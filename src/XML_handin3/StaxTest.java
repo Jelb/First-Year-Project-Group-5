@@ -13,6 +13,5 @@ public class StaxTest {
 		    } catch (Exception e) {
 		      e.printStackTrace();
 		    }
-		  }
-
+	  }
 }

@@ -100,7 +100,7 @@ public class StaxWriter {
   }
   
     public void writeNode(XMLEventWriter eventWriter, String[] rsArr) throws XMLStreamException {
-        String[] name  = new String[] {"ARC#", "KDV#", "KDV-ID", "X-COORD", "Y-COORD" };
+        String[] name  = new TXTScan("src/kdv_node_unload.txt").scanning(5);
         String[] value = rsArr;
                 
         XMLEventFactory eventFactory = XMLEventFactory.newInstance();
@@ -166,5 +166,10 @@ public class StaxWriter {
         
         eventWriter.add(eEdgeElement);
         eventWriter.add(endLine);
+    }
+    
+    public void test(){
+    	while()
+    	(, rsArr)
     }
 }
