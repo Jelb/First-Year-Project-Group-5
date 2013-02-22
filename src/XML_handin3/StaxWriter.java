@@ -112,7 +112,7 @@ public class StaxWriter {
         EndElement slutKnudeElement = eventFactory.createEndElement("", "", "Knudepunkt");
         
         eventWriter.add(startKnudeElement);
-        
+        eventWriter.add(endLine);
         for(int i = 0; i < 5; i++) {
             // Create Start node
             StartElement sElement = eventFactory.createStartElement("", "", name[i]);
@@ -128,5 +128,6 @@ public class StaxWriter {
         }
         
         eventWriter.add(slutKnudeElement);
+        eventWriter.add(endLine);
     }
 }

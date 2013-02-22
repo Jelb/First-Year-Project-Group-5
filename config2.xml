@@ -1,0 +1,10 @@
+<?xml version="1.1" encoding="utf-8"?>
+<config xmlns="http://config.dk" xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:schemaLocation="http://config.dk path_to_xsd.xsd">
+<Knudepunkt>
+	<ARC#>123</ARC#>
+	<KDV#>432</KDV#>
+	<KDV-ID>44576.3845</KDV-ID>
+	<X-COORD>23453465</X-COORD>
+	<Y-COORD>2432345.345345</Y-COORD>
+</Knudepunkt>
+</config>
