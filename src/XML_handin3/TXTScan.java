@@ -8,9 +8,9 @@ import java.util.Scanner;
 public class TXTScan {
 private Scanner scan;
 private String[] arr;
-	public TXTScan() {
+	public TXTScan(String fileName) {
 		try {
-			scan = new Scanner(new File("src/kdv_node_unload.txt")).useDelimiter("[,\\n]");
+			scan = new Scanner(new File(fileName)).useDelimiter("[,\\n]");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -37,4 +37,6 @@ private String[] arr;
 			System.out.println(scan.next());
 		}
 	}
+	
+	public void close() {scan.close();}
 }
