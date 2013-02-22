@@ -101,7 +101,7 @@ public class AddressPaser2 {
 		try {
 			streetName = fs.streetScan(INPUT);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// TODO Auto-generated catch block - det gider jeg ikke
 			e.printStackTrace();
 		}
 		result[0] = streetName.trim();
