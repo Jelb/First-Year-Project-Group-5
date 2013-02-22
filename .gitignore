@@ -3,6 +3,8 @@
 *.jar
 *.war
 *.ear
+bin/*
+
 
 # Eclipse files #
 .classpath
