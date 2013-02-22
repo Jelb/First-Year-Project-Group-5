@@ -99,20 +99,20 @@ public class StaxWriter {
 
   }
   
-    public void writeNode(XMLEventWriter eventWriter, String[] array) throws XMLStreamException {
+    public void writeNode(XMLEventWriter eventWriter, String[] rsArr) throws XMLStreamException {
         String[] name  = new String[] {"ARC#", "KDV#", "KDV-ID", "X-COORD", "Y-COORD" };
-        String[] value = array;
-        
-        
+        String[] value = rsArr;
+                
         XMLEventFactory eventFactory = XMLEventFactory.newInstance();
         XMLEvent endLine = eventFactory.createIgnorableSpace("\n");
         XMLEvent tab = eventFactory.createIgnorableSpace("\t");
             
-        StartElement startKnudeElement = eventFactory.createStartElement("", "", "Knudepunkt");
-        EndElement slutKnudeElement = eventFactory.createEndElement("", "", "Knudepunkt");
+        StartElement sNodeElement = eventFactory.createStartElement("", "", "Node");
+        EndElement eNodeElement = eventFactory.createEndElement("", "", "Node");
         
-        eventWriter.add(startKnudeElement);
+        eventWriter.add(sNodeElement);
         eventWriter.add(endLine);
+        
         for(int i = 0; i < 5; i++) {
             // Create Start node
             StartElement sElement = eventFactory.createStartElement("", "", name[i]);
@@ -127,7 +127,44 @@ public class StaxWriter {
             eventWriter.add(endLine);
         }
         
-        eventWriter.add(slutKnudeElement);
+        eventWriter.add(eNodeElement);
+        eventWriter.add(endLine);
+    }
+    
+    private void writeAddress(XMLEventWriter eventWriter, String[] rsArr) throws XMLStreamException {
+    	String[] name  = new String[] { "FNODE#", "TNODE#", "LENGTH", "DAV_DK#", "DAV_DK-ID", "ROADTYPE", "ROADNAME",
+    									"FROMLEFT", "TOLEFT", "FROMRIGHT", "TORIGHT", "FROMLEFT_LETTER",
+    									"TOLEFT_LETTER", "FROMRIGHT_LETTER", "TORIGHT_LETTER", "F_PARISH_NO",
+    									"T_PARISH_NO", "F_ZIPCODE", "T_ZIPCODE", "MUNICIPAL_NO", "ROADCODE", "SUBNET",
+    									"ROUTE_NO", "EXIT", "ZONETYPE", "SPEEDLIMIT", "DRIVETIME", "ONE_WAY", "F_TURN",
+    									"T_TURN", "ROAD_NO", "CHANGE_DATE", "CHECK_ID" };
+    	String[] value = rsArr;
+    	
+    	XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+        XMLEvent endLine = eventFactory.createIgnorableSpace("\n");
+        XMLEvent tab = eventFactory.createIgnorableSpace("\t");
+        
+        StartElement sEdgeElement = eventFactory.createStartElement("", "", "Edge");
+        EndElement eEdgeElement = eventFactory.createEndElement("", "", "Edge");
+        
+        eventWriter.add(sEdgeElement);
+        eventWriter.add(endLine);
+        
+        for(int i = 0; i < 33; i++) {
+            // Create Start node
+            StartElement sElement = eventFactory.createStartElement("", "", name[i]);
+            eventWriter.add(tab);
+            eventWriter.add(sElement);
+            // Create Content
+            Characters characters = eventFactory.createCharacters(value[i]);
+            eventWriter.add(characters);
+            // Create End node
+            EndElement eElement = eventFactory.createEndElement("", "", name[i]);
+            eventWriter.add(eElement);
+            eventWriter.add(endLine);
+        }
+        
+        eventWriter.add(eEdgeElement);
         eventWriter.add(endLine);
     }
 }
