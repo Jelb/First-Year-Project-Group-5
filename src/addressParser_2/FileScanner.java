@@ -14,7 +14,7 @@ private static DataInputStream inStreet, inZip;
 private static BufferedReader brStreet, brZip;
 	
 	public FileScanner() throws FileNotFoundException{
-		street = new FileInputStream("src/road_names_3.txt");
+		street = new FileInputStream("src/names.txt");
 		zip = new FileInputStream("src/post.txt");
 		inStreet = new DataInputStream(street);
 		inZip = new DataInputStream(zip);
