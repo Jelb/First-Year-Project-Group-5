@@ -1,9 +1,5 @@
 //Modified code from Lars Vogel
-//http://www.vogella.com/articles/JavaXML/article.html
-//Yannis Panagis, 2013
-
 package XML_handin3;
-
 import java.io.FileOutputStream;
 
 import javax.xml.stream.XMLEventFactory;
@@ -15,8 +11,6 @@ import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartDocument;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-
-
 
 public class StaxWriter {
   private String configFile;
@@ -52,14 +46,6 @@ public class StaxWriter {
     eventWriter.add(xsiNamespace);
     eventWriter.add(attribute);
     eventWriter.add(endLine);
-    // Write the different nodes
-    /*createNode(eventWriter, "mode", "1");
-    createNode(eventWriter, "unit", "901");
-    createNode(eventWriter, "current", "0");
-    createNode(eventWriter, "interactive", "0");
-    */
-   String[] test = new String[] {"123", "432", "44576.3845", "23453465", "2432345.345345" };
-   writeNode(eventWriter, test);
 
     eventWriter.add(eventFactory.createEndElement("", "", "config"));
     eventWriter.add(endLine);
@@ -67,40 +53,14 @@ public class StaxWriter {
     eventWriter.flush();
     eventWriter.close();
   }
-
-  /**
-   * Will write the different XML elements of the form (element name, value) 
-   * with the help of the eventWriter. If you need to write attributes to an element
-   * the code needs to be modified to include a HashMap<String,String> of possible attribute
-   * values and then use attr = eventFactory.createAttribute(...) and eventWriter.add(attr)
-   * before the element is ended. A similar case is encountered in creating xsi namespace
-   *  
-   * @param eventWriter The external XMLEventWriter
-   * @param name The element name to be created
-   * @param value The element value
-   */
-  private void createNode(XMLEventWriter eventWriter, String name,
-      String value) throws XMLStreamException {
-    
-    XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-    XMLEvent endLine = eventFactory.createIgnorableSpace("\n");
-    XMLEvent tab = eventFactory.createIgnorableSpace("\t");
-    // Create Start node
-    StartElement sElement = eventFactory.createStartElement("", "", name);
-    eventWriter.add(tab);
-    eventWriter.add(sElement);
-    // Create Content
-    Characters characters = eventFactory.createCharacters(value);
-    eventWriter.add(characters);
-    // Create End node
-    EndElement eElement = eventFactory.createEndElement("", "", name);
-    eventWriter.add(eElement);
-    eventWriter.add(endLine);
-
-  }
   
+<<<<<<< HEAD
     public void writeNode(XMLEventWriter eventWriter, String[] rsArr) throws XMLStreamException {
         String[] name  = new TXTScan("src/kdv_node_unload.txt").scanning(5);
+=======
+    private void writeNode(XMLEventWriter eventWriter, String[] rsArr) throws XMLStreamException {
+        String[] name  = new String[] {"ARC#", "KDV#", "KDV-ID", "X-COORD", "Y-COORD" };
+>>>>>>> 0f6e72e5eefc98e125aa78cba71a4d1f30efe836
         String[] value = rsArr;
                 
         XMLEventFactory eventFactory = XMLEventFactory.newInstance();
