@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 /**
- * @author Jonas E. JÃ¸rgensen
+ * @author Jonas E. Jøcfrgensen
  * 
  * regexadress is used to spilt a given adress input into each of its components.<br>
  * 1. [0] Street name <br>
