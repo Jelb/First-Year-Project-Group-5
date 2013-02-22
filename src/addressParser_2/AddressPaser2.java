@@ -5,12 +5,7 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 /**
- * æøå
-<<<<<<< HEAD
- * @author Jonas E. Jørgensen
-=======
- * @author Jonas E. Jørgensen
->>>>>>> Filen matcher nu det vi afleverede
+ * @author Jonas E. J��rgensen
  * 
  * regexadress is used to spilt a given adress input into each of its components.<br>
  * 1. [0] Street name <br>
@@ -37,14 +32,14 @@ public class AddressPaser2 {
     //pattern for house number
     private static final String NR = "[0-9]+";
     //pattern for city
-    private static final String BY = "[\\wæÆøØåÅ]{3,}";
+    private static final String BY = "[\\w������������]{3,}";
     //patterns for floor
     private static final String SAL = "sal";
     private static final String ETAGE = "etage";
     
 	public AddressPaser2() {
 		for(int i = 0; i < result.length; i++){
-			result[i] = "NOT FOUND";
+			result[i] = "";
 		}
 		try {
 			fs = new FileScanner();
@@ -58,16 +53,16 @@ public class AddressPaser2 {
 		
 		INPUT = input.toLowerCase().trim(); 
 		
-		System.out.println("plain input: " + INPUT);
+//		System.out.println("plain input: " + INPUT);
 		
 		INPUT = INPUT.replaceAll("[.,]", "");
 		
-		System.out.println("without period and comma: " + INPUT);
+//		System.out.println("without period and comma: " + INPUT);
 		
 		randomCheck();
 		findStreetName();
 		
-		System.out.println("without street name: " + INPUT);
+//		System.out.println("without street name: " + INPUT);
 		
 		// Searches for zip-code if search string contains one
 		// else searches for city-name
@@ -79,19 +74,19 @@ public class AddressPaser2 {
 		else {
 			findCity();
 		}
-        System.out.println("without zip and/or city name: " + INPUT);
+//        System.out.println("without zip and/or city name: " + INPUT);
 
 		buildingNo();
 		
-		System.out.println("without building number: " + INPUT);
+//		System.out.println("without building number: " + INPUT);
 		
 		findBuildingLetter();
 		
-		System.out.println("without building letter: " + INPUT);
+//		System.out.println("without building letter: " + INPUT);
 		
 		findFloorNumber();
 		
-		System.out.println("without floor number: " + INPUT);
+//		System.out.println("without floor number: " + INPUT);
 		
 		print();
 		return result;
@@ -102,7 +97,7 @@ public class AddressPaser2 {
 		try {
 			streetName = fs.streetScan(INPUT);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block - det gider jeg ikke
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		result[0] = streetName.trim();
@@ -124,13 +119,14 @@ public class AddressPaser2 {
 		
 		result[4] = zipNameArr[0].trim();
 		result[5] = zipNameArr[1].trim();
-		INPUT = INPUT.replaceFirst(zipCodeAndCityName.toLowerCase(), "").trim();
+		INPUT = INPUT.replaceFirst(zipNameArr[0].trim().toLowerCase(), "").trim();
+		INPUT = INPUT.replaceFirst(zipNameArr[1].trim().toLowerCase(), "").trim();
 	}
 	
 	private void findCity() {
 		String cityName = "";
 		try {
-			cityName = fs.zipScan(INPUT).trim();
+			cityName = fs.cityNameScan(INPUT).trim();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -156,12 +152,13 @@ public class AddressPaser2 {
     }
 	
 	private void findBuildingLetter() {
-		p1 = Pattern.compile("\\w");
+		p1 = Pattern.compile("[a-z]^[a-z]");
 		m1 = p1.matcher(INPUT);
 		
 		if (m1.find()) {
-			result[2] = m1.group().toUpperCase();
-			INPUT = INPUT.replaceFirst(m1.group().toLowerCase(), "").trim();
+			String letter = m1.group().toUpperCase();
+			result[2] = letter;
+			INPUT = INPUT.replaceFirst(letter.toLowerCase(), "").trim();
 		}
 	}
 	
@@ -179,33 +176,40 @@ public class AddressPaser2 {
      * Checks if the input contains any illegal characters.
      */
     private void randomCheck() {
-        p1 = Pattern.compile("[^\\w\\d\\s.,]");
+        p1 = Pattern.compile("[^\\w\\d\\s.,æÆøØåÅ]");
         m1 = p1.matcher(INPUT.trim());
         if(m1.find()) {                                                         // CHECK 01
-            System.out.println("----------------------------------------");
-            System.out.println(INPUT);
-            System.out.println("MALFORMED ADDRESS");
-            System.out.println("----------------------------------------");
+            throw new RuntimeException();
         }
     }
     
     public static void main(String[] arg) {
     	AddressPaser2 ap = new AddressPaser2();
     	ap.parseAddress("Rued Langgaards Vej 77A 1. 4735 Mern");
+    	ap.parseAddress("Hesseløgade 56 i København Ø");
     	
     }
     
     private void print() {
-        System.out.println("----------------------------------------");
-        System.out.println("Search string: ");
-        System.out.println();
-        System.out.println("Street name:     " + result[0].trim());
-        System.out.println("Building no:     " + result[1].trim());
-        System.out.println("Building letter: " + result[2].trim());
-        System.out.println("Floor:           " + result[3].trim());
-//        System.out.println("Door:            " + result[-].trim());
-        System.out.println("Zip code:        " + result[4].trim());
-        System.out.println("City:            " + result[5].trim());
-        System.out.println("----------------------------------------");
+//        System.out.println("----------------------------------------");
+//        System.out.println("Search string: ");
+//        System.out.println();
+//        System.out.println("Street name:     " + result[0].trim());
+//        System.out.println("Building no:     " + result[1].trim());
+//        System.out.println("Building letter: " + result[2].trim());
+//        System.out.println("Floor:           " + result[3].trim());
+////        System.out.println("Door:            " + result[-].trim());
+//        System.out.println("Zip code:        " + result[4].trim());
+//        System.out.println("City:            " + result[5].trim());
+//        System.out.println("----------------------------------------");
+    }
+    
+    public String Test() {
+    	String strBuilder = "";
+    	for (String s : result) {
+    		strBuilder += s + "#";
+    	}
+    	System.out.println("Test: " + strBuilder.substring(0, strBuilder.length()-1));
+    	return strBuilder.substring(0, strBuilder.length()-1);
     }
 }

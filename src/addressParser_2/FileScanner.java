@@ -14,7 +14,7 @@ private static DataInputStream inStreet, inZip;
 private static BufferedReader brStreet, brZip;
 	
 	public FileScanner() throws FileNotFoundException{
-		street = new FileInputStream("src/names.txt");
+		street = new FileInputStream("src/road_names_3.txt");
 		zip = new FileInputStream("src/post.txt");
 		inStreet = new DataInputStream(street);
 		inZip = new DataInputStream(zip);
@@ -32,12 +32,31 @@ private static BufferedReader brStreet, brZip;
 		return street;
 	}
 	
+	/**
+	 * 
+	 * @param input The whole search string
+	 * @return
+	 * @throws IOException
+	 */
 	public String zipScan(String input) throws IOException {
 		String strLine;
-		String zip = "";
-		while((strLine = brZip.readLine()) != null)
-			if(input.contains(strLine.toLowerCase()))
-				zip = strLine;
-		return zip;
+		String zipAndName = "";
+		while((strLine = brZip.readLine()) != null) {
+			String zipCode = strLine.split(" ", 2)[0];
+			if(input.contains(zipCode) && zipCode.length() > 3)
+				zipAndName = strLine;
+		}
+		return zipAndName;
+	}
+	
+	public String cityNameScan(String input) throws IOException {
+		String strLine;
+		String inputName = "";
+		while((strLine = brZip.readLine()) != null) {
+			String name = strLine.split(" ", 2)[1];
+			if(input.contains(name.toLowerCase()))
+				inputName = name;
+		}
+		return inputName;
 	}
 }
