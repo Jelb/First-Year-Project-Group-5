@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 /**
- * @author Jonas E. J��rgensen
+ * @author Jonas E. Jørgensen
  * 
  * regexadress is used to spilt a given adress input into each of its components.<br>
  * 1. [0] Street name <br>
@@ -32,7 +32,7 @@ public class AddressPaser2 {
     //pattern for house number
     private static final String NR = "[0-9]+";
     //pattern for city
-    private static final String BY = "[\\w������������]{3,}";
+    private static final String BY = "[\\wæÆøØåÅ]{3,}";
     //patterns for floor
     private static final String SAL = "sal";
     private static final String ETAGE = "etage";
