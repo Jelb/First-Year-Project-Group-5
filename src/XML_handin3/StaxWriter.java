@@ -54,13 +54,13 @@ public class StaxWriter {
     eventWriter.close();
   }
   
-<<<<<<< HEAD
-    public void writeNode(XMLEventWriter eventWriter, String[] rsArr) throws XMLStreamException {
-        String[] name  = new TXTScan("src/kdv_node_unload.txt").scanning(5);
-=======
+/**<<<<<<< HEAD
+*    public void writeNode(XMLEventWriter eventWriter, String[] rsArr) throws XMLStreamException {
+*        String[] name  = new TXTScan("src/kdv_node_unload.txt").scanning(5);}
+=======*/
     private void writeNode(XMLEventWriter eventWriter, String[] rsArr) throws XMLStreamException {
         String[] name  = new String[] {"ARC#", "KDV#", "KDV-ID", "X-COORD", "Y-COORD" };
->>>>>>> 0f6e72e5eefc98e125aa78cba71a4d1f30efe836
+//>>>>>>> 0f6e72e5eefc98e125aa78cba71a4d1f30efe836
         String[] value = rsArr;
                 
         XMLEventFactory eventFactory = XMLEventFactory.newInstance();
@@ -126,10 +126,5 @@ public class StaxWriter {
         
         eventWriter.add(eEdgeElement);
         eventWriter.add(endLine);
-    }
-    
-    public void test(){
-    	while()
-    	(, rsArr)
     }
 }
