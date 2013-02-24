@@ -14,6 +14,10 @@ import javax.xml.stream.events.XMLEvent;
 
 public class StaxWriter {
   private String configFile;
+  
+  XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+  XMLEvent endLine = eventFactory.createIgnorableSpace("\n");
+  XMLEvent tab = eventFactory.createIgnorableSpace("\t");
 
   public void setFile(String configFile) {
     this.configFile = configFile;
@@ -54,6 +58,20 @@ public class StaxWriter {
     eventWriter.close();
   }
   
+  private void createNode(XMLEventWriter eventWriter, String name, String value) throws XMLStreamException {
+	  // Create Start node
+      StartElement sElement = eventFactory.createStartElement("", "", name);
+      eventWriter.add(tab);
+      eventWriter.add(sElement);
+      // Create Content
+      Characters characters = eventFactory.createCharacters(value);
+      eventWriter.add(characters);
+      // Create End node
+      EndElement eElement = eventFactory.createEndElement("", "", name);
+      eventWriter.add(eElement);
+      eventWriter.add(endLine);
+  }
+  
 /**<<<<<<< HEAD
 *    public void writeNode(XMLEventWriter eventWriter, String[] rsArr) throws XMLStreamException {
 *        String[] name  = new TXTScan("src/kdv_node_unload.txt").scanning(5);}
@@ -62,10 +80,6 @@ public class StaxWriter {
         String[] name  = new String[] {"ARC#", "KDV#", "KDV-ID", "X-COORD", "Y-COORD" };
 //>>>>>>> 0f6e72e5eefc98e125aa78cba71a4d1f30efe836
         String[] value = rsArr;
-                
-        XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-        XMLEvent endLine = eventFactory.createIgnorableSpace("\n");
-        XMLEvent tab = eventFactory.createIgnorableSpace("\t");
             
         StartElement sNodeElement = eventFactory.createStartElement("", "", "Node");
         EndElement eNodeElement = eventFactory.createEndElement("", "", "Node");
@@ -74,17 +88,7 @@ public class StaxWriter {
         eventWriter.add(endLine);
         
         for(int i = 0; i < 5; i++) {
-            // Create Start node
-            StartElement sElement = eventFactory.createStartElement("", "", name[i]);
-            eventWriter.add(tab);
-            eventWriter.add(sElement);
-            // Create Content
-            Characters characters = eventFactory.createCharacters(value[i]);
-            eventWriter.add(characters);
-            // Create End node
-            EndElement eElement = eventFactory.createEndElement("", "", name[i]);
-            eventWriter.add(eElement);
-            eventWriter.add(endLine);
+            createNode(eventWriter, name[i], value[i]);
         }
         
         eventWriter.add(eNodeElement);
@@ -99,10 +103,6 @@ public class StaxWriter {
     									"ROUTE_NO", "EXIT", "ZONETYPE", "SPEEDLIMIT", "DRIVETIME", "ONE_WAY", "F_TURN",
     									"T_TURN", "ROAD_NO", "CHANGE_DATE", "CHECK_ID" };
     	String[] value = rsArr;
-    	
-    	XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-        XMLEvent endLine = eventFactory.createIgnorableSpace("\n");
-        XMLEvent tab = eventFactory.createIgnorableSpace("\t");
         
         StartElement sEdgeElement = eventFactory.createStartElement("", "", "Edge");
         EndElement eEdgeElement = eventFactory.createEndElement("", "", "Edge");
@@ -111,17 +111,7 @@ public class StaxWriter {
         eventWriter.add(endLine);
         
         for(int i = 0; i < 33; i++) {
-            // Create Start node
-            StartElement sElement = eventFactory.createStartElement("", "", name[i]);
-            eventWriter.add(tab);
-            eventWriter.add(sElement);
-            // Create Content
-            Characters characters = eventFactory.createCharacters(value[i]);
-            eventWriter.add(characters);
-            // Create End node
-            EndElement eElement = eventFactory.createEndElement("", "", name[i]);
-            eventWriter.add(eElement);
-            eventWriter.add(endLine);
+            createNode(eventWriter, name[i], value[i]);
         }
         
         eventWriter.add(eEdgeElement);
