@@ -8,14 +8,23 @@ import java.util.Scanner;
 
 public class TXTScan {
 private Scanner scan;
-private String[] arr;
+private String[] arr, nyArr;
  public TXTScan(String filePath) {
   try {
-   scan = new Scanner(new File(filePath)).useDelimiter("[,\\n]");
+   scan = new Scanner(new File(filePath)).useDelimiter("[\\n]");
   } catch (FileNotFoundException e) {
    // TODO Auto-generated catch block
    e.printStackTrace();
   }
+ }
+ 
+ public String[] nyScanning(int tal){
+	 nyArr = scan.next().split(",");
+	 if(nyArr.length != tal){ 
+		 for(String s: nyArr)
+	 	System.out.println(s);
+	 }
+	 return nyArr;
  }
  
  public String[] scanning(int size) throws NoSuchElementException{

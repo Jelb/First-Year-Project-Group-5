@@ -30,25 +30,24 @@ public class XMLCreater {
   * @throws FileNotFoundException
   * @throws XMLStreamException
   */
- public void init(String configFile, String txtFilePath) throws FileNotFoundException, XMLStreamException {
-  this.configFile = configFile;
-  txtscan = new TXTScan(txtFilePath);
-  // Create a XMLOutputFactory
-     outputFactory = XMLOutputFactory.newInstance();
-     // Create XMLEventWriter
-     eventWriter = outputFactory.createXMLEventWriter(new FileOutputStream(configFile));
-     // Create a EventFactory
-     eventFactory = XMLEventFactory.newInstance();
-     endLine = eventFactory.createIgnorableSpace("\n");
-     tab = eventFactory.createIgnorableSpace("\t");
-     // Create config open tag
-     // also creates default namespace xsi namespace and an attribute 
-     // used to bind with external XML Schema
-     configStartElement = eventFactory.createStartElement("", "http://config.dk", "config");
-     namespace = eventFactory.createNamespace("", "http://config.dk");
-     xsiNamespace = eventFactory.createNamespace("xsi", "http://www.w3.org/2000/10/XMLSchema-instance");
-     attribute = eventFactory.createAttribute("xsi", "http://www.w3.org/2000/10/XMLSchema-instance", "schemaLocation", "http://config.dk path_to_xsd.xsd");
-     
+public void init(String configFile, String txtFilePath) throws FileNotFoundException, XMLStreamException {
+	this.configFile = configFile;
+	txtscan = new TXTScan(txtFilePath);
+	// Create a XMLOutputFactory
+    outputFactory = XMLOutputFactory.newInstance();
+    // Create XMLEventWriter
+    eventWriter = outputFactory.createXMLEventWriter(new FileOutputStream(configFile));
+    // Create a EventFactory
+    eventFactory = XMLEventFactory.newInstance();
+    endLine = eventFactory.createIgnorableSpace("\n");
+    tab = eventFactory.createIgnorableSpace("\t");
+    // Create config open tag
+    // also creates default namespace xsi namespace and an attribute 
+    // used to bind with external XML Schema
+    configStartElement = eventFactory.createStartElement("", "http://config.dk", "config");
+    namespace = eventFactory.createNamespace("", "http://config.dk");
+    xsiNamespace = eventFactory.createNamespace("xsi", "http://www.w3.org/2000/10/XMLSchema-instance");
+    attribute = eventFactory.createAttribute("xsi", "http://www.w3.org/2000/10/XMLSchema-instance", "schemaLocation", "http://config.dk path_to_xsd.xsd"); 
  }
  
  /**
@@ -118,7 +117,7 @@ public class XMLCreater {
   endDoc();
  }
  
- public void createSubNode(XMLEventWriter eventWriter, String name, String value) throws XMLStreamException {
+ private void createSubNode(XMLEventWriter eventWriter, String name, String value) throws XMLStreamException {
         eventWriter.add(tab);
         eventWriter.add(eventFactory.createStartElement("", "", name));
         eventWriter.add(eventFactory.createCharacters(value));
