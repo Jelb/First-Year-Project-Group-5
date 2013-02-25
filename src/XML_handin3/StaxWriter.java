@@ -58,6 +58,13 @@ public class StaxWriter {
     eventWriter.close();
   }
   
+  /**
+   * Writes a single node of data in the XML document.
+   * 
+   * @param eventWriter			The XMLEventWriter we use to create elements
+   * @param name				The name or type of node element
+   * @param value				The value of the node element
+   */
   private void createNode(XMLEventWriter eventWriter, String name, String value) throws XMLStreamException {
 	  // Create Start node
       StartElement sElement = eventFactory.createStartElement("", "", name);
@@ -73,13 +80,20 @@ public class StaxWriter {
   }
   
 /**<<<<<<< HEAD
-*    public void writeNode(XMLEventWriter eventWriter, String[] rsArr) throws XMLStreamException {
+*    public void writeNode(XMLEventWriter eventWriter, String[] inputArr) throws XMLStreamException {
 *        String[] name  = new TXTScan("src/kdv_node_unload.txt").scanning(5);}
 =======*/
-    private void writeNode(XMLEventWriter eventWriter, String[] rsArr) throws XMLStreamException {
+  
+	/**
+	 * Takes a String array of 5 values and writes 5 data nodes.
+	 * 
+	 * @param eventWriter		The XMLEventWriter we use to create elements
+	 * @param inputArr			The String array containing the node values
+	 */
+    private void writeNode(XMLEventWriter eventWriter, String[] inputArr) throws XMLStreamException {
         String[] name  = new String[] {"ARC#", "KDV#", "KDV-ID", "X-COORD", "Y-COORD" };
 //>>>>>>> 0f6e72e5eefc98e125aa78cba71a4d1f30efe836
-        String[] value = rsArr;
+        String[] value = inputArr;
             
         StartElement sNodeElement = eventFactory.createStartElement("", "", "Node");
         EndElement eNodeElement = eventFactory.createEndElement("", "", "Node");
@@ -87,6 +101,7 @@ public class StaxWriter {
         eventWriter.add(sNodeElement);
         eventWriter.add(endLine);
         
+        // Calls the createNode method to create the 5 nodes
         for(int i = 0; i < 5; i++) {
             createNode(eventWriter, name[i], value[i]);
         }
@@ -95,14 +110,20 @@ public class StaxWriter {
         eventWriter.add(endLine);
     }
     
-    private void writeAddress(XMLEventWriter eventWriter, String[] rsArr) throws XMLStreamException {
+    /**
+     * Takes a String array of 33 values and writes 33 data nodes.
+     * 
+     * @param eventWriter		The XMLEventWriter we use to create elements
+     * @param inputArr			The String array containing the node values
+     */
+    private void writeEdge(XMLEventWriter eventWriter, String[] inputArr) throws XMLStreamException {
     	String[] name  = new String[] { "FNODE#", "TNODE#", "LENGTH", "DAV_DK#", "DAV_DK-ID", "ROADTYPE", "ROADNAME",
     									"FROMLEFT", "TOLEFT", "FROMRIGHT", "TORIGHT", "FROMLEFT_LETTER",
     									"TOLEFT_LETTER", "FROMRIGHT_LETTER", "TORIGHT_LETTER", "F_PARISH_NO",
     									"T_PARISH_NO", "F_ZIPCODE", "T_ZIPCODE", "MUNICIPAL_NO", "ROADCODE", "SUBNET",
     									"ROUTE_NO", "EXIT", "ZONETYPE", "SPEEDLIMIT", "DRIVETIME", "ONE_WAY", "F_TURN",
     									"T_TURN", "ROAD_NO", "CHANGE_DATE", "CHECK_ID" };
-    	String[] value = rsArr;
+    	String[] value = inputArr;
         
         StartElement sEdgeElement = eventFactory.createStartElement("", "", "Edge");
         EndElement eEdgeElement = eventFactory.createEndElement("", "", "Edge");
@@ -110,6 +131,7 @@ public class StaxWriter {
         eventWriter.add(sEdgeElement);
         eventWriter.add(endLine);
         
+    	// Calls the createNode method to create the 33 nodes
         for(int i = 0; i < 33; i++) {
             createNode(eventWriter, name[i], value[i]);
         }
