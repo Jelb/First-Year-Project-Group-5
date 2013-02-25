@@ -14,6 +14,7 @@ import javax.xml.stream.events.XMLEvent;
 
 public class StaxWriter {
   private String configFile;
+  private TXTScan txtscan;
   
   XMLEventFactory eventFactory = XMLEventFactory.newInstance();
   XMLEvent endLine = eventFactory.createIgnorableSpace("\n");
@@ -51,11 +52,18 @@ public class StaxWriter {
     eventWriter.add(attribute);
     eventWriter.add(endLine);
 
+    txtscan = new TXTScan("src/XML_handin3/kdv_unload_lille.txt");
+    while (txtscan.hasNext()) {
+    	writeEdge(eventWriter, txtscan.scanning(33));
+    
     eventWriter.add(eventFactory.createEndElement("", "", "config"));
     eventWriter.add(endLine);
     eventWriter.add(eventFactory.createEndDocument());
     eventWriter.flush();
     eventWriter.close();
+    
+    
+    }
   }
   
   /**
