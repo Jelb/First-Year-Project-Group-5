@@ -11,7 +11,11 @@ private Scanner scan;
 private String[] arr, nyArr;
  public TXTScan(String filePath) {
   try {
+<<<<<<< HEAD
    scan = new Scanner(new File(filePath)).useDelimiter("[\\n]");
+	  File file = new File(filePath);
+	  boolean b = file.canRead();
+   scan = new Scanner(file).useDelimiter("[,\\n]");
   } catch (FileNotFoundException e) {
    // TODO Auto-generated catch block
    e.printStackTrace();
