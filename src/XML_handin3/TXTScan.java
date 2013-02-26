@@ -7,36 +7,24 @@ import java.util.Scanner;
 
 public class TXTScan {
 private Scanner scan;
-private String[] arr;
-	public TXTScan(String fileName) {
-		try {
-			scan = new Scanner(new File(fileName)).useDelimiter("[,\\n]");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public String[] scanning(int size) {
-		arr = new String[size];
-		for(int i = 0; i < size; i++){
-			arr[i] = scan.next();
-		}
-		return arr;
-	}
-	
-	public boolean hasNext() {
-			return scan.hasNext();
-	}
-	
-	
-	public void test(){
-		scan.useDelimiter(",");
-		for(int i = 0; i < 100; i++){
-			
-			System.out.println(scan.next());
-		}
-	}
-	
-	public void close() {scan.close();}
+private String[] arr, nyArr;
+ public TXTScan(String filePath) {
+  try {
+   scan = new Scanner(new File(filePath)).useDelimiter("[\\n]");
+  } catch (FileNotFoundException e) {
+   // TODO Auto-generated catch block
+   e.printStackTrace();
+  }
+ }
+ 
+  public String[] scanning(int tal){
+  nyArr = scan.next().split(",");
+  while(nyArr.length != tal){nyArr = scan.next().split(","); System.out.println(nyArr[0]);}
+  nyArr[nyArr.length -1] = nyArr[nyArr.length -1].trim();
+  return nyArr;
+ }
+
+ public boolean hasNext() {
+   return scan.hasNext();
+ }
 }

@@ -11,7 +11,6 @@ private Scanner scan;
 private String[] arr, nyArr;
  public TXTScan(String filePath) {
   try {
-<<<<<<< HEAD
    scan = new Scanner(new File(filePath)).useDelimiter("[\\n]");
 	  File file = new File(filePath);
 	  boolean b = file.canRead();
