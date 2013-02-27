@@ -6,7 +6,7 @@ import java.util.LinkedList;
 public class Graph {
 	private final int V;	// number of nodes
 	private int E;			// number of edges
-	private LinkedList<Edge>[] adj; // adjacency list
+	private LinkedList<Edge>[] adj; // array of adjacency lists
 	
 	public Graph(int V) {
 		this.V = V;
