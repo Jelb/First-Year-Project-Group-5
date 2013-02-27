@@ -17,8 +17,8 @@ public class StaxTest {
       try {
        kdv_node_unload.init("kdv_node_unload.xml","kdv_node_unload.txt");
        kdv_node_unload.createDocument(5, "edge");
- //      kvd_unload.init("kdv_unload.xml","kdv_unload.txt");
- //      kvd_unload.createDocument(33, "edge");
+       kvd_unload.init("kdv_unload.xml","kdv_unload.txt");
+       kvd_unload.createDocument(33, "edge");
    } catch (FileNotFoundException e1) {
     // TODO Auto-generated catch block
     e1.printStackTrace();
