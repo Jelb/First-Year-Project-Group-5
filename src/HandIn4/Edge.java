@@ -38,11 +38,11 @@ public class Edge {
 	}
      
     public int either(){  
-    	return FNODE.getID();  
+    	return FNODE.getKdvID();  
     }
     public int other(int vertex){
-     	if      (vertex == FNODE.getID()) return TNODE.getID();
-        else if (vertex == TNODE.getID()) return FNODE.getID();
+     	if      (vertex == FNODE.getKdvID()) return TNODE.getKdvID();
+        else if (vertex == TNODE.getKdvID()) return FNODE.getKdvID();
         else throw new RuntimeException("Inconsistent edge");
     }
     public int compareTo(Edge that){
@@ -52,8 +52,8 @@ public class Edge {
     }
 
      public String toString(){  
-    	 String data = FNODE.getID() + " " + TNODE.getID() + " " + length() + " " + FNODE.getXcord() + " " + FNODE.getYcord +
-    			 " " + TNODE.getXcord() + " " + TNODE.getYcord() +" ";
+    	 String data = FNODE.getKdvID() + " " + TNODE.getKdvID() + " " + length() + " " + FNODE.getXCord() + " " + FNODE.getYCord() +
+    			 " " + TNODE.getXCord() + " " + TNODE.getYCord() +" ";
     	 for(String s: info){
     		 data += s + " ";
     	 }
