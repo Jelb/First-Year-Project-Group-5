@@ -6,7 +6,10 @@ import java.util.Scanner;
 
 public class TXTScan {
 	private Scanner scan;
-	private String[] nyArr;
+	private String[] edgeArray;
+	private String[] nodeArray;
+	private String[] titleEdgeArray;
+	private String[] titleNodeArray;
 	
 	public TXTScan(String filePath) {
 		try {
@@ -21,28 +24,36 @@ public class TXTScan {
 		String[] temp = scan.next().split(",(?! |[a-zA-ZæÆøØåÅ])");
 		temp[temp.length -1] = temp[temp.length-1].trim();
 		if(temp.length == 33){
-			nyArr = new String[]{
+			edgeArray = new String[]{
 					temp[0], temp[1], temp[2], temp[6], temp[7], 
 					temp[8], temp[9], temp[10], temp[11], temp[12], 
 					temp[13], temp[14],temp[17], temp[18], temp[26]};
-		} else {
-			nyArr = temp;
+			return edgeArray;
 		}
-		return nyArr;
+		if(temp.length == 5){
+			nodeArray = new String[]{
+					temp[1], temp[3], temp[4]};
+			return nodeArray;		
+		}
+		return temp;
 	}
 
 	public String[] titleScanning(int tal){
 		String[] temp = scan.next().split("( |,)");
 		temp[temp.length -1] = temp[temp.length-1].trim();
 		if(temp.length == 33){
-			nyArr = new String[]{
+			titleEdgeArray = new String[]{
 					temp[0], temp[1], temp[2], temp[6], temp[7], 
 					temp[8], temp[9], temp[10], temp[11], temp[12], 
 					temp[13], temp[14],temp[17], temp[18], temp[26]};
-		} else {
-			nyArr = temp;
+			return titleEdgeArray;
 		}
-		return nyArr;
+		if(temp.length == 5){
+			titleNodeArray = new String[]{
+					temp[1], temp[3], temp[4]};
+			return titleNodeArray;
+		}
+		return temp;
 	}
 	
 	public boolean hasNext() {
