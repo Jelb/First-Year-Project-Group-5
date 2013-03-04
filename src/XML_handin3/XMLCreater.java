@@ -41,8 +41,8 @@ public class XMLCreater {
 		// Create config open tag
 		// also creates default namespace xsi namespace and an attribute 
 		// used to bind with external XML Schema
-		configStartElement = eventFactory.createStartElement("", "http://config.dk", "config");
-		namespace = eventFactory.createNamespace("", "http://config.dk");
+		configStartElement = eventFactory.createStartElement("krak", "http://config.dk", "config");
+		namespace = eventFactory.createNamespace("krak", "http://config.dk");
 		xsiNamespace = eventFactory.createNamespace("xsi", "http://www.w3.org/2000/10/XMLSchema-instance");
 		attribute = eventFactory.createAttribute("xsi", "http://www.w3.org/2000/10/XMLSchema-instance", "schemaLocation", "http://config.dk path_to_xsd.xsd");
 	}
@@ -70,7 +70,7 @@ public class XMLCreater {
 	 * @throws XMLStreamException
 	 */
 	private void endDoc() throws XMLStreamException {
-		eventWriter.add(eventFactory.createEndElement("", "", "config"));
+		eventWriter.add(eventFactory.createEndElement("krak", "", "config"));
 		eventWriter.add(endLine);
 		eventWriter.add(eventFactory.createEndDocument());
 		eventWriter.flush();
@@ -95,12 +95,12 @@ public class XMLCreater {
 		for(int j = 0; j < title.length; j++) title[j] = title[j].replaceAll("#", "");
 		while(txtscan.hasNext()){
 				arr = txtscan.scanning(size);
-				eventWriter.add(eventFactory.createStartElement("", "", main));
+				eventWriter.add(eventFactory.createStartElement("krak", "", main));
 				eventWriter.add(endLine);
 				for(int i = 0; i < title.length; i++){
 					createSubNode(eventWriter, title[i], arr[i]);
 				}
-			eventWriter.add(eventFactory.createEndElement("", "", main));
+			eventWriter.add(eventFactory.createEndElement("krak", "", main));
 			eventWriter.add(endLine);
 		}
 		//-----------------------------
@@ -110,9 +110,9 @@ public class XMLCreater {
  
 	public void createSubNode(XMLEventWriter eventWriter, String name, String value) throws XMLStreamException {
 		eventWriter.add(tab);
-        eventWriter.add(eventFactory.createStartElement("", "", name));
+        eventWriter.add(eventFactory.createStartElement("krak", "", name));
         eventWriter.add(eventFactory.createCharacters(value));
-        eventWriter.add(eventFactory.createEndElement("", "", name));
+        eventWriter.add(eventFactory.createEndElement("krak", "", name));
         eventWriter.add(endLine);
 	}
 }
