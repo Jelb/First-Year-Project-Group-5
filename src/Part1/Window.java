@@ -58,7 +58,7 @@ public class Window {
 	 * @return 		The geo coordinate of said pixel
 	 */	
 	private double pixelToGeo(int coord) {
-		return (double) Math.round(coord);
+		return (double) coord;
 	}
 	
 }
