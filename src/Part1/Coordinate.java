@@ -9,4 +9,12 @@ public class Coordinate {
 		xCoord = x;
 		yCoord = y;
 	}
+	
+	public double getXcoord() {
+		return xCoord;
+	}
+	
+	public double getYcoord() {
+		return yCoord;
+	}
 }

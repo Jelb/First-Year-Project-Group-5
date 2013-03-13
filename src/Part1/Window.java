@@ -40,6 +40,27 @@ public class Window {
 	private void redrawMap(){
 	
 	}
+	
+	/**
+	 * Calculates the pixel coordinate of a given geo coordinate NOT DONE!
+	 * 
+	 * @param coord The geo coordinate
+	 * @return 		The pixel placement of said coordinate
+	 */
+	private int geoToPixel(double coord) {
+		return (int) Math.round(coord);
+	}
+
+	/**
+	 * Calculates the geo coordinate of a given pixel NOT DONE!
+	 * 
+	 * @param coord The pixel
+	 * @return 		The geo coordinate of said pixel
+	 */	
+	private double pixelToGeo(int coord) {
+		return (double) Math.round(coord);
+	}
+	
 }
 
 //Can draw lines from RoadSegment[] 
