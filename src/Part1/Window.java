@@ -3,6 +3,7 @@ package Part1;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,6 +20,10 @@ public class Window {
 	private JPanel map;
 
 	public Window(){
+
+	}
+	
+	private void makeFrame(){
 		frame = new JFrame("Better than apple maps");
 		
         contentPane = frame.getContentPane();
@@ -29,17 +34,20 @@ public class Window {
         
         contentPane.setBackground(Color.WHITE);
         frame.pack();
+        //frame.setMinimumSize(new Dimension(1250, 700));
+        //frame.setSize(1300, 700);
         frame.setVisible(true);
 	}
 	
-	private JPanel drawMap(){
-	
+	/**
+	 * Draws the map
+	 * 
+	 * @param Array of RoadSegments
+	 * @return JPanel of drawn map
+	 */
+	private JPanel drawMap(){	
 		return map;
-	}
-	
-	private void redrawMap(){
-	
-	}
+	}	
 	
 	/**
 	 * Calculates the pixel coordinate of a given geo coordinate NOT DONE!
