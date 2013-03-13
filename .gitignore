@@ -4,6 +4,7 @@
 *.war
 *.ear
 bin/*
+doc/*
 
 
 # Eclipse files #
