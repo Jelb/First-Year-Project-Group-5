@@ -7,34 +7,38 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /*
- * Window class is the GUI of our program, including drawing of the map.
+ * Window class is the GUI of our program, which puts the map and other components together
  */ 
 
 public class Window {
-	
-	//private RoadSegment[] segmentArray;
+		
 	private JFrame frame;
 	private Container contentPane;
-	private JPanel map;
+	private Map mapObject;
+	private JPanel drawnMap;
 
 	public Window(){
 		
 	}
 	/**
-	 * Creates the Gui
+	 * Creates the GUI
 	 */
 	private void makeFrame(){
 		frame = new JFrame("Better than apple maps");
 		
         contentPane = frame.getContentPane();
-        contentPane.setLayout(new BorderLayout());
-		
-        map = new Map();
-        contentPane.add(map, BorderLayout.CENTER);
+        contentPane.setLayout(new BorderLayout());	       
+        
+        mapObject = new Map();
+        mapObject.TESTdrawSegments();
+        drawnMap = mapObject.getMap();              
+        
+        contentPane.add(drawnMap, BorderLayout.CENTER);
         
         contentPane.setBackground(Color.WHITE);
         frame.pack();
@@ -42,30 +46,6 @@ public class Window {
         frame.setSize(1300, 700);
         frame.setVisible(true);
 	}
-	
-	private class Map extends JPanel{
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		protected void paintComponent(Graphics g) {
-			g.setColor(Color.red);
-			g.drawLine(1, 1, 100, 100);
-		    
-		}
-	}
-	/**
-	 * Draws the map
-	 * 
-	 * @param Array of RoadSegments
-	 * @return JPanel of drawn map
-	 */
-	private JPanel drawMap(){
-		
-		return map;
-	}	
 	
 	/**
 	 * Calculates the pixel coordinate of a given geo coordinate NOT DONE!
@@ -92,9 +72,3 @@ public class Window {
 		testWindow.makeFrame();
 	}
 }
-
-//Can draw lines from RoadSegment[] 
-//where RoadSegment includes from(x,y) to(x,y) and colour
-//Pixel vs coordninate problem
-//Centre x,y coordinate
-// Scaling/rezising
