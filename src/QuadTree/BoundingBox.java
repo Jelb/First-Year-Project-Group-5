@@ -1,6 +1,13 @@
 package QuadTree;
 
-public class BoundingBox {
+/**
+ * 
+ * Class description
+ * 
+ *
+ */
+
+public class BoundingBox { //TODO: x1 --> xmin...
 	int x1;
 	int y1;
 	int x2;
