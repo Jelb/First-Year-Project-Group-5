@@ -25,9 +25,9 @@ public class KrakNode extends Node {
     return Y;
   }
 	
-  public KrakNode(NodeData data){
-    super(data.KDV);
-    X = data.X_COORD;
-    Y = data.Y_COORD;
+  public KrakNode(String[] data){
+    super(Integer.parseInt(data[1]));
+    X = Double.parseDouble(data[3]);
+    Y = Double.parseDouble(data[4]);
   }
 }

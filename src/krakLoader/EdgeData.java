@@ -80,6 +80,7 @@ public class EdgeData {
 
   public EdgeData(String line) throws IOException{
     DataLine dl = new DataLine(line);
+    
 
     try{
       FNODE = dl.getPositiveInt();

@@ -37,14 +37,15 @@ public class KrakLoader {
     
     String line = br.readLine();
     // a count of node entries found in file
+    @SuppressWarnings("unused")
     int nodeCount = 0;
     
     // An array list containing the nodes we find in the file
     ArrayList<KrakNode> nodes = new ArrayList<KrakNode>();
     
     while(line != null){
-      NodeData nd = new NodeData(line); // parse the node data into a NodeData object
-      nodes.add(new KrakNode(nd)); // Make an edge based on the NodeData
+    	// Splits "line" by ',' and parses the array substrings to KrakNode
+    	nodes.add(new KrakNode(line.split(","))); 
       nodeCount++; 
       line = br.readLine();
     }
@@ -63,11 +64,11 @@ public class KrakLoader {
     
     br.readLine(); // again discarding column names
     line = br.readLine();
+    @SuppressWarnings("unused")
     int edgeCount = 0;
     
     while(line != null){
-      EdgeData ed = new EdgeData(line); // parse edge entry
-      KrakEdge edge = new KrakEdge(ed, graph); // create edge
+      KrakEdge edge = new KrakEdge(line.split(",(?! |[a-zA-ZæÆøØåÅ])"), graph); // create edge
       graph.addEdge(edge); // add edge to graph
       edgeCount++;
       line = br.readLine();

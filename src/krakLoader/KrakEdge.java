@@ -26,43 +26,45 @@ public class KrakEdge extends Edge<KrakNode> {
   public final int FROMRIGHT;
   public final int TORIGHT;
 	
-  public KrakEdge(EdgeData data, Graph<KrakEdge,KrakNode> graph){
-    this.v1 = graph.getNode(data.FNODE);
-    this.v2 = graph.getNode(data.TNODE);
+  // Tilføj eventuelt check for om der er 33 elementer.
+  public KrakEdge(String[] data, Graph<KrakEdge,KrakNode> graph){
+	  if(data.length != 33) throw new IndexOutOfBoundsException("The data array is to short");
+    this.v1 = graph.getNode(Integer.parseInt(data[0]));
+    this.v2 = graph.getNode(Integer.parseInt(data[1]));
      
-    length = data.LENGTH;
-    DAV_DK = data.DAV_DK;
-    DAV_DK_ID = data.DAV_DK_ID;
-    type = data.TYP;
+    length = Double.parseDouble(data[2]);
+    DAV_DK = Integer.parseInt(data[3]);
+    DAV_DK_ID = Integer.parseInt(data[4]);
+    type = Integer.parseInt(data[5]);
     // sestoft: Share roadname strings to save space
-    String interned = interner.get(data.VEJNAVN);
+    String interned = interner.get(data[6]);
     if (interned != null) {
       roadname = interned;
     } else {
-      roadname = data.VEJNAVN;
+      roadname = data[6];
       interner.put(roadname, roadname);
     } 
-    String dir = data.ONE_WAY;
+    String dir = data[27].toLowerCase();
     /*
      * 	tf = ensrettet modsat digitalise�rings�retning (To-From)
      *	ft = ensrettet i digitaliseringsretning (From-To)
      *  n = ingen k�rsel tilladt (henholdsvis typ 8, 21-28)
      *  <blank> = ingen ensretning
      */
-    if(dir.equalsIgnoreCase("tf")){
+    if(dir.equals("tf")){
       this.direction = Edge.BACKWARD;
-    } else if(dir.equalsIgnoreCase("ft")){
+    } else if(dir.equals("ft")){
       this.direction = Edge.FORWARD;
-    } else if(dir.equalsIgnoreCase("n")){
+    } else if(dir.equals("n")){
       // FIXME:this road can not be travelled on, shouldn't really be included
       this.direction = Edge.BOTH;
     } else{
       this.direction = Edge.BOTH;
     }
-    FROMLEFT = data.FROMLEFT;
-    TOLEFT = data.TOLEFT;
-    FROMRIGHT = data.FROMRIGHT;
-    TORIGHT = data.TORIGHT;  
+    FROMLEFT = Integer.parseInt(data[7]);
+    TOLEFT = Integer.parseInt(data[8]);
+    FROMRIGHT = Integer.parseInt(data[9]);
+    TORIGHT = Integer.parseInt(data[10]);  
  }
   
   public static void clear() {
