@@ -1,4 +1,4 @@
-package Part1;
+package Mess_inspiration;
 
 public class Interval<Key extends Comparable> { 
     public final Key low;      // left endpoint
