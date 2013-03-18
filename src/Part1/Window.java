@@ -15,11 +15,11 @@ public class Window {
 	private Container contentPane;
 	private Map mapObject;
 	
-	public static int origoX;			// NOT DONE! The current offset of the windows top left position
-	public static int origoY;			// NOT DONE! The current offset of the windows top left position
+	public static int origoX = 0;			// NOT DONE! The current offset of the windows top left position
+	public static int origoY = 0;			// NOT DONE! The current offset of the windows top left position
 	
-	public static int windowSize = 500; // NOT DONE! Will take the dynamic ACTUAL size of the window
-	public static int zoomFactor = 1;   // NOT DONE! Will change according to the ACTUAL current zoom factor
+	public static int windowSize = 500; 	// NOT DONE! Will take the dynamic ACTUAL size of the window
+	public static int zoomFactor = 1;   	// NOT DONE! Will change according to the ACTUAL current zoom factor
 
 	public Window(){
 		
