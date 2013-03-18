@@ -1,11 +1,11 @@
 package QuadTree;
 
 public class Coordinate {
-	int x;
-	int y;
+	double x;
+	double y;
 	int id;
 	
-	public Coordinate(int x, int y, int id) {
+	public Coordinate(double x, double y, int id) {
 		this.x = x;
 		this.y = y;
 		this.id = id;
@@ -15,11 +15,11 @@ public class Coordinate {
 		return (x == c.getX() && y == c.getY());
 	}
 
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 	

@@ -7,32 +7,32 @@ package QuadTree;
  *
  */
 
-public class BoundingBox { //TODO: x1 --> xmin...
-	int x1;
-	int y1;
-	int x2;
-	int y2;
+public class BoundingBox {
+	double xMin;
+	double yMin;
+	double xMax;
+	double yMax;
 	
 	/**
 	 * 
 	 * Sets the smallest x to x1 and the smallest y to y1
 	 */
-	public BoundingBox(int x1, int y1, int x2, int y2) {
+	public BoundingBox(double x1, double y1, double x2, double y2) {
 		if (x1 <= x2) {
-			this.x1 = x1;
-			this.x2 = x2;
+			this.xMin = x1;
+			this.xMax = x2;
 		}
 		else {
-			this.x1 = x2;
-			this.x2 = x1;
+			this.xMin = x2;
+			this.xMax = x1;
 		}
 		if (y1 <= y2) {
-			this.y1 = y1;
-			this.y2 = y2;
+			this.yMin = y1;
+			this.yMax = y2;
 		}
 		else {
-			this.y1 = y2;
-			this.y2 = y1;
+			this.yMin = y2;
+			this.yMax = y1;
 		}
 	}
 	
@@ -40,7 +40,7 @@ public class BoundingBox { //TODO: x1 --> xmin...
 	 * Returns true if the given BoundingBox intersects this BoundingBox
 	 */
 	public boolean intersects(BoundingBox b) {
-		return (axisOverlaps(x1, x2, b.getX1(), b.getX2()) && axisOverlaps(y1, y2, b.getY1(), b.getY2()));
+		return (axisOverlaps(xMin, xMax, b.getXMin(), b.getXMax()) && axisOverlaps(yMin, yMax, b.getYMin(), b.getYMax()));
 		
 	}
 	
@@ -48,31 +48,31 @@ public class BoundingBox { //TODO: x1 --> xmin...
 	 * 
 	 * Returns true if the given point is inside the bounding box
 	 */
-	public boolean holds(int x, int y) {
-		return (x1 <= x && x <= x2 && y1 <= y && y <= y2);
+	public boolean holds(double x, double y) {
+		return (xMin <= x && x <= xMax && yMin <= y && y <= yMax);
 	}
 	
 	/**
 	 * returns true if the given two lines overlap
 	 */
-	private boolean axisOverlaps(int x1, int x2, int otherX1, int otherX2) {
-		return (x1 <= otherX1 && otherX1 <= x2) || (otherX1 <= x1 && x1 <= otherX2);
+	private boolean axisOverlaps(double a1, double a2, double otherA1, double otherA2) {
+		return (a1 <= otherA1 && otherA1 <= a2) || (otherA1 <= a1 && a1 <= otherA2);
 	}
 
-	public int getX1() {
-		return x1;
+	public double getXMin() {
+		return xMin;
 	}
 
-	public int getY1() {
-		return y1;
+	public double getYMin() {
+		return yMin;
 	}
 
-	public int getX2() {
-		return x2;
+	public double getXMax() {
+		return xMax;
 	}
 
-	public int getY2() {
-		return y2;
+	public double getYMax() {
+		return yMax;
 	}
 
 }

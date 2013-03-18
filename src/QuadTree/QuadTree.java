@@ -6,10 +6,10 @@ import java.util.Random;
 
 public class QuadTree implements Parent {
 	Element root;
-	int xMax;
-	int yMax;
+	double xMax;
+	double yMax;
 	
-	public QuadTree(int leafCap, int xMax, int yMax) {
+	public QuadTree(int leafCap, double xMax, double yMax) {
 		root = new Leaf(leafCap, this, 0, 0, xMax, yMax);
 		this.xMax = xMax;
 		this.yMax = yMax;
@@ -18,7 +18,7 @@ public class QuadTree implements Parent {
 	/**
 	 * finds all the points that are held in the box defined by the two points (x1, y1), (x2, y2)
 	 */
-	public List<Integer> query(int x1, int y1, int x2, int y2) {
+	public List<Integer> query(double x1, double y1, double x2, double y2) {
 		if (x1 > xMax || x1 < 0 || x2 < 0 || x2 > xMax || y1 < 0 || y1 > yMax || y2 > yMax || y2 < 0) throw new IllegalArgumentException();
 		BoundingBox box = new BoundingBox(x1, y1, x2, y2);
 		return root.query(box, new ArrayList<Integer>());
@@ -27,7 +27,7 @@ public class QuadTree implements Parent {
 	/**
 	 * inserts a point in the QuadTree
 	 */
-	public void insert(int x, int y, int id) {
+	public void insert(double x, double y, int id) {
 		if (x < 0 || x > xMax || y < 0 || y > yMax) throw new IllegalArgumentException();
 		root.insert(new Coordinate(x, y, id));
 	}
@@ -48,15 +48,15 @@ public class QuadTree implements Parent {
 	
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
-		int maxX = 10;
-		int maxY = 10;
+		double maxX = 10;
+		double maxY = 10;
 		QuadTree QT = new QuadTree(3, maxX, maxY);
 		Random random = new Random();
 		ArrayList<Coordinate> coordList = new ArrayList<Coordinate>();
 		int N = 10;
 		for (int i = 0; i < N; i++) {
-			int x = random.nextInt(maxX);
-			int y = random.nextInt(maxY);
+			double x = random.nextDouble()*maxX;
+			double y = random.nextDouble()*maxY;
 			QT.insert(x, y, i);
 			coordList.add(new Coordinate(x, y, i));
 		}

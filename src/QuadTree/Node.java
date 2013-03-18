@@ -12,7 +12,7 @@ public class Node extends BoundingBox implements Element, Parent {
 	Element SW;
 	Element SE;
 	
-	public Node(int x1, int y1, int x2, int y2) {
+	public Node(double x1, double y1, double x2, double y2) {
 		super(x1, y1, x2, y2);
 	}
 	
@@ -55,14 +55,14 @@ public class Node extends BoundingBox implements Element, Parent {
 	
 	/**
 	 * Changes the child of either one the quadrants to a new given Element. Used when Leafs converts to Nodes
-	 * Throws RuntimeException if the given former (current) child does not match any of the children of this Node
+	 * Throws IllegalStateException if the given former (current) child does not match any of the children of this Node
 	 */
 	public void changeChild(Element oldChild, Element newChild) {
 		if (NW == oldChild) NW = newChild;
 		else if (NE == oldChild) NE = newChild;
 		else if (SW == oldChild) SW = newChild;
 		else if (SE == oldChild) SE = newChild;
-		else {throw new RuntimeException();}
+		else {throw new IllegalStateException();}
 	}
 	
 	public void show() {

@@ -8,7 +8,7 @@ public class Leaf extends BoundingBox implements Element {
 	int cap;
 	Parent parent;
 	
-	public Leaf(int cap, Parent parent, int x1, int y1, int x2, int y2) {
+	public Leaf(int cap, Parent parent, double x1, double y1, double x2, double y2) {
 		super(x1, y1, x2, y2);
 		points = new Coordinate[cap];
 		this.cap = cap;
@@ -47,13 +47,13 @@ public class Leaf extends BoundingBox implements Element {
 	 * converts this leaf to a node and puts the points that it holds into the corresponding quadrant of the new node
 	 */
 	public Node convertToNode() {
-		int xMid = (x1 + x2) / 2;
-		int yMid = (y1 + y2) / 2;
-		Node node = new Node(x1, y1, x2, y2);
-		Leaf NW = new Leaf(cap, node, x1, yMid+1, xMid, y2);
-		Leaf NE = new Leaf(cap, node, xMid+1, yMid+1, x2, y2);
-		Leaf SW = new Leaf(cap, node, x1, y1, xMid, yMid);
-		Leaf SE = new Leaf(cap, node, xMid+1, y1, x2, yMid);
+		double xMid = (xMin + xMax) / 2.0;
+		double yMid = (yMin + yMax) / 2.0;
+		Node node = new Node(xMin, yMin, xMax, yMax);
+		Leaf NW = new Leaf(cap, node, xMin, yMid, xMid, yMax);
+		Leaf NE = new Leaf(cap, node, xMid, yMid, xMax, yMax);
+		Leaf SW = new Leaf(cap, node, xMin, yMin, xMid, yMid);
+		Leaf SE = new Leaf(cap, node, xMid, yMin, xMax, yMid);
 		node.setNW(NW);
 		node.setNE(NE);
 		node.setSW(SW);
