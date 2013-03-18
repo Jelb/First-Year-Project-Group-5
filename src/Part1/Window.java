@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import javax.swing.JFrame;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 /*
  * Window class is the GUI of our program, which puts the map and other components together
@@ -29,11 +31,30 @@ public class Window {
 	 */
 	private void makeFrame(){
 		frame = new JFrame("Better than apple maps");
+		frame.addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent event) {
+				
+				int w = frame.getWidth();
+				int h = frame.getHeight();
+				
+				if(w < h) windowSize = w;
+			    else windowSize = h;
+				
+				System.out.println(windowSize);	
+				contentPane.removeAll();
+				mapObject = new Map();
+				
+				contentPane.add(mapObject, BorderLayout.CENTER);
+			    
+			    frame.repaint();
+			  }
+		});
 		
         contentPane = frame.getContentPane();
         contentPane.setLayout(new BorderLayout());	       
         
         mapObject = new Map();
+
     
         contentPane.add(mapObject, BorderLayout.CENTER);
         frame.repaint();
@@ -41,7 +62,7 @@ public class Window {
         contentPane.setBackground(Color.WHITE);
         frame.pack();
         //frame.setMinimumSize(new Dimension(1250, 700));
-        frame.setSize(1300, 700);
+        frame.setSize(500, 500);
         frame.setVisible(true);
 	}
 	
