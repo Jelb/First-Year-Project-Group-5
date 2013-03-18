@@ -6,25 +6,29 @@ import java.util.Random;
 
 public class QuadTree implements Parent {
 	Element root;
+	int xMax;
+	int yMax;
 	
 	public QuadTree(int leafCap, int xMax, int yMax) {
 		root = new Leaf(leafCap, this, 0, 0, xMax, yMax);
-		
+		this.xMax = xMax;
+		this.yMax = yMax;
 	}
 	
 	/**
 	 * finds all the points that are held in the box defined by the two points (x1, y1), (x2, y2)
 	 */
 	public List<Integer> query(int x1, int y1, int x2, int y2) {
+		if (x1 > xMax || x1 < 0 || x2 < 0 || x2 > xMax || y1 < 0 || y1 > yMax || y2 > yMax || y2 < 0) throw new IllegalArgumentException();
 		BoundingBox box = new BoundingBox(x1, y1, x2, y2);
 		return root.query(box, new ArrayList<Integer>());
 	}
 	
 	/**
 	 * inserts a point in the QuadTree
-	 * TODO: Check that the coordinate is inside the borders of the QuadTree
 	 */
 	public void insert(int x, int y, int id) {
+		if (x < 0 || x > xMax || y < 0 || y > yMax) throw new IllegalArgumentException();
 		root.insert(new Coordinate(x, y, id));
 	}
 	
