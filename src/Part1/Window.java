@@ -14,6 +14,12 @@ public class Window {
 	private JFrame frame;
 	private Container contentPane;
 	private Map mapObject;
+	
+	public static int origoX;			// NOT DONE! The current offset of the windows top left position
+	public static int origoY;			// NOT DONE! The current offset of the windows top left position
+	
+	public static int windowSize = 500; // NOT DONE! Will take the dynamic ACTUAL size of the window
+	public static int zoomFactor = 1;   // NOT DONE! Will change according to the ACTUAL current zoom factor
 
 	public Window(){
 		
@@ -37,26 +43,6 @@ public class Window {
         //frame.setMinimumSize(new Dimension(1250, 700));
         frame.setSize(1300, 700);
         frame.setVisible(true);
-	}
-	
-	/**
-	 * Calculates the pixel coordinate of a given geo coordinate NOT DONE!
-	 * 
-	 * @param coord The geo coordinate
-	 * @return 		The pixel placement of said coordinate
-	 */
-	private int geoToPixel(double coord) {
-		return (int) Math.round(coord);
-	}
-
-	/**
-	 * Calculates the geo coordinate of a given pixel NOT DONE!
-	 * 
-	 * @param coord The pixel
-	 * @return 		The geo coordinate of said pixel
-	 */	
-	private double pixelToGeo(int coord) {
-		return (double) coord;
 	}
 	
 	public static void main(String[] args){
