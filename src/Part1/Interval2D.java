@@ -4,14 +4,17 @@ public class Interval2D<Key extends Comparable> {
     public final Interval<Key> intervalX;   // x-interval
     public final Interval<Key> intervalY;   // y-interval
    
+    //Tager to intervaller - x og y
     public Interval2D(Interval<Key> intervalX, Interval<Key> intervalY) {
         this.intervalX = intervalX;
         this.intervalY = intervalY;
     }
 
     // does this 2D interval a intersect b?
+    //Skal tjekke for begge dele - at den ene betingelse er opfyldt er ikke nok.
+    //Bruges slet ikke i QuadTree, kun i test client her i Interval2D!
     public boolean intersects(Interval2D<Key> b) {
-        if (intervalX.intersects(b.intervalX)) return true;
+        if (intervalX.intersects(b.intervalX)) return true; // &&
         if (intervalY.intersects(b.intervalY)) return true;
         return false;
     }
