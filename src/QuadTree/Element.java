@@ -15,4 +15,6 @@ public interface Element {
 	public boolean intersects(BoundingBox b);
 	
 	public boolean holds(int x, int y);
+	
+	public void show();
 }

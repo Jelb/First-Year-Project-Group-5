@@ -65,5 +65,17 @@ public class Node extends BoundingBox implements Element, Parent {
 		else {throw new RuntimeException();}
 	}
 	
+	public void show() {
+		System.out.println("I'm a Node");
+		System.out.println("NW");
+		NW.show();
+		System.out.println("NE");
+		NE.show();
+		System.out.println("SW");
+		SW.show();
+		System.out.println("SE");
+		SE.show();
+	}
+	
 	
 }

@@ -7,7 +7,7 @@ import java.util.Random;
 public class QuadTree implements Parent {
 	Element root;
 	
-	QuadTree(int leafCap, int xMax, int yMax) {
+	public QuadTree(int leafCap, int xMax, int yMax) {
 		root = new Leaf(leafCap, this, 0, 0, xMax, yMax);
 		
 	}
@@ -22,6 +22,7 @@ public class QuadTree implements Parent {
 	
 	/**
 	 * inserts a point in the QuadTree
+	 * TODO: Check that the coordinate is inside the borders of the QuadTree
 	 */
 	public void insert(int x, int y, int id) {
 		root.insert(new Coordinate(x, y, id));
@@ -34,14 +35,21 @@ public class QuadTree implements Parent {
 		root = newChild;
 	}
 	
+	/**
+	 * 
+	 */
+	public void showTree() {
+		root.show();
+	}
+	
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
-		int maxX = 100000;
-		int maxY = 100000;
+		int maxX = 10;
+		int maxY = 10;
 		QuadTree QT = new QuadTree(3, maxX, maxY);
 		Random random = new Random();
 		ArrayList<Coordinate> coordList = new ArrayList<Coordinate>();
-		int N = 1000000;
+		int N = 10;
 		for (int i = 0; i < N; i++) {
 			int x = random.nextInt(maxX);
 			int y = random.nextInt(maxY);
@@ -52,13 +60,14 @@ public class QuadTree implements Parent {
 		long duration = endTime - startTime;
 		System.out.println("Time to insert " + N + " points: " + duration/1000.0 + "s");
 		startTime = System.currentTimeMillis(); 
-		List<Integer> list = QT.query(0, 0, 100000, 100000);
+		List<Integer> list = QT.query(0, 0, 10, 10);
 		endTime = System.currentTimeMillis();
 		duration = endTime - startTime;
 		System.out.println("Time for query: " + duration/1000.0 + "s");
-//		for (Integer i : list) {
-//			System.out.println(i + ": (" + coordList.get(i).getX() + ", " + coordList.get(i).getY() + ")");
-//		}
+		for (Integer i : list) {
+			System.out.println(i + ": (" + coordList.get(i).getX() + ", " + coordList.get(i).getY() + ")");
+		}
+		QT.showTree();
 	}
 	
 

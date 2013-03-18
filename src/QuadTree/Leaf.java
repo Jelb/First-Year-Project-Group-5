@@ -64,5 +64,16 @@ public class Leaf extends BoundingBox implements Element {
 		parent.changeChild(this, node);
 		return node;
 	}
+	
+	/**
+	 * 
+	 */
+	public void show() {
+		System.out.println("I'm a Leaf");
+		for (Coordinate c : points) {
+			if (c == null) break;
+			System.out.println("(" + c.getX() + ", " + c.getY() + ")");
+		}
+	}
 
 }
