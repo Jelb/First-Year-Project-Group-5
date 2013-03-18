@@ -4,6 +4,7 @@ public class Edge {
 	private String[] info;
 	private Node FNODE, TNODE;
 	private double length;
+	private int TYP;
 
 	/**
 	 * [0] FNODE
@@ -22,15 +23,18 @@ public class Edge {
 	 * [13] H_POSTNR
 	 * [14] DRIVETIME
 	 */
-	public Edge(Node FNODE, Node TNODE, double LENGTH, String VEJNAVN, int FROMLEFT, int TOLEFT, 
-				int FROMRIGHT, int TORIGHT,String FROMLEFT_BOGSTAV, String TOLEFT_BOGSTAV, 
-				String FROMRIGHT_BOGSTA, String TORIGHT_BOGSTAV, int V_POSTNR, int H_POSTNR, double DRIVETIME) {
+	public Edge(Node FNODE, Node TNODE, double LENGTH, int TYP)
+//	, String VEJNAVN, int FROMLEFT, int TOLEFT, 
+//				int FROMRIGHT, int TORIGHT,String FROMLEFT_BOGSTAV, String TOLEFT_BOGSTAV, 
+//				String FROMRIGHT_BOGSTA, String TORIGHT_BOGSTAV, int V_POSTNR, int H_POSTNR, double DRIVETIME)
+	{
 		this.FNODE = FNODE;
 		this.TNODE = TNODE;
 		this.length = LENGTH;
-		info = new String[]{VEJNAVN, Integer.toString(FROMLEFT), Integer.toString(TOLEFT), Integer.toString(FROMRIGHT), 
-				Integer.toString(TORIGHT), FROMLEFT_BOGSTAV, TOLEFT_BOGSTAV, FROMRIGHT_BOGSTA, TORIGHT_BOGSTAV, 
-				Integer.toString(V_POSTNR), Integer.toString(H_POSTNR), Double.toString(DRIVETIME)};
+		this.TYP = TYP;
+//		info = new String[]{VEJNAVN, Integer.toString(FROMLEFT), Integer.toString(TOLEFT), Integer.toString(FROMRIGHT), 
+//				Integer.toString(TORIGHT), FROMLEFT_BOGSTAV, TOLEFT_BOGSTAV, FROMRIGHT_BOGSTA, TORIGHT_BOGSTAV, 
+//				Integer.toString(V_POSTNR), Integer.toString(H_POSTNR), Double.toString(DRIVETIME)};
 	}
 	
 	public double length(){  

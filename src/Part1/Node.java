@@ -5,7 +5,7 @@ public class Node {
 	private double xCord;
 	private double yCord;
 	private int kdvID;
-	private static Node[] nodeArray = new Node[675901];
+	//private static Node[] nodeArray = new Node[675901];
 	
 	public Node(double xCord, double yCord, int kdvID) {
 		this.xCord = xCord;
@@ -25,13 +25,13 @@ public class Node {
 		return kdvID;
 	}
 	
-	public static void insertNode(Node node){
-		int i = node.getKdvID();
-		nodeArray[i] = node;
-	}
-	
-	public static Node getNode(int index) {
-		return nodeArray[index];
-	}
+//	public static void insertNode(Node node){
+//		int i = node.getKdvID();
+//		nodeArray[i] = node;
+//	}
+//	
+//	public static Node getNode(int index) {
+//		return nodeArray[index];
+//	}
 
 }
