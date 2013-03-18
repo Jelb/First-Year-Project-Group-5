@@ -1,4 +1,5 @@
-package Part1;
+package Mess_inspiration;
+
 
 public class Interval2D<Key extends Comparable> { 
     public final Interval<Key> intervalX;   // x-interval

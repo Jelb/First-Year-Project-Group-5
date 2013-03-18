@@ -1,4 +1,5 @@
-package Part1;
+package Mess_inspiration;
+
 
 public class QuadTree2<Key extends Comparable, Value> {
 	private Node root;
