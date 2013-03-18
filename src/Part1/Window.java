@@ -1,15 +1,9 @@
 package Part1;
 
 import java.awt.BorderLayout;
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Graphics;
-
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 /*
  * Window class is the GUI of our program, which puts the map and other components together
@@ -20,7 +14,6 @@ public class Window {
 	private JFrame frame;
 	private Container contentPane;
 	private Map mapObject;
-	private JPanel drawnMap;
 
 	public Window(){
 		
@@ -35,10 +28,9 @@ public class Window {
         contentPane.setLayout(new BorderLayout());	       
         
         mapObject = new Map();
-        mapObject.TESTdrawSegments();
-        drawnMap = mapObject.getMap();              
-        
-        contentPane.add(drawnMap, BorderLayout.CENTER);
+    
+        contentPane.add(mapObject, BorderLayout.CENTER);
+        frame.repaint();
         
         contentPane.setBackground(Color.WHITE);
         frame.pack();
