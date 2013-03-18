@@ -16,7 +16,9 @@ public class Map extends JPanel {
 	private ArrayList<RoadSegmentJComponent> segments;
 		
 	public Map(){
-		createSegmentArray();
+		//createSegmentArray();
+		TomsTempClass test = new TomsTempClass();
+		segments = test.mapTestMethod();
 	}
 
 	
