@@ -15,7 +15,7 @@ public class RoadSegmentJComponent extends JComponent {
 	private Color color;
 	
 	private static final long serialVersionUID = 1L;
-	
+
 	public RoadSegmentJComponent(int x1,int y1, int x2, int y2, Color color){
 		this.x1 = x1;
 		this.y1 = y1;
@@ -23,10 +23,10 @@ public class RoadSegmentJComponent extends JComponent {
 		this.y2 = y2;
 		this.color = color;
 	}
+	
 	@Override
 	protected void paintComponent(Graphics g) {
 		g.setColor(color);
 		g.drawLine(x1, y1, x2, y2);
-	    
 	}
 }

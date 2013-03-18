@@ -16,6 +16,7 @@ public class Interval<Key extends Comparable> {
     }
 
     // does this interval a intersect interval b?
+    //Skal ikke bruges
     public boolean intersects(Interval<Key> b) {
         Interval<Key> a  = this;
         if (less(a.high, b.low)) return false;
