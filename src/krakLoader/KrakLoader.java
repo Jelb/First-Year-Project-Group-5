@@ -110,8 +110,6 @@ public class KrakLoader {
 			QT.insert(node.getXCord()-minX, node.getYCord()-minY, node.getKdvID());
 		}
 
-		nodes = null;
-
 		return QT;
 	}
 
