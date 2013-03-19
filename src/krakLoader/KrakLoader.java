@@ -11,6 +11,7 @@ import java.util.List;
 
 import Part1.Edge;
 import Part1.Node;
+import QuadTree.Coordinate;
 import QuadTree.QuadTree;
 
 import Part1.Graph;
@@ -110,8 +111,8 @@ public class KrakLoader {
 		KrakLoader krakLoader = new KrakLoader("kdv_node_unload.txt", "kdv_unload.txt");
 		Graph graph = krakLoader.createGraph();
 		QuadTree QT = krakLoader.createQuadTree();
-		List<Integer> list = QT.query(0, 0, 100000, 100000);
-		for (Integer i : list) System.out.println(i);
+		List<Coordinate> list = QT.query(0, 0, 100000, 100000);
+		for (Coordinate c : list) System.out.println(c.getID());
 		System.out.printf("Graph has %d edges%n", graph.getE());
 		MemoryMXBean mxbean = ManagementFactory.getMemoryMXBean();
 		System.out.printf("Heap memory usage: %d MB%n", mxbean.getHeapMemoryUsage().getUsed()/(1000000));

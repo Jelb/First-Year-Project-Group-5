@@ -34,10 +34,10 @@ public class Leaf extends BoundingBox implements Element {
 	/**
 	 * adds the points of the Leaf that are inside the Bounding Box of the query
 	 */
-	public List<Integer> query(BoundingBox box, List<Integer> list) {
+	public List<Coordinate> query(BoundingBox box, List<Coordinate> list) {
 		for (Coordinate c: points) {
 			if (c == null) break;
-			else if (box.holds(c.getX(), c.getY())) list.add(c.getID());
+			else if (box.holds(c.getX(), c.getY())) list.add(c);
 		}
 		return list;
 	}

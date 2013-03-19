@@ -45,7 +45,7 @@ public class Node extends BoundingBox implements Element, Parent {
 	/**
 	 * Sends the query on to the next Node or Leaf according to where the search box intersects with the quadrant
 	 */
-	public List<Integer> query(BoundingBox box, List<Integer> list) {
+	public List<Coordinate> query(BoundingBox box, List<Coordinate> list) {
 		if (NW.intersects(box)) list = NW.query(box, list);
 		if (NE.intersects(box)) list = NE.query(box, list);
 		if (SW.intersects(box)) list = SW.query(box, list);

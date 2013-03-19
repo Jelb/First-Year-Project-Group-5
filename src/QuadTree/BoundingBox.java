@@ -15,7 +15,7 @@ public class BoundingBox {
 	
 	/**
 	 * 
-	 * Sets the smallest x to x1 and the smallest y to y1
+	 * Sets the smallest x to xMin and the smallest y to yMin
 	 */
 	public BoundingBox(double x1, double y1, double x2, double y2) {
 		if (x1 <= x2) {

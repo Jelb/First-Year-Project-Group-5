@@ -23,7 +23,7 @@ public class TomsTempClass {
 									}; 
 
 	public ArrayList<RoadSegmentJComponent> mapTestMethod() {
-		ArrayList<RoadSegmentJComponent> rs = new ArrayList<>();
+		ArrayList<RoadSegmentJComponent> rs = new ArrayList<RoadSegmentJComponent>();
 		
 		for(int i = 0; i < 12; i++) {
 			RoadSegmentJComponent segment = 

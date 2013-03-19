@@ -18,10 +18,10 @@ public class QuadTree implements Parent {
 	/**
 	 * finds all the points that are held in the box defined by the two points (x1, y1), (x2, y2)
 	 */
-	public List<Integer> query(double x1, double y1, double x2, double y2) {
+	public List<Coordinate> query(double x1, double y1, double x2, double y2) {
 		if (x1 > xMax || x1 < 0 || x2 < 0 || x2 > xMax || y1 < 0 || y1 > yMax || y2 > yMax || y2 < 0) throw new IllegalArgumentException();
 		BoundingBox box = new BoundingBox(x1, y1, x2, y2);
-		return root.query(box, new ArrayList<Integer>());
+		return root.query(box, new ArrayList<Coordinate>());
 	}
 	
 	/**
@@ -64,14 +64,14 @@ public class QuadTree implements Parent {
 		long duration = endTime - startTime;
 		System.out.println("Time to insert " + N + " points: " + duration/1000.0 + "s");
 		startTime = System.currentTimeMillis(); 
-		List<Integer> list = QT.query(0, 0, 10, 10);
+		List<Coordinate> list = QT.query(0, 0, 10, 10);
 		endTime = System.currentTimeMillis();
 		duration = endTime - startTime;
 		System.out.println("Time for query: " + duration/1000.0 + "s");
-		for (Integer i : list) {
-			System.out.println(i + ": (" + coordList.get(i).getX() + ", " + coordList.get(i).getY() + ")");
+		for (Coordinate c : list) {
+			System.out.println(c.getID() + ": (" + c.getX() + ", " + c.getY() + ")");
 		}
-		QT.showTree();
+		//QT.showTree();
 	}
 	
 

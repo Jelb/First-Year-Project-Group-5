@@ -70,34 +70,27 @@ public class QuadTreeTest {
 		coordList.add(new Coordinate(7, 4, 1));
 		QT.insert(9, 3, 2);
 		coordList.add(new Coordinate(9, 3, 2));
-		List<Integer> list = QT.query(4, 1, 10, 6);
-		for (Integer i : list) System.out.println(coordList.get(i).getX() + ", " + coordList.get(i).getY());
+		List<Coordinate> list = QT.query(4, 1, 10, 6);
+		for (Coordinate c : list) System.out.println(c.getX() + ", " + c.getY());
 	}
 	
 	@Test
 	public void querySearchPartitionedOnce() {
-		List<Coordinate> coordList = new ArrayList<Coordinate>();
 		QT.insert(1, 2, 0);
-		coordList.add(new Coordinate(1, 2, 0));
 		QT.insert(7, 4, 1);
-		coordList.add(new Coordinate(7, 4, 1));
 		QT.insert(9, 3, 2);
-		coordList.add(new Coordinate(9, 3, 2));
 		QT.insert(7, 5, 3);
-		coordList.add(new Coordinate(7, 5, 3));
-		List<Integer> list = QT.query(4, 1, 10, 6);
+		List<Coordinate> list = QT.query(4, 1, 10, 6);
 		QT.showTree();
 		System.out.println();
-		for (Integer i : list) System.out.println(coordList.get(i).getX() + ", " + coordList.get(i).getY());
+		for (Coordinate c : list) System.out.println(c.getX() + ", " + c.getY());
 	}
 	
 	@Test
 	public void querySearchEdge() {
-		List<Coordinate> coordList = new ArrayList<Coordinate>();
 		QT.insert(7, 6, 0);
-		coordList.add(new Coordinate(7, 6, 0));
-		List<Integer> list = QT.query(4, 1, 10, 6);
-		for (Integer i : list) System.out.println(coordList.get(i).getX() + ", " + coordList.get(i).getY());
+		List<Coordinate> list = QT.query(4, 1, 10, 6);
+		for (Coordinate c : list) System.out.println(c.getX() + ", " + c.getY());
 	}
 	
 	@Test
@@ -121,28 +114,28 @@ public class QuadTreeTest {
 	@Test (expected = Exception.class)
 	public void queryPartlyOutsideBorders() {
 		QT.insert(1, 2, 0);
-		List<Integer> list = QT.query(-2, -1, 3, 3);
-		for (Integer i : list) System.out.println(i);
+		List<Coordinate> list = QT.query(-2, -1, 3, 3);
+		for (Coordinate c : list) System.out.println(c.getID());
 	}
 	
 	@Test (expected = Exception.class)
 	public void queryTotallyOutsideBorders() {
 		QT.insert(1, 2, 0);
-		List<Integer> list = QT.query(-20, -10, -2, -1);
-		for (Integer i : list) System.out.println(i);
+		List<Coordinate> list = QT.query(-20, -10, -2, -1);
+		for (Coordinate c : list) System.out.println(c.getID());
 	}
 	
 	@Test
 	public void queryOnLine() {
 		QT.insert(5,5,0);
-		List<Integer> list = QT.query(3, 5, 7, 5);
-		for (Integer i : list) System.out.println(i);
+		List<Coordinate> list = QT.query(3, 5, 7, 5);
+		for (Coordinate c : list) System.out.println(c.getID());
 	}
 	
 	@Test
 	public void emptyQuerySearch() {
 		QT.insert(5,5,0);
-		List<Integer> list = QT.query(3, 6, 7, 9);
+		List<Coordinate> list = QT.query(3, 6, 7, 9);
 		System.out.println("Length of list: " + list.size());
 		assertEquals(0, list.size());
 	}
