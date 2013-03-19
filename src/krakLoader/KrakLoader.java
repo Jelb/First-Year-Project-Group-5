@@ -28,8 +28,7 @@ public class KrakLoader {
 	/**
 	 * Constructor for the KrakLoader class. The constructor creates an
 	 * ArrayList containing all nodes which are represented within the "<br>
-	 * kdv_node_unload.txt</br>" file by calling the <i>createNodeList</i>
-	 * method.
+	 * kdv_node_unload.txt</br>" file.
 	 * 
 	 * @param nodeFile
 	 *            The path which leads to the "<br>
@@ -41,17 +40,15 @@ public class KrakLoader {
 	public KrakLoader(String nodeFile, String edgeFile) {
 		this.nodeFile = nodeFile;
 		this.edgeFile = edgeFile;
-		try {
-			createNodeList();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		createNodeList();
+		
 	}
 
-	public void createNodeList() throws IOException {
+	private void createNodeList(){
 		// open the file containing the list of nodes
+		try {
 		BufferedReader br = new BufferedReader(new FileReader(nodeFile));
-
+		
 		br.readLine(); // discard names of columns which is the first line
 
 		String line = br.readLine();
@@ -79,6 +76,9 @@ public class KrakLoader {
 			line = br.readLine();
 		}
 		br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -116,10 +116,12 @@ public class KrakLoader {
 	}
 
 	/**
+	 * Creates and 
 	 * 
-	 * @return
+	 * @return A QuadTree based on the nodes arrayList.
 	 */
 	public QuadTree createQuadTree() {
+		if(nodes.size() == 0) createNodeList();
 		// Create QuadTree
 		QuadTree QT = new QuadTree(3, maxX - minX, maxY - minY);
 		for (int i = 1; i < nodes.size(); i++) { //For loop start at index 1 because index 0 is null.
@@ -133,6 +135,7 @@ public class KrakLoader {
 	public static void main(String[] args) throws IOException {
 		KrakLoader krakLoader = new KrakLoader("kdv_node_unload.txt",
 				"kdv_unload.txt");
+		
 		Graph graph = krakLoader.createGraph();
 		QuadTree QT = krakLoader.createQuadTree();
 		List<Point> list = QT.query(0, 0, 100000, 100000);
