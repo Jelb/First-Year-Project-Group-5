@@ -14,10 +14,11 @@ public class Map extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<RoadSegmentJComponent> segments;
+	private TomsTempClass test;
 		
 	public Map(){
 		//createSegmentArray();
-		TomsTempClass test = new TomsTempClass();
+		test = new TomsTempClass();
 		segments = test.mapTestMethod();
 	}
 
@@ -35,6 +36,10 @@ public class Map extends JPanel {
         for(RoadSegmentJComponent r : segments) {
             r.paintComponent(g);
         }
+    }
+    
+    public void getMapTestMethod() {
+    	segments = test.mapTestMethod();
     }
     
 }
