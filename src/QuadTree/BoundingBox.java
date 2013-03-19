@@ -37,7 +37,7 @@ public class BoundingBox {
 	}
 	
 	/**
-	 * Returns true if the given BoundingBox intersects this BoundingBox
+	 * Returns true if the given BoundingBox b intersects this BoundingBox
 	 */
 	public boolean intersects(BoundingBox b) {
 		return (axisOverlaps(xMin, xMax, b.getXMin(), b.getXMax()) && axisOverlaps(yMin, yMax, b.getYMin(), b.getYMax()));
@@ -46,7 +46,7 @@ public class BoundingBox {
 	
 	/**
 	 * 
-	 * Returns true if the given point is inside the bounding box
+	 * Returns true if the given point defined by x and y is inside the bounding box
 	 */
 	public boolean holds(double x, double y) {
 		return (xMin <= x && x <= xMax && yMin <= y && y <= yMax);

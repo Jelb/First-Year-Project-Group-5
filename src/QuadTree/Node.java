@@ -4,6 +4,8 @@ import java.util.List;
  /**
   * 
   * The Node class holds references to the four quadrants: Northwest (NW), Northeast (NE), Southwest (SW) and Southeast (SE)
+  * The four quadrants of the Node can be either Nodes or Leafs, it is not necessary for the Node to know this.
+  * When a query or an insertion is called on the Node, it sends it on to its children.
   *
   */
 public class Node extends BoundingBox implements Element, Parent {
@@ -33,7 +35,7 @@ public class Node extends BoundingBox implements Element, Parent {
 	}
 
 	/**
-	 * Sends the given coordinate on to the next Node or Leaf according to where the coordinate/point belongs
+	 * Sends the given coordinate on to the next Node or Leaf according to where the coordinate belongs
 	 */
 	public void insert(Coordinate c) {
 		if (NW.holds(c.getX(), c.getY())) NW.insert(c);
@@ -43,13 +45,13 @@ public class Node extends BoundingBox implements Element, Parent {
 	}
 	
 	/**
-	 * Sends the query on to the next Node or Leaf according to where the search box intersects with the quadrant
+	 * Sends the query on to the next Node or Leaf according to which of the children of the Node intersects with the query box
 	 */
-	public List<Coordinate> query(BoundingBox box, List<Coordinate> list) {
-		if (NW.intersects(box)) list = NW.query(box, list);
-		if (NE.intersects(box)) list = NE.query(box, list);
-		if (SW.intersects(box)) list = SW.query(box, list);
-		if (SE.intersects(box)) list = SE.query(box, list);
+	public List<Coordinate> query(BoundingBox queryBox, List<Coordinate> list) {
+		if (NW.intersects(queryBox)) list = NW.query(queryBox, list);
+		if (NE.intersects(queryBox)) list = NE.query(queryBox, list);
+		if (SW.intersects(queryBox)) list = SW.query(queryBox, list);
+		if (SE.intersects(queryBox)) list = SE.query(queryBox, list);
 		return list;
 	}
 	
@@ -65,6 +67,9 @@ public class Node extends BoundingBox implements Element, Parent {
 		else {throw new IllegalStateException();}
 	}
 	
+	/**
+	 * Used when testing to show the structure of the QuadTree
+	 */
 	public void show() {
 		System.out.println("I'm a Node");
 		System.out.println("NW");

@@ -1,5 +1,10 @@
 package QuadTree;
 
+/**
+ * 
+ * The Coordinate class defines the coordinates in the QuadTree
+ *
+ */
 public class Coordinate {
 	double x;
 	double y;

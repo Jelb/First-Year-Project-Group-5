@@ -8,7 +8,7 @@ import java.util.List;
  *
  */
 public interface Element {
-	public List<Coordinate> query(BoundingBox box, List<Coordinate> list);
+	public List<Coordinate> query(BoundingBox queryBox, List<Coordinate> list);
 	
 	public void insert(Coordinate c);
 	

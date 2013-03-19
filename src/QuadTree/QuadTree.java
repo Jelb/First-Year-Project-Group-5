@@ -20,8 +20,8 @@ public class QuadTree implements Parent {
 	 */
 	public List<Coordinate> query(double x1, double y1, double x2, double y2) {
 		if (x1 > xMax || x1 < 0 || x2 < 0 || x2 > xMax || y1 < 0 || y1 > yMax || y2 > yMax || y2 < 0) throw new IllegalArgumentException();
-		BoundingBox box = new BoundingBox(x1, y1, x2, y2);
-		return root.query(box, new ArrayList<Coordinate>());
+		BoundingBox queryBox = new BoundingBox(x1, y1, x2, y2);
+		return root.query(queryBox, new ArrayList<Coordinate>());
 	}
 	
 	/**
@@ -40,7 +40,7 @@ public class QuadTree implements Parent {
 	}
 	
 	/**
-	 * 
+	 * shows the structure of the QuadTree
 	 */
 	public void showTree() {
 		root.show();
