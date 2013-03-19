@@ -2,8 +2,8 @@ package QuadTree;
 
 /**
  * 
- * Class description
- * 
+ * The BoundingBox class defines methods for detecting whether elements of the QuadTree (Leafs, Nodes and query boxes) intersect with each other,
+ * and whether a given point is inside a given BoundingBox (e.g. a Node)
  *
  */
 
@@ -16,6 +16,7 @@ public class BoundingBox {
 	/**
 	 * 
 	 * Sets the smallest x to xMin and the smallest y to yMin
+	 * We use this guarantee in the implementation of the other methods of the class
 	 */
 	public BoundingBox(double x1, double y1, double x2, double y2) {
 		if (x1 <= x2) {

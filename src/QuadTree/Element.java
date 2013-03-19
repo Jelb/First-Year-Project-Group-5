@@ -8,9 +8,9 @@ import java.util.List;
  *
  */
 public interface Element {
-	public List<Coordinate> query(BoundingBox queryBox, List<Coordinate> list);
+	public List<Point> query(BoundingBox queryBox, List<Point> list);
 	
-	public void insert(Coordinate c);
+	public void insert(Point c);
 	
 	public boolean intersects(BoundingBox b);
 	

@@ -9,7 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import QuadTree.Coordinate;
+import QuadTree.Point;
 import QuadTree.QuadTree;
 
 public class QuadTreeTest {
@@ -63,15 +63,15 @@ public class QuadTreeTest {
 	
 	@Test
 	public void querySearchUnpartitioned() {
-		List<Coordinate> coordList = new ArrayList<Coordinate>();
+		List<Point> coordList = new ArrayList<Point>();
 		QT.insert(1, 2, 0);
-		coordList.add(new Coordinate(1, 2, 0));
+		coordList.add(new Point(1, 2, 0));
 		QT.insert(7, 4, 1);
-		coordList.add(new Coordinate(7, 4, 1));
+		coordList.add(new Point(7, 4, 1));
 		QT.insert(9, 3, 2);
-		coordList.add(new Coordinate(9, 3, 2));
-		List<Coordinate> list = QT.query(4, 1, 10, 6);
-		for (Coordinate c : list) System.out.println(c.getX() + ", " + c.getY());
+		coordList.add(new Point(9, 3, 2));
+		List<Point> list = QT.query(4, 1, 10, 6);
+		for (Point c : list) System.out.println(c.getX() + ", " + c.getY());
 	}
 	
 	@Test
@@ -80,17 +80,17 @@ public class QuadTreeTest {
 		QT.insert(7, 4, 1);
 		QT.insert(9, 3, 2);
 		QT.insert(7, 5, 3);
-		List<Coordinate> list = QT.query(4, 1, 10, 6);
+		List<Point> list = QT.query(4, 1, 10, 6);
 		QT.showTree();
 		System.out.println();
-		for (Coordinate c : list) System.out.println(c.getX() + ", " + c.getY());
+		for (Point c : list) System.out.println(c.getX() + ", " + c.getY());
 	}
 	
 	@Test
 	public void querySearchEdge() {
 		QT.insert(7, 6, 0);
-		List<Coordinate> list = QT.query(4, 1, 10, 6);
-		for (Coordinate c : list) System.out.println(c.getX() + ", " + c.getY());
+		List<Point> list = QT.query(4, 1, 10, 6);
+		for (Point c : list) System.out.println(c.getX() + ", " + c.getY());
 	}
 	
 	@Test
@@ -114,28 +114,28 @@ public class QuadTreeTest {
 	@Test (expected = Exception.class)
 	public void queryPartlyOutsideBorders() {
 		QT.insert(1, 2, 0);
-		List<Coordinate> list = QT.query(-2, -1, 3, 3);
-		for (Coordinate c : list) System.out.println(c.getID());
+		List<Point> list = QT.query(-2, -1, 3, 3);
+		for (Point c : list) System.out.println(c.getID());
 	}
 	
 	@Test (expected = Exception.class)
 	public void queryTotallyOutsideBorders() {
 		QT.insert(1, 2, 0);
-		List<Coordinate> list = QT.query(-20, -10, -2, -1);
-		for (Coordinate c : list) System.out.println(c.getID());
+		List<Point> list = QT.query(-20, -10, -2, -1);
+		for (Point c : list) System.out.println(c.getID());
 	}
 	
 	@Test
 	public void queryOnLine() {
 		QT.insert(5,5,0);
-		List<Coordinate> list = QT.query(3, 5, 7, 5);
-		for (Coordinate c : list) System.out.println(c.getID());
+		List<Point> list = QT.query(3, 5, 7, 5);
+		for (Point c : list) System.out.println(c.getID());
 	}
 	
 	@Test
 	public void emptyQuerySearch() {
 		QT.insert(5,5,0);
-		List<Coordinate> list = QT.query(3, 6, 7, 9);
+		List<Point> list = QT.query(3, 6, 7, 9);
 		System.out.println("Length of list: " + list.size());
 		assertEquals(0, list.size());
 	}

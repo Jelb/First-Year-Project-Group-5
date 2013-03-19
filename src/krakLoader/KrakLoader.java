@@ -11,7 +11,7 @@ import java.util.List;
 
 import Part1.Edge;
 import Part1.Node;
-import QuadTree.Coordinate;
+import QuadTree.Point;
 import QuadTree.QuadTree;
 
 import Part1.Graph;
@@ -33,9 +33,15 @@ public class KrakLoader {
 	{ 
 		this.nodeFile = nodeFile;
 		this.edgeFile = edgeFile;
+		try {
+			createNodeList();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	public Graph createGraph() throws IOException {
+	public void createNodeList() throws IOException {
 		// open the file containing the list of nodes
 		BufferedReader br = new BufferedReader(new FileReader(nodeFile));
 
@@ -66,19 +72,21 @@ public class KrakLoader {
 			line = br.readLine();
 		}
 		br.close();
+	}
+
+	public Graph createGraph() throws IOException {
+
 
 		System.out.println("Adding " + nodes.size() + " nodes to graph");
 
 		// Create a graph on the nodes
 		Graph graph = new Graph(nodes.size()+1);
 
-		System.gc();
-
 		//Open the file containing the edge entries
-		br = new BufferedReader(new FileReader(edgeFile));
+		BufferedReader br = new BufferedReader(new FileReader(edgeFile));
 
 		br.readLine(); // again discarding column names
-		line = br.readLine();
+		String line = br.readLine();
 
 		while(line != null){
 			String[] lineArray = line.split(",(?! |[a-zA-ZæÆøØåÅ])");
@@ -92,8 +100,6 @@ public class KrakLoader {
 		}
 		br.close();
 
-		System.gc();
-
 		return graph;
 	}
 
@@ -104,6 +110,8 @@ public class KrakLoader {
 			QT.insert(node.getXCord()-minX, node.getYCord()-minY, node.getKdvID());
 		}
 
+		nodes = null;
+
 		return QT;
 	}
 
@@ -111,8 +119,8 @@ public class KrakLoader {
 		KrakLoader krakLoader = new KrakLoader("kdv_node_unload.txt", "kdv_unload.txt");
 		Graph graph = krakLoader.createGraph();
 		QuadTree QT = krakLoader.createQuadTree();
-		List<Coordinate> list = QT.query(0, 0, 100000, 100000);
-		for (Coordinate c : list) System.out.println(c.getID());
+		List<Point> list = QT.query(0, 0, 100000, 100000);
+		for (Point p : list) System.out.println(p.getID());
 		System.out.printf("Graph has %d edges%n", graph.getE());
 		MemoryMXBean mxbean = ManagementFactory.getMemoryMXBean();
 		System.out.printf("Heap memory usage: %d MB%n", mxbean.getHeapMemoryUsage().getUsed()/(1000000));

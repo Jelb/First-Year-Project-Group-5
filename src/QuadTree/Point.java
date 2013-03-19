@@ -2,22 +2,22 @@ package QuadTree;
 
 /**
  * 
- * The Coordinate class defines the coordinates in the QuadTree
+ * The Point class defines the points in the QuadTree
  *
  */
-public class Coordinate {
+public class Point {
 	double x;
 	double y;
 	int id;
 	
-	public Coordinate(double x, double y, int id) {
+	public Point(double x, double y, int id) {
 		this.x = x;
 		this.y = y;
 		this.id = id;
 	}
 	
-	public boolean equals(Coordinate c) {
-		return (x == c.getX() && y == c.getY());
+	public boolean equals(Point p) {
+		return (x == p.getX() && y == p.getY());
 	}
 
 	public double getX() {

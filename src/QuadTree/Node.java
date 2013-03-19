@@ -35,9 +35,9 @@ public class Node extends BoundingBox implements Element, Parent {
 	}
 
 	/**
-	 * Sends the given coordinate on to the next Node or Leaf according to where the coordinate belongs
+	 * Sends the given point on to the next Node or Leaf according to where the point belongs
 	 */
-	public void insert(Coordinate c) {
+	public void insert(Point c) {
 		if (NW.holds(c.getX(), c.getY())) NW.insert(c);
 		else if (NE.holds(c.getX(), c.getY())) NE.insert(c);
 		else if (SW.holds(c.getX(), c.getY())) SW.insert(c);
@@ -47,7 +47,7 @@ public class Node extends BoundingBox implements Element, Parent {
 	/**
 	 * Sends the query on to the next Node or Leaf according to which of the children of the Node intersects with the query box
 	 */
-	public List<Coordinate> query(BoundingBox queryBox, List<Coordinate> list) {
+	public List<Point> query(BoundingBox queryBox, List<Point> list) {
 		if (NW.intersects(queryBox)) list = NW.query(queryBox, list);
 		if (NE.intersects(queryBox)) list = NE.query(queryBox, list);
 		if (SW.intersects(queryBox)) list = SW.query(queryBox, list);
