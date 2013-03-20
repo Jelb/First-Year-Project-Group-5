@@ -79,4 +79,8 @@ public class Map extends JPanel {
     	segments = test.mapTestMethod();
     }
     
+    public void addRoadSegment(RoadSegment roadSegment) {
+    	segments.add(roadSegment);
+    }
+    
 }

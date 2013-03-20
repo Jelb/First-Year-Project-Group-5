@@ -24,7 +24,7 @@ public class Window extends JFrame {
 	public static int windowSize = 500; 	// NOT DONE! Will take the dynamic ACTUAL size of the window
 	public static double zoomFactor = 1.0;   	// NOT DONE! Will change according to the ACTUAL current zoom factor
 
-	protected Window(){
+	public Window(){
 		super("Better than apple maps");
 	}
 
@@ -72,6 +72,10 @@ public class Window extends JFrame {
 	
 	public double getZoomFactor(){
 		return zoomFactor;
+	}
+	
+	public void addRoadSegment(RoadSegment roadSegment) {
+		mapObject.addRoadSegment(roadSegment);
 	}
 	
 	public static void main(String[] args){

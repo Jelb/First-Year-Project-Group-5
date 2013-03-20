@@ -12,6 +12,8 @@ import java.util.PriorityQueue;
 
 import Part1.Edge;
 import Part1.Node;
+import Part1.RoadSegment;
+import Part1.Window;
 import QuadTree.Point;
 import QuadTree.QuadTree;
 
@@ -50,7 +52,7 @@ public class KrakLoader {
 		else return loader;
 	}
 
-	private void createNodeList(){
+	public void createNodeList(){
 		// open the file containing the list of nodes
 		try {
 		BufferedReader br = new BufferedReader(new FileReader(nodeFile));
@@ -149,6 +151,22 @@ public class KrakLoader {
 		return QT;
 	}
 
+	public static double getMaxX() {
+		return maxX;
+	}
+
+	public static double getMaxY() {
+		return maxY;
+	}
+
+	public static double getMinX() {
+		return minX;
+	}
+
+	public static double getMinY() {
+		return minY;
+	}
+
 	public static void main(String[] args) throws IOException {
 		Long startTime = System.currentTimeMillis();
 		KrakLoader krakLoader = KrakLoader.use("kdv_node_unload.txt",
@@ -166,10 +184,10 @@ public class KrakLoader {
 		for (Node n : list) {
 			Iterable<Edge> edges = graph.adjOut(n.getKdvID());
 			for (Edge e : edges) {
-				n.getXCord();
-				n.getYCord();
-				e.getToNode().getXCord();
-				e.getToNode().getYCord();
+				double x1 = n.getXCord();
+				double y1 = n.getYCord();
+				double x2 = e.getToNode().getXCord();
+				double y2 = e.getToNode().getYCord();
 			}
 		}
 		endTime = System.currentTimeMillis();
