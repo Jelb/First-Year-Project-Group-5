@@ -20,20 +20,20 @@ public class Window extends JFrame {
 	private Container contentPane;
 	private Map mapObject;
 	
-	public static int offsetX = -400000;			// NOT DONE! The current offset of the windows top left position
-	public static int offsetY = -6000000;		// NOT DONE! The current offset of the windows top left position
+	public static int offsetX = 0;			// NOT DONE! The current offset of the windows top left position
+	public static int offsetY = 0;		// NOT DONE! The current offset of the windows top left position
 	
 	public static int windowSize = 760; 		// NOT DONE! Will take the dynamic ACTUAL size of the window
-	public static double zoomFactor = 1.6;   	// NOT DONE! Will change according to the ACTUAL current zoom factor
+	public static double zoomFactor = 1;   	// NOT DONE! Will change according to the ACTUAL current zoom factor
 
-	public Window(){
+	private Window(){
 		super("Better than apple maps");
 	}
 
 	public static Window getInstance() {
 		if(instance == null) {
-			instance = new Window
-					();
+			instance = new Window();
+			instance.makeFrame();
 		}
 		return instance;
 }
@@ -50,6 +50,7 @@ public class Window extends JFrame {
 				
 				if(w < h) windowSize = w;
 			    else windowSize = h;
+				
             	mapObject.getMapTestMethod();
             }
          });
@@ -93,6 +94,7 @@ public class Window extends JFrame {
 				}
 				
 				mapObject.getMapTestMethod();
+				
 				repaint();
 			}
 		}

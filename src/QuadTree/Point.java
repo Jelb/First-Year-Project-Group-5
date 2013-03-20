@@ -1,7 +1,7 @@
 package QuadTree;
 
 /**
- * 
+ * NOT USED ANYMORE. NODE IS USED INSTEAD.
  * The Point class defines the points in the QuadTree
  *
  */

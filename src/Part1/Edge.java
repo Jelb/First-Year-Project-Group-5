@@ -75,4 +75,8 @@ public class Edge {
      public Node getToNode() {
     	 return TNODE;
      }
+     
+     public int getType() {
+    	 return TYP;
+     }
 }

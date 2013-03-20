@@ -39,7 +39,7 @@ public class RoadSegment extends JComponent {
 				g2.setColor(Color.yellow);
 				break;
 			case Landevej:
-				g2.setColor(Color.white);
+				g2.setColor(Color.black);
 				break;
 			case Gade:
 				g2.setColor(Color.white);
@@ -48,7 +48,7 @@ public class RoadSegment extends JComponent {
 				g2.setColor(Color.lightGray);
 				break;
 		}
-		
+	
 		// determine road width by zoom factor
 		int roadWidth = 1;
 		if(Window.zoomFactor > 1.5) roadWidth = 10;
