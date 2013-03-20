@@ -24,7 +24,7 @@ public class KrakLoader {
 	private static KrakLoader loader;
 	private ArrayList<Node> nodes;
 	private final String nodeFile, edgeFile;
-	private double maxX = 0, maxY = 0, minX = -1, minY = -1;
+	private double maxX = 0, maxY = 0, minX = -1, minY = -1, maxLength = 0;
 
 	/**
 	 * Constructor for the KrakLoader class. The constructor creates an
@@ -79,6 +79,11 @@ public class KrakLoader {
 			nodes.add(new Node(x, y, id));
 			line = br.readLine();
 		}
+		
+		// The coordinates of every node is corrected for the offset
+		Node.setXOffset(minX);
+		Node.setYOffset(minY);
+		
 		br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -93,7 +98,7 @@ public class KrakLoader {
 	 */
 	public Graph createGraph() throws IOException {
 
-		System.out.println("Adding " + nodes.size() + " nodes to graph");
+		System.out.println("Adding " + (nodes.size()-1) + " nodes to graph");
 
 		// Create a graph on the nodes
 		Graph graph = new Graph(nodes.size());
@@ -109,6 +114,7 @@ public class KrakLoader {
 			Node fromNode = nodes.get(Integer.parseInt(lineArray[0]));
 			Node toNode = nodes.get(Integer.parseInt(lineArray[1]));
 			double length = Double.parseDouble(lineArray[2]);
+			if (length > maxLength) maxLength = length;
 			int type = Integer.parseInt(lineArray[5]);
 			Edge edge = new Edge(fromNode, toNode, length, type); // Creates an edge.
 			graph.addEdge(edge); // Adds the newly created edge object to the graph.
@@ -129,22 +135,37 @@ public class KrakLoader {
 		// Create QuadTree
 		QuadTree QT = new QuadTree(3, maxX - minX, maxY - minY);
 		for (int i = 1; i < nodes.size(); i++) { //For loop start at index 1 because index 0 is null.
-			QT.insert(nodes.get(i).getXCord() - minX, nodes.get(i).getYCord() - minY,
-					nodes.get(i).getKdvID());
+			QT.insert(nodes.get(i));
 		}
 
 		return QT;
 	}
 
 	public static void main(String[] args) throws IOException {
+		Long startTime = System.currentTimeMillis();
 		KrakLoader krakLoader = KrakLoader.use("kdv_node_unload.txt",
 				"kdv_unload.txt");
 		krakLoader.createNodeList();
 		Graph graph = krakLoader.createGraph();
 		QuadTree QT = krakLoader.createQuadTree();
-		List<Point> list = QT.query(0, 0, 100000, 100000);
-		for (Point p : list)
-			System.out.println(p.getID());
+		Long endTime = System.currentTimeMillis();
+		Long duration = endTime - startTime;
+		System.out.println("Time to create Nodelist, Graph and QuadTree: " + duration/1000.0);
+		startTime = System.currentTimeMillis();
+		List<Node> list = QT.query(0, 0, krakLoader.maxX-krakLoader.minX, krakLoader.maxY-krakLoader.minY);
+		System.out.println("Length of the result from full query: " + list.size());
+		for (Node n : list) {
+			Iterable<Edge> edges = graph.adjOut(n.getKdvID());
+			for (Edge e : edges) {
+				n.getXCord();
+				n.getYCord();
+				e.getToNode().getXCord();
+				e.getToNode().getYCord();
+			}
+		}
+		endTime = System.currentTimeMillis();
+		duration = endTime - startTime;
+		System.out.println("Time to query all nodes and find their neighbours: " + duration/1000.0);
 		System.out.printf("Graph has %d edges%n", graph.getE());
 		MemoryMXBean mxbean = ManagementFactory.getMemoryMXBean();
 		System.out.printf("Heap memory usage: %d MB%n", mxbean

@@ -5,6 +5,8 @@ public class Node {
 	private double xCord;
 	private double yCord;
 	private int kdvID;
+	private static double xOffset;
+	private static double yOffset;
 	//private static Node[] nodeArray = new Node[675901];
 	
 	public Node(double xCord, double yCord, int kdvID) {
@@ -14,23 +16,23 @@ public class Node {
 	}
 	
 	public double getXCord(){
-		return xCord;
+		return xCord - xOffset;
 	}
 	
 	public double getYCord(){
-		return yCord;
+		return yCord - yOffset;
 	}
 	
 	public int getKdvID(){
 		return kdvID;
 	}
 	
-	public void setXOffset(double xOffset) {
-		xCord -= xOffset;
+	public static void setXOffset(double xOffset) {
+		Node.xOffset = xOffset;
 	}
 	
-	public void setYOffset(double yOffset) {
-		yCord -= yOffset;
+	public static void setYOffset(double yOffset) {
+		Node.yOffset = yOffset;
 	}
 	
 //	public static void insertNode(Node node){

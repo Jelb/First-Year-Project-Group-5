@@ -1,20 +1,22 @@
 package QuadTree;
 
 import java.util.List;
+
+import Part1.Node;
  /**
   * 
-  * The Node class holds references to the four quadrants: Northwest (NW), Northeast (NE), Southwest (SW) and Southeast (SE)
-  * The four quadrants of the Node can be either Nodes or Leafs, it is not necessary for the Node to know this.
-  * When a query or an insertion is called on the Node, it sends it on to its children.
+  * The QuadNode class holds references to the four quadrants: Northwest (NW), Northeast (NE), Southwest (SW) and Southeast (SE)
+  * The four quadrants of the QuadNode can be either Nodes or Leafs, it is not necessary for the QuadNode to know this.
+  * When a query or an insertion is called on the QuadNode, it sends it on to its children.
   *
   */
-public class Node extends BoundingBox implements Element, Parent {
+public class QuadNode extends BoundingBox implements Element, Parent {
 	Element NW;
 	Element NE;
 	Element SW;
 	Element SE;
 	
-	public Node(double x1, double y1, double x2, double y2) {
+	public QuadNode(double x1, double y1, double x2, double y2) {
 		super(x1, y1, x2, y2);
 	}
 	
@@ -35,19 +37,19 @@ public class Node extends BoundingBox implements Element, Parent {
 	}
 
 	/**
-	 * Sends the given point on to the next Node or Leaf according to where the point belongs
+	 * Sends the given point on to the next QuadNode or Leaf according to where the point belongs
 	 */
-	public void insert(Point c) {
-		if (NW.holds(c.getX(), c.getY())) NW.insert(c);
-		else if (NE.holds(c.getX(), c.getY())) NE.insert(c);
-		else if (SW.holds(c.getX(), c.getY())) SW.insert(c);
-		else if (SE.holds(c.getX(), c.getY())) SE.insert(c);
+	public void insert(Node c) {
+		if (NW.holds(c.getXCord(), c.getYCord())) NW.insert(c);
+		else if (NE.holds(c.getXCord(), c.getYCord())) NE.insert(c);
+		else if (SW.holds(c.getXCord(), c.getYCord())) SW.insert(c);
+		else if (SE.holds(c.getXCord(), c.getYCord())) SE.insert(c);
 	}
 	
 	/**
-	 * Sends the query on to the next Node or Leaf according to which of the children of the Node intersects with the query box
+	 * Sends the query on to the next QuadNode or Leaf according to which of the children of the QuadNode intersects with the query box
 	 */
-	public List<Point> query(BoundingBox queryBox, List<Point> list) {
+	public List<Node> query(BoundingBox queryBox, List<Node> list) {
 		if (NW.intersects(queryBox)) list = NW.query(queryBox, list);
 		if (NE.intersects(queryBox)) list = NE.query(queryBox, list);
 		if (SW.intersects(queryBox)) list = SW.query(queryBox, list);
@@ -57,7 +59,7 @@ public class Node extends BoundingBox implements Element, Parent {
 	
 	/**
 	 * Changes the child of either one the quadrants to a new given Element. Used when Leafs converts to Nodes
-	 * Throws IllegalStateException if the given former (current) child does not match any of the children of this Node
+	 * Throws IllegalStateException if the given former (current) child does not match any of the children of this QuadNode
 	 */
 	public void changeChild(Element oldChild, Element newChild) {
 		if (NW == oldChild) NW = newChild;
@@ -71,7 +73,7 @@ public class Node extends BoundingBox implements Element, Parent {
 	 * Used when testing to show the structure of the QuadTree
 	 */
 	public void show() {
-		System.out.println("I'm a Node");
+		System.out.println("I'm a QuadNode");
 		System.out.println("NW");
 		NW.show();
 		System.out.println("NE");

@@ -2,15 +2,17 @@ package QuadTree;
 
 import java.util.List;
 
+import Part1.Node;
+
 /**
  * 
- * An interface defining an element (Node or Leaf) of the QuadTree
+ * An interface defining an element (QuadNode or Leaf) of the QuadTree
  *
  */
 public interface Element {
-	public List<Point> query(BoundingBox queryBox, List<Point> list);
+	public List<Node> query(BoundingBox queryBox, List<Node> list);
 	
-	public void insert(Point c);
+	public void insert(Node n);
 	
 	public boolean intersects(BoundingBox b);
 	

@@ -3,7 +3,7 @@ package QuadTree;
 /**
  * 
  * The BoundingBox class defines methods for detecting whether elements of the QuadTree (Leafs, Nodes and query boxes) intersect with each other,
- * and whether a given point is inside a given BoundingBox (e.g. a Node)
+ * and whether a given point is inside a given BoundingBox (e.g. a QuadNode)
  *
  */
 
