@@ -8,7 +8,7 @@ import javax.swing.JComponent;
 public class TomsTempClass {
 	
 	private double roadSeg[][]	= {
-										{ 450000, 6030000, 440000, 6060000 },
+										{ 490000, 6010000, 440000, 6060000 },
 										{ 440000, 6060000, 480000, 6090000 },
 										{ 440000, 6060000, 450000, 6120000 },
 										{ 480000, 6090000, 450000, 6120000 },
@@ -27,7 +27,7 @@ public class TomsTempClass {
 		
 		for(int i = 0; i < 12; i++) {
 			RoadSegment segment = 
-			new RoadSegment(geoXToPixel(roadSeg[i][0]), geoYToPixel(roadSeg[i][1]), geoXToPixel(roadSeg[i][2]), geoYToPixel(roadSeg[i][3]), Color.red);
+			new RoadSegment(geoXToPixel(roadSeg[i][0]), geoYToPixel(roadSeg[i][1]), geoXToPixel(roadSeg[i][2]), geoYToPixel(roadSeg[i][3]), Vejtype.Motorvej);
 			rs.add(segment);
 		}
 		
@@ -35,10 +35,10 @@ public class TomsTempClass {
 	}
 	
 	private int geoXToPixel(double geoX) {
-		return (int) Math.round(( (geoX - 400000 + Window.origoX) * (Window.windowSize / 2) * Window.getInstance().getZoomFactor()) / 100000);
+		return (int) Math.round(( (geoX + Window.offsetX) * (Window.windowSize / 3) * Window.getInstance().getZoomFactor()) / 100000);
 	}
 	
 	private int geoYToPixel(double geoY) {
-		return (int) Math.round((( geoY - 6000000 + Window.origoY) * (Window.windowSize / 2) * Window.getInstance().getZoomFactor()) / 100000);
+		return (int) Math.round((( geoY + Window.offsetY) * (Window.windowSize / 3) * Window.getInstance().getZoomFactor()) / 100000);
 	}
 }
