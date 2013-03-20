@@ -52,7 +52,7 @@ public class Map extends JPanel {
 				
 				System.out.println("zoomFactor : "+ zoomFactor);
 				
-				Window.getInstance().setZoomFactor(1.5);
+				Window.getInstance().setZoomFactor(zoomFactor);
 				
 				getMapTestMethod();
 				//Window.getInstance().repaint();
