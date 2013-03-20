@@ -24,7 +24,7 @@ public class Window extends JFrame {
 	public static int offsetY = 0;		// NOT DONE! The current offset of the windows top left position
 	
 	public static int windowSize = 760; 		// NOT DONE! Will take the dynamic ACTUAL size of the window
-	public static double zoomFactor = 1;   	// NOT DONE! Will change according to the ACTUAL current zoom factor
+	public static double zoomFactor = 0.75;   	// NOT DONE! Will change according to the ACTUAL current zoom factor
 
 	private Window(){
 		super("Better than apple maps");
@@ -41,7 +41,8 @@ public class Window extends JFrame {
 	/**
 	 * Creates the GUI
 	 */
-	private void makeFrame(){;		
+	private void makeFrame(){		
+		setSize(windowSize, windowSize); pack();
 		addComponentListener(new ComponentAdapter() {
 
             public void componentResized(ComponentEvent evt) {
@@ -52,6 +53,7 @@ public class Window extends JFrame {
 			    else windowSize = h;
 				
             	mapObject.getMapTestMethod();
+            	repaint();
             }
          });
 		
@@ -78,11 +80,11 @@ public class Window extends JFrame {
 				
 				if(event.getKeyCode() == KeyEvent.VK_UP) {
 					System.out.println("Up pressed");
-					Window.offsetY += 10000;
+					Window.offsetY += -10000;
 				}
 				if(event.getKeyCode() == KeyEvent.VK_DOWN) {
 					System.out.println("Down pressed");
-					Window.offsetY += -10000;
+					Window.offsetY += 10000;
 				}
 				if(event.getKeyCode() == KeyEvent.VK_LEFT) {
 					System.out.println("Left pressed");

@@ -55,7 +55,7 @@ public class Map extends JPanel {
 				Window.getInstance().setZoomFactor(1.5);
 				
 				getMapTestMethod();
-				Window.getInstance().repaint();
+				//Window.getInstance().repaint();
 			}
 		});		
 	}

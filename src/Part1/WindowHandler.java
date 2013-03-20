@@ -60,7 +60,7 @@ public class WindowHandler {
 	
 	public static ArrayList<RoadSegment> calculatePixels() {
 		ArrayList<RoadSegment> rs = new ArrayList<RoadSegment>();
-		for (Node n : nodes) {
+		for (Node n: nodes) {
 			Iterable<Edge> edges = graph.adjOut(n.getKdvID());
 			for (Edge e : edges) {
 				if (e.getType() != 5) break;
