@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.PriorityQueue;
 
 import Part1.Edge;
 import Part1.Node;
@@ -24,7 +26,7 @@ public class KrakLoader {
 	private static KrakLoader loader;
 	private ArrayList<Node> nodes;
 	private final String nodeFile, edgeFile;
-	private double maxX = 0, maxY = 0, minX = -1, minY = -1, maxLength = 0;
+	private static double maxX = 0, maxY = 0, minX = -1, minY = -1, maxLength = 0;
 
 	/**
 	 * Constructor for the KrakLoader class. The constructor creates an
@@ -83,7 +85,8 @@ public class KrakLoader {
 		// The coordinates of every node is corrected for the offset
 		Node.setXOffset(minX);
 		Node.setYOffset(minY);
-		
+		System.out.println("Width of map: " + (maxX-minX));
+		System.out.println("Height of map: " + (maxY-minY));
 		br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -108,12 +111,15 @@ public class KrakLoader {
 
 		br.readLine(); // again discarding column names
 		String line = br.readLine();
-
+		
+		PriorityQueue<Double> PQ = new PriorityQueue<Double>(10, Collections.reverseOrder());
+		
 		while (line != null) {
 			String[] lineArray = line.split(",(?! |[a-zA-ZæÆøØåÅ])"); // Regex matches ',' not followed by space of letters.
 			Node fromNode = nodes.get(Integer.parseInt(lineArray[0]));
 			Node toNode = nodes.get(Integer.parseInt(lineArray[1]));
 			double length = Double.parseDouble(lineArray[2]);
+			PQ.add(length);
 			if (length > maxLength) maxLength = length;
 			int type = Integer.parseInt(lineArray[5]);
 			Edge edge = new Edge(fromNode, toNode, length, type); // Creates an edge.
@@ -121,7 +127,9 @@ public class KrakLoader {
 			line = br.readLine();
 		}
 		br.close();
-
+		System.out.println("Max length: " + maxLength);
+		for (int i = 0; i < 30; i++)
+			System.out.println((i+1) + ": " + PQ.remove());
 		return graph;
 	}
 
@@ -148,11 +156,12 @@ public class KrakLoader {
 		krakLoader.createNodeList();
 		Graph graph = krakLoader.createGraph();
 		QuadTree QT = krakLoader.createQuadTree();
+		krakLoader = null;
 		Long endTime = System.currentTimeMillis();
 		Long duration = endTime - startTime;
 		System.out.println("Time to create Nodelist, Graph and QuadTree: " + duration/1000.0);
 		startTime = System.currentTimeMillis();
-		List<Node> list = QT.query(0, 0, krakLoader.maxX-krakLoader.minX, krakLoader.maxY-krakLoader.minY);
+		List<Node> list = QT.query(0, 0, maxX-minX, maxY-minY);
 		System.out.println("Length of the result from full query: " + list.size());
 		for (Node n : list) {
 			Iterable<Edge> edges = graph.adjOut(n.getKdvID());
