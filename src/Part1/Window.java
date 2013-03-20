@@ -14,6 +14,7 @@ import java.awt.event.ComponentEvent;
 public class Window extends JFrame {
 		
 	private static final long serialVersionUID = 1L;
+	private static Window instance = null;
 	private Container contentPane;
 	private Map mapObject;
 	
@@ -23,9 +24,18 @@ public class Window extends JFrame {
 	public static int windowSize = 500; 	// NOT DONE! Will take the dynamic ACTUAL size of the window
 	public static int zoomFactor = 1;   	// NOT DONE! Will change according to the ACTUAL current zoom factor
 
-	public Window(){
+	protected Window(){
 		super("Better than apple maps");
 	}
+
+	public static Window getInstance() {
+		if(instance == null) {
+			instance = new Window
+					();
+		}
+		return instance;
+}
+	
 	/**
 	 * Creates the GUI
 	 */
@@ -33,15 +43,12 @@ public class Window extends JFrame {
 		addComponentListener(new ComponentAdapter() {
 
             public void componentResized(ComponentEvent evt) {
-            	//Component c = (Component)evt.getSource();
             	int w = getWidth();
 				int h = getHeight();
 				
 				if(w < h) windowSize = w;
 			    else windowSize = h;
-            	//System.out.println(windowSize);
             	mapObject.getMapTestMethod();
-            	//frame.repaint();
             }
          });
 		
@@ -60,7 +67,7 @@ public class Window extends JFrame {
 	}
 	
 	public static void main(String[] args){
-		Window testWindow = new Window();
+		Window testWindow = Window.getInstance();
 		testWindow.makeFrame();
 	}
 }
