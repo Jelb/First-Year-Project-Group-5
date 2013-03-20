@@ -22,12 +22,12 @@ public class TomsTempClass {
 										{ 550000, 6090000, 565000, 6130000 },
 									}; 
 
-	public ArrayList<RoadSegmentJComponent> mapTestMethod() {
-		ArrayList<RoadSegmentJComponent> rs = new ArrayList<RoadSegmentJComponent>();
+	public ArrayList<RoadSegment> mapTestMethod() {
+		ArrayList<RoadSegment> rs = new ArrayList<RoadSegment>();
 		
 		for(int i = 0; i < 12; i++) {
-			RoadSegmentJComponent segment = 
-			new RoadSegmentJComponent(geoXToPixel(roadSeg[i][0]), geoYToPixel(roadSeg[i][1]), geoXToPixel(roadSeg[i][2]), geoYToPixel(roadSeg[i][3]), Color.red);
+			RoadSegment segment = 
+			new RoadSegment(geoXToPixel(roadSeg[i][0]), geoYToPixel(roadSeg[i][1]), geoXToPixel(roadSeg[i][2]), geoYToPixel(roadSeg[i][3]), Color.red);
 			rs.add(segment);
 		}
 		
