@@ -21,6 +21,7 @@ import Part1.Graph;
  * @author Peter Tiedemann petert@itu.dk
  */
 public class KrakLoader {
+	private static KrakLoader loader;
 	private ArrayList<Node> nodes;
 	private final String nodeFile, edgeFile;
 	private double maxX = 0, maxY = 0, minX = -1, minY = -1;
@@ -37,11 +38,14 @@ public class KrakLoader {
 	 *            The path which leads to the "<br>
 	 *            kdv_unload.txt</br>" file.
 	 */
-	public KrakLoader(String nodeFile, String edgeFile) {
+	private KrakLoader(String nodeFile, String edgeFile) {
 		this.nodeFile = nodeFile;
 		this.edgeFile = edgeFile;
-		createNodeList();
-		
+	}
+	
+	public static KrakLoader use(String nodeFile, String edgeFile) {
+		if(loader == null) return new KrakLoader(nodeFile, edgeFile);
+		else return loader;
 	}
 
 	private void createNodeList(){
@@ -92,7 +96,7 @@ public class KrakLoader {
 		System.out.println("Adding " + nodes.size() + " nodes to graph");
 
 		// Create a graph on the nodes
-		Graph graph = new Graph(nodes.size() + 1);
+		Graph graph = new Graph(nodes.size());
 
 		// Reads the "kdv_unload.txt" file into the buffer.
 		BufferedReader br = new BufferedReader(new FileReader(edgeFile));
@@ -133,9 +137,9 @@ public class KrakLoader {
 	}
 
 	public static void main(String[] args) throws IOException {
-		KrakLoader krakLoader = new KrakLoader("kdv_node_unload.txt",
+		KrakLoader krakLoader = KrakLoader.use("kdv_node_unload.txt",
 				"kdv_unload.txt");
-		
+		krakLoader.createNodeList();
 		Graph graph = krakLoader.createGraph();
 		QuadTree QT = krakLoader.createQuadTree();
 		List<Point> list = QT.query(0, 0, 100000, 100000);
