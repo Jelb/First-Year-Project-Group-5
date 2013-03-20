@@ -1,6 +1,5 @@
 package Part1;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -14,6 +13,11 @@ public class Map extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private ArrayList<RoadSegment> segments;
 	private TomsTempClass test;
+	
+	private int pressedX;
+	private int pressedY;
+	private int releasedX;
+	private int releasedY;	
 		
 	public Map(){
 		test = new TomsTempClass();
@@ -25,18 +29,33 @@ public class Map extends JPanel {
 		addMouseListener(new MouseAdapter(){
 			
 			public void mousePressed(MouseEvent e){				
-				int pressedX = e.getX();
-				int pressedY = e.getY();
+				pressedX = e.getX();
+				pressedY = e.getY();
 				
 				System.out.println("Pressed X : "+ pressedX);
 				System.out.println("Pressed Y : "+ pressedY);
 			}
 			
 			public void mouseReleased(MouseEvent e){
-				int releasedX = e.getX();
-				int releasedY =  e.getY();
+				releasedX = e.getX();
+				releasedY =  e.getY();
 				System.out.println("Released X : "+ releasedX);
 				System.out.println("Released Y : "+ releasedY);
+				
+				double selectedXpixels = releasedX-pressedX;
+				
+				double windowXpixels = Window.getInstance().getWidth();
+				
+				double ratio = selectedXpixels/windowXpixels;
+				
+				double zoomFactor = Window.getInstance().getZoomFactor() * ratio;
+				
+				System.out.println("zoomFactor : "+ zoomFactor);
+				
+				Window.getInstance().setZoomFactor(1.5);
+				
+				getMapTestMethod();
+				Window.getInstance().repaint();
 			}
 		});		
 	}

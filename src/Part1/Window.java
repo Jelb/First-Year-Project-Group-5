@@ -22,7 +22,7 @@ public class Window extends JFrame {
 	public static int origoY = 0;			// NOT DONE! The current offset of the windows top left position
 	
 	public static int windowSize = 500; 	// NOT DONE! Will take the dynamic ACTUAL size of the window
-	public static int zoomFactor = 1;   	// NOT DONE! Will change according to the ACTUAL current zoom factor
+	public static double zoomFactor = 1.0;   	// NOT DONE! Will change according to the ACTUAL current zoom factor
 
 	protected Window(){
 		super("Better than apple maps");
@@ -64,6 +64,14 @@ public class Window extends JFrame {
         setSize(500, 500);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	public void setZoomFactor(double z){
+		zoomFactor = z;
+	}
+	
+	public double getZoomFactor(){
+		return zoomFactor;
 	}
 	
 	public static void main(String[] args){

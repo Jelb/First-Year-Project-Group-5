@@ -35,10 +35,10 @@ public class TomsTempClass {
 	}
 	
 	private int geoXToPixel(double geoX) {
-		return (int) Math.round(( (geoX - 400000 + Window.origoX) * (Window.windowSize / 2) * Window.zoomFactor) / 100000);
+		return (int) Math.round(( (geoX - 400000 + Window.origoX) * (Window.windowSize / 2) * Window.getInstance().getZoomFactor()) / 100000);
 	}
 	
 	private int geoYToPixel(double geoY) {
-		return (int) Math.round((( geoY - 6000000 + Window.origoY) * (Window.windowSize / 2) * Window.zoomFactor) / 100000);
+		return (int) Math.round((( geoY - 6000000 + Window.origoY) * (Window.windowSize / 2) * Window.getInstance().getZoomFactor()) / 100000);
 	}
 }
