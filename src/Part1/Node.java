@@ -25,6 +25,14 @@ public class Node {
 		return kdvID;
 	}
 	
+	public void setXOffset(double xOffset) {
+		xCord -= xOffset;
+	}
+	
+	public void setYOffset(double yOffset) {
+		yCord -= yOffset;
+	}
+	
 //	public static void insertNode(Node node){
 //		int i = node.getKdvID();
 //		nodeArray[i] = node;

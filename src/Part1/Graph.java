@@ -32,6 +32,24 @@ public class Graph {
 	
 	// returns adjacency list for the given node
 	public Iterable<Edge> adj(int v) { return adj[v]; }
+	
+	// returns all outgoing edges from a given node
+	public Iterable<Edge> adjOut(int v) {
+		LinkedList<Edge> outEdges = new LinkedList<Edge>();
+		for (Edge e : adj[v])
+			if (e.getFromNodeID() == v)
+				outEdges.add(e);
+		return outEdges;
+	}
+	
+	// returns all incoming edges to a given node
+	public Iterable<Edge> adjIn(int v) {
+		LinkedList<Edge>  inEdges = new LinkedList<Edge>();
+		for (Edge e : adj[v])
+			if (e.getToNodeID() == v)
+				inEdges.add(e);
+		return inEdges;
+	}
 
 	// returns linked list all edges in the graph
 	public Iterable<Edge> edges() {

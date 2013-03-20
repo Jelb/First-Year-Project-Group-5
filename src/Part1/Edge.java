@@ -40,6 +40,14 @@ public class Edge {
 	public double length(){  
 		return length;  
 	}
+	
+	public int getFromNodeID() {
+		return FNODE.getKdvID();
+	}
+	
+	public int getToNodeID() {
+		return TNODE.getKdvID();
+	}
      
     public int either(){  
     	return FNODE.getKdvID();  
@@ -62,5 +70,9 @@ public class Edge {
     		 data += s + " ";
     	 }
      	 return data.trim();  
+     }
+     
+     public Node getToNode() {
+    	 return TNODE;
      }
 }
