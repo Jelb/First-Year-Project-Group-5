@@ -59,6 +59,7 @@ public class WindowHandler {
 	}
 	
 	public static ArrayList<RoadSegment> calculatePixels() {
+		Long startTime = System.currentTimeMillis();
 		ArrayList<RoadSegment> rs = new ArrayList<RoadSegment>();
 		for (Node n: nodes) {
 			Iterable<Edge> edges = graph.adjOut(n.getKdvID());
@@ -75,6 +76,9 @@ public class WindowHandler {
 				rs.add(new RoadSegment(pixelX1, pixelY1, pixelX2, pixelY2, Vejtype.Landevej));
 			}
 		}
+		Long endTime = System.currentTimeMillis();
+		Long duration = endTime - startTime;
+		System.out.println("Time to calculate pixels: " + (duration/1000.0) + "s");
 		return rs;
 	}
 	
@@ -92,12 +96,14 @@ public class WindowHandler {
 		System.out.println("Time to create Nodelist, Graph and QuadTree: " + duration/1000.0 + " s");
 		startTime = System.currentTimeMillis();
 		nodes = QT.query(0, 0, KrakLoader.getMaxX()-KrakLoader.getMinX(), KrakLoader.getMaxY()-KrakLoader.getMinY());
-		System.out.println("Length of the result from full query: " + nodes.size());
-		window = Window.getInstance();
-		calculatePixels();
 		endTime = System.currentTimeMillis();
 		duration = endTime - startTime;
 		System.out.println("Time to query all nodes and find their neighbours: " + duration/1000.0 + " s");
+		System.out.println("Length of the result from full query: " + nodes.size());
+		window = Window.getInstance();
+		
+		calculatePixels();
+		
 		System.out.printf("Graph has %d edges%n", graph.getE());
 		//MemoryMXBean mxbean = ManagementFactory.getMemoryMXBean();
 		//System.out.printf("Heap memory usage: %d MB%n", mxbean

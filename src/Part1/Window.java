@@ -53,7 +53,11 @@ public class Window extends JFrame {
 			    else windowSize = h;
 				
             	mapObject.getMapTestMethod();
+//            	Long startTime = System.currentTimeMillis();
             	repaint();
+//            	Long endTime = System.currentTimeMillis();
+//        		Long duration = endTime - startTime;
+//        		System.out.println("Time to paint the map: " + (duration/1000.0) + "s");
             }
          });
 		
