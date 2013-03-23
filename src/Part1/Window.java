@@ -59,7 +59,8 @@ public class Window extends JFrame {
 		timer = new Timer(DELAY, new ActionListener() {
 			   public void actionPerformed(ActionEvent e) {
 			    System.out.println("timer action " + counter++ + "!");
-			    mapObject.getMapTestMethod();
+			    //Map.use().getRoadSegments();
+			    WindowHandler.calculatePixels();
 			   }
 			  });
 			  timer.setRepeats(false);
@@ -98,15 +99,15 @@ public class Window extends JFrame {
         
         //setSize(750, (int)Math.round(750 / 2)); pack();
         
-        //mapObject = new Map();
-        contentPane.add(mapObject, BorderLayout.CENTER);
-    	mapObject.getMapTestMethod();
+        contentPane.add(Map.use(), BorderLayout.CENTER);
+    	//Map.use().getRoadSegments();
+        WindowHandler.calculatePixels();
         repaint();
         
         contentPane.setBackground(Color.WHITE);
-        pack();
         //setSize(windowSize, windowSize);
         setSize(750, (int) Math.round(750 / 1.5));
+        pack();
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -133,8 +134,7 @@ public class Window extends JFrame {
 					Window.offsetX += -10000;
 				}
 				
-				mapObject.getMapTestMethod();
-				
+				WindowHandler.calculatePixels();
 				repaint();
 			}
 		}
@@ -169,14 +169,14 @@ public class Window extends JFrame {
 				System.out.println("Released Y : "+ releasedY);
 				
 				double selectedXpixels = releasedX-pressedX;
-				double windowXpixels = Window.getInstance().getWidth();
+				double windowXpixels = getWidth();
 				double ratio = selectedXpixels/windowXpixels;
-				double zoomFactor = Window.getInstance().getZoomFactor() * ratio;
+				double zoomFactor = getZoomFactor() * ratio;
 				
 				System.out.println("zoomFactor : "+ zoomFactor);
-				Window.getInstance().setZoomFactor(zoomFactor);
+				setZoomFactor(zoomFactor);
 				
-				mapObject.getMapTestMethod();
+				WindowHandler.calculatePixels();
 				//Window.getInstance().repaint();
 			}
 		});		
