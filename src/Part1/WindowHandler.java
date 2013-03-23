@@ -113,7 +113,7 @@ public class WindowHandler {
 		KrakLoader krakLoader = KrakLoader.use("kdv_node_unload.txt",
 				"kdv_unload.txt");
 		krakLoader.createNodeList(); 				//ArraylList with Nodes
-		graph = krakLoader.createGraph();			//Makes graph object
+		graph = krakLoader.createGraphAndLongestRoadsList();			//Makes graph object
 		QT = krakLoader.createQuadTree();			//Makes and returns a quadTree
 		krakLoader = null;							//Avoid loithering
 		Long endTime = System.currentTimeMillis();

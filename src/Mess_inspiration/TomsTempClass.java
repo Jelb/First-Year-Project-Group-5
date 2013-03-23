@@ -25,9 +25,10 @@ public class TomsTempClass {
 										{ 525000, 6095000, 565000, 6130000 },
 										{ 550000, 6090000, 565000, 6130000 },
 									}; 
-
+	/**
 	public ArrayList<RoadSegment> mapTestMethod() {
 		ArrayList<RoadSegment> rs = new ArrayList<RoadSegment>();
+		
 		
 		for(int i = 0; i < 12; i++) {
 			RoadSegment segment = 
@@ -45,4 +46,6 @@ public class TomsTempClass {
 	private int geoYToPixel(double geoY) {
 		return (int) Math.round((( geoY + Window.offsetY) * (Window.windowSize / 3) * Window.getInstance().getZoomFactor()) / 100000);
 	}
+	*/
 }
+
