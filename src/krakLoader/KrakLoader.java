@@ -27,6 +27,7 @@ import Part1.Graph;
 public class KrakLoader {
 	private static KrakLoader loader;
 	private ArrayList<Node> nodes;
+	private ArrayList<Edge> longestRoads;
 	private final String nodeFile, edgeFile;
 	private static double maxX = 0, maxY = 0, minX = -1, minY = -1, maxLength = 0;
 
@@ -101,7 +102,7 @@ public class KrakLoader {
 	 * @return
 	 * @throws IOException
 	 */
-	public Graph createGraph() throws IOException {
+	public Graph createGraphAndLongestRoadsList() throws IOException {
 
 		System.out.println("Adding " + (nodes.size()-1) + " nodes to graph");
 
@@ -114,24 +115,20 @@ public class KrakLoader {
 		br.readLine(); // again discarding column names
 		String line = br.readLine();
 		
-		PriorityQueue<Double> PQ = new PriorityQueue<Double>(10, Collections.reverseOrder());
-		
 		while (line != null) {
 			String[] lineArray = line.split(",(?! |[a-zA-ZæÆøØåÅ])"); // Regex matches ',' not followed by space of letters.
 			Node fromNode = nodes.get(Integer.parseInt(lineArray[0]));
 			Node toNode = nodes.get(Integer.parseInt(lineArray[1]));
 			double length = Double.parseDouble(lineArray[2]);
-			PQ.add(length);
-			if (length > maxLength) maxLength = length;
 			int type = Integer.parseInt(lineArray[5]);
 			Edge edge = new Edge(fromNode, toNode, length, type); // Creates an edge.
+			if (length > 10000) longestRoads.add(edge);
 			graph.addEdge(edge); // Adds the newly created edge object to the graph.
 			line = br.readLine();
 		}
 		br.close();
 		System.out.println("Max length: " + maxLength);
-		for (int i = 0; i < 30; i++)
-			System.out.println((i+1) + ": " + PQ.remove());
+		
 		return graph;
 	}
 
@@ -166,13 +163,17 @@ public class KrakLoader {
 	public static double getMinY() {
 		return minY;
 	}
+	
+	public List<Edge> getLongestRoads() {
+		return longestRoads;
+	}
 
 	public static void main(String[] args) throws IOException {
 		Long startTime = System.currentTimeMillis();
 		KrakLoader krakLoader = KrakLoader.use("kdv_node_unload.txt",
 				"kdv_unload.txt");
 		krakLoader.createNodeList();
-		Graph graph = krakLoader.createGraph();
+		Graph graph = krakLoader.createGraphAndLongestRoadsList();
 		QuadTree QT = krakLoader.createQuadTree();
 		krakLoader = null;
 		Long endTime = System.currentTimeMillis();
@@ -198,4 +199,5 @@ public class KrakLoader {
 		System.out.printf("Heap memory usage: %d MB%n", mxbean
 				.getHeapMemoryUsage().getUsed() / (1000000));
 	}
+
 }
