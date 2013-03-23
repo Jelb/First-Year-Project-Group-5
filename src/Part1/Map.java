@@ -21,6 +21,7 @@ public class Map extends JPanel {
 	
     public void paintComponent(Graphics g) {
         for(RoadSegment r : segments) {
+        	if(r == null) continue;
             r.paintComponent(g);
         }
     }

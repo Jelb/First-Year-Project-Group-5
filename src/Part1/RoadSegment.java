@@ -25,6 +25,7 @@ public class RoadSegment extends JComponent {
 		this.x2 = x2;
 		this.y2 = y2;
 		this.color = color;
+		
 	}
 	
 	protected void paintComponent(Graphics g) {
