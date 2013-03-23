@@ -1,5 +1,6 @@
 package Part1;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
@@ -73,12 +74,34 @@ public class WindowHandler {
 				int pixelX2 = geoXToPixel(x2);
 				int pixelY1 = window.getHeight() - geoYToPixel(y1);
 				int pixelY2 = window.getHeight() - geoYToPixel(y2);
-				Map.use().addRoadSegment(new RoadSegment(pixelX1, pixelY1, pixelX2, pixelY2, e.getType()));
+				Map.use().addRoadSegment(new RoadSegment(pixelX1, pixelY1, pixelX2, pixelY2, getRoadSegmentColor(e.getType()), selectRoadWidth()));
 			}
 		}
 		Long endTime = System.currentTimeMillis();
 		Long duration = endTime - startTime;
 		System.out.println("Time to calculate pixels: " + (duration/1000.0) + "s");
+	}
+	
+	// determine what color the drawn line has
+	private static Color getRoadSegmentColor(int TYP){
+		switch(TYP) {
+		case 1 : return Color.red;		// Motor ways 	
+		case 2 : return Color.red;		// Motor traffic road
+		case 3 : return Color.blue; 	// Primary roads > 6 m 
+		case 4 : return Color.blue;		// Secondary roads > 6 m
+		case 5 : return Color.black;	// Roads between 3-6 meters
+		case 8 : return Color.green;	// paths
+		default : return Color.pink; 	// everything else
+		}
+	}
+	
+	// determine road width by zoom factor
+	private static int selectRoadWidth(){
+		int roadWidth = 1;
+		if(Window.zoomFactor > 1.5) roadWidth = 10;
+		if(Window.zoomFactor > 3)   roadWidth = 10;
+		if(Window.zoomFactor > 5)   roadWidth = 10;
+		return roadWidth;
 	}
 	
 

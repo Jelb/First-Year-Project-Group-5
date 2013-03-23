@@ -4,7 +4,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
 import javax.swing.JComponent;
 
 public class RoadSegment extends JComponent {
@@ -15,57 +14,25 @@ public class RoadSegment extends JComponent {
 	private int y1;
 	private int x2;
 	private int y2;
-	private int TYP;
+	private Color color;
+	private int roadWidth;
 	
 	private static final long serialVersionUID = 1L;
 
-	public RoadSegment(int x1,int y1, int x2, int y2, int TYP){
+	public RoadSegment(int x1,int y1, int x2, int y2, Color color, int roadWidth){
 		this.x1 = x1;
 		this.y1 = y1;
 		this.x2 = x2;
 		this.y2 = y2;
-		this.TYP = TYP;
+		this.color = color;
 	}
 	
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		
-		// determine paint color by road type
-		switch(TYP) {
-			//Case motervej
-			case 1:
-				g2.setColor(Color.orange);			
-				break;
-			//Case mototrafikvej
-			case 2:
-				g2.setColor(Color.yellow);
-				break;
-			//Case mean roads
-			case 3:
-			case 4:
-				g2.setColor(Color.yellow);
-				break;
-			//Case landevej
-			case Landevej:
-				g2.setColor(Color.black);
-				break;
-			//Case gade
-			case Gade:
-				g2.setColor(Color.white);
-				break;
-			//Casse sti
-			case Sti:
-				g2.setColor(Color.lightGray);
-				break;
-		}
+		// set road color
+		g2.setColor(color);
 	
-		// determine road width by zoom factor
-		int roadWidth = 1;
-		if(Window.zoomFactor > 1.5) roadWidth = 10;
-		if(Window.zoomFactor > 3)   roadWidth = 10;
-		if(Window.zoomFactor > 5)   roadWidth = 10;
-		
-		
 		// setting stroke type
 		g2.setStroke(new BasicStroke(roadWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
