@@ -29,8 +29,15 @@ public class QuadTree implements Parent {
 	 * finds all the nodes that are held in the box defined by the two nodes (x1, y1), (x2, y2)
 	 */
 	public List<Node> query(double x1, double y1, double x2, double y2) {
-		// If the query box is outside of the QuadTree area, an IllegalArgumentException is thrown
-		if (x1 > xMax || x1 < 0 || x2 < 0 || x2 > xMax || y1 < 0 || y1 > yMax || y2 > yMax || y2 < 0) throw new IllegalArgumentException();
+		// If the query box is outside of the QuadTree area, it is set to the ends of the quadtree area
+		if (x1 > xMax) x1 = xMax;
+		if (x1 < 0) x1 = 0;
+		if (x2 < 0) x2 = 0;
+		if (x2 > xMax) x2 = xMax;
+		if (y1 < 0) y1 = 0;
+		if (y1 > yMax) y1 = yMax;
+		if (y2 > yMax) y2 = yMax; 
+		if (y2 < 0) y2 = 0;
 		BoundingBox queryBox = new BoundingBox(x1, y1, x2, y2);
 		return root.query(queryBox, new ArrayList<Node>());
 	}
@@ -64,6 +71,14 @@ public class QuadTree implements Parent {
 	 */
 	public void showTree() {
 		root.show();
+	}
+	
+	public double getXMax() {
+		return xMax;
+	}
+	
+	public double getYMax() {
+		return yMax;
 	}
 	
 	public static void main(String[] args) {

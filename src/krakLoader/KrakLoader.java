@@ -102,7 +102,7 @@ public class KrakLoader {
 	 * @return
 	 * @throws IOException
 	 */
-	public Graph createGraphAndLongestRoadsList() throws IOException {
+	public Graph createGraphAndLongestRoadsList(int longestRoadsFloor) throws IOException {
 
 		System.out.println("Adding " + (nodes.size()-1) + " nodes to graph");
 
@@ -122,7 +122,7 @@ public class KrakLoader {
 			double length = Double.parseDouble(lineArray[2]);
 			int type = Integer.parseInt(lineArray[5]);
 			Edge edge = new Edge(fromNode, toNode, length, type); // Creates an edge.
-			if (length > 10000) longestRoads.add(edge);
+			if (length > longestRoadsFloor) longestRoads.add(edge);
 			graph.addEdge(edge); // Adds the newly created edge object to the graph.
 			line = br.readLine();
 		}
@@ -173,7 +173,7 @@ public class KrakLoader {
 		KrakLoader krakLoader = KrakLoader.use("kdv_node_unload.txt",
 				"kdv_unload.txt");
 		krakLoader.createNodeList();
-		Graph graph = krakLoader.createGraphAndLongestRoadsList();
+		Graph graph = krakLoader.createGraphAndLongestRoadsList(10000);
 		QuadTree QT = krakLoader.createQuadTree();
 		krakLoader = null;
 		Long endTime = System.currentTimeMillis();

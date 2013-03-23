@@ -72,6 +72,10 @@ public class Edge {
      	 return data.trim();  
      }
      
+     public Node getFromNode() {
+    	 return FNODE;
+     }
+     
      public Node getToNode() {
     	 return TNODE;
      }

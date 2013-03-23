@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
+import java.util.LinkedList;
 import java.util.List;
 
 import krakLoader.KrakLoader;
@@ -11,6 +12,9 @@ import QuadTree.QuadTree;
 
 public class WindowHandler {
 	static List<Node> nodes;
+	static List<Edge> edges;
+	static List<Edge> longestRoads;
+	static int longestRoadsFloor;
 	static QuadTree QT;
 	static Graph graph;
 	static Window window;
@@ -59,24 +63,74 @@ public class WindowHandler {
 		return (int) Math.round((( geoY + Window.offsetY) * (Window.windowSize / 3)
 									* Window.use().getZoomFactor()) / 100000);
 	}
+
+	// Converts X-pixel to coordinate
+	private static double pixelToGeoX(int x) {
+		return 0.0;
+	}
+	
+	// Converts Y-pixel to coordinate
+	private static double pixelToGeoY(int y) {
+		return 0.0;
+	}
+	
+	// Takes a search area in pixels, and returns a list of all the edges to be drawn on the map
+	public static List<Edge> search(int x1, int x2, int y1, int y2) {
+		
+		double geoX1 = pixelToGeoX(x1) - longestRoadsFloor;
+		double geoX2 = pixelToGeoX(x2) + longestRoadsFloor;
+		double geoY1 = pixelToGeoY(y1) - longestRoadsFloor;
+		double geoY2 = pixelToGeoY(y2) + longestRoadsFloor;
+		nodes = QT.query(geoX1, geoY1, geoX2, geoY2);
+		// checks whether any of the longest roads intersect with the searched area
+		List<Edge> searchedEdges = new LinkedList<Edge>();
+		for (Edge e : longestRoads) {
+			if(lineIntersects(geoX1, geoX2, geoY1, geoY2, e.getFromNode().getXCord(), e.getFromNode().getYCord(),
+					e.getToNode().getXCord(), e.getFromNode().getYCord())) {
+				searchedEdges.add(e);
+			}
+		}
+		for (Node n: nodes) {
+			Iterable<Edge> edgesFromNode = graph.adjOut(n.getKdvID());
+			for (Edge e : edgesFromNode) {
+				searchedEdges.add(e);
+			}
+		}
+		return searchedEdges;
+		
+	}
+	
+	private static boolean lineIntersects(double boxX1, double boxX2, double boxY1, double boxY2,
+									double lineX1, double lineX2, double lineY1, double lineY2) {
+		return false;
+	}
+	
+	// Gets all the edges that go out from each Node in the list of nodes
+	public static List<Edge> getEdgesFromNodes(List<Node> nodes) {
+		List<Edge> edges = new LinkedList<Edge>();
+		for (Node n: nodes) {
+			Iterable<Edge> edgesFromNode = graph.adjOut(n.getKdvID());
+			for (Edge e : edgesFromNode) {
+				edges.add(e);
+			}
+		}
+		return edges;
+	}
 	
 	//Adds road segments to arrayList within Map class
 	public static void calculatePixels() {
 		Long startTime = System.currentTimeMillis();
-		for (Node n: nodes) {
-			Iterable<Edge> edges = graph.adjOut(n.getKdvID());
-			for (Edge e : edges) {
-				if (e.getType() != 5) break;
-				double x1 = n.getXCord();
-				double y1 = n.getYCord();
-				double x2 = e.getToNode().getXCord();
-				double y2 = e.getToNode().getYCord();
-				int pixelX1 = geoXToPixel(x1);
-				int pixelX2 = geoXToPixel(x2);
-				int pixelY1 = window.getHeight() - geoYToPixel(y1);
-				int pixelY2 = window.getHeight() - geoYToPixel(y2);
-				Map.use().addRoadSegment(new RoadSegment(pixelX1, pixelY1, pixelX2, pixelY2, getRoadSegmentColor(e.getType()), selectRoadWidth()));
-			}
+		for (Edge e : edges) {
+			if (e.getType() != 5) break;
+			double x1 = e.getFromNode().getXCord();
+			double y1 = e.getFromNode().getYCord();
+			double x2 = e.getToNode().getXCord();
+			double y2 = e.getToNode().getYCord();
+			int pixelX1 = geoXToPixel(x1);
+			int pixelX2 = geoXToPixel(x2);
+			int pixelY1 = window.getHeight() - geoYToPixel(y1);
+			int pixelY2 = window.getHeight() - geoYToPixel(y2);
+			Map.use().addRoadSegment(new RoadSegment(pixelX1, pixelY1, pixelX2, pixelY2, getRoadSegmentColor(e.getType()), selectRoadWidth()));
 		}
 		Long endTime = System.currentTimeMillis();
 		Long duration = endTime - startTime;
@@ -108,13 +162,14 @@ public class WindowHandler {
 
 	public static void main(String[] args) throws IOException {
 		//Initializing of data from KrakLoader
-		
 		Long startTime = System.currentTimeMillis();
 		KrakLoader krakLoader = KrakLoader.use("kdv_node_unload.txt",
 				"kdv_unload.txt");
 		krakLoader.createNodeList(); 				//ArraylList with Nodes
-		graph = krakLoader.createGraph();			//Makes graph object
+		longestRoadsFloor = 10000;				//All roads with length larger than the longest road floor are added to the longest roads list
+		graph = krakLoader.createGraphAndLongestRoadsList(longestRoadsFloor);			//Makes graph object and list of roads longer than the longest roads floor
 		QT = krakLoader.createQuadTree();			//Makes and returns a quadTree
+		longestRoads = krakLoader.getLongestRoads();
 		krakLoader = null;							//Avoid loithering
 		Long endTime = System.currentTimeMillis();
 		Long duration = endTime - startTime;
@@ -129,6 +184,9 @@ public class WindowHandler {
 		duration = endTime - startTime;
 		System.out.println("Time to query all nodes and find their neighbours: " 
 														+ duration/1000.0 + " s");
+		
+		edges = getEdgesFromNodes(nodes);
+		
 		System.out.println("Length of the result from full query: " + nodes.size());
 		window = Window.use();
 		
