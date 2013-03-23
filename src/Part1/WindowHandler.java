@@ -122,7 +122,7 @@ public class WindowHandler {
 		Map.use().newArrayList();
 		Long startTime = System.currentTimeMillis();
 		for (Edge e : edges) {
-			if (e.getType() != 5) break;
+			//if (e.getType() != 5) break;
 			double x1 = e.getFromNode().getXCord();
 			double y1 = e.getFromNode().getYCord();
 			double x2 = e.getToNode().getXCord();
