@@ -101,7 +101,7 @@ public class Window extends JFrame {
         
         contentPane.add(Map.use(), BorderLayout.CENTER);
     	//Map.use().getRoadSegments();
-        //WindowHandler.calculatePixels();
+        WindowHandler.calculatePixels();
         repaint();
         
         contentPane.setBackground(Color.WHITE);
