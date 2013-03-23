@@ -46,6 +46,7 @@ public class KrakLoader {
 	private KrakLoader(String nodeFile, String edgeFile) {
 		this.nodeFile = nodeFile;
 		this.edgeFile = edgeFile;
+		longestRoads = new ArrayList<Edge>();
 	}
 	
 	public static KrakLoader use(String nodeFile, String edgeFile) {
