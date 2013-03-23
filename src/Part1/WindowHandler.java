@@ -58,9 +58,9 @@ public class WindowHandler {
 		return (int) Math.round((( geoY + Window.offsetY) * (Window.windowSize / 3) * Window.getInstance().getZoomFactor()) / 100000);
 	}
 	
-	public static ArrayList<RoadSegment> calculatePixels() {
+	//Adds road segments to arrayList within Map class
+	public static void calculatePixels() {
 		Long startTime = System.currentTimeMillis();
-		ArrayList<RoadSegment> rs = new ArrayList<RoadSegment>();
 		for (Node n: nodes) {
 			Iterable<Edge> edges = graph.adjOut(n.getKdvID());
 			for (Edge e : edges) {
@@ -73,34 +73,40 @@ public class WindowHandler {
 				int pixelX2 = geoXToPixel(x2);
 				int pixelY1 = window.getHeight() - geoYToPixel(y1);
 				int pixelY2 = window.getHeight() - geoYToPixel(y2);
-				rs.add(new RoadSegment(pixelX1, pixelY1, pixelX2, pixelY2, Vejtype.Landevej));
+				Map.use().addRoadSegment(new RoadSegment(pixelX1, pixelY1, pixelX2, pixelY2, e.getType()));
 			}
 		}
 		Long endTime = System.currentTimeMillis();
 		Long duration = endTime - startTime;
 		System.out.println("Time to calculate pixels: " + (duration/1000.0) + "s");
-		return rs;
 	}
 	
 
 	public static void main(String[] args) throws IOException {
+		//Initializing of data from KrakLoader
+		
 		Long startTime = System.currentTimeMillis();
 		KrakLoader krakLoader = KrakLoader.use("kdv_node_unload.txt",
 				"kdv_unload.txt");
-		krakLoader.createNodeList();
-		graph = krakLoader.createGraph();
-		QT = krakLoader.createQuadTree();
-		krakLoader = null;
+		krakLoader.createNodeList(); 				//ArraylList with Nodes
+		graph = krakLoader.createGraph();			//Makes graph object
+		QT = krakLoader.createQuadTree();			//Makes and returns a quadTree
+		krakLoader = null;							//Avoid loithering
 		Long endTime = System.currentTimeMillis();
 		Long duration = endTime - startTime;
 		System.out.println("Time to create Nodelist, Graph and QuadTree: " + duration/1000.0 + " s");
+		
+		//
+		
 		startTime = System.currentTimeMillis();
-		nodes = QT.query(0, 0, KrakLoader.getMaxX()-KrakLoader.getMinX(), KrakLoader.getMaxY()-KrakLoader.getMinY());
+		nodes = QT.query(0, 0, KrakLoader.getMaxX()-KrakLoader.getMinX(), 
+							KrakLoader.getMaxY()-KrakLoader.getMinY());
 		endTime = System.currentTimeMillis();
 		duration = endTime - startTime;
-		System.out.println("Time to query all nodes and find their neighbours: " + duration/1000.0 + " s");
+		System.out.println("Time to query all nodes and find their neighbours: " 
+														+ duration/1000.0 + " s");
 		System.out.println("Length of the result from full query: " + nodes.size());
-		window = Window.getInstance();
+		window = Window.use();
 		
 		//calculatePixels(); Vi calculater allerede ved oprettelse af Window
 		

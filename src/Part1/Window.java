@@ -12,6 +12,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /*
  * Window class is the GUI of our program, which puts the map and other components together
@@ -38,7 +40,8 @@ public class Window extends JFrame {
 		super("Better than apple maps");
 	}
 
-	public static Window getInstance() {
+	//Singleton
+	public static Window use() {
 		if(instance == null) {
 			instance = new Window();
 			instance.makeFrame();
@@ -49,43 +52,6 @@ public class Window extends JFrame {
 	/**
 	 * Creates the GUI
 	 */
-	//Gamle makeFrame-metode
-	/**private void makeFrame(){		
-		setSize(windowSize, windowSize); pack();
-		addComponentListener(new ComponentAdapter() {
-
-            public void componentResized(ComponentEvent evt) {
-            	int w = getWidth();
-				int h = getHeight();
-				
-				if(w < h) windowSize = w;
-			    else windowSize = h;
-				
-            	mapObject.getMapTestMethod();
-//            	Long startTime = System.currentTimeMillis();
-            	repaint();
-//            	Long endTime = System.currentTimeMillis();
-//        		Long duration = endTime - startTime;
-//        		System.out.println("Time to paint the map: " + (duration/1000.0) + "s");
-            }
-         });
-		
-		addKeyListener(new MKeyListener());
-		
-        contentPane = getContentPane();
-        contentPane.setLayout(new BorderLayout());	       
-        
-        mapObject = new Map();
-        contentPane.add(mapObject, BorderLayout.CENTER);
-        repaint();
-        
-        contentPane.setBackground(Color.WHITE);
-        pack();
-        setSize(windowSize, windowSize);
-        setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}*/
-	
 	private void makeFrame(){		
 		//setSize(windowSize, windowSize); pack();
 		setSize(750, (int)Math.round(750 / 2)); pack();
@@ -101,6 +67,13 @@ public class Window extends JFrame {
 		addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent evt) {
             	//super.componentResized(evt);
+            	
+            	/**
+            	int w = getWidth();
+				int h = getHeight();
+				
+				if(w < h) windowSize = w;
+			    else windowSize = h;*/
             	
             	timer.start();
             	
@@ -123,9 +96,9 @@ public class Window extends JFrame {
         contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());	       
         
-        setSize(750, (int)Math.round(750 / 2)); pack();
+        //setSize(750, (int)Math.round(750 / 2)); pack();
         
-        mapObject = new Map();
+        //mapObject = new Map();
         contentPane.add(mapObject, BorderLayout.CENTER);
     	mapObject.getMapTestMethod();
         repaint();
@@ -174,12 +147,43 @@ public class Window extends JFrame {
 		return zoomFactor;
 	}
 	
-	public void addRoadSegment(RoadSegment roadSegment) {
-		mapObject.addRoadSegment(roadSegment);
+	public void zoomWithBox(){
+		addMouseListener(new MouseAdapter(){
+			private int pressedX;
+			private int pressedY;
+			private int releasedX;
+			private int releasedY;
+			
+			public void mousePressed(MouseEvent e){	
+				pressedX = e.getX();
+				pressedY = e.getY();
+				
+				System.out.println("Pressed X : "+ pressedX);
+				System.out.println("Pressed Y : "+ pressedY);
+			}
+			
+			public void mouseReleased(MouseEvent e){
+				releasedX = e.getX();
+				releasedY =  e.getY();
+				System.out.println("Released X : "+ releasedX);
+				System.out.println("Released Y : "+ releasedY);
+				
+				double selectedXpixels = releasedX-pressedX;
+				double windowXpixels = Window.getInstance().getWidth();
+				double ratio = selectedXpixels/windowXpixels;
+				double zoomFactor = Window.getInstance().getZoomFactor() * ratio;
+				
+				System.out.println("zoomFactor : "+ zoomFactor);
+				Window.getInstance().setZoomFactor(zoomFactor);
+				
+				mapObject.getMapTestMethod();
+				//Window.getInstance().repaint();
+			}
+		});		
 	}
 	
 	public static void main(String[] args){
-		Window testWindow = Window.getInstance();
+		Window testWindow = Window.use();
 		testWindow.makeFrame();
 	}
 }
