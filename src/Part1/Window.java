@@ -4,6 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import javax.swing.JFrame;
+import javax.swing.Timer;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
@@ -26,6 +30,10 @@ public class Window extends JFrame {
 	public static int windowSize = 760; 		// NOT DONE! Will take the dynamic ACTUAL size of the window
 	public static double zoomFactor = 0.75;   	// NOT DONE! Will change according to the ACTUAL current zoom factor
 
+	private Timer timer;
+	private static final int DELAY = 2000;
+	private int counter;
+	
 	private Window(){
 		super("Better than apple maps");
 	}
@@ -41,7 +49,8 @@ public class Window extends JFrame {
 	/**
 	 * Creates the GUI
 	 */
-	private void makeFrame(){		
+	//Gamle makeFrame-metode
+	/**private void makeFrame(){		
 		setSize(windowSize, windowSize); pack();
 		addComponentListener(new ComponentAdapter() {
 
@@ -73,6 +82,58 @@ public class Window extends JFrame {
         contentPane.setBackground(Color.WHITE);
         pack();
         setSize(windowSize, windowSize);
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}*/
+	
+	private void makeFrame(){		
+		//setSize(windowSize, windowSize); pack();
+		setSize(750, (int)Math.round(750 / 2)); pack();
+		
+		timer = new Timer(DELAY, new ActionListener() {
+			   public void actionPerformed(ActionEvent e) {
+			    System.out.println("timer action " + counter++ + "!");
+			    mapObject.getMapTestMethod();
+			   }
+			  });
+			  timer.setRepeats(false);
+			
+		addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent evt) {
+            	//super.componentResized(evt);
+            	
+            	timer.start();
+            	
+            	/**double w = getWidth();
+				double h = getHeight();
+				if(w/1.5 != h) 
+					if(w/1.5 < h) h = w * 1.5;*/
+            	
+//            	Long startTime = System.currentTimeMillis();
+				//mapObject.getMapTestMethod();
+//            	Long endTime = System.currentTimeMillis();
+//        		Long duration = endTime - startTime;
+//        		System.out.println("Time to paint the map: " + (duration/1000.0) + "s");
+				//repaint();
+            }
+         });
+		
+		addKeyListener(new MKeyListener());
+		
+        contentPane = getContentPane();
+        contentPane.setLayout(new BorderLayout());	       
+        
+        setSize(750, (int)Math.round(750 / 2)); pack();
+        
+        mapObject = new Map();
+        contentPane.add(mapObject, BorderLayout.CENTER);
+    	mapObject.getMapTestMethod();
+        repaint();
+        
+        contentPane.setBackground(Color.WHITE);
+        pack();
+        //setSize(windowSize, windowSize);
+        setSize(750, (int) Math.round(750 / 1.5));
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}

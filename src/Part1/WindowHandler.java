@@ -102,7 +102,7 @@ public class WindowHandler {
 		System.out.println("Length of the result from full query: " + nodes.size());
 		window = Window.getInstance();
 		
-		calculatePixels();
+		//calculatePixels(); Vi calculater allerede ved oprettelse af Window
 		
 		System.out.printf("Graph has %d edges%n", graph.getE());
 		//MemoryMXBean mxbean = ManagementFactory.getMemoryMXBean();
