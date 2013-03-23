@@ -1,9 +1,13 @@
-package Part1;
+package Mess_inspiration;
 
 import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JComponent;
+
+import Part1.RoadSegment;
+import Part1.Vejtype;
+import Part1.Window;
 
 public class TomsTempClass {
 	
@@ -21,9 +25,10 @@ public class TomsTempClass {
 										{ 525000, 6095000, 565000, 6130000 },
 										{ 550000, 6090000, 565000, 6130000 },
 									}; 
-
+	/**
 	public ArrayList<RoadSegment> mapTestMethod() {
 		ArrayList<RoadSegment> rs = new ArrayList<RoadSegment>();
+		
 		
 		for(int i = 0; i < 12; i++) {
 			RoadSegment segment = 
@@ -41,4 +46,6 @@ public class TomsTempClass {
 	private int geoYToPixel(double geoY) {
 		return (int) Math.round((( geoY + Window.offsetY) * (Window.windowSize / 3) * Window.getInstance().getZoomFactor()) / 100000);
 	}
+	*/
 }
+

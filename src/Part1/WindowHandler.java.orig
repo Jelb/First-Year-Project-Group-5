@@ -121,6 +121,7 @@ public class WindowHandler {
 	public static void calculatePixels() {
 		Map.use().newArrayList();
 		Long startTime = System.currentTimeMillis();
+<<<<<<< HEAD
 		for (Edge e : edges) {
 			if (e.getType() != 5) break;
 			double x1 = e.getFromNode().getXCord();
@@ -132,6 +133,23 @@ public class WindowHandler {
 			int pixelY1 = window.getHeight() - geoYToPixel(y1);
 			int pixelY2 = window.getHeight() - geoYToPixel(y2);
 			Map.use().addRoadSegment(new RoadSegment(pixelX1, pixelY1, pixelX2, pixelY2, getRoadSegmentColor(e.getType()), selectRoadWidth()));
+=======
+		for (Node n: nodes) {
+			if(n == null)continue;
+			Iterable<Edge> edges = graph.adjOut(n.getKdvID());
+			for (Edge e : edges) {
+				//if (e.getType() != 5) break;
+				double x1 = n.getXCord();
+				double y1 = n.getYCord();
+				double x2 = e.getToNode().getXCord();
+				double y2 = e.getToNode().getYCord();
+				int pixelX1 = geoXToPixel(x1);
+				int pixelX2 = geoXToPixel(x2);
+				int pixelY1 = window.getHeight() - geoYToPixel(y1);
+				int pixelY2 = window.getHeight() - geoYToPixel(y2);
+				Map.use().addRoadSegment(new RoadSegment(pixelX1, pixelY1, pixelX2, pixelY2, getRoadSegmentColor(e.getType()), selectRoadWidth()));
+			}
+>>>>>>> 9745646bbcb3d65d936cb2db95bf9763bdeef15f
 		}
 		Long endTime = System.currentTimeMillis();
 		Long duration = endTime - startTime;
@@ -167,8 +185,12 @@ public class WindowHandler {
 		KrakLoader krakLoader = KrakLoader.use("kdv_node_unload.txt",
 				"kdv_unload.txt");
 		krakLoader.createNodeList(); 				//ArraylList with Nodes
+<<<<<<< HEAD
 		longestRoadsFloor = 10000;				//All roads with length larger than the longest road floor are added to the longest roads list
 		graph = krakLoader.createGraphAndLongestRoadsList(longestRoadsFloor);			//Makes graph object and list of roads longer than the longest roads floor
+=======
+		graph = krakLoader.createGraphAndLongestRoadsList();			//Makes graph object
+>>>>>>> 9745646bbcb3d65d936cb2db95bf9763bdeef15f
 		QT = krakLoader.createQuadTree();			//Makes and returns a quadTree
 		longestRoads = krakLoader.getLongestRoads();
 		krakLoader = null;							//Avoid loithering
@@ -183,7 +205,12 @@ public class WindowHandler {
 		System.out.println("Time to query all nodes and find their neighbours: " 
 														+ duration/1000.0 + " s");
 		
+<<<<<<< HEAD
 		edges = getEdgesFromNodes(nodes);
+=======
+		//
+		
+>>>>>>> 9745646bbcb3d65d936cb2db95bf9763bdeef15f
 		
 		System.out.println("Length of the result from full query: " + nodes.size());
 		window = Window.use();
