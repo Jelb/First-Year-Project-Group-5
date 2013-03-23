@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
-import java.util.ArrayList;
 import java.util.List;
 
 import krakLoader.KrakLoader;
@@ -50,13 +49,15 @@ public class WindowHandler {
 	
 	// Converts X-coordinates to pixel-values
 	private static int geoXToPixel(double geoX) {
-		return (int) Math.round(( (geoX + Window.offsetX) * (Window.windowSize / 3) * Window.getInstance().getZoomFactor()) / 100000);
+		return (int) Math.round(( (geoX + Window.offsetX) * (Window.windowSize / 3)
+									* Window.use().getZoomFactor()) / 100000);
 	}
 	
 	
 	// Converts Y-coordinates to pixel-values
 	private static int geoYToPixel(double geoY) {
-		return (int) Math.round((( geoY + Window.offsetY) * (Window.windowSize / 3) * Window.getInstance().getZoomFactor()) / 100000);
+		return (int) Math.round((( geoY + Window.offsetY) * (Window.windowSize / 3)
+									* Window.use().getZoomFactor()) / 100000);
 	}
 	
 	//Adds road segments to arrayList within Map class
