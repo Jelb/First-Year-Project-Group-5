@@ -3,6 +3,8 @@ package Part1;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
@@ -53,6 +55,7 @@ public class Window extends JFrame {
 	 * Creates the GUI
 	 */
 	private void makeFrame(){		
+		setPreferredSize(new Dimension(750,500));
 		//setSize(windowSize, windowSize); pack();
 		setSize(750, (int)Math.round(750 / 2)); pack();
 		
@@ -98,10 +101,10 @@ public class Window extends JFrame {
         contentPane.setLayout(new BorderLayout());	       
         
         //setSize(750, (int)Math.round(750 / 2)); pack();
-        
+        Map.use().getRoadSegments();
         contentPane.add(Map.use(), BorderLayout.CENTER);
     	//Map.use().getRoadSegments();
-        WindowHandler.calculatePixels();
+        //WindowHandler.calculatePixels();
         repaint();
         
         contentPane.setBackground(Color.WHITE);

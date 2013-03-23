@@ -9,7 +9,7 @@ public class Map extends JPanel {
 	 * Map is a JPanel with the lines drawn
 	 */
 	private static final long serialVersionUID = 1L;
-	private ArrayList<RoadSegment> segments;
+	private ArrayList<RoadSegment> segments = new ArrayList<RoadSegment>();
 	private static Map instance;
 	
 	//Singleton check
@@ -29,6 +29,10 @@ public class Map extends JPanel {
     //Returns arrayList of road segments
     public ArrayList<RoadSegment> getRoadSegments() {
     	return segments;
+    }
+    
+    public void newArrayList() {
+    	segments = new ArrayList<RoadSegment>();
     }
     
     //Adds road segments to arrayList

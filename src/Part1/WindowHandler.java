@@ -62,11 +62,13 @@ public class WindowHandler {
 	
 	//Adds road segments to arrayList within Map class
 	public static void calculatePixels() {
+		Map.use().newArrayList();
 		Long startTime = System.currentTimeMillis();
 		for (Node n: nodes) {
+			if(n == null)continue;
 			Iterable<Edge> edges = graph.adjOut(n.getKdvID());
 			for (Edge e : edges) {
-				if (e.getType() != 5) break;
+				//if (e.getType() != 5) break;
 				double x1 = n.getXCord();
 				double y1 = n.getYCord();
 				double x2 = e.getToNode().getXCord();
@@ -119,9 +121,6 @@ public class WindowHandler {
 		Long endTime = System.currentTimeMillis();
 		Long duration = endTime - startTime;
 		System.out.println("Time to create Nodelist, Graph and QuadTree: " + duration/1000.0 + " s");
-		
-		//
-		
 		startTime = System.currentTimeMillis();
 		nodes = QT.query(0, 0, KrakLoader.getMaxX()-KrakLoader.getMinX(), 
 							KrakLoader.getMaxY()-KrakLoader.getMinY());
@@ -129,6 +128,10 @@ public class WindowHandler {
 		duration = endTime - startTime;
 		System.out.println("Time to query all nodes and find their neighbours: " 
 														+ duration/1000.0 + " s");
+		
+		//
+		
+		
 		System.out.println("Length of the result from full query: " + nodes.size());
 		window = Window.use();
 		
