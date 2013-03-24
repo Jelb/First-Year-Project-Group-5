@@ -3,7 +3,6 @@ package Part1;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.Timer;
@@ -25,8 +24,7 @@ public class Window extends JFrame {
 		
 	private static final long serialVersionUID = 1L;
 	private static Window instance = null;
-	private Container contentPane;
-	private Map mapObject;
+	private static Container contentPane;
 	
 	public static int offsetX = 0;			// NOT DONE! The current offset of the windows top left position
 	public static int offsetY = 0;		// NOT DONE! The current offset of the windows top left position
@@ -55,102 +53,89 @@ public class Window extends JFrame {
 	 * Creates the GUI
 	 */
 	private void makeFrame(){		
-		setPreferredSize(new Dimension(750,500));
-		//setSize(windowSize, windowSize); pack();
-		setSize(750, (int)Math.round(750 / 2)); pack();
-		
-		timer = new Timer(DELAY, new ActionListener() {
-			   public void actionPerformed(ActionEvent e) {
-			    System.out.println("timer action " + counter++ + "!");
-			    //Map.use().getRoadSegments();
-			    WindowHandler.calculatePixels();
-			   }
-			  });
-			  timer.setRepeats(false);
-			
-		addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent evt) {
-            	//super.componentResized(evt);
-            	
-            	/**
-            	int w = getWidth();
-				int h = getHeight();
-				
-				if(w < h) windowSize = w;
-			    else windowSize = h;*/
-            	
-            	timer.start();
-            	
-            	/**double w = getWidth();
-				double h = getHeight();
-				if(w/1.5 != h) 
-					if(w/1.5 < h) h = w * 1.5;*/
-            	
-//            	Long startTime = System.currentTimeMillis();
-				//mapObject.getMapTestMethod();
-//            	Long endTime = System.currentTimeMillis();
-//        		Long duration = endTime - startTime;
-//        		System.out.println("Time to paint the map: " + (duration/1000.0) + "s");
-				//repaint();
-            }
-         });
+		setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);	//Frame starts maximized
 		
 		addKeyListener(new MKeyListener());
 		
         contentPane = getContentPane();
-        contentPane.setLayout(new BorderLayout());	       
+        contentPane.setLayout(new BorderLayout());
         
-        //setSize(750, (int)Math.round(750 / 2)); pack();
-        Map.use().getRoadSegments();
         contentPane.add(Map.use(), BorderLayout.CENTER);
-    	//Map.use().getRoadSegments();
-        //WindowHandler.calculatePixels();
-        repaint();
         
-        contentPane.setBackground(Color.WHITE);
-        //setSize(windowSize, windowSize);
-        setSize(750, (int) Math.round(750 / 1.5));
         pack();
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-		// inner class key listener
-		class MKeyListener extends KeyAdapter {
+	// inner class key listener
+	class MKeyListener extends KeyAdapter {
+		
+		public void keyPressed(KeyEvent event) {
 			
-			public void keyPressed(KeyEvent event) {
-				
-				if(event.getKeyCode() == KeyEvent.VK_UP) {
-					System.out.println("Up pressed");
-					Window.offsetY += -10000;
-				}
-				if(event.getKeyCode() == KeyEvent.VK_DOWN) {
-					System.out.println("Down pressed");
-					Window.offsetY += 10000;
-				}
-				if(event.getKeyCode() == KeyEvent.VK_LEFT) {
-					System.out.println("Left pressed");
-					Window.offsetX += 10000;
-				}
-				if(event.getKeyCode() == KeyEvent.VK_RIGHT) {
-					System.out.println("Right pressed");
-					Window.offsetX += -10000;
-				}
-				
-				WindowHandler.calculatePixels();
-				repaint();
+			if(event.getKeyCode() == KeyEvent.VK_UP) {
+				System.out.println("Up pressed");
+				Window.offsetY += -10000;
 			}
+			if(event.getKeyCode() == KeyEvent.VK_DOWN) {
+				System.out.println("Down pressed");
+				Window.offsetY += 10000;
+			}
+			if(event.getKeyCode() == KeyEvent.VK_LEFT) {
+				System.out.println("Left pressed");
+				Window.offsetX += 10000;
+			}
+			if(event.getKeyCode() == KeyEvent.VK_RIGHT) {
+				System.out.println("Right pressed");
+				Window.offsetX += -10000;
+			}
+			
+			WindowHandler.calculatePixels();
+			repaint();
 		}
-	
-	public void setZoomFactor(double z){
-		zoomFactor = z;
 	}
 	
-	public double getZoomFactor(){
-		return zoomFactor;
-	}
+	//add a resize adapter
+	public void resizeAdapter() {
+		addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent evt) {
+				//super.componentResized(evt);
+        	
+				/**
+        		int w = getWidth();
+				int h = getHeight();
+			
+				if(w < h) windowSize = w;
+		    	else windowSize = h;*/
+        	
+				timer.start();
+        	
+				/**double w = getWidth();
+				double h = getHeight();
+				if(w/1.5 != h) 
+				if(w/1.5 < h) h = w * 1.5;*/
+        	
+//        		Long startTime = System.currentTimeMillis();
+				//mapObject.getMapTestMethod();
+//        		Long endTime = System.currentTimeMillis();
+//    			Long duration = endTime - startTime;
+//    			System.out.println("Time to paint the map: " + (duration/1000.0) + "s");
+				//repaint();
+        }
+     });}
 	
-	public void zoomWithBox(){
+	// make a timer thats used every 2 seconds when a resize happens 
+	public void makeTimer(){
+		timer = new Timer(DELAY, new ActionListener() {
+			   public void actionPerformed(ActionEvent e) {
+			    System.out.println("timer action " + counter++ + "!");
+			    WindowHandler.calculatePixels();
+			   }
+			  });
+			  timer.setRepeats(false);
+	}	
+	
+	//Press mouse and hold, then drag to new spot. Pressed and released pixels printed out
+	public void zoomWithBoxLister(){
 		addMouseListener(new MouseAdapter(){
 			private int pressedX;
 			private int pressedY;
@@ -171,22 +156,16 @@ public class Window extends JFrame {
 				System.out.println("Released X : "+ releasedX);
 				System.out.println("Released Y : "+ releasedY);
 				
-				double selectedXpixels = releasedX-pressedX;
-				double windowXpixels = getWidth();
-				double ratio = selectedXpixels/windowXpixels;
-				double zoomFactor = getZoomFactor() * ratio;
-				
-				System.out.println("zoomFactor : "+ zoomFactor);
-				setZoomFactor(zoomFactor);
-				
 				WindowHandler.calculatePixels();
-				//Window.getInstance().repaint();
 			}
 		});		
 	}
 	
-	public static void main(String[] args){
-		Window testWindow = Window.use();
-		testWindow.makeFrame();
+	public void setZoomFactor(double z){
+		zoomFactor = z;
+	}
+	
+	public double getZoomFactor(){
+		return zoomFactor;
 	}
 }

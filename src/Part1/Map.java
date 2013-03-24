@@ -9,8 +9,8 @@ public class Map extends JPanel {
 	 * Map is a JPanel with the lines drawn
 	 */
 	private static final long serialVersionUID = 1L;
-	private ArrayList<RoadSegment> segments = new ArrayList<RoadSegment>();
-	private static Map instance;
+	private ArrayList<RoadSegment> segments;
+	private static Map instance = null;
 	
 	//Singleton check
 	public static Map use() {
