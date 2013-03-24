@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,14 +53,22 @@ public class WindowHandler {
 //	}
 	
 	// Converts X-coordinates to pixel-values
-	private static int geoXToPixel(double geoX) {
+	private static int geoXToPixelOLD(double geoX) {
 		return (int) Math.round(( (geoX + Window.offsetX) * (Window.windowSize / 3)
 									* Window.use().getZoomFactor()) / 100000);
 	}
 	
+	private static int geoXToPixel(double geoX) {
+		return (int) Math.round( (geoX/450403.8604700001) * Window.use().getWidth());
+	}
+	
+	private static int geoYToPixel(double geoY) {
+		return (int) Math.round( (geoY/352136.5527900001) * Window.use().getHeight());
+	}
+	
 	
 	// Converts Y-coordinates to pixel-values
-	private static int geoYToPixel(double geoY) {
+	private static int geoYToPixelOLD(double geoY) {
 		return (int) Math.round((( geoY + Window.offsetY) * (Window.windowSize / 3)
 									* Window.use().getZoomFactor()) / 100000);
 	}
@@ -189,6 +198,7 @@ public class WindowHandler {
 		window = Window.use();
 		
 		calculatePixels();
+		Map.use().repaint();
 		
 		System.out.printf("Graph has %d edges%n", graph.getE());
 		//MemoryMXBean mxbean = ManagementFactory.getMemoryMXBean();

@@ -3,6 +3,7 @@ package Part1;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.Timer;
@@ -54,12 +55,12 @@ public class Window extends JFrame {
 	 */
 	private void makeFrame(){		
 		setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);	//Frame starts maximized
+		setPreferredSize(new Dimension(750,500)); //When minimized goes to this
 		
 		addKeyListener(new MKeyListener());
 		
         contentPane = getContentPane();
-        contentPane.setLayout(new BorderLayout());
-        
+        contentPane.setLayout(new BorderLayout());        
         contentPane.add(Map.use(), BorderLayout.CENTER);
         
         pack();
