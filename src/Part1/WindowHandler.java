@@ -7,7 +7,7 @@ import java.lang.management.MemoryMXBean;
 import java.util.LinkedList;
 import java.util.List;
 
-import krakLoader.KrakLoader;
+import DataReader.DataReader;
 import QuadTree.QuadTree;
 
 public class WindowHandler {
@@ -164,7 +164,7 @@ public class WindowHandler {
 	public static void main(String[] args) throws IOException {
 		//Initializing of data from KrakLoader
 		Long startTime = System.currentTimeMillis();
-		KrakLoader krakLoader = KrakLoader.use("kdv_node_unload.txt",
+		DataReader krakLoader = DataReader.use("kdv_node_unload.txt",
 				"kdv_unload.txt");
 		krakLoader.createNodeList(); 				//ArraylList with Nodes
 		longestRoadsFloor = 10000;				//All roads with length larger than the longest road floor are added to the longest roads list
@@ -176,8 +176,8 @@ public class WindowHandler {
 		Long duration = endTime - startTime;
 		System.out.println("Time to create Nodelist, Graph and QuadTree: " + duration/1000.0 + " s");
 		startTime = System.currentTimeMillis();
-		nodes = QT.query(0, 0, KrakLoader.getMaxX()-KrakLoader.getMinX(), 
-							KrakLoader.getMaxY()-KrakLoader.getMinY());
+		nodes = QT.query(0, 0, DataReader.getMaxX()-DataReader.getMinX(), 
+							DataReader.getMaxY()-DataReader.getMinY());
 		endTime = System.currentTimeMillis();
 		duration = endTime - startTime;
 		System.out.println("Time to query all nodes and find their neighbours: " 

@@ -1,4 +1,4 @@
-package krakLoader;
+package DataReader;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,59 +6,81 @@ import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.PriorityQueue;
+
+import javax.swing.JOptionPane;
 
 import Part1.Edge;
 import Part1.Node;
-import Part1.RoadSegment;
-import Part1.Window;
-import QuadTree.Point;
 import QuadTree.QuadTree;
 
 import Part1.Graph;
 
 /**
- * This class can load the data files from krak into a graph representation
+ * The DataReader is used to extract information about <br>Nodes</br> and <br>Edges</br> 
+ * contained within two <i>.txt-files</i>. 
+ * Furthermore the DataReader class are capable of creating graphs based on the information
+ * extracted form the files. 
+ * After extraction of the information from both files the DataReader instance contains an <i>
+ * ArrayList</i> containing all nodes and another one containing all edges.
  * 
- * @author Peter Tiedemann petert@itu.dk
+ * The data-files used to store the information about nodes and edges has to be formated as
+ * it is the case within the data-files handed out by <br>www.Krak.dk</br>.
+ * 
+ * The <br>DataReader</br> class implements the singleton design pattern. 
+ * 
+ * @author Jonas (JELB@ITU.DK)
+ *
  */
-public class KrakLoader {
-	private static KrakLoader loader;
+public class DataReader {
+	private static DataReader loader;
 	private ArrayList<Node> nodes;
 	private ArrayList<Edge> longestRoads;
 	private final String nodeFile, edgeFile;
 	private static double maxX = 0, maxY = 0, minX = -1, minY = -1, maxLength = 0;
 
 	/**
-	 * Constructor for the KrakLoader class. The constructor creates an
-	 * ArrayList containing all nodes which are represented within the "<br>
-	 * kdv_node_unload.txt</br>" file.
+	 * Constructor for the DataReader class. 
+	 * The constructor stores the files which are required for using the
+	 * class methods. 
+	 * The Constructor is private to support the singleton implementation.
 	 * 
-	 * @param nodeFile
-	 *            The path which leads to the "<br>
-	 *            kdv_node_unload.txt</br>" file.
-	 * @param edgeFile
-	 *            The path which leads to the "<br>
-	 *            kdv_unload.txt</br>" file.
+	 * @param nodeFile The path for where the file containing information about the nodes is stored.
+	 * @param edgeFile The path for where the file containing information about the edges is stored.
 	 */
-	private KrakLoader(String nodeFile, String edgeFile) {
+	private DataReader(String nodeFile, String edgeFile) {
 		this.nodeFile = nodeFile;
 		this.edgeFile = edgeFile;
 		longestRoads = new ArrayList<Edge>();
 	}
 	
-	public static KrakLoader use(String nodeFile, String edgeFile) {
-		if(loader == null) return new KrakLoader(nodeFile, edgeFile);
-		else return loader;
+	/**
+	 * This method makes this the <br>DataReader</br> class to a singleton. 
+	 * The method checks if an instance of the class already has been created
+	 * and returns the current if so. Create and returns a new instance of the
+	 * <br>DataReader</br> if none exists. 
+	 * 
+	 * @param nodeFile The path for where the file containing information about the nodes is stored.
+	 * @param edgeFile The path for where the file containing information about the edges is stored.
+	 * @return Returns the instance of <br>DataReader</br> which currently are in use. 
+	 */
+	public static DataReader use(String nodeFile, String edgeFile) {
+		if(loader == null) 
+			loader = new DataReader(nodeFile, edgeFile);
+		return loader;
 	}
 
+	/**
+	 * The method extracts information about the nodes from the <i>nodeFile</i>
+	 * and creates <br>Node</br> objects corresponding to the extracted information.
+	 * <p>
+	 * This class will <br>terminate</br> the program if the file path is invalid or the
+	 * file is unreadable. 
+	 */
 	public void createNodeList(){
 		// open the file containing the list of nodes
 		try {
 		BufferedReader br = new BufferedReader(new FileReader(nodeFile));
-		
 		br.readLine(); // discard names of columns which is the first line
 
 		String line = br.readLine();
@@ -93,20 +115,26 @@ public class KrakLoader {
 		System.out.println("Height of map: " + (maxY-minY));
 		br.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "The \"nodeFile\" was not foud. \nThe will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
 		}
 	}
 
 	/**
+	 * The method creates a <br>Graph</br> based on the information within the "<i>edgeFile</i>.
+	 * Before storing the information in the graph the method constructs <br>Edge</br> object based on the information.
+	 * These objects are finally stored in the graph object.
+	 * <p>
+	 * This class will <br>terminate</br> the program if the file path is invalid or the
+	 * file is unreadable.  
 	 * 
-	 * 
-	 * @return
-	 * @throws IOException
+	 * @param longestRoadsFloor An int describing the floor value of the elements stored in the ArrayList <br>longestRoads</br>. 
+	 * @return Returns a <br>Graph</br> object based on the content <i>edgeFile</i>.
 	 */
-	public Graph createGraphAndLongestRoadsList(int longestRoadsFloor) throws IOException {
+	public Graph createGraphAndLongestRoadsList(int longestRoadsFloor) {
 
 		System.out.println("Adding " + (nodes.size()-1) + " nodes to graph");
-
+		try {
 		// Create a graph on the nodes
 		Graph graph = new Graph(nodes.size());
 
@@ -117,7 +145,7 @@ public class KrakLoader {
 		String line = br.readLine();
 		
 		while (line != null) {
-			String[] lineArray = line.split(",(?! |[a-zA-ZæÆøØåÅ])"); // Regex matches ',' not followed by space of letters.
+			String[] lineArray = line.split(",(?! |[a-zA-ZæÆøØåÅ])"); // Regex matches ',' not followed by spaces of letters.
 			Node fromNode = nodes.get(Integer.parseInt(lineArray[0]));
 			Node toNode = nodes.get(Integer.parseInt(lineArray[1]));
 			double length = Double.parseDouble(lineArray[2]);
@@ -129,17 +157,23 @@ public class KrakLoader {
 		}
 		br.close();
 		System.out.println("Max length: " + maxLength);
-		
 		return graph;
+		} 
+		catch (IOException e) {
+			//
+			JOptionPane.showMessageDialog(null, "The \"edgeFile\" was not foud. \nThe will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
+		}
+		return null;
 	}
 
 	/**
-	 * Creates and 
+	 * The method creates an instance of the <br>QuadTree</br> class and inserts all the existing nodes within it.
 	 * 
-	 * @return A QuadTree based on the nodes arrayList.
+	 * @return Returns a <br>QuadTree</br> object containing all nodes created in the <i>createNodeList()</i> method.
 	 */
 	public QuadTree createQuadTree() {
-		if(nodes.size() == 0) createNodeList();
+		if(nodes == null) createNodeList();
 		// Create QuadTree
 		QuadTree QT = new QuadTree(3, maxX - minX, maxY - minY);
 		for (int i = 1; i < nodes.size(); i++) { //For loop start at index 1 because index 0 is null.
@@ -148,30 +182,55 @@ public class KrakLoader {
 
 		return QT;
 	}
-
+	
+	/**
+	 * Getter method for the <i>maxX</i> field.
+	 * 
+	 * @return Returns the current value of the <i>maxX</i> field.
+	 */
 	public static double getMaxX() {
 		return maxX;
 	}
 
+	/**
+	 * Getter method for the <i>maxY</i> field.
+	 * 
+	 * @return Returns the current value of the <i>maxY</i> field.
+	 */
 	public static double getMaxY() {
 		return maxY;
 	}
 
+	/**
+	 * Getter method for the <i>minX</i> field.
+	 * 
+	 * @return Returns the current value of the <i>minX</i> field.
+	 */
 	public static double getMinX() {
 		return minX;
 	}
 
+	/**
+	 * Getter method for the <i>minY</i> field.
+	 * 
+	 * @return Returns the current value of the <i>minY</i> field.
+	 */
 	public static double getMinY() {
 		return minY;
 	}
 	
+	/**
+	 * Getter method for the <i>longestRoads</i> field.
+	 * 
+	 * @return Returns the current ArrayList for the <i>longestRoads</i> field.
+	 */
 	public List<Edge> getLongestRoads() {
 		return longestRoads;
 	}
 
 	public static void main(String[] args) throws IOException {
 		Long startTime = System.currentTimeMillis();
-		KrakLoader krakLoader = KrakLoader.use("kdv_node_unload.txt",
+		DataReader krakLoader = DataReader.use("kdv_node_unload.txt",
 				"kdv_unload.txt");
 		krakLoader.createNodeList();
 		Graph graph = krakLoader.createGraphAndLongestRoadsList(10000);
