@@ -77,6 +77,7 @@ public class Window extends JFrame {
         ImageIcon ic = new ImageIcon(image);
         JLabel background = new JLabel(ic);
         contentPane.add(background);
+        setResizable(false);
         pack();
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -191,11 +192,10 @@ public class Window extends JFrame {
 		contentPane.add(Map.use(), BorderLayout.CENTER);
 		repaint();
 		if(initializing){
-			//invalidate();
 			validate();
+			setResizable(true);
 			initializing = false;
 		}
-
 	}
 	
 	
