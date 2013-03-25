@@ -21,6 +21,7 @@ public class WindowHandler {
 	static Window window;
 	static double geoWidth = 450403.8604700001;
 	static double geoHeight = 352136.5527900001;
+	private static boolean boo;
 
 	/**
 	 * Calculates the pixel coordinate of a given geo coordinate, and returns a new coordinate set with int values
@@ -178,6 +179,7 @@ public class WindowHandler {
 	
 
 	public static void main(String[] args) throws IOException {
+		Window.use();
 		//Initializing of data from KrakLoader
 		Long startTime = System.currentTimeMillis();
 		DataReader krakLoader = DataReader.use("kdv_node_unload.txt",
@@ -204,7 +206,7 @@ public class WindowHandler {
 		System.out.println("Length of the result from full query: " + nodes.size());
 
 		calculatePixels();
-		Map.use().repaint();
+		Window.use().updateMap();
 		
 		System.out.printf("Graph has %d edges%n", graph.getE());
 		//MemoryMXBean mxbean = ManagementFactory.getMemoryMXBean();

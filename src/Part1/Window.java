@@ -4,8 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.Timer;
 
 import java.awt.event.ActionEvent;
@@ -16,6 +20,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 /*
  * Window class is the GUI of our program, which puts the map and other components together
@@ -24,10 +31,11 @@ import java.awt.event.MouseEvent;
 public class Window extends JFrame {
 		
 	private static final long serialVersionUID = 1L;
-	private static Window instance = null;
+	private static Window instance;
 	private static Container contentPane;
+	private static boolean initializing = true;
 	
-	public static int offsetX = 0;			// NOT DONE! The current offset of the windows top left position
+	public static int offsetX = 0;			// NOT DONE! The current offset of the windows top left position 
 	public static int offsetY = 0;		// NOT DONE! The current offset of the windows top left position
 	
 	public static int windowSize = 760; 		// NOT DONE! Will take the dynamic ACTUAL size of the window
@@ -54,20 +62,32 @@ public class Window extends JFrame {
 	 * Creates the GUI
 	 */
 	private void makeFrame(){		
-		setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);	//Frame starts maximized
-		setPreferredSize(new Dimension(750,500)); //When minimized goes to this
-		
-		addKeyListener(new MKeyListener());
-		zoomWithBoxListener();
-		
-        contentPane = getContentPane();
-        contentPane.setLayout(new BorderLayout());        
-        contentPane.add(Map.use(), BorderLayout.CENTER);
-        
+		//setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);	//Frame starts maximized
+		setPreferredSize(new Dimension(1024,640)); //When minimized goes to this
+		setLocation((int)(((Toolkit.getDefaultToolkit().getScreenSize().getWidth() - getWidth())/2)), (int)(((Toolkit.getDefaultToolkit().getScreenSize().getHeight() - getHeight())/2)));
+		contentPane = getContentPane();
+        contentPane.setLayout(new BorderLayout()); 
+        BufferedImage image = null;
+		try {
+			image = ImageIO.read(new File("onesplash.jpg"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        ImageIcon ic = new ImageIcon(image);
+        JLabel background = new JLabel(ic);
+        contentPane.add(background);
         pack();
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addListeners();
 	}
+	
+	private void addListeners() {
+		addKeyListener(new MKeyListener());
+		zoomWithBoxListener();
+	}
+	
 	
 	// inner class key listener
 	class MKeyListener extends KeyAdapter {
@@ -165,6 +185,20 @@ public class Window extends JFrame {
 			}
 		});		
 	}
+	
+	public void updateMap() {
+		contentPane.removeAll();
+		contentPane.add(Map.use(), BorderLayout.CENTER);
+		repaint();
+		if(initializing){
+			//invalidate();
+			validate();
+			initializing = false;
+		}
+
+	}
+	
+	
 	
 	public void setZoomFactor(double z){
 		zoomFactor = z;
