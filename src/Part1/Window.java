@@ -123,6 +123,10 @@ public class Window extends JFrame {
 		addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent evt) {
 				//super.componentResized(evt);
+				
+				double w = getWidth();
+				double h = getHeight();
+				if(w/1.5 != h) h = w * 1.5;
         	
 				/**
         		int w = getWidth();
@@ -135,8 +139,9 @@ public class Window extends JFrame {
         	
 				/**double w = getWidth();
 				double h = getHeight();
-				if(w/1.5 != h) 
-				if(w/1.5 < h) h = w * 1.5;*/
+				if(w/1.5 != h) 1.5;
+				if(w/1.5 < h) h = w * 1.5;
+				if(w/1.5 > h) */
         	
 //        		Long startTime = System.currentTimeMillis();
 				//mapObject.getMapTestMethod();
