@@ -64,12 +64,11 @@ public class Window extends JFrame {
 	private void makeFrame(){		
 		//setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);	//Frame starts maximized
 		setPreferredSize(new Dimension(1024,640)); //When minimized goes to this
-		setLocation((int)(((Toolkit.getDefaultToolkit().getScreenSize().getWidth() - getWidth())/2)), (int)(((Toolkit.getDefaultToolkit().getScreenSize().getHeight() - getHeight())/2)));
 		contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout()); 
         BufferedImage image = null;
 		try {
-			image = ImageIO.read(new File("onesplash.jpg"));
+			image = ImageIO.read(new File("splash.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -79,6 +78,8 @@ public class Window extends JFrame {
         contentPane.add(background);
         setResizable(false);
         pack();
+		setLocation((int)((Toolkit.getDefaultToolkit().getScreenSize().getWidth() - getWidth())/2),
+					(int)((Toolkit.getDefaultToolkit().getScreenSize().getHeight() - getHeight())/2));
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addListeners();
@@ -190,9 +191,8 @@ public class Window extends JFrame {
 	public void updateMap() {
 		contentPane.removeAll();
 		contentPane.add(Map.use(), BorderLayout.CENTER);
-		repaint();
+		revalidate();
 		if(initializing){
-			validate();
 			setResizable(true);
 			initializing = false;
 		}
