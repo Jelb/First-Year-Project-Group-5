@@ -19,6 +19,8 @@ public class WindowHandler {
 	static QuadTree QT;
 	static Graph graph;
 	static Window window;
+	static double geoWidth = 450403.8604700001;
+	static double geoHeight = 352136.5527900001;
 
 	/**
 	 * Calculates the pixel coordinate of a given geo coordinate, and returns a new coordinate set with int values
@@ -58,45 +60,48 @@ public class WindowHandler {
 									* Window.use().getZoomFactor()) / 100000);
 	}
 	
-	private static int geoXToPixel(double geoX) {
-		return (int) Math.round( (geoX/450403.8604700001) * Window.use().getWidth());
-	}
-	
-	private static int geoYToPixel(double geoY) {
-		return (int) Math.round( (geoY/352136.5527900001) * Window.use().getHeight());
-	}
-	
-	
 	// Converts Y-coordinates to pixel-values
 	private static int geoYToPixelOLD(double geoY) {
 		return (int) Math.round((( geoY + Window.offsetY) * (Window.windowSize / 3)
 									* Window.use().getZoomFactor()) / 100000);
 	}
+	
+	private static int geoXToPixel(double geoX) {
+		return (int) Math.round( (geoX/geoWidth) * Window.use().getWidth());
+	}
+	
+	private static int geoYToPixel(double geoY) {
+		return (int) Math.round( (geoY/geoHeight) * Window.use().getHeight());
+	}
+		
+	
+
 
 	// Converts X-pixel to coordinate
 	private static double pixelToGeoX(int x) {
-		return 0.0;
+		return  (((double)x/ Window.use().getWidth()) * geoWidth);
 	}
+	
 	
 	// Converts Y-pixel to coordinate
 	private static double pixelToGeoY(int y) {
-		return 0.0;
+		return  (((double)y/(Window.use().getHeight()) * geoHeight));
 	}
 	
 	// Takes a search area in pixels, and returns a list of all the edges to be drawn on the map
-	public static List<Edge> search(int x1, int x2, int y1, int y2) {
+	public static void search(int x1, int x2, int y1, int y2) {
 		
 		double geoX1 = pixelToGeoX(x1) - longestRoadsFloor;
 		double geoX2 = pixelToGeoX(x2) + longestRoadsFloor;
-		double geoY1 = pixelToGeoY(y1) - longestRoadsFloor;
-		double geoY2 = pixelToGeoY(y2) + longestRoadsFloor;
+		double geoY1 = geoHeight - pixelToGeoY(y1) - longestRoadsFloor;
+		double geoY2 = geoHeight - pixelToGeoY(y2) + longestRoadsFloor;
 		nodes = QT.query(geoX1, geoY1, geoX2, geoY2);
 		// checks whether any of the longest roads intersect with the searched area
 		List<Edge> searchedEdges = new LinkedList<Edge>();
 		for (Edge e : longestRoads) {
 			if(lineIntersects(geoX1, geoX2, geoY1, geoY2, e.getFromNode().getXCord(), e.getFromNode().getYCord(),
-					e.getToNode().getXCord(), e.getFromNode().getYCord())) {
-				searchedEdges.add(e);
+				e.getToNode().getXCord(), e.getFromNode().getYCord())) {
+			searchedEdges.add(e);
 			}
 		}
 		for (Node n: nodes) {
@@ -105,7 +110,9 @@ public class WindowHandler {
 				searchedEdges.add(e);
 			}
 		}
-		return searchedEdges;
+		//geoWidth = pixelToGeoX(x2) - pixelToGeoX(x1);
+		//geoHeight = pixelToGeoY(y2) - pixelToGeoY(y1);
+		edges = searchedEdges;
 		
 	}
 	
@@ -138,8 +145,8 @@ public class WindowHandler {
 			double y2 = e.getToNode().getYCord();
 			int pixelX1 = geoXToPixel(x1);
 			int pixelX2 = geoXToPixel(x2);
-			int pixelY1 = window.getHeight() - geoYToPixel(y1);
-			int pixelY2 = window.getHeight() - geoYToPixel(y2);
+			int pixelY1 = Window.use().getHeight() - geoYToPixel(y1);
+			int pixelY2 = Window.use().getHeight() - geoYToPixel(y2);
 			Map.use().addRoadSegment(new RoadSegment(pixelX1, pixelY1, pixelX2, pixelY2, getRoadSegmentColor(e.getType()), selectRoadWidth()));
 		}
 		Long endTime = System.currentTimeMillis();
@@ -195,8 +202,7 @@ public class WindowHandler {
 		edges = getEdgesFromNodes(nodes);
 		
 		System.out.println("Length of the result from full query: " + nodes.size());
-		window = Window.use();
-		
+
 		calculatePixels();
 		Map.use().repaint();
 		

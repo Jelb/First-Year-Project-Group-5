@@ -58,6 +58,7 @@ public class Window extends JFrame {
 		setPreferredSize(new Dimension(750,500)); //When minimized goes to this
 		
 		addKeyListener(new MKeyListener());
+		zoomWithBoxListener();
 		
         contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());        
@@ -136,7 +137,7 @@ public class Window extends JFrame {
 	}	
 	
 	//Press mouse and hold, then drag to new spot. Pressed and released pixels printed out
-	public void zoomWithBoxLister(){
+	public void zoomWithBoxListener(){
 		addMouseListener(new MouseAdapter(){
 			private int pressedX;
 			private int pressedY;
@@ -157,7 +158,10 @@ public class Window extends JFrame {
 				System.out.println("Released X : "+ releasedX);
 				System.out.println("Released Y : "+ releasedY);
 				
+				WindowHandler.search(pressedX, releasedY, pressedX, releasedY);
+				
 				WindowHandler.calculatePixels();
+				repaint();
 			}
 		});		
 	}
