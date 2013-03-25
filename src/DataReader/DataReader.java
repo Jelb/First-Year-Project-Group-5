@@ -3,11 +3,7 @@ package DataReader;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
 import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JOptionPane;
 
 import Part1.Edge;
@@ -30,10 +26,11 @@ import Part1.Graph;
  * The <br>DataReader</br> class implements the singleton design pattern. 
  * 
  * @author Jonas (JELB@ITU.DK)
+ * @author Mads (MENJ@ITU.DK)
  *
  */
 public class DataReader {
-	private static DataReader loader;
+	private static DataReader instance;
 	private ArrayList<Node> nodes;
 	private ArrayList<Edge> longestRoads;
 	private final String nodeFile, edgeFile;
@@ -51,7 +48,6 @@ public class DataReader {
 	private DataReader(String nodeFile, String edgeFile) {
 		this.nodeFile = nodeFile;
 		this.edgeFile = edgeFile;
-		longestRoads = new ArrayList<Edge>();
 	}
 	
 	/**
@@ -65,9 +61,10 @@ public class DataReader {
 	 * @return Returns the instance of <br>DataReader</br> which currently are in use. 
 	 */
 	public static DataReader use(String nodeFile, String edgeFile) {
-		if(loader == null) 
-			loader = new DataReader(nodeFile, edgeFile);
-		return loader;
+		if(instance == null) 
+			instance = new DataReader(nodeFile, edgeFile);
+		return instance
+				;
 	}
 
 	/**
@@ -90,7 +87,6 @@ public class DataReader {
 		nodes.add(null);
 		while (line != null) {
 			// Splits "line" by ',' and parses the id, x and y values to
-			// KrakNode
 			String[] lineArray = line.split(",");
 			double x = Double.parseDouble(lineArray[3]);
 			if (maxX < x)
@@ -99,9 +95,9 @@ public class DataReader {
 			if (maxY < y)
 				maxY = y;
 			int id = Integer.parseInt(lineArray[1]);
-			if (minX > x || minX == -1)
+			if (minX > x || minX < 0) // Is allowed because all our coordinates are in quadrant meaning all coordinates are positive.
 				minX = x;
-			if (minY > y || minY == -1)
+			if (minY > y || minY < 0) // Is allowed because all our coordinates are in quadrant meaning all coordinates are positive.
 				minY = y;
 
 			nodes.add(new Node(x, y, id));
@@ -134,6 +130,7 @@ public class DataReader {
 	public Graph createGraphAndLongestRoadsList(int longestRoadsFloor) {
 
 		System.out.println("Adding " + (nodes.size()-1) + " nodes to graph");
+		longestRoads = new ArrayList<Edge>();
 		try {
 		// Create a graph on the nodes
 		Graph graph = new Graph(nodes.size());
@@ -224,40 +221,7 @@ public class DataReader {
 	 * 
 	 * @return Returns the current ArrayList for the <i>longestRoads</i> field.
 	 */
-	public List<Edge> getLongestRoads() {
+	public ArrayList<Edge> getLongestRoads() {
 		return longestRoads;
 	}
-
-	public static void main(String[] args) throws IOException {
-		Long startTime = System.currentTimeMillis();
-		DataReader krakLoader = DataReader.use("kdv_node_unload.txt",
-				"kdv_unload.txt");
-		krakLoader.createNodeList();
-		Graph graph = krakLoader.createGraphAndLongestRoadsList(10000);
-		QuadTree QT = krakLoader.createQuadTree();
-		krakLoader = null;
-		Long endTime = System.currentTimeMillis();
-		Long duration = endTime - startTime;
-		System.out.println("Time to create Nodelist, Graph and QuadTree: " + duration/1000.0);
-		startTime = System.currentTimeMillis();
-		List<Node> list = QT.query(0, 0, maxX-minX, maxY-minY);
-		System.out.println("Length of the result from full query: " + list.size());
-		for (Node n : list) {
-			Iterable<Edge> edges = graph.adjOut(n.getKdvID());
-			for (Edge e : edges) {
-				double x1 = n.getXCord();
-				double y1 = n.getYCord();
-				double x2 = e.getToNode().getXCord();
-				double y2 = e.getToNode().getYCord();
-			}
-		}
-		endTime = System.currentTimeMillis();
-		duration = endTime - startTime;
-		System.out.println("Time to query all nodes and find their neighbours: " + duration/1000.0);
-		System.out.printf("Graph has %d edges%n", graph.getE());
-		MemoryMXBean mxbean = ManagementFactory.getMemoryMXBean();
-		System.out.printf("Heap memory usage: %d MB%n", mxbean
-				.getHeapMemoryUsage().getUsed() / (1000000));
-	}
-
 }
