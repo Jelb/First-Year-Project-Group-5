@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Toolkit;
 
 import javax.imageio.ImageIO;
@@ -196,14 +197,13 @@ public class Window extends JFrame {
 	public void updateMap() {
 		contentPane.removeAll();
 		contentPane.add(Map.use(), BorderLayout.CENTER);
+		repaint();
 		revalidate();
 		if(initializing){
 			setResizable(true);
 			initializing = false;
 		}
 	}
-	
-	
 	
 	public void setZoomFactor(double z){
 		zoomFactor = z;
