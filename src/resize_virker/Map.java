@@ -45,6 +45,5 @@ public class Map extends JPanel {
     		if(r == null) continue;
     		r.calcPixel();
     	}
-    	System.out.println("updatePix is called");
     }
 }

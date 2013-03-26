@@ -42,10 +42,6 @@ public class Window extends JFrame {
 	public static int windowSize = 760; 		// NOT DONE! Will take the dynamic ACTUAL size of the window
 	public static double zoomFactor = 0.75;   	// NOT DONE! Will change according to the ACTUAL current zoom factor
 
-	private Timer timer;
-	private static final int DELAY = 2000;
-	private int counter;
-	
 	private Window(){
 		super("Better than apple maps");
 	}
@@ -126,21 +122,12 @@ public class Window extends JFrame {
 			public void componentResized(ComponentEvent evt) {
 				if(Map.use().getRoadSegments() != null)
 				Map.use().updatePix();
-				System.out.println("resized");
+				System.out.println("resize");
 				repaint();
+				
         }
      });}
-	
-	// make a timer thats used every 2 seconds when a resize happens 
-	public void makeTimer(){
-		timer = new Timer(DELAY, new ActionListener() {
-			   public void actionPerformed(ActionEvent e) {
-			    System.out.println("timer action " + counter++ + "!");
-			    WindowHandler.calculatePixels();
-			   }
-			  });
-			  timer.setRepeats(false);
-	}	
+
 	
 	//Press mouse and hold, then drag to new spot. Pressed and released pixels printed out
 	public void zoomWithBoxListener(){
