@@ -132,10 +132,10 @@ public class Window extends JFrame {
 	//Press mouse and hold, then drag to new spot. Pressed and released pixels printed out
 	public void zoomWithBoxListener(){
 		addMouseListener(new MouseAdapter(){
-			private int pressedX;
-			private int pressedY;
-			private int releasedX;
-			private int releasedY;
+			private double pressedX;
+			private double pressedY;
+			private double releasedX;
+			private double releasedY;
 			
 			public void mousePressed(MouseEvent e){	
 				pressedX = e.getX();
@@ -151,9 +151,15 @@ public class Window extends JFrame {
 				System.out.println("Released X : "+ releasedX);
 				System.out.println("Released Y : "+ releasedY);
 				
-				WindowHandler.search(pressedX, releasedY, pressedX, releasedY);
+				//WindowHandler.search((int)pressedX, (int)releasedY, (int)pressedX, (int)releasedY);
+				//search(int x1, int x2, int y1, int y2)
+				WindowHandler.search((int)pressedX, (int)releasedX, (int)pressedY, (int)releasedY);
+				
 				
 				WindowHandler.calculatePixels();
+				//RoadSegment.setMapSize(releasedX, pressedY, pressedX, releasedY);
+				/**if(Map.use().getRoadSegments() != null)
+					Map.use().updatePix(); //Problem: updatePix er afhængig af vinduets nuværende størrelse*/
 				repaint();
 			}
 		});		

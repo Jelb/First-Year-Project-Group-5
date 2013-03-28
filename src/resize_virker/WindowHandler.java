@@ -35,8 +35,8 @@ public class WindowHandler {
 		
 		double geoX1 = pixelToGeoX(x1) - longestRoadsFloor;
 		double geoX2 = pixelToGeoX(x2) + longestRoadsFloor;
-		double geoY1 = geoHeight - pixelToGeoY(y1) - longestRoadsFloor;
-		double geoY2 = geoHeight - pixelToGeoY(y2) + longestRoadsFloor;
+		double geoY1 = geoHeight - pixelToGeoY(y1) + longestRoadsFloor;
+		double geoY2 = geoHeight - pixelToGeoY(y2) - longestRoadsFloor;
 		nodes = QT.query(geoX1, geoY1, geoX2, geoY2);
 		// checks whether any of the longest roads intersect with the searched area
 		List<Edge> searchedEdges = new LinkedList<Edge>();
