@@ -73,7 +73,7 @@ public class Window extends JFrame {
 		contentPane.setPreferredSize(new Dimension(1024,640)); //Sets the dimension on the content pane.		
         contentPane.setLayout(new BorderLayout()); //Sets the layout manager for the content pane.
 
-        // Shows if the background image is unable to be loaded.
+        // Showed if the background image is unable to be loaded.
         JLabel background = new JLabel("<html><center><b>Loading image could not load.<br>The map is loading...</b></html>", JLabel.CENTER);
 		try {
 			background = new JLabel(new ImageIcon(ImageIO.read(new File("splash.jpg"))));
@@ -89,7 +89,6 @@ public class Window extends JFrame {
 					(int)((Toolkit.getDefaultToolkit().getScreenSize().getHeight() - getHeight())/2));
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        addListeners();
 	}
 	
 	/**
@@ -114,6 +113,7 @@ public class Window extends JFrame {
 		if(initializing){
 			setResizable(true);
 			initializing = false;
+			addListeners();
 		}
 	}
 	
@@ -136,7 +136,7 @@ public class Window extends JFrame {
 	}
 	
 	/**
-	 * Adds a key listener useded to move around the map.
+	 * Adds a key listener used to move around the map.
 	 * 
 	 * @author Tom (TMCH@ITU.DK)
 	 */
@@ -179,7 +179,6 @@ public class Window extends JFrame {
 		public void componentResized(ComponentEvent evt) {
 			if(Map.use().getRoadSegments() != null)
 			Map.use().updatePix();
-			System.out.println("resize");
 			repaint();
 		}
 	}

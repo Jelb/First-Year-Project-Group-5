@@ -19,6 +19,15 @@ public class RoadSegment extends JComponent {
 	
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 
+	 * 
+	 * @param xStartCoord
+	 * @param yStartCoord
+	 * @param xEndCoord
+	 * @param yEndCoord
+	 * @param Type
+	 */
 	public RoadSegment(double xStartCoord, double yStartCoord, double xEndCoord, double yEndCoord, int Type){
 		geoStartX = xStartCoord;
 		geoStartY = yStartCoord;
@@ -28,6 +37,9 @@ public class RoadSegment extends JComponent {
 		calcPixel();
 	}
 	
+	/**
+	 * Used to convert the UTM coordinate to pixel.
+	 */
 	public void calcPixel(){
 		double diffX = (geoMaxX - geoMinX);
 		double diffY = (geoMaxY - geoMinY);
@@ -43,6 +55,14 @@ public class RoadSegment extends JComponent {
 		yEnd = y2;
 	}
 	
+	/**
+	 * Used to set maximum and minimum coordinate set of the map.
+	 * 
+	 * @param geoMaxX The max X-coordinate of the current displayed map.
+	 * @param geoMaxY The max Y-coordinate of the current displayed map.
+	 * @param geoMinX The min X-coordinate of the current displayed map.
+	 * @param geoMinY The min Y-coordinate of the current displayed map.
+	 */
 	public static void setMapSize(double geoMaxX, double geoMaxY, double geoMinX, double geoMinY){
 		RoadSegment.geoMaxX = geoMaxX;
 		RoadSegment.geoMaxY = geoMaxY;
@@ -50,18 +70,23 @@ public class RoadSegment extends JComponent {
 		RoadSegment.geoMinY = geoMinY;
 	}
 	
-	// determine what color the drawn line has
-		private static Color getRoadSegmentColor(int TYP){
-			switch(TYP) {
-			case 1 : return Color.red;		// Motor ways 	
-			case 2 : return Color.red;		// Motor traffic road
-			case 3 : return Color.blue; 	// Primary roads > 6 m 
-			case 4 : return Color.blue;		// Secondary roads > 6 m
-			case 5 : return Color.black;	// Roads between 3-6 meters
-			case 8 : return Color.green;	// paths
-			default : return Color.pink; 	// everything else
-			}
+	/**
+	 * Method used to receive the color used to paint the specific roadSegment.
+	 *
+	 * @param TYP An integer describing the road type.
+	 * @return The Color used to paint the roadSegment.
+	 */
+	private static Color getRoadSegmentColor(int TYP){
+		switch(TYP) {
+		case 1 : return Color.red;		// Motor ways 	
+		case 2 : return Color.red;		// Motor traffic road
+		case 3 : return Color.blue; 	// Primary roads > 6 m 
+		case 4 : return Color.blue;		// Secondary roads > 6 m
+		case 5 : return Color.black;	// Roads between 3-6 meters
+		case 8 : return Color.green;	// paths
+		default : return Color.pink; 	// everything else
 		}
+	}
 	
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
