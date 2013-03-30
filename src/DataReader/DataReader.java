@@ -63,8 +63,7 @@ public class DataReader {
 	public static DataReader use(String nodeFile, String edgeFile) {
 		if(instance == null) 
 			instance = new DataReader(nodeFile, edgeFile);
-		return instance
-				;
+		return instance;
 	}
 
 	/**
