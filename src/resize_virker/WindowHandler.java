@@ -16,8 +16,8 @@ public class WindowHandler {
 	static QuadTree QT;
 	static Graph graph;
 	static Window window;
-	static double geoWidth = 450403.8604700001;
-	static double geoHeight = 352136.5527900001;
+	static double geoWidth;
+	static double geoHeight;
 			
 	// Converts X-pixel to coordinate
 	private static double pixelToGeoX(int x) {
