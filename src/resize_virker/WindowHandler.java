@@ -32,56 +32,73 @@ public class WindowHandler {
 	
 	// Takes a search area in pixels, and returns a list of all the edges to be drawn on the map
 	public static void search(int x1, int x2, int y1, int y2) {
+		//TODO: Add the longestRoadsFloor to each border of the search area and use this to optimize panning.
+		double geoXMax;
+		double geoXMin;
+		double geoYMax;
+		double geoYMin;
+		if (x1 > x2) {
+			geoXMax = pixelToGeoX(x1);
+			geoXMin = pixelToGeoX(x2);
+		}
+		else {
+			geoXMax = pixelToGeoX(x2);
+			geoXMin = pixelToGeoX(x1);
+		}
+		if (y1 > y2) {
+			geoYMax = geoHeight - pixelToGeoY(y2);
+			geoYMin = geoHeight - pixelToGeoY(y1);
+		}
+		else {
+			geoYMax = geoHeight - pixelToGeoY(y1);
+			geoYMin = geoHeight - pixelToGeoY(y2);
+		}
+		nodes = QT.query(geoXMin, geoYMin, geoXMax, geoYMax);
+		getEdgesFromNodes();
+		RoadSegment.setMapSize(geoXMax, geoYMax, geoXMin, geoYMin);
+
 		
-		double geoX1 = pixelToGeoX(x1) - longestRoadsFloor;
-		double geoX2 = pixelToGeoX(x2) + longestRoadsFloor;
-		double geoY1 = geoHeight - pixelToGeoY(y1) + longestRoadsFloor;
-		double geoY2 = geoHeight - pixelToGeoY(y2) - longestRoadsFloor;
-		nodes = QT.query(geoX1, geoY1, geoX2, geoY2);
-		// checks whether any of the longest roads intersect with the searched area
-		List<Edge> searchedEdges = new LinkedList<Edge>();
-		for (Edge e : longestRoads) {
-			if(lineIntersects(geoX1, geoX2, geoY1, geoY2, e.getFromNode().getXCord(), e.getFromNode().getYCord(),
-				e.getToNode().getXCord(), e.getFromNode().getYCord())) {
-			searchedEdges.add(e);
-			}
-		}
-		for (Node n: nodes) {
-			Iterable<Edge> edgesFromNode = graph.adjOut(n.getKdvID());
-			for (Edge e : edgesFromNode) {
-				searchedEdges.add(e);
-			}
-		}
-		//geoWidth = pixelToGeoX(x2) - pixelToGeoX(x1);
-		//geoHeight = pixelToGeoY(y2) - pixelToGeoY(y1);
-		edges = searchedEdges;
+		// TODO:check whether any of the longest roads intersect with the searched area
+//		List<Edge> searchedEdges = new LinkedList<Edge>();
+//		for (Edge e : longestRoads) {
+//			if(lineIntersects(geoX1, geoX2, geoY1, geoY2, e.getFromNode().getXCord(), e.getFromNode().getYCord(),
+//				e.getToNode().getXCord(), e.getFromNode().getYCord())) {
+//			searchedEdges.add(e);
+//			}
+//		}
+//		for (Node n: nodes) {
+//			Iterable<Edge> edgesFromNode = graph.adjOut(n.getKdvID());
+//			for (Edge e : edgesFromNode) {
+//				searchedEdges.add(e);
+//			}
+//		}
+//		edges = searchedEdges;
 		
 	}
 	
+	//TODO: Write code to detect intersection between area of interest and road.
 	private static boolean lineIntersects(double boxX1, double boxX2, double boxY1, double boxY2,
 									double lineX1, double lineX2, double lineY1, double lineY2) {
 		return false;
 	}
 	
 	// Gets all the edges that go out from each Node in the list of nodes
-	public static List<Edge> getEdgesFromNodes(List<Node> nodes) {
-		List<Edge> edges = new LinkedList<Edge>();
+	public static void getEdgesFromNodes() {
+		edges = new LinkedList<Edge>();
 		for (Node n: nodes) {
 			Iterable<Edge> edgesFromNode = graph.adjOut(n.getKdvID());
 			for (Edge e : edgesFromNode) {
+				if (e.getType() != 5) continue;
 				edges.add(e);
 			}
 		}
-		return edges;
 	}
 	
 	//Adds road segments to arrayList within Map class
 	public static void calculatePixels() {
-		RoadSegment.setMapSize(DataReader.getMaxX(), DataReader.getMaxY(), DataReader.getMinX(), DataReader.getMinY());
 		Map.use().newArrayList();
 		Long startTime = System.currentTimeMillis();
 		for (Edge e : edges) {
-			//if (e.getType() != 5) break;
 			double x1 = e.getFromNode().getXCord();
 			double y1 = e.getFromNode().getYCord();
 			double x2 = e.getToNode().getXCord();
@@ -92,12 +109,24 @@ public class WindowHandler {
 		Long duration = endTime - startTime;
 		System.out.println("Time to calculate pixels: " + (duration/1000.0) + "s");
 	}
+
 	
+	public static void setGeoWidth(double geoWidth) {
+		WindowHandler.geoWidth = geoWidth;
+	}
+
+
+	public static void setGeoHeight(double geoHeight) {
+		WindowHandler.geoHeight = geoHeight;
+	}
+
 
 	public static void main(String[] args) throws IOException {
 		Window.use();
 		//Initializing of data from KrakLoader
+		
 		Long startTime = System.currentTimeMillis();
+		
 		DataReader krakLoader = DataReader.use("kdv_node_unload.txt",
 				"kdv_unload.txt");
 		krakLoader.createNodeList(); 				//ArraylList with Nodes
@@ -105,21 +134,25 @@ public class WindowHandler {
 		graph = krakLoader.createGraphAndLongestRoadsList(longestRoadsFloor);			//Makes graph object and list of roads longer than the longest roads floor
 		QT = krakLoader.createQuadTree();			//Makes and returns a quadTree
 		longestRoads = krakLoader.getLongestRoads();
-		krakLoader = null;							//Avoid loithering
+		krakLoader = null;		//Avoid loitering
+		
 		Long endTime = System.currentTimeMillis();
 		Long duration = endTime - startTime;
 		System.out.println("Time to create Nodelist, Graph and QuadTree: " + duration/1000.0 + " s");
+		
+		setGeoHeight(DataReader.getMaxY()-DataReader.getMinY());
+		setGeoWidth(DataReader.getMaxX()-DataReader.getMinX());
+		
 		startTime = System.currentTimeMillis();
-		nodes = QT.query(0, 0, DataReader.getMaxX()-DataReader.getMinX(), 
-							DataReader.getMaxY()-DataReader.getMinY());
-		RoadSegment.setMapSize(DataReader.getMaxX(), DataReader.getMinX(), 
-							DataReader.getMaxY(), DataReader.getMinY());
+		
+		nodes = QT.query(0, 0, geoWidth, geoHeight);
+		RoadSegment.setMapSize(geoWidth, geoHeight, 0.0, 0.0);
+		getEdgesFromNodes();
+		
 		endTime = System.currentTimeMillis();
 		duration = endTime - startTime;
 		System.out.println("Time to query all nodes and find their neighbours: " 
 														+ duration/1000.0 + " s");
-		
-		edges = getEdgesFromNodes(nodes);
 		
 		System.out.println("Length of the result from full query: " + nodes.size());
 

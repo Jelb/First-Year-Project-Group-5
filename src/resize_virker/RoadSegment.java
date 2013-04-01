@@ -45,10 +45,10 @@ public class RoadSegment extends JComponent {
 		double diffY = (geoMaxY - geoMinY);
 		int width = Window.use().getWidth();
 		int height = Window.use().getHeight();
-		int x1 =(int)(((geoStartX)/diffX)*width);
-		int y1 =(int)(height-(((geoStartY)/diffY)*height));
-		int x2 =(int)(((geoEndX)/diffX)*width);
-		int y2 =(int)(height-(((geoEndY)/diffY)*height));
+		int x1 =(int)(((geoStartX-geoMinX)/diffX)*width);
+		int y1 =(int)(height-(((geoStartY-geoMinY)/diffY)*height));
+		int x2 =(int)(((geoEndX-geoMinX)/diffX)*width);
+		int y2 =(int)(height-(((geoEndY-geoMinY)/diffY)*height));
 		xStart = x1;
 		yStart = y1;
 		xEnd = x2;
@@ -100,4 +100,5 @@ public class RoadSegment extends JComponent {
 		// draw the road segment
 		g2.drawLine(xStart, yStart, xEnd, yEnd);
 	}
+	
 }

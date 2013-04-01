@@ -148,19 +148,19 @@ public class Window extends JFrame {
 
 			if(event.getKeyCode() == KeyEvent.VK_UP) {
 				System.out.println("Up pressed");
-				Window.offsetY += -10000;
+				offsetY += -10000;
 			}
 			if(event.getKeyCode() == KeyEvent.VK_DOWN) {
 				System.out.println("Down pressed");
-				Window.offsetY += 10000;
+				offsetY += 10000;
 			}
 			if(event.getKeyCode() == KeyEvent.VK_LEFT) {
 				System.out.println("Left pressed");
-				Window.offsetX += 10000;
+				offsetX += 10000;
 			}
 			if(event.getKeyCode() == KeyEvent.VK_RIGHT) {
 				System.out.println("Right pressed");
-				Window.offsetX += -10000;
+				offsetX += -10000;
 			}
 
 			WindowHandler.calculatePixels();
@@ -187,13 +187,12 @@ public class Window extends JFrame {
 	/**
 	 * Adds a mouse listener used for "box zooming" on the map.
 	 * 
-	 * @author Christopher (CHBJ@ITU.DK)
 	 */
 	public class mouseZoom extends MouseAdapter {
-		private double pressedX;
-		private double pressedY;
-		private double releasedX;
-		private double releasedY;
+		private int pressedX;
+		private int pressedY;
+		private int releasedX;
+		private int releasedY;
 		
 		/**
 		 * Records which pixel the mouse is pressed on.
@@ -217,13 +216,13 @@ public class Window extends JFrame {
 			
 			//WindowHandler.search((int)pressedX, (int)releasedY, (int)pressedX, (int)releasedY);
 			//search(int x1, int x2, int y1, int y2)
-			WindowHandler.search((int)pressedX, (int)releasedX, (int)pressedY, (int)releasedY);
+			WindowHandler.search(pressedX, releasedX, pressedY, releasedY);
 			
 			
 			WindowHandler.calculatePixels();
 			//RoadSegment.setMapSize(releasedX, pressedY, pressedX, releasedY);
-				Map.use().updatePix(); //Problem: updatePix er afhængig af vinduets nuværende størrelse*/
-			repaint();
+			//Map.use().updatePix(); //Problem: updatePix er afhængig af vinduets nuværende størrelse*/
+			updateMap();
 		}
 	}
 }

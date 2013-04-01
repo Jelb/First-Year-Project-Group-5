@@ -15,10 +15,10 @@ import Part1.Graph;
 /**
  * The DataReader is used to extract information about <br>Nodes</br> and <br>Edges</br> 
  * contained within two <i>.txt-files</i>. 
- * Furthermore the DataReader class are capable of creating graphs based on the information
- * extracted form the files. 
- * After extraction of the information from both files the DataReader instance contains an <i>
- * ArrayList</i> containing all nodes and another one containing all edges.
+ * Furthermore the DataReader class is capable of creating a graph and a quad-tree based on the information
+ * extracted from the files. 
+ * After extraction of the information from both files the DataReader instance can create an <i>
+ * ArrayList</i> containing all nodes, which in turn is used for creating the graph and the quad-tree.
  * 
  * The data-files used to store the information about nodes and edges has to be formated as
  * it is the case within the data-files handed out by <br>www.Krak.dk</br>.
@@ -53,12 +53,12 @@ public class DataReader {
 	/**
 	 * This method makes this the <br>DataReader</br> class to a singleton. 
 	 * The method checks if an instance of the class already has been created
-	 * and returns the current if so. Create and returns a new instance of the
+	 * and returns the current if so. Creates and returns a new instance of the
 	 * <br>DataReader</br> if none exists. 
 	 * 
 	 * @param nodeFile The path for where the file containing information about the nodes is stored.
 	 * @param edgeFile The path for where the file containing information about the edges is stored.
-	 * @return Returns the instance of <br>DataReader</br> which currently are in use. 
+	 * @return Returns the instance of <br>DataReader</br> which currently is in use. 
 	 */
 	public static DataReader use(String nodeFile, String edgeFile) {
 		if(instance == null) 
@@ -94,9 +94,9 @@ public class DataReader {
 			if (maxY < y)
 				maxY = y;
 			int id = Integer.parseInt(lineArray[1]);
-			if (minX > x || minX < 0) // Is allowed because all our coordinates are in quadrant meaning all coordinates are positive.
+			if (minX > x || minX < 0) // Is allowed because all our coordinates are positive.
 				minX = x;
-			if (minY > y || minY < 0) // Is allowed because all our coordinates are in quadrant meaning all coordinates are positive.
+			if (minY > y || minY < 0) // Is allowed because all our coordinates are positive.
 				minY = y;
 
 			nodes.add(new Node(x, y, id));
@@ -118,7 +118,7 @@ public class DataReader {
 	/**
 	 * The method creates a <br>Graph</br> based on the information within the "<i>edgeFile</i>.
 	 * Before storing the information in the graph the method constructs <br>Edge</br> object based on the information.
-	 * These objects are finally stored in the graph object.
+	 * These objects are  stored in the graph object.
 	 * <p>
 	 * This class will <br>terminate</br> the program if the file path is invalid or the
 	 * file is unreadable.  
@@ -131,29 +131,29 @@ public class DataReader {
 		System.out.println("Adding " + (nodes.size()-1) + " nodes to graph");
 		longestRoads = new ArrayList<Edge>();
 		try {
-		// Create a graph on the nodes
-		Graph graph = new Graph(nodes.size());
-
-		// Reads the "kdv_unload.txt" file into the buffer.
-		BufferedReader br = new BufferedReader(new FileReader(edgeFile));
-
-		br.readLine(); // again discarding column names
-		String line = br.readLine();
-		
-		while (line != null) {
-			String[] lineArray = line.split(",(?! |[a-zA-ZæÆøØåÅ])"); // Regex matches ',' not followed by spaces of letters.
-			Node fromNode = nodes.get(Integer.parseInt(lineArray[0]));
-			Node toNode = nodes.get(Integer.parseInt(lineArray[1]));
-			double length = Double.parseDouble(lineArray[2]);
-			int type = Integer.parseInt(lineArray[5]);
-			Edge edge = new Edge(fromNode, toNode, length, type); // Creates an edge.
-			if (length > longestRoadsFloor) longestRoads.add(edge);
-			graph.addEdge(edge); // Adds the newly created edge object to the graph.
-			line = br.readLine();
-		}
-		br.close();
-		System.out.println("Max length: " + maxLength);
-		return graph;
+			// Create a graph on the nodes
+			Graph graph = new Graph(nodes.size());
+	
+			// Reads the "kdv_unload.txt" file into the buffer.
+			BufferedReader br = new BufferedReader(new FileReader(edgeFile));
+	
+			br.readLine(); // again discarding column names
+			String line = br.readLine();
+			
+			while (line != null) {
+				String[] lineArray = line.split(",(?! |[a-zA-ZæÆøØåÅ])"); // Regex matches ',' not followed by spaces of letters.
+				Node fromNode = nodes.get(Integer.parseInt(lineArray[0]));
+				Node toNode = nodes.get(Integer.parseInt(lineArray[1]));
+				double length = Double.parseDouble(lineArray[2]);
+				int type = Integer.parseInt(lineArray[5]);
+				Edge edge = new Edge(fromNode, toNode, length, type); // Creates an edge.
+				if (length > longestRoadsFloor) longestRoads.add(edge);
+				graph.addEdge(edge); // Adds the newly created edge object to the graph.
+				line = br.readLine();
+			}
+			br.close();
+			System.out.println("Max length: " + maxLength);
+			return graph;
 		} 
 		catch (IOException e) {
 			//
