@@ -50,8 +50,8 @@ public class RoadSegment extends JComponent {
 	public void calcPixel(){
 		double diffX = (geoMaxX - geoMinX);
 		double diffY = (geoMaxY - geoMinY);
-		int width = Window.use().getWidth();
-		int height = Window.use().getHeight();
+		int width = Window.use().getMapWidth();
+		int height = Window.use().getMapHeight();
 		int x1 =(int)(((geoStartX-geoMinX)/diffX)*width);
 		int y1 =(int)(height-(((geoStartY-geoMinY)/diffY)*height));
 		int x2 =(int)(((geoEndX-geoMinX)/diffX)*width);
