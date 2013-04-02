@@ -6,19 +6,26 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JComponent;
 
+@SuppressWarnings("serial")
 public class RoadSegment extends JComponent {
 	/**
 	 * The objects of this class are the JComponents which make up the lines on the map
 	 */
+	
+	// The current minimum and maximum values of the area of the map we're looking at.
 	private static double geoMaxX, geoMaxY, geoMinX, geoMinY;
 	
+	
+	// The start and end points of the road segment in UTM-values 
 	private double geoStartX, geoStartY, geoEndX, geoEndY;
+	
+	// The start and end points of the road segment in pixels
 	private int xStart, yStart, xEnd, yEnd;
+	
 	private Color color;
 	private int roadWidth;
 	
-	private static final long serialVersionUID = 1L;
-
+	
 	/**
 	 * 
 	 * 
