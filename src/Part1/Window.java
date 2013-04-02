@@ -62,7 +62,6 @@ public class Window extends JFrame {
 	 * @throws IOException 
 	 */
 	private void makeFrame() {		
-		
 		contentPane = getContentPane();
 		contentPane.setPreferredSize(new Dimension(1024,640)); //Sets the dimension on the content pane.		
         contentPane.setLayout(new BorderLayout()); //Sets the layout manager for the content pane.
@@ -110,12 +109,12 @@ public class Window extends JFrame {
 		}
 	}
 	
-	public int getWidth() {
-		return contentPane.getWidth();
+	public int getMapWidth() {
+		return contentPane.getComponent(0).getWidth();
 	}
 	
-	public int getHeight() {
-		return contentPane.getHeight();
+	public int getMapHeight() {
+		return contentPane.getComponent(0).getHeight();
 	}
 	
 	/**
