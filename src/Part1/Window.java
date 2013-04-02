@@ -1,27 +1,21 @@
 package Part1;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Toolkit;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.Timer;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -31,26 +25,27 @@ import java.io.IOException;
 
 public class Window extends JFrame {
 		
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 	private static Window instance;
 	private static Container contentPane;
 	private static boolean initializing = true;
-	
-	public static int offsetX = 0;			// NOT DONE! The current offset of the windows top left position 
-	public static int offsetY = 0;		// NOT DONE! The current offset of the windows top left position
-	
-	public static int windowSize = 760; 		// NOT DONE! Will take the dynamic ACTUAL size of the window
-	public static double zoomFactor = 0.75;   	// NOT DONE! Will change according to the ACTUAL current zoom factor
 
-	private Timer timer;
-	private static final int DELAY = 2000;
-	private int counter;
-	
+	/**
+	 * Constructor for the window class.
+	 */
 	private Window(){
 		super("Better than apple maps");
 	}
 
-	//Singleton
+	/**
+	 * Checks if an instance of the class is created.
+	 * If not a new is created.
+	 * 
+	 * @return The current instance of window. If no such a new i created and returned.
+	 */
 	public static Window use() {
 		if(instance == null) {
 			instance = new Window();
@@ -60,156 +55,155 @@ public class Window extends JFrame {
 }
 	
 	/**
-	 * Creates the GUI
+	 * The method is used to set up the initial instance of the window.
+	 * After setting the dimension and the layout a splash-screen
+	 * is displayed while the program is loading.
+	 * 
+	 * @throws IOException 
 	 */
-	private void makeFrame(){		
-		//setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);	//Frame starts maximized
-		setPreferredSize(new Dimension(1024,640)); //When minimized goes to this
+	private void makeFrame() {		
+		
 		contentPane = getContentPane();
-        contentPane.setLayout(new BorderLayout()); 
-        BufferedImage image = null;
+		contentPane.setPreferredSize(new Dimension(1024,640)); //Sets the dimension on the content pane.		
+        contentPane.setLayout(new BorderLayout()); //Sets the layout manager for the content pane.
+
+        // Showed if the background image is unable to be loaded.
+        JLabel background = new JLabel("<html><center><b>Loading image could not load.<br>The map is loading...</b></html>", JLabel.CENTER);
 		try {
-			image = ImageIO.read(new File("splash.jpg"));
+			background = new JLabel(new ImageIcon(ImageIO.read(new File("splash.jpg"))));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		}
-        ImageIcon ic = new ImageIcon(image);
-        JLabel background = new JLabel(ic);
         contentPane.add(background);
         setResizable(false);
         pack();
+        //Used to center the application on the screen at launch.
 		setLocation((int)((Toolkit.getDefaultToolkit().getScreenSize().getWidth() - getWidth())/2),
 					(int)((Toolkit.getDefaultToolkit().getScreenSize().getHeight() - getHeight())/2));
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        addListeners();
 	}
 	
+	/**
+	 * Adds the needed listeners to the window instance.
+	 */
 	private void addListeners() {
 		addKeyListener(new MKeyListener());
-		zoomWithBoxListener();
+		addComponentListener(new resizeListener());
+		addMouseListener(new mouseZoom());
 	}
 	
+	/**
+	 * Redraws the map when its content has changed or 
+	 * the window has been resized. 
+	 */
+	public void updateMap() {
+		contentPane.removeAll();
+		contentPane.add(Map.use(), BorderLayout.CENTER);
+		System.out.println("updateMap is called");
+		repaint();
+		validate();
+		if(initializing){
+			setResizable(true);
+			initializing = false;
+			addListeners();
+		}
+	}
 	
-	// inner class key listener
+	public int getWidth() {
+		return contentPane.getWidth();
+	}
+	
+	public int getHeight() {
+		return contentPane.getHeight();
+	}
+	
+	/**
+	 * Adds a key listener used to move around the map.
+	 * 
+	 * @author Tom (TMCH@ITU.DK)
+	 */
 	class MKeyListener extends KeyAdapter {
-		
+		/**
+		 * Adds a key listener to each of the arrow keys.
+		 */
 		public void keyPressed(KeyEvent event) {
-			
-			if(event.getKeyCode() == KeyEvent.VK_UP) {
-				System.out.println("Up pressed");
-				Window.offsetY += -10000;
-			}
-			if(event.getKeyCode() == KeyEvent.VK_DOWN) {
-				System.out.println("Down pressed");
-				Window.offsetY += 10000;
-			}
-			if(event.getKeyCode() == KeyEvent.VK_LEFT) {
-				System.out.println("Left pressed");
-				Window.offsetX += 10000;
-			}
-			if(event.getKeyCode() == KeyEvent.VK_RIGHT) {
-				System.out.println("Right pressed");
-				Window.offsetX += -10000;
-			}
-			
-			WindowHandler.calculatePixels();
+
+//			if(event.getKeyCode() == KeyEvent.VK_UP) {
+//				System.out.println("Up pressed");
+//				offsetY += -10000;
+//			}
+//			if(event.getKeyCode() == KeyEvent.VK_DOWN) {
+//				System.out.println("Down pressed");
+//				offsetY += 10000;
+//			}
+//			if(event.getKeyCode() == KeyEvent.VK_LEFT) {
+//				System.out.println("Left pressed");
+//				offsetX += 10000;
+//			}
+//			if(event.getKeyCode() == KeyEvent.VK_RIGHT) {
+//				System.out.println("Right pressed");
+//				offsetX += -10000;
+//			}
+//
+//			WindowHandler.calculatePixels();
+//			repaint();
+		}
+	}
+	
+	/**
+	 * Adds a listener to the window instance.
+	 * The listener recalculates the position of each edge so 
+	 * that it fits the screen.
+	 * 
+	 * @author Jonas (JELB@ITU.DK)
+	 */
+	public class resizeListener extends ComponentAdapter {
+		public void componentResized(ComponentEvent evt) {
+			if(Map.use().getRoadSegments() != null)
+			Map.use().updatePix();
 			repaint();
 		}
 	}
 	
-	//add a resize adapter
-	public void resizeAdapter() {
-		addComponentListener(new ComponentAdapter() {
-			public void componentResized(ComponentEvent evt) {
-				//super.componentResized(evt);
-				
-				double w = getWidth();
-				double h = getHeight();
-				if(w/1.5 != h) h = w * 1.5;
-        	
-				/**
-        		int w = getWidth();
-				int h = getHeight();
-			
-				if(w < h) windowSize = w;
-		    	else windowSize = h;*/
-        	
-				timer.start();
-        	
-				/**double w = getWidth();
-				double h = getHeight();
-				if(w/1.5 != h) 1.5;
-				if(w/1.5 < h) h = w * 1.5;
-				if(w/1.5 > h) */
-        	
-//        		Long startTime = System.currentTimeMillis();
-				//mapObject.getMapTestMethod();
-//        		Long endTime = System.currentTimeMillis();
-//    			Long duration = endTime - startTime;
-//    			System.out.println("Time to paint the map: " + (duration/1000.0) + "s");
-				//repaint();
-        }
-     });}
 	
-	// make a timer thats used every 2 seconds when a resize happens 
-	public void makeTimer(){
-		timer = new Timer(DELAY, new ActionListener() {
-			   public void actionPerformed(ActionEvent e) {
-			    System.out.println("timer action " + counter++ + "!");
-			    WindowHandler.calculatePixels();
-			   }
-			  });
-			  timer.setRepeats(false);
-	}	
-	
-	//Press mouse and hold, then drag to new spot. Pressed and released pixels printed out
-	public void zoomWithBoxListener(){
-		addMouseListener(new MouseAdapter(){
-			private int pressedX;
-			private int pressedY;
-			private int releasedX;
-			private int releasedY;
+	/**
+	 * Adds a mouse listener used for "box zooming" on the map.
+	 * 
+	 */
+	public class mouseZoom extends MouseAdapter {
+		private int pressedX;
+		private int pressedY;
+		private int releasedX;
+		private int releasedY;
+		
+		/**
+		 * Records which pixel the mouse is pressed on.
+		 */
+		public void mousePressed(MouseEvent e){	
+			pressedX = e.getX();
+			pressedY = e.getY();
 			
-			public void mousePressed(MouseEvent e){	
-				pressedX = e.getX();
-				pressedY = e.getY();
-				
-				System.out.println("Pressed X : "+ pressedX);
-				System.out.println("Pressed Y : "+ pressedY);
-			}
-			
-			public void mouseReleased(MouseEvent e){
-				releasedX = e.getX();
-				releasedY =  e.getY();
-				System.out.println("Released X : "+ releasedX);
-				System.out.println("Released Y : "+ releasedY);
-				
-				WindowHandler.search(pressedX, releasedY, pressedX, releasedY);
-				
-				WindowHandler.calculatePixels();
-				repaint();
-			}
-		});		
-	}
-	
-	public void updateMap() {
-		contentPane.removeAll();
-		contentPane.add(Map.use(), BorderLayout.CENTER);
-		repaint();
-		revalidate();
-		if(initializing){
-			setResizable(true);
-			initializing = false;
+			System.out.println("Pressed X : "+ pressedX);
+			System.out.println("Pressed Y : "+ pressedY);
 		}
-	}
-	
-	public void setZoomFactor(double z){
-		zoomFactor = z;
-	}
-	
-	public double getZoomFactor(){
-		return zoomFactor;
+		
+		/**
+		 * Records which pixel the mouse is released on.
+		 */
+		public void mouseReleased(MouseEvent e){
+			releasedX = e.getX();
+			releasedY =  e.getY();
+			System.out.println("Released X : "+ releasedX);
+			System.out.println("Released Y : "+ releasedY);
+			
+
+			WindowHandler.search(pressedX, releasedX, pressedY, releasedY);
+			
+			
+			WindowHandler.calculatePixels();
+
+			updateMap();
+		}
 	}
 }
