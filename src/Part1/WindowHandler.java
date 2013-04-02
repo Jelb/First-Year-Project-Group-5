@@ -101,6 +101,8 @@ public class WindowHandler {
 	public static void calculatePixels() {
 		Map.use().newArrayList();
 		Long startTime = System.currentTimeMillis();
+		// For all the edges currently in the field of view,
+		// create a roadSegment and add it to the list
 		for (Edge e : edges) {
 			double x1 = e.getFromNode().getXCord();
 			double y1 = e.getFromNode().getYCord();
@@ -136,9 +138,9 @@ public class WindowHandler {
 		//ArraylList with Nodes
 		krakLoader.createNodeList();
 		
-		//All roads with length larger than the longest road floor are added to the longest roads list
 		longestRoadsFloor = 10000;
 		
+		//All roads with length larger than the longest road floor are added to the longest roads list
 		//Makes graph object and list of roads longer than the longest roads floor
 		graph = krakLoader.createGraphAndLongestRoadsList(longestRoadsFloor);
 		
@@ -149,19 +151,26 @@ public class WindowHandler {
 		//Avoid loitering
 		krakLoader = null;
 		
+		// Counts and prints the time spent initializing
 		Long endTime = System.currentTimeMillis();
 		Long duration = endTime - startTime;
 		System.out.println("Time to create Nodelist, Graph and QuadTree: " + duration/1000.0 + " s");
 		
+		// Sets the delta width and height of the entire map
 		setGeoHeight(DataReader.getMaxY()-DataReader.getMinY());
 		setGeoWidth(DataReader.getMaxX()-DataReader.getMinX());
 		
+		// Starts a new test timer
 		startTime = System.currentTimeMillis();
 		
+		// Finds all the nodes in the view area
 		nodes = QT.query(0, 0, geoWidth, geoHeight);
 		RoadSegment.setMapSize(geoWidth, geoHeight, 0.0, 0.0);
+		
+		// Finds all the edges for these nodes
 		getEdgesFromNodes();
 		
+		// Ends timer, prints result
 		endTime = System.currentTimeMillis();
 		duration = endTime - startTime;
 		System.out.println("Time to query all nodes and find their neighbours: " 
@@ -169,7 +178,11 @@ public class WindowHandler {
 		
 		System.out.println("Length of the result from full query: " + nodes.size());
 
+		// Creates and adds roadSegments to an the arraylist 'edges'
 		calculatePixels();
+		
+		// Throws out the old contentPane, then adds a new and calls repaint/validate,
+		// thus calling the internal method paintComponents found in the roadSegments objects
 		Window.use().updateMap();
 		
 		System.out.printf("Graph has %d edges%n", graph.getE());
