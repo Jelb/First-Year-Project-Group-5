@@ -19,13 +19,13 @@ public class WindowHandler {
 			
 	// Converts X-pixel to coordinate
 	private static double pixelToGeoX(int x) {
-		return  (((double)x/ Window.use().getWidth()) * geoWidth);
+		return  ((x/ Window.use().getWidth()) * geoWidth);
 	}
 	
 	
 	// Converts Y-pixel to coordinate
 	private static double pixelToGeoY(int y) {
-		return  (((double)y/(Window.use().getHeight()) * geoHeight));
+		return  ((y/(Window.use().getHeight()) * geoHeight));
 	}
 	
 	// Takes a search area in pixels, and saves a list of all the edges to be drawn on the map
