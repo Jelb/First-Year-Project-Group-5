@@ -1,4 +1,4 @@
-package DataReader;
+package Part1;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,11 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
-import Part1.Edge;
-import Part1.Node;
 import QuadTree.QuadTree;
 
-import Part1.Graph;
 
 /**
  * The DataReader is used to extract information about <br>Nodes</br> and <br>Edges</br> 

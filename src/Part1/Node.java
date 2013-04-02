@@ -35,6 +35,10 @@ public class Node {
 		Node.yOffset = yOffset;
 	}
 	
+	public boolean equals(Node n) {
+		return (xCord == n.getXCord() && yCord == n.getYCord());
+	}
+	
 //	public static void insertNode(Node node){
 //		int i = node.getKdvID();
 //		nodeArray[i] = node;

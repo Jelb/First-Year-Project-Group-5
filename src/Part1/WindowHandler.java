@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import DataReader.DataReader;
 import Part1.*;
 import QuadTree.QuadTree;
 
