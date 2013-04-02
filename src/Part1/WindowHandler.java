@@ -126,18 +126,28 @@ public class WindowHandler {
 
 	public static void main(String[] args) throws IOException {
 		Window.use();
-		//Initializing of data from KrakLoader
 		
+		// Timer for testing purposes
 		Long startTime = System.currentTimeMillis();
 		
-		DataReader krakLoader = DataReader.use("kdv_node_unload.txt",
-				"kdv_unload.txt");
-		krakLoader.createNodeList(); 				//ArraylList with Nodes
-		longestRoadsFloor = 10000;				//All roads with length larger than the longest road floor are added to the longest roads list
-		graph = krakLoader.createGraphAndLongestRoadsList(longestRoadsFloor);			//Makes graph object and list of roads longer than the longest roads floor
-		QT = krakLoader.createQuadTree();			//Makes and returns a quadTree
+		//Initializing of data from KrakLoader
+		DataReader krakLoader = DataReader.use("kdv_node_unload.txt","kdv_unload.txt");
+		
+		//ArraylList with Nodes
+		krakLoader.createNodeList();
+		
+		//All roads with length larger than the longest road floor are added to the longest roads list
+		longestRoadsFloor = 10000;
+		
+		//Makes graph object and list of roads longer than the longest roads floor
+		graph = krakLoader.createGraphAndLongestRoadsList(longestRoadsFloor);
+		
+		//Makes and returns a quadTree
+		QT = krakLoader.createQuadTree();
 		longestRoads = krakLoader.getLongestRoads();
-		krakLoader = null;		//Avoid loitering
+		
+		//Avoid loitering
+		krakLoader = null;
 		
 		Long endTime = System.currentTimeMillis();
 		Long duration = endTime - startTime;

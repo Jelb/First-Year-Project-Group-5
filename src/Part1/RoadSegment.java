@@ -88,7 +88,6 @@ public class RoadSegment extends JComponent {
 		case 1 : return Color.red;		// Motor ways 	
 		case 2 : return Color.red;		// Motor traffic road
 		case 3 : return Color.blue; 	// Primary roads > 6 m 
-	
 		case 4 : return Color.blue;		// Secondary roads > 6 m
 		case 5 : return Color.black;	// Roads between 3-6 meters
 		case 8 : return Color.green;	// paths
