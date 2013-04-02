@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import javax.swing.JComponent;
 
 import Part1.RoadSegment;
-import Part1.Vejtype;
 import Part1.Window;
 
 public class TomsTempClass {
