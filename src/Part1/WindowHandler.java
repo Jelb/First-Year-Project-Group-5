@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import Part1.*;
 import QuadTree.QuadTree;
 
 public class WindowHandler {
@@ -76,6 +75,7 @@ public class WindowHandler {
 	}
 	
 	//TODO: Write code to detect intersection between area of interest and road.
+	@SuppressWarnings("unused")
 	private static boolean lineIntersects(double boxX1, double boxX2, double boxY1, double boxY2,
 									double lineX1, double lineX2, double lineY1, double lineY2) {
 		return false;
