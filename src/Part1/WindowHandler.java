@@ -28,7 +28,7 @@ public class WindowHandler {
 		return  (((double)y/(Window.use().getHeight()) * geoHeight));
 	}
 	
-	// Takes a search area in pixels, and returns a list of all the edges to be drawn on the map
+	// Takes a search area in pixels, and saves a list of all the edges to be drawn on the map
 	public static void search(int x1, int x2, int y1, int y2) {
 		//TODO: Add the longestRoadsFloor to each border of the search area and use this to optimize panning.
 		double geoXMax;
@@ -51,6 +51,10 @@ public class WindowHandler {
 			geoYMax = geoHeight - pixelToGeoY(y1);
 			geoYMin = geoHeight - pixelToGeoY(y2);
 		}
+		System.out.println("Start point: (" + geoXMin + ", " + geoYMin + ")");
+		System.out.println("End point: (" + geoXMax + ", " + geoYMax + ")");
+		geoWidth = geoXMax - geoXMin;
+		geoHeight = geoYMax - geoYMin;
 		nodes = QT.query(geoXMin, geoYMin, geoXMax, geoYMax);
 		getEdgesFromNodes();
 		RoadSegment.setMapSize(geoXMax, geoYMax, geoXMin, geoYMin);
@@ -87,7 +91,7 @@ public class WindowHandler {
 		for (Node n: nodes) {
 			Iterable<Edge> edgesFromNode = graph.adjOut(n.getKdvID());
 			for (Edge e : edgesFromNode) {
-				if (e.getType() != 5) continue;
+				//if (e.getType() != 5) continue;
 				edges.add(e);
 			}
 		}
