@@ -11,7 +11,7 @@ public class Graph {
 	public Graph(int V) {
 		this.V = V;
 		this.E = 0;
-		adj = (LinkedList<Edge>[])new LinkedList[V];
+		adj = (LinkedList<Edge>[]) new LinkedList[V];
 		// creates V linked lists, one for each node
 		for (int v = 0; v < V; v++) {
 			adj[v] = new LinkedList<Edge>();
