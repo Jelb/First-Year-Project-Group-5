@@ -148,7 +148,7 @@ public class Window extends JFrame {
 //
 //			WindowHandler.calculatePixels();
 //			repaint();
-//		}
+		}
 	}
 	
 	/**
