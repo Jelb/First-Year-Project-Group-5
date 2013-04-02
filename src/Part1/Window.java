@@ -111,11 +111,11 @@ public class Window extends JFrame {
 	}
 	
 	public int getWidth() {
-		return contentPane.getWidth();
+		return contentPane.getComponent(0).getWidth();
 	}
 	
 	public int getHeight() {
-		return contentPane.getHeight();
+		return contentPane.getComponent(0).getHeight();
 	}
 	
 	/**
