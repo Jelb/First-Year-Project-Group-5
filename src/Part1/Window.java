@@ -158,29 +158,13 @@ public class Window extends JFrame {
 	 */
 	class MKeyListener extends KeyAdapter {
 		/**
-		 * Adds a key listener to each of the arrow keys.
+		 * Adds a key listener that sends the pressed button to the pan method of WindowHandler.
 		 */
 		public void keyPressed(KeyEvent event) {
+			WindowHandler.pan(event);
+			WindowHandler.calculatePixels();
 
-//			if(event.getKeyCode() == KeyEvent.VK_UP) {
-//				System.out.println("Up pressed");
-//				offsetY += -10000;
-//			}
-//			if(event.getKeyCode() == KeyEvent.VK_DOWN) {
-//				System.out.println("Down pressed");
-//				offsetY += 10000;
-//			}
-//			if(event.getKeyCode() == KeyEvent.VK_LEFT) {
-//				System.out.println("Left pressed");
-//				offsetX += 10000;
-//			}
-//			if(event.getKeyCode() == KeyEvent.VK_RIGHT) {
-//				System.out.println("Right pressed");
-//				offsetX += -10000;
-//			}
-//
-//			WindowHandler.calculatePixels();
-//			repaint();
+			updateMap();
 		}
 	}
 	
@@ -231,7 +215,7 @@ public class Window extends JFrame {
 			System.out.println("Released Y : "+ releasedY);
 			
 
-			WindowHandler.search(pressedX, releasedX, pressedY, releasedY);
+			WindowHandler.pixelSearch(pressedX, releasedX, pressedY, releasedY);
 			
 			
 			WindowHandler.calculatePixels();

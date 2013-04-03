@@ -1,5 +1,6 @@
 package Part1;
 
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,9 +32,31 @@ public class WindowHandler {
 		return  (((double)y/(Window.use().getMapHeight()) * geoHeight));
 	}
 	
-	// Takes a search area in pixels, and saves a list of all the edges to be drawn on the map
-	public static void search(int x1, int x2, int y1, int y2) {
-		//TODO: Add the longestRoadsFloor to each border of the search area and use this to optimize panning.
+	/**
+	 * Pans the map 10% in the direction specified.
+	 * @param keyEvent A key event holding the value of the key pressed.
+	 */
+	public static void pan(KeyEvent keyEvent) {
+		if(keyEvent.getKeyCode() == KeyEvent.VK_UP) {
+			System.out.println("Up pressed");
+			search(0.0, geoWidth, geoHeight*0.1, geoHeight+geoHeight*0.1);
+		}
+		if(keyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
+			System.out.println("Down pressed");
+			search(0.0, geoWidth, -geoHeight*0.1, geoHeight-geoHeight*0.1);
+		}
+		if(keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
+			System.out.println("Left pressed");
+			search(-geoWidth*0.1, geoWidth-geoWidth*0.1, 0.0, geoHeight);
+		}
+		if(keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
+			System.out.println("Right pressed");
+			search(geoWidth*0.1, geoWidth+geoWidth*0.1, 0.0, geoHeight);
+		}
+	}
+	
+	// Searches an area using pixel-values
+	public static void pixelSearch(int x1, int x2, int y1, int y2) {
 		double geoXMax;
 		double geoXMin;
 		double geoYMax;
@@ -54,6 +77,13 @@ public class WindowHandler {
 			geoYMax = geoHeight - pixelToGeoY(y1);
 			geoYMin = geoHeight - pixelToGeoY(y2);
 		}
+		search(geoXMin, geoXMax, geoYMin, geoYMax);
+	}
+	
+	// Takes a search area in UTM-coordinates, and saves a list of all the edges to be drawn on the map
+	public static void search(double geoXMin, double geoXMax, double geoYMin, double geoYMax) {
+		//TODO: Add the longestRoadsFloor to each border of the search area and use this to optimize panning.
+		
 		System.out.println("Start point: (" + geoXMin + ", " + geoYMin + ")");
 		System.out.println("End point: (" + geoXMax + ", " + geoYMax + ")");
 		geoWidth = geoXMax - geoXMin;
