@@ -31,7 +31,7 @@ public class DataReader {
 	private ArrayList<Node> nodes;
 	private ArrayList<Edge> longestRoads;
 	private final String nodeFile, edgeFile;
-	private static double maxX = 0, maxY = 0, minX = -1, minY = -1, maxLength = 0;
+	private static double maxX = 0, maxY = 0, minX = -1, minY = -1;
 
 	/**
 	 * Constructor for the DataReader class. 
@@ -101,6 +101,8 @@ public class DataReader {
 		}
 		
 		// The coordinates of every node is corrected for the offset
+		System.out.println("Offset x: " + minX);
+		System.out.println("Offset y: " + minY);
 		Node.setXOffset(minX);
 		Node.setYOffset(minY);
 		System.out.println("Width of map: " + (maxX-minX));
@@ -149,7 +151,6 @@ public class DataReader {
 				line = br.readLine();
 			}
 			br.close();
-			System.out.println("Max length: " + maxLength);
 			return graph;
 		} 
 		catch (IOException e) {

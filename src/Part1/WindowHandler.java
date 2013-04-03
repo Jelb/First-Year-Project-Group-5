@@ -16,6 +16,9 @@ public class WindowHandler {
 	static Window window;
 	static double geoWidth;
 	static double geoHeight;
+	static double offsetX;
+	static double offsetY;
+	static double ratio;
 			
 	// Converts X-pixel to coordinate
 	private static double pixelToGeoX(int x) {
@@ -55,9 +58,27 @@ public class WindowHandler {
 		System.out.println("End point: (" + geoXMax + ", " + geoYMax + ")");
 		geoWidth = geoXMax - geoXMin;
 		geoHeight = geoYMax - geoYMin;
-		nodes = QT.query(geoXMin, geoYMin, geoXMax, geoYMax);
+		// recalculate the search area to fit the aspect ratio
+		if (geoWidth > geoHeight * ratio) {
+			double newGeoHeight = geoWidth / ratio;
+			double diff = (newGeoHeight - geoHeight) / 2;
+			geoYMax += diff;
+			geoYMin -= diff;
+			geoHeight = newGeoHeight;
+		}
+		else {
+			double newGeoWidth = geoHeight * ratio;
+			double diff = (newGeoWidth - geoWidth) / 2;
+			geoXMax += diff;
+			geoXMin -= diff;
+			geoWidth = newGeoWidth;
+		}
+		
+		nodes = QT.query(geoXMin+offsetX, geoYMin+offsetY, geoXMax+offsetX, geoYMax+offsetY);
 		getEdgesFromNodes();
-		RoadSegment.setMapSize(geoXMax, geoYMax, geoXMin, geoYMin);
+		RoadSegment.setMapSize(geoXMax+offsetX, geoYMax+offsetY, geoXMin+offsetX, geoYMin+offsetY);
+		offsetX += geoXMin;
+		offsetY += geoYMin;
 
 		
 		// TODO:check whether any of the longest roads intersect with the searched area
@@ -114,6 +135,18 @@ public class WindowHandler {
 		Long duration = endTime - startTime;
 		System.out.println("Time to calculate pixels: " + (duration/1000.0) + "s");
 	}
+	
+	public static void resetMap() {
+		setGeoHeight(DataReader.getMaxY()-DataReader.getMinY());
+		setGeoWidth(DataReader.getMaxX()-DataReader.getMinX());
+		offsetX = 0;
+		offsetY = 0;
+		nodes = QT.query(0, 0, geoWidth, geoHeight);
+		RoadSegment.setMapSize(geoWidth, geoHeight, 0.0, 0.0);
+		getEdgesFromNodes();
+		calculatePixels();
+		Window.use().updateMap();
+	}
 
 	
 	public static void setGeoWidth(double geoWidth) {
@@ -123,6 +156,10 @@ public class WindowHandler {
 
 	public static void setGeoHeight(double geoHeight) {
 		WindowHandler.geoHeight = geoHeight;
+	}
+	
+	public static double getRatio() {
+		return ratio;
 	}
 
 
@@ -160,6 +197,8 @@ public class WindowHandler {
 		setGeoHeight(DataReader.getMaxY()-DataReader.getMinY());
 		setGeoWidth(DataReader.getMaxX()-DataReader.getMinX());
 		
+		ratio = geoWidth/geoHeight;
+		
 		// Starts a new test timer
 		startTime = System.currentTimeMillis();
 		
@@ -184,7 +223,7 @@ public class WindowHandler {
 		// Throws out the old contentPane, then adds a new and calls repaint/validate,
 		// thus calling the internal method paintComponents found in the roadSegments objects
 		Window.use().updateMap();
-		
+		Window.use().repaint();
 		System.out.printf("Graph has %d edges%n", graph.getE());
 		//MemoryMXBean mxbean = ManagementFactory.getMemoryMXBean();
 		//System.out.printf("Heap memory usage: %d MB%n", mxbean

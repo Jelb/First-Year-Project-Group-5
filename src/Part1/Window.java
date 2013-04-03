@@ -9,7 +9,12 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
@@ -63,6 +68,7 @@ public class Window extends JFrame {
 	 */
 	private void makeFrame() {		
 		contentPane = getContentPane();
+		//setUndecorated(true);
 		contentPane.setPreferredSize(new Dimension(1024,640)); //Sets the dimension on the content pane.		
         contentPane.setLayout(new BorderLayout()); //Sets the layout manager for the content pane.
 
@@ -73,14 +79,21 @@ public class Window extends JFrame {
 		} catch (IOException e) {
 			
 		}
+		addMenu();
         contentPane.add(background);
         setResizable(false);
         pack();
-        //Used to center the application on the screen at launch.
-		setLocation((int)((Toolkit.getDefaultToolkit().getScreenSize().getWidth() - getWidth())/2),
-					(int)((Toolkit.getDefaultToolkit().getScreenSize().getHeight() - getHeight())/2));
+        centerWindow();
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	/**
+	 * Used to center the application on the screen at launch.
+	 */
+	private void centerWindow() {
+		setLocation((int)((Toolkit.getDefaultToolkit().getScreenSize().getWidth() - getWidth())/2),
+				(int)((Toolkit.getDefaultToolkit().getScreenSize().getHeight() - getHeight())/2));
 	}
 	
 	/**
@@ -89,7 +102,7 @@ public class Window extends JFrame {
 	private void addListeners() {
 		addKeyListener(new MKeyListener());
 		addComponentListener(new resizeListener());
-		addMouseListener(new mouseZoom());
+		Map.use().addMouseListener(new mouseZoom());
 	}
 	
 	/**
@@ -100,13 +113,34 @@ public class Window extends JFrame {
 		contentPane.removeAll();
 		contentPane.add(Map.use(), BorderLayout.CENTER);
 		System.out.println("updateMap is called");
-		repaint();
-		validate();
 		if(initializing){
+			contentPane.setPreferredSize(new Dimension((int)(640*WindowHandler.getRatio()),640));
+			pack();
+			centerWindow();
 			setResizable(true);
 			initializing = false;
 			addListeners();
 		}
+		repaint();
+		validate();
+	}
+	
+	/**
+	 * Creates and adds the menu bar.
+	 */
+	private void addMenu() {
+		JMenuBar menu = new JMenuBar();
+		JMenu zoomMenu = new JMenu("Don't panic");
+		JMenuItem resetZoomButton = new JMenuItem("Reset zoom");
+		menu.add(zoomMenu);
+		zoomMenu.add(resetZoomButton);
+		add(menu);
+		setJMenuBar(menu);
+		resetZoomButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				WindowHandler.resetMap();
+			}
+		});
 	}
 	
 	public int getMapWidth() {
@@ -170,7 +204,7 @@ public class Window extends JFrame {
 	 * Adds a mouse listener used for "box zooming" on the map.
 	 * 
 	 */
-	public class mouseZoom extends MouseAdapter {
+	private class mouseZoom extends MouseAdapter {
 		private int pressedX;
 		private int pressedY;
 		private int releasedX;
