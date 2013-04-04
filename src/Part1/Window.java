@@ -176,10 +176,28 @@ public class Window extends JFrame {
 	 * @author Jonas (JELB@ITU.DK)
 	 */
 	public class resizeListener extends ComponentAdapter {
+		int height;
+		int width;
+		int count;
+		boolean run;
+	
 		public void componentResized(ComponentEvent evt) {
+			if(run){
+			if(Math.abs(width - Window.use().getWidth())>0){
+				Window.use().setPreferredSize(new Dimension(Window.use().getWidth(), (int)(Window.use().getWidth()/1.2)));
+			} else if(Math.abs(width - Window.use().getWidth())>0){
+				Window.use().setPreferredSize(new Dimension((int)(Window.use().getHeight()*1.2), Window.use().getHeight()));
+			}
+			pack();
+			height = Window.use().getHeight();
+			width = Window.use().getWidth();
 			if(Map.use().getRoadSegments() != null)
 			Map.use().updatePix();
 			repaint();
+
+			System.out.println(++count);
+			}
+			run =!run;
 		}
 	}
 	

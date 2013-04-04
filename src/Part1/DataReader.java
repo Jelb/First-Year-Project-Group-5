@@ -10,7 +10,7 @@ import QuadTree.QuadTree;
 
 
 /**
- * The DataReader is used to extract information about <br>Nodes</br> and <br>Edges</br> 
+ * The DataReader is used to extract information about <b>Nodes</b> and <b>Edges</b> 
  * contained within two <i>.txt-files</i>. 
  * Furthermore the DataReader class is capable of creating a graph and a quad-tree based on the information
  * extracted from the files. 
@@ -18,9 +18,9 @@ import QuadTree.QuadTree;
  * ArrayList</i> containing all nodes, which in turn is used for creating the graph and the quad-tree.
  * 
  * The data-files used to store the information about nodes and edges has to be formated as
- * it is the case within the data-files handed out by <br>www.Krak.dk</br>.
+ * it is the case within the data-files handed out by <b>www.Krak.dk</b>.
  * 
- * The <br>DataReader</br> class implements the singleton design pattern. 
+ * The <b>DataReader</b> class implements the singleton design pattern. 
  * 
  * @author Jonas (JELB@ITU.DK)
  * @author Mads (MENJ@ITU.DK)
@@ -48,14 +48,14 @@ public class DataReader {
 	}
 	
 	/**
-	 * This method makes this the <br>DataReader</br> class to a singleton. 
+	 * This method makes this the <b>DataReader</b> class to a singleton. 
 	 * The method checks if an instance of the class already has been created
 	 * and returns the current if so. Creates and returns a new instance of the
-	 * <br>DataReader</br> if none exists. 
+	 * <b>DataReader</b> if none exists. 
 	 * 
 	 * @param nodeFile The path for where the file containing information about the nodes is stored.
 	 * @param edgeFile The path for where the file containing information about the edges is stored.
-	 * @return Returns the instance of <br>DataReader</br> which currently is in use. 
+	 * @return Returns the instance of <b>DataReader</b> which currently is in use. 
 	 */
 	public static DataReader use(String nodeFile, String edgeFile) {
 		if(instance == null) 
@@ -65,9 +65,9 @@ public class DataReader {
 
 	/**
 	 * The method extracts information about the nodes from the <i>nodeFile</i>
-	 * and creates <br>Node</br> objects corresponding to the extracted information.
+	 * and creates <b>Node</b> objects corresponding to the extracted information.
 	 * <p>
-	 * This class will <br>terminate</br> the program if the file path is invalid or the
+	 * This class will <b>terminate</b> the program if the file path is invalid or the
 	 * file is unreadable. 
 	 */
 	public void createNodeList(){
@@ -115,15 +115,15 @@ public class DataReader {
 	}
 
 	/**
-	 * The method creates a <br>Graph</br> based on the information within the "<i>edgeFile</i>.
-	 * Before storing the information in the graph the method constructs <br>Edge</br> object based on the information.
+	 * The method creates a <b>Graph</b> based on the information within the "<i>edgeFile</i>.
+	 * Before storing the information in the graph the method constructs <b>Edge</b> object based on the information.
 	 * These objects are  stored in the graph object.
 	 * <p>
-	 * This class will <br>terminate</br> the program if the file path is invalid or the
+	 * This class will <b>terminate</b> the program if the file path is invalid or the
 	 * file is unreadable.  
 	 * 
-	 * @param longestRoadsFloor An int describing the floor value of the elements stored in the ArrayList <br>longestRoads</br>. 
-	 * @return Returns a <br>Graph</br> object based on the content <i>edgeFile</i>.
+	 * @param longestRoadsFloor An int describing the floor value of the elements stored in the ArrayList <b>longestRoads</b>. 
+	 * @return Returns a <b>Graph</b> object based on the content <i>edgeFile</i>.
 	 */
 	public Graph createGraphAndLongestRoadsList(int longestRoadsFloor) {
 
@@ -162,9 +162,9 @@ public class DataReader {
 	}
 
 	/**
-	 * The method creates an instance of the <br>QuadTree</br> class and inserts all the existing nodes within it.
+	 * The method creates an instance of the <b>QuadTree</b> class and inserts all the existing nodes within it.
 	 * 
-	 * @return Returns a <br>QuadTree</br> object containing all nodes created in the <i>createNodeList()</i> method.
+	 * @return Returns a <b>QuadTree</b> object containing all nodes created in the <i>createNodeList()</i> method.
 	 */
 	public QuadTree createQuadTree() {
 		if(nodes == null) createNodeList();
