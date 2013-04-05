@@ -161,7 +161,9 @@ public class Window extends JFrame {
 		 * Adds a key listener that sends the pressed button to the pan method of WindowHandler.
 		 */
 		public void keyPressed(KeyEvent event) {
-			WindowHandler.pan(event);
+			if (event.getKeyCode() == KeyEvent.VK_1) WindowHandler.zoomOut();
+			else if (event.getKeyCode() == KeyEvent.VK_2) WindowHandler.zoomIn();
+			else WindowHandler.pan(event);
 			WindowHandler.calculatePixels();
 
 			updateMap();

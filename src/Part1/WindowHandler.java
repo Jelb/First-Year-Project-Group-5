@@ -39,20 +39,28 @@ public class WindowHandler {
 	public static void pan(KeyEvent keyEvent) {
 		if(keyEvent.getKeyCode() == KeyEvent.VK_UP) {
 			System.out.println("Up pressed");
-			search(0.0, geoWidth, geoHeight*0.1, geoHeight+geoHeight*0.1);
+			search(0.0, geoWidth, geoHeight*0.1, geoHeight*1.1);
 		}
 		if(keyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
 			System.out.println("Down pressed");
-			search(0.0, geoWidth, -geoHeight*0.1, geoHeight-geoHeight*0.1);
+			search(0.0, geoWidth, -geoHeight*0.1, geoHeight*0.9);
 		}
 		if(keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
 			System.out.println("Left pressed");
-			search(-geoWidth*0.1, geoWidth-geoWidth*0.1, 0.0, geoHeight);
+			search(-geoWidth*0.1, geoWidth*0.9, 0.0, geoHeight);
 		}
 		if(keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
 			System.out.println("Right pressed");
-			search(geoWidth*0.1, geoWidth+geoWidth*0.1, 0.0, geoHeight);
+			search(geoWidth*0.1, geoWidth*1.1, 0.0, geoHeight);
 		}
+	}
+	
+	public static void zoomOut() {
+		search(-geoWidth*0.1, geoWidth*1.1, -geoHeight*0.1, geoHeight*1.1);
+	}
+	
+	public static void zoomIn() {
+		search(geoWidth*0.1, geoWidth*0.9, geoHeight*0.1, geoHeight*0.9);
 	}
 	
 	// Searches an area using pixel-values
