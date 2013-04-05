@@ -84,6 +84,15 @@ public class WindowHandler {
 	public static void search(double geoXMin, double geoXMax, double geoYMin, double geoYMax) {
 		//TODO: Add the longestRoadsFloor to each border of the search area and use this to optimize panning.
 		
+		//ensures that the search area is wider than 200m
+		if (geoXMax - geoXMin < 200) {
+			double centerX = (geoXMax - geoXMin)/2 + geoXMin;
+			geoXMin = centerX - 100;
+			geoXMax = centerX + 100;
+			double centerY = (geoYMax - geoYMin)/2 + geoYMin;
+			geoYMin = centerY - 100/ratio;
+			geoYMax = centerY + 100/ratio;
+		}
 		System.out.println("Start point: (" + geoXMin + ", " + geoYMin + ")");
 		System.out.println("End point: (" + geoXMax + ", " + geoYMax + ")");
 		geoWidth = geoXMax - geoXMin;

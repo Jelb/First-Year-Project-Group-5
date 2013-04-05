@@ -182,11 +182,11 @@ public class Window extends JFrame {
 		boolean run;
 	
 		public void componentResized(ComponentEvent evt) {
-			if(run){
+			//if(run){
 			if(Math.abs(width - Window.use().getWidth())>0){
-				Window.use().setPreferredSize(new Dimension(Window.use().getWidth(), (int)(Window.use().getWidth()/1.2)));
-			} else if(Math.abs(width - Window.use().getWidth())>0){
-				Window.use().setPreferredSize(new Dimension((int)(Window.use().getHeight()*1.2), Window.use().getHeight()));
+				Window.use().setPreferredSize(new Dimension(Window.use().getWidth(), (int)(Window.use().getWidth()/WindowHandler.getRatio())));
+			} else if(Math.abs(height - Window.use().getHeight())>0){
+				Window.use().setPreferredSize(new Dimension((int)(Window.use().getHeight()*WindowHandler.getRatio()), Window.use().getHeight()));
 			}
 			pack();
 			height = Window.use().getHeight();
@@ -196,8 +196,8 @@ public class Window extends JFrame {
 			repaint();
 
 			System.out.println(++count);
-			}
-			run =!run;
+//			}
+//			run =!run;
 		}
 	}
 	
