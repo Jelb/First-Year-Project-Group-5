@@ -2,7 +2,6 @@ package Part1;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
 import QuadTree.QuadTree;
@@ -101,8 +100,8 @@ public class WindowHandler {
 			geoYMin = centerY - 100/ratio;
 			geoYMax = centerY + 100/ratio;
 		}
-		System.out.println("Start point: (" + geoXMin + ", " + geoYMin + ")");
-		System.out.println("End point: (" + geoXMax + ", " + geoYMax + ")");
+		//System.out.println("Start point: (" + geoXMin + ", " + geoYMin + ")");
+		//System.out.println("End point: (" + geoXMax + ", " + geoYMax + ")");
 		geoWidth = geoXMax - geoXMin;
 		geoHeight = geoYMax - geoYMin;
 		// recalculate the search area to fit the aspect ratio
@@ -120,10 +119,13 @@ public class WindowHandler {
 			geoXMin -= diff;
 			geoWidth = newGeoWidth;
 		}
-		
+		long startTime = System.currentTimeMillis();
 		nodes = QT.query(geoXMin+offsetX, geoYMin+offsetY, geoXMax+offsetX, geoYMax+offsetY);
-		getEdgesFromNodes();
+		System.out.println("Time for query in quadtree: " + (System.currentTimeMillis()-startTime)/1000.0);
 		RoadSegment.setMapSize(geoXMax+offsetX, geoYMax+offsetY, geoXMin+offsetX, geoYMin+offsetY);
+		startTime = System.currentTimeMillis();
+		getEdgesFromNodes();
+		System.out.println("Time to create list of road segments: " + (System.currentTimeMillis()-startTime)/1000.0);
 		offsetX += geoXMin;
 		offsetY += geoYMin;
 
@@ -153,34 +155,56 @@ public class WindowHandler {
 		return false;
 	}
 	
+	// returns true if the given edge will be shown on the map with the current zoom level
+	private static boolean includeEdge(Edge e) {
+		int t = e.getType();
+		if (t == 1 || t == 2 || t == 3 || t == 4) return true;
+		else if (geoWidth < 100000 && (t == 5)) return true;
+		else if (geoWidth < 10000) return true;
+		else return false;
+	}
+	
 	// Gets all the edges that go out from each Node in the list of nodes
 	public static void getEdgesFromNodes() {
-		edges = new LinkedList<Edge>();
-		for (Node n: nodes) {
+		//edges = new LinkedList<Edge>();
+		Map.use().newArrayList();
+		for (Node n : nodes) {
 			Iterable<Edge> edgesFromNode = graph.adjOut(n.getKdvID());
 			for (Edge e : edgesFromNode) {
-				//if (e.getType() != 5) continue;
-				edges.add(e);
+				if (includeEdge(e)) {
+					//edges.add(e);
+					double x1 = e.getFromNode().getXCord();
+					double y1 = e.getFromNode().getYCord();
+					double x2 = e.getToNode().getXCord();
+					double y2 = e.getToNode().getYCord();
+					Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, e.getType()));
+				}
 			}
 		}
 	}
 	
 	//Adds road segments to arrayList within Map class
 	public static void calculatePixels() {
+		long time1 = 0;
+		long time2 = 0;
 		Map.use().newArrayList();
-		Long startTime = System.currentTimeMillis();
 		// For all the edges currently in the field of view,
 		// create a roadSegment and add it to the list
 		for (Edge e : edges) {
+			Long startTime = System.currentTimeMillis();
 			double x1 = e.getFromNode().getXCord();
 			double y1 = e.getFromNode().getYCord();
 			double x2 = e.getToNode().getXCord();
 			double y2 = e.getToNode().getYCord();
+			Long endTime = System.currentTimeMillis();
+			time1 += endTime-startTime;
+			startTime = System.currentTimeMillis();
 			Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, e.getType()));
+			endTime = System.currentTimeMillis();
+			time2 += endTime-startTime;
 		}
-		Long endTime = System.currentTimeMillis();
-		Long duration = endTime - startTime;
-		System.out.println("Time to calculate pixels: " + (duration/1000.0) + "s");
+		System.out.println("Time to read edges: " + (time1/1000.0) + "s");
+		System.out.println("Time to insert road segments: " + (time2/1000.0) + "s");
 	}
 	
 	public static void resetMap() {
@@ -191,7 +215,7 @@ public class WindowHandler {
 		nodes = QT.query(0, 0, geoWidth, geoHeight);
 		RoadSegment.setMapSize(geoWidth, geoHeight, 0.0, 0.0);
 		getEdgesFromNodes();
-		calculatePixels();
+		//calculatePixels();
 		Window.use().updateMap();
 	}
 
@@ -265,12 +289,17 @@ public class WindowHandler {
 		System.out.println("Length of the result from full query: " + nodes.size());
 
 		// Creates and adds roadSegments to an the arraylist 'edges'
-		calculatePixels();
+		//calculatePixels();
 		
 		// Throws out the old contentPane, then adds a new and calls repaint/validate,
 		// thus calling the internal method paintComponents found in the roadSegments objects
+		
+		startTime = System.currentTimeMillis();
 		Window.use().updateMap();
-		Window.use().repaint();
+		endTime = System.currentTimeMillis();
+		duration = endTime - startTime;
+		System.out.println("Time to update map the first time: " + duration/1000.0 + "s");
+		
 		System.out.printf("Graph has %d edges%n", graph.getE());
 		//MemoryMXBean mxbean = ManagementFactory.getMemoryMXBean();
 		//System.out.printf("Heap memory usage: %d MB%n", mxbean

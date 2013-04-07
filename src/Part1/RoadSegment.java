@@ -4,6 +4,8 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+
 import javax.swing.JComponent;
 
 @SuppressWarnings("serial")
@@ -102,6 +104,9 @@ public class RoadSegment extends JComponent {
 	 */
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
+		
+		// enable anti-aliasing
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		// set road color
 		g2.setColor(color);

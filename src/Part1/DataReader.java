@@ -169,7 +169,7 @@ public class DataReader {
 	public QuadTree createQuadTree() {
 		if(nodes == null) createNodeList();
 		// Create QuadTree
-		QuadTree QT = new QuadTree(3, maxX - minX, maxY - minY);
+		QuadTree QT = new QuadTree(5, maxX - minX, maxY - minY);
 		for (int i = 1; i < nodes.size(); i++) { //For loop start at index 1 because index 0 is null.
 			QT.insert(nodes.get(i));
 		}

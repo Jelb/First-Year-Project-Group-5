@@ -110,9 +110,9 @@ public class Window extends JFrame {
 	 * the window has been resized. 
 	 */
 	public void updateMap() {
+		long startTime = System.currentTimeMillis();
 		contentPane.removeAll();
 		contentPane.add(Map.use(), BorderLayout.CENTER);
-		System.out.println("updateMap is called");
 		if(initializing){
 			contentPane.setPreferredSize(new Dimension((int)(640*WindowHandler.getRatio()),640));
 			pack();
@@ -123,6 +123,7 @@ public class Window extends JFrame {
 		}
 		repaint();
 		validate();
+		System.out.println("Time to update map: " + (System.currentTimeMillis()-startTime)/1000.0);
 	}
 	
 	/**
@@ -164,7 +165,7 @@ public class Window extends JFrame {
 			if (event.getKeyCode() == KeyEvent.VK_1) WindowHandler.zoomOut();
 			else if (event.getKeyCode() == KeyEvent.VK_2) WindowHandler.zoomIn();
 			else WindowHandler.pan(event);
-			WindowHandler.calculatePixels();
+			//WindowHandler.calculatePixels();
 
 			updateMap();
 		}
@@ -238,7 +239,7 @@ public class Window extends JFrame {
 			WindowHandler.pixelSearch(pressedX, releasedX, pressedY, releasedY);
 			
 			
-			WindowHandler.calculatePixels();
+			//WindowHandler.calculatePixels();
 
 			updateMap();
 		}
