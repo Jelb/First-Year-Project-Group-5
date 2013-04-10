@@ -120,7 +120,8 @@ public class WindowHandler {
 			geoWidth = newGeoWidth;
 		}
 		long startTime = System.currentTimeMillis();
-		nodes = QT.query(geoXMin+offsetX, geoYMin+offsetY, geoXMax+offsetX, geoYMax+offsetY);
+		nodes = QT.query(geoXMin+offsetX-longestRoadsFloor, geoYMin+offsetY-longestRoadsFloor,
+				geoXMax+offsetX+longestRoadsFloor, geoYMax+offsetY+longestRoadsFloor);
 		System.out.println("Time for query in quadtree: " + (System.currentTimeMillis()-startTime)/1000.0);
 		RoadSegment.setMapSize(geoXMax+offsetX, geoYMax+offsetY, geoXMin+offsetX, geoYMin+offsetY);
 		startTime = System.currentTimeMillis();
@@ -130,35 +131,34 @@ public class WindowHandler {
 		offsetY += geoYMin;
 
 		
-		// TODO:check whether any of the longest roads intersect with the searched area
-//		List<Edge> searchedEdges = new LinkedList<Edge>();
-//		for (Edge e : longestRoads) {
-//			if(lineIntersects(geoX1, geoX2, geoY1, geoY2, e.getFromNode().getXCord(), e.getFromNode().getYCord(),
-//				e.getToNode().getXCord(), e.getFromNode().getYCord())) {
-//			searchedEdges.add(e);
-//			}
-//		}
-//		for (Node n: nodes) {
-//			Iterable<Edge> edgesFromNode = graph.adjOut(n.getKdvID());
-//			for (Edge e : edgesFromNode) {
-//				searchedEdges.add(e);
-//			}
-//		}
-//		edges = searchedEdges;
+		// check whether any of the longest roads intersect with the searched area
+		for (Edge e : longestRoads) {
+			double x1 = e.getFromNode().getXCord();
+			double y1 = e.getFromNode().getYCord();
+			double x2 = e.getToNode().getXCord();
+			double y2 = e.getToNode().getYCord();
+			if(lineIntersects(geoXMin, geoXMax, geoYMin, geoYMax, x1, x2,
+				y1, y2)) Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, e.getType()));
+		}
 		
 	}
 	
 	//TODO: Write code to detect intersection between area of interest and road.
-	@SuppressWarnings("unused")
 	private static boolean lineIntersects(double boxX1, double boxX2, double boxY1, double boxY2,
 									double lineX1, double lineX2, double lineY1, double lineY2) {
-		return false;
+//		if (lineX1 > boxX2 && lineX2 > boxX2) return false;
+//		else if (lineX1 < boxX1 && lineX2 < boxX1) return false;
+//		else if (lineY1 > boxY2 && lineY2 > boxY2) return false;
+//		else if (lineY1 < boxY1 && lineY1 < boxY1) return false;
+//		else return true;
+		return true;
 	}
+	
 	
 	// returns true if the given edge will be shown on the map with the current zoom level
 	private static boolean includeEdge(Edge e) {
 		int t = e.getType();
-		if (t == 1 || t == 2 || t == 3 || t == 4) return true;
+		if (t == 1 || t == 2 || t == 3 || t == 4 || t==80) return true;
 		else if (geoWidth < 100000 && (t == 5)) return true;
 		else if (geoWidth < 10000) return true;
 		else return false;
