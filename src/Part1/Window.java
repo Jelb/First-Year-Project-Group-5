@@ -9,6 +9,7 @@ import java.awt.Toolkit;
 
 import javax.imageio.ImageIO;
 import javax.media.j3d.Background;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -143,8 +144,11 @@ public class Window extends JFrame {
 	}
 	
 	private void addButtons() {
-		JButton panic = new JButton("Panic");
-		panic.setBounds(0, 0, 70, 30);
+		ImageIcon homeIcon = new ImageIcon("home48.png", "Home");
+		JButton panic = new JButton(homeIcon);
+		panic.setBorder(BorderFactory.createEmptyBorder());
+		panic.setBounds(5, 5, homeIcon.getIconWidth(),homeIcon.getIconHeight());
+		panic.setToolTipText("Home");
 		panic.addActionListener(new ActionListener() {
 			
 			@Override
