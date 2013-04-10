@@ -68,6 +68,9 @@ public class WindowHandler {
 		double geoXMin;
 		double geoYMax;
 		double geoYMin;
+		
+		// If not ∆x or ∆y is above 10 the method is stopped.
+		if (!(Math.abs(x1-x2) > 10 || Math.abs(y1-y2) > 10)) return;
 		if (x1 > x2) {
 			geoXMax = pixelToGeoX(x1);
 			geoXMin = pixelToGeoX(x2);
@@ -92,13 +95,13 @@ public class WindowHandler {
 		//TODO: Add the longestRoadsFloor to each border of the search area and use this to optimize panning.
 		
 		//ensures that the search area is wider than 200m
-		if (geoXMax - geoXMin < 200) {
+		if (geoXMax - geoXMin < 500) {
 			double centerX = (geoXMax - geoXMin)/2 + geoXMin;
-			geoXMin = centerX - 100;
-			geoXMax = centerX + 100;
+			geoXMin = centerX - 250;
+			geoXMax = centerX + 250;
 			double centerY = (geoYMax - geoYMin)/2 + geoYMin;
-			geoYMin = centerY - 100/ratio;
-			geoYMax = centerY + 100/ratio;
+			geoYMin = centerY - 250/ratio;
+			geoYMax = centerY + 250/ratio;
 		}
 		//System.out.println("Start point: (" + geoXMin + ", " + geoYMin + ")");
 		//System.out.println("End point: (" + geoXMax + ", " + geoYMax + ")");
