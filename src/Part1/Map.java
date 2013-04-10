@@ -12,6 +12,9 @@ public class Map extends JPanel {
 	private ArrayList<RoadSegment> segments;
 	private static Map instance = null;
 	
+	private Map() {
+	}
+	
 	//Singleton check
 	public static Map use() {
 		if(instance == null) 
