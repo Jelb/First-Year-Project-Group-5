@@ -1,17 +1,24 @@
 package Part1;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
 import javax.imageio.ImageIO;
+import javax.media.j3d.Background;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,8 +42,9 @@ public class Window extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private static Window instance;
+	private static JLayeredPane screen;
 	private static Container contentPane;
-	private static boolean initializing = true;
+	private JLabel background;
 
 	/**
 	 * Constructor for the window class.
@@ -66,24 +74,29 @@ public class Window extends JFrame {
 	 * 
 	 * @throws IOException 
 	 */
-	private void makeFrame() {		
+	private void makeFrame() {	
 		contentPane = getContentPane();
-		//setUndecorated(true);
-		contentPane.setPreferredSize(new Dimension(1024,640)); //Sets the dimension on the content pane.		
-        contentPane.setLayout(new BorderLayout()); //Sets the layout manager for the content pane.
+		setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
+		
+		screen = new JLayeredPane();
+		screen.setPreferredSize(new Dimension(1024,640)); //Sets the dimension on the content pane.		
 
         // Showed if the background image is unable to be loaded.
-        JLabel background = new JLabel("<html><center><b>Loading image could not load.<br>The map is loading...</b></html>", JLabel.CENTER);
+        background = new JLabel("<html><center><b>Loading image could not load.<br>The map is loading...</b></html>", JLabel.CENTER);
 		try {
 			background = new JLabel(new ImageIcon(ImageIO.read(new File("splash.jpg"))));
 		} catch (IOException e) {
 			
 		}
-		addMenu();
-        contentPane.add(background);
+		background.setBounds(0, 0, 1024, 640);
+
+		
+		contentPane.add(screen);
+        screen.add(background, JLayeredPane.DRAG_LAYER);
+        screen.setVisible(true);
         setResizable(false);
         pack();
-        centerWindow();
+        centerWindow(getWidth(), getHeight());
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -91,9 +104,9 @@ public class Window extends JFrame {
 	/**
 	 * Used to center the application on the screen at launch.
 	 */
-	private void centerWindow() {
-		setLocation((int)((Toolkit.getDefaultToolkit().getScreenSize().getWidth() - getWidth())/2),
-				(int)((Toolkit.getDefaultToolkit().getScreenSize().getHeight() - getHeight())/2));
+	private void centerWindow(int width, int height) {
+		setLocation((int)((Toolkit.getDefaultToolkit().getScreenSize().getWidth() - width)/2),
+				(int)((Toolkit.getDefaultToolkit().getScreenSize().getHeight() - height)/2));
 	}
 	
 	/**
@@ -110,46 +123,51 @@ public class Window extends JFrame {
 	 * the window has been resized. 
 	 */
 	public void updateMap() {
+		removeDefaultLayer();
 		long startTime = System.currentTimeMillis();
-		contentPane.removeAll();
-		contentPane.add(Map.use(), BorderLayout.CENTER);
-		if(initializing){
-			contentPane.setPreferredSize(new Dimension((int)(640*WindowHandler.getRatio()),640));
-			pack();
-			centerWindow();
-			setResizable(true);
-			initializing = false;
-			addListeners();
-		}
+		screen.add(Map.use(), JLayeredPane.DEFAULT_LAYER);
+		Map.use().setBounds(0, 0, (int)(640*WindowHandler.getRatio()), 640);
 		repaint();
 		validate();
+		if(background!= null){
+			screen.setPreferredSize(new Dimension((int)(640*WindowHandler.getRatio()),640));
+			screen.remove(background);
+			addButtons();
+			setResizable(true);
+			addListeners();
+			centerWindow(getPreferredSize().width, getPreferredSize().height);
+			pack();
+			background = null;
+		}
 		System.out.println("Time to update map: " + (System.currentTimeMillis()-startTime)/1000.0);
 	}
 	
-	/**
-	 * Creates and adds the menu bar.
-	 */
-	private void addMenu() {
-		JMenuBar menu = new JMenuBar();
-		JMenu zoomMenu = new JMenu("Don't panic");
-		JMenuItem resetZoomButton = new JMenuItem("Reset zoom");
-		menu.add(zoomMenu);
-		zoomMenu.add(resetZoomButton);
-		add(menu);
-		setJMenuBar(menu);
-		resetZoomButton.addActionListener(new ActionListener(){
+	private void addButtons() {
+		JButton panic = new JButton("Panic");
+		panic.setBounds(0, 0, 70, 30);
+		panic.addActionListener(new ActionListener() {
+			
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				WindowHandler.resetMap();
 			}
 		});
+		screen.add(panic, JLayeredPane.PALETTE_LAYER);
+	}
+	
+	
+	private void removeDefaultLayer() {
+		Component[] layer = screen.getComponentsInLayer(JLayeredPane.DEFAULT_LAYER);
+		for(Component c: layer)
+			screen.remove(c);
 	}
 	
 	public int getMapWidth() {
-		return contentPane.getComponent(0).getWidth();
+		return contentPane.getWidth();
 	}
 	
 	public int getMapHeight() {
-		return contentPane.getComponent(0).getHeight();
+		return contentPane.getHeight();
 	}
 	
 	/**
