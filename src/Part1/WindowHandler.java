@@ -160,7 +160,7 @@ public class WindowHandler {
 		int t = e.getType();
 		if (t == 1 || t == 2 || t == 3 || t == 4) return true;
 		else if (geoWidth < 100000 && (t == 5)) return true;
-		else if (geoWidth < 10000) return true;
+		else if (geoWidth < 30000) return true;
 		else return false;
 	}
 	
