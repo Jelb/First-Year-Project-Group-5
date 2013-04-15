@@ -236,16 +236,22 @@ public class Window extends JFrame {
 				switch(event.getKeyCode()){
 					case KeyEvent.VK_1:
 						WindowHandler.zoomOut();
+						break;
 					case KeyEvent.VK_2:
 						WindowHandler.zoomIn();
+						break;
 					case KeyEvent.VK_UP:
 						WindowHandler.pan(Direction.NORTH);
+						break;
 					case KeyEvent.VK_DOWN:
 						WindowHandler.pan(Direction.SOUTH);
+						break;
 					case KeyEvent.VK_LEFT:
 						WindowHandler.pan(Direction.WEST);
+						break;
 					case KeyEvent.VK_RIGHT:
 						WindowHandler.pan(Direction.EAST);
+						break;
 				}
 				
 

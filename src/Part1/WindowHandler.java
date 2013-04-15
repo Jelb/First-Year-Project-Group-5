@@ -1,6 +1,5 @@
 package Part1;
 
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.List;
 
@@ -39,21 +38,29 @@ public class WindowHandler {
 		switch(d){
 			case NORTH: 
 				System.out.println("Pan North");
-				search(0.0, geoWidth, geoHeight*0.1, geoHeight*1.1);
+				pan(0, geoHeight*0.1);
 				break;
 			case SOUTH:
 				System.out.println("Pan South");
-				search(0.0, geoWidth, -geoHeight*0.1, geoHeight*0.9);
+				pan(0, -geoHeight*0.1);
 				break;
 			case WEST:
 				System.out.println("Pan West");
-				search(-geoWidth*0.1, geoWidth*0.9, 0.0, geoHeight);
+				pan(-geoWidth*0.1, 0);
 				break;
 			case EAST:
 				System.out.println("Pan East");
-				search(geoWidth*0.1, geoWidth*1.1, 0.0, geoHeight);
+				pan(geoWidth*0.1, 0);
 				break;
 		}
+	}
+	
+	/**
+	 * A general pan method that takes as parameter how much the viewport has moved on the x-axis and y-axis
+	 */
+	//TODO: Optimize pan to take advantage of the point we already have loaded
+	public static void pan(double deltaX, double deltaY) {
+		search(deltaX, geoWidth+deltaX, deltaY, geoHeight+deltaY);
 	}
 	
 	public static void zoomOut() {
