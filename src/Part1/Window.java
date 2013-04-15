@@ -145,17 +145,35 @@ public class Window extends JFrame {
 	}
 	
 	private void addButtons() {
-		JButton zoomOut = createButton("ZoomOut.png", "Zoom out", 75, 75);
+		JButton resetZoom = createButton("ResetZoom.png", "Zoom out", 75, 75);
+		JButton zoomOut = createButton("ZoomOut.png", "Zoom out", 100, 175);
+		JButton zoomIn = createButton("ZoomIn.png", "Zoom in", 50, 175);
 		JButton west = createButton("West.png", "West", 25, 75);
 		JButton east = createButton("East.png", "East", 125, 75);
 		JButton north = createButton("North.png", "North",75, 25);
 		JButton south = createButton("South.png", "South", 75, 125);
 		
-		zoomOut.addActionListener(new ActionListener() {
+		resetZoom.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				WindowHandler.resetMap();
+			}
+		});
+		
+		zoomOut.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowHandler.zoomOut();
+			}
+		});
+		
+		zoomIn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowHandler.zoomIn();
 			}
 		});
 		
@@ -191,7 +209,9 @@ public class Window extends JFrame {
 			}
 		});		
 		
+		screen.add(resetZoom, JLayeredPane.PALETTE_LAYER);
 		screen.add(zoomOut, JLayeredPane.PALETTE_LAYER);
+		screen.add(zoomIn, JLayeredPane.PALETTE_LAYER);
 		screen.add(west, JLayeredPane.PALETTE_LAYER);
 		screen.add(east, JLayeredPane.PALETTE_LAYER);
 		screen.add(north, JLayeredPane.PALETTE_LAYER);
