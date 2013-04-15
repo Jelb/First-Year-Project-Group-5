@@ -11,6 +11,7 @@ import java.awt.Toolkit;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -77,7 +78,7 @@ public class Window extends JFrame {
 	 */
 	private void makeFrame() {	
 		contentPane = getContentPane();
-		contentPane.setLayout(new BorderLayout());
+		setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
 
 		screen = new JLayeredPane();		
 		screen.setPreferredSize(new Dimension(1024,640)); //Sets the dimension on the content pane.
@@ -92,7 +93,7 @@ public class Window extends JFrame {
 		background.setBounds(0, 0, 1024, 640);
 
 		
-		contentPane.add(screen, BorderLayout.CENTER);
+		contentPane.add(screen);
         screen.add(background, JLayeredPane.DRAG_LAYER);
         screen.setVisible(true);
         setResizable(false);

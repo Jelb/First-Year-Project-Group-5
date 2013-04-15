@@ -39,18 +39,22 @@ public class WindowHandler {
 			case NORTH: 
 				System.out.println("Pan North");
 				pan(0, geoHeight*0.1);
-				break;
+				Window.use().updateMap();
+				break;				
 			case SOUTH:
 				System.out.println("Pan South");
 				pan(0, -geoHeight*0.1);
+				Window.use().updateMap();
 				break;
 			case WEST:
 				System.out.println("Pan West");
 				pan(-geoWidth*0.1, 0);
+				Window.use().updateMap();
 				break;
 			case EAST:
 				System.out.println("Pan East");
 				pan(geoWidth*0.1, 0);
+				Window.use().updateMap();
 				break;
 		}
 	}
@@ -65,10 +69,12 @@ public class WindowHandler {
 	
 	public static void zoomOut() {
 		search(-geoWidth*0.1, geoWidth*1.1, -geoHeight*0.1, geoHeight*1.1);
+		Window.use().updateMap();
 	}
 	
 	public static void zoomIn() {
 		search(geoWidth*0.1, geoWidth*0.9, geoHeight*0.1, geoHeight*0.9);
+		Window.use().updateMap();
 	}
 	
 	// Searches an area using pixel-values
