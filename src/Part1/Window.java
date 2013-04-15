@@ -30,6 +30,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -118,6 +120,7 @@ public class Window extends JFrame {
 		addKeyListener(new MKeyListener());
 		addComponentListener(new resizeListener());
 		Map.use().addMouseListener(new mouseZoom());
+		Map.use().addMouseWheelListener(new mouseWheelZoom());
 	}
 	
 	/**
@@ -145,7 +148,7 @@ public class Window extends JFrame {
 	}
 	
 	private void addButtons() {
-		JButton resetZoom = createButton("ResetZoom.png", "Zoom out", 75, 75);
+		JButton resetZoom = createButton("ResetZoom.png", "Reset zoom", 75, 75);
 		JButton zoomOut = createButton("ZoomOut.png", "Zoom out", 100, 175);
 		JButton zoomIn = createButton("ZoomIn.png", "Zoom in", 50, 175);
 		JButton west = createButton("West.png", "West", 25, 75);
@@ -271,10 +274,7 @@ public class Window extends JFrame {
 					case KeyEvent.VK_RIGHT:
 						WindowHandler.pan(Direction.EAST);
 						break;
-				}
-				
-
-			updateMap();
+				}				
 		}
 	}
 	
@@ -350,5 +350,17 @@ public class Window extends JFrame {
 
 			updateMap();
 		}
+	}
+	
+	private class mouseWheelZoom implements MouseWheelListener{
+	    public void mouseWheelMoved(MouseWheelEvent e) {
+	        int notches = e.getWheelRotation();
+	        if (notches < 0) {
+	        	WindowHandler.zoomIn();
+	        } else {	            
+	            WindowHandler.zoomOut();
+	        }
+	    }
+		
 	}
 }
