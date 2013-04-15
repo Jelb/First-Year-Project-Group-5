@@ -5,10 +5,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 
 import javax.imageio.ImageIO;
-import javax.media.j3d.Background;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -80,7 +81,8 @@ public class Window extends JFrame {
 		setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
 		
 		screen = new JLayeredPane();
-		screen.setPreferredSize(new Dimension(1024,640)); //Sets the dimension on the content pane.		
+		screen.setPreferredSize(new Dimension(1024,640)); //Sets the dimension on the content pane.
+		//screen.setLayout(new FlowLayout());
 
         // Showed if the background image is unable to be loaded.
         background = new JLabel("<html><center><b>Loading image could not load.<br>The map is loading...</b></html>", JLabel.CENTER);
@@ -144,19 +146,66 @@ public class Window extends JFrame {
 	}
 	
 	private void addButtons() {
-		ImageIcon homeIcon = new ImageIcon("home48.png", "Home");
-		JButton panic = new JButton(homeIcon);
-		panic.setBorder(BorderFactory.createEmptyBorder());
-		panic.setBounds(5, 5, homeIcon.getIconWidth(),homeIcon.getIconHeight());
-		panic.setToolTipText("Home");
-		panic.addActionListener(new ActionListener() {
+		JButton zoomOut = createButton("ZoomOut.png", "Zoom out");
+		JButton west = createButton("West.png", "West");
+		JButton east = createButton("East.png", "East");
+		JButton north = createButton("North.png", "North");
+		JButton south = createButton("South.png", "South");
+		
+		zoomOut.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				WindowHandler.resetMap();
 			}
 		});
-		screen.add(panic, JLayeredPane.PALETTE_LAYER);
+		
+		west.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowHandler.pan(Direction.WEST);
+			}
+		});
+		
+		east.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowHandler.pan(Direction.EAST);
+			}
+		});
+		
+		north.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowHandler.pan(Direction.NORTH);
+			}
+		});
+		
+		south.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowHandler.pan(Direction.SOUTH);
+			}
+		});
+		
+		screen.add(zoomOut, JLayeredPane.PALETTE_LAYER);
+		screen.add(west, JLayeredPane.PALETTE_LAYER);
+		screen.add(east, JLayeredPane.PALETTE_LAYER);
+		screen.add(north, JLayeredPane.PALETTE_LAYER);
+		screen.add(south, JLayeredPane.PALETTE_LAYER);
+	}
+	
+	private JButton createButton(String file, String hoverText){
+		ImageIcon icon = new ImageIcon(file, hoverText);
+		JButton button = new JButton(icon);
+		button.setBorder(BorderFactory.createEmptyBorder());
+		//button.setBounds(5, 5, icon.getIconWidth(),icon.getIconHeight());
+		button.setToolTipText(hoverText);
+		return button;
 	}
 	
 	
@@ -184,10 +233,21 @@ public class Window extends JFrame {
 		 * Adds a key listener that sends the pressed button to the pan method of WindowHandler.
 		 */
 		public void keyPressed(KeyEvent event) {
-			if (event.getKeyCode() == KeyEvent.VK_1) WindowHandler.zoomOut();
-			else if (event.getKeyCode() == KeyEvent.VK_2) WindowHandler.zoomIn();
-			else WindowHandler.pan(event);
-			//WindowHandler.calculatePixels();
+				switch(event.getKeyCode()){
+					case KeyEvent.VK_1:
+						WindowHandler.zoomOut();
+					case KeyEvent.VK_2:
+						WindowHandler.zoomIn();
+					case KeyEvent.VK_UP:
+						WindowHandler.pan(Direction.NORTH);
+					case KeyEvent.VK_DOWN:
+						WindowHandler.pan(Direction.SOUTH);
+					case KeyEvent.VK_LEFT:
+						WindowHandler.pan(Direction.WEST);
+					case KeyEvent.VK_RIGHT:
+						WindowHandler.pan(Direction.EAST);
+				}
+				
 
 			updateMap();
 		}

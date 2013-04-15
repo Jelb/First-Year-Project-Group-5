@@ -35,22 +35,24 @@ public class WindowHandler {
 	 * Pans the map 10% in the direction specified.
 	 * @param keyEvent A key event holding the value of the key pressed.
 	 */
-	public static void pan(KeyEvent keyEvent) {
-		if(keyEvent.getKeyCode() == KeyEvent.VK_UP) {
-			System.out.println("Up pressed");
-			search(0.0, geoWidth, geoHeight*0.1, geoHeight*1.1);
-		}
-		if(keyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
-			System.out.println("Down pressed");
-			search(0.0, geoWidth, -geoHeight*0.1, geoHeight*0.9);
-		}
-		if(keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
-			System.out.println("Left pressed");
-			search(-geoWidth*0.1, geoWidth*0.9, 0.0, geoHeight);
-		}
-		if(keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
-			System.out.println("Right pressed");
-			search(geoWidth*0.1, geoWidth*1.1, 0.0, geoHeight);
+	public static void pan(Direction d) {
+		switch(d){
+			case NORTH: 
+				System.out.println("Pan North");
+				search(0.0, geoWidth, geoHeight*0.1, geoHeight*1.1);
+				break;
+			case SOUTH:
+				System.out.println("Pan South");
+				search(0.0, geoWidth, -geoHeight*0.1, geoHeight*0.9);
+				break;
+			case WEST:
+				System.out.println("Pan West");
+				search(-geoWidth*0.1, geoWidth*0.9, 0.0, geoHeight);
+				break;
+			case EAST:
+				System.out.println("Pan East");
+				search(geoWidth*0.1, geoWidth*1.1, 0.0, geoHeight);
+				break;
 		}
 	}
 	
