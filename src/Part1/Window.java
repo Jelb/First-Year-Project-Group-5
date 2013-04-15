@@ -11,7 +11,6 @@ import java.awt.Toolkit;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -78,11 +77,10 @@ public class Window extends JFrame {
 	 */
 	private void makeFrame() {	
 		contentPane = getContentPane();
-		setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
-		
-		screen = new JLayeredPane();
+		contentPane.setLayout(new BorderLayout());
+
+		screen = new JLayeredPane();		
 		screen.setPreferredSize(new Dimension(1024,640)); //Sets the dimension on the content pane.
-		//screen.setLayout(new FlowLayout());
 
         // Showed if the background image is unable to be loaded.
         background = new JLabel("<html><center><b>Loading image could not load.<br>The map is loading...</b></html>", JLabel.CENTER);
@@ -94,7 +92,7 @@ public class Window extends JFrame {
 		background.setBounds(0, 0, 1024, 640);
 
 		
-		contentPane.add(screen);
+		contentPane.add(screen, BorderLayout.CENTER);
         screen.add(background, JLayeredPane.DRAG_LAYER);
         screen.setVisible(true);
         setResizable(false);
@@ -146,11 +144,11 @@ public class Window extends JFrame {
 	}
 	
 	private void addButtons() {
-		JButton zoomOut = createButton("ZoomOut.png", "Zoom out");
-		JButton west = createButton("West.png", "West");
-		JButton east = createButton("East.png", "East");
-		JButton north = createButton("North.png", "North");
-		JButton south = createButton("South.png", "South");
+		JButton zoomOut = createButton("ZoomOut.png", "Zoom out", 75, 75);
+		JButton west = createButton("West.png", "West", 25, 75);
+		JButton east = createButton("East.png", "East", 125, 75);
+		JButton north = createButton("North.png", "North",75, 25);
+		JButton south = createButton("South.png", "South", 75, 125);
 		
 		zoomOut.addActionListener(new ActionListener() {
 			
@@ -190,7 +188,7 @@ public class Window extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				WindowHandler.pan(Direction.SOUTH);
 			}
-		});
+		});		
 		
 		screen.add(zoomOut, JLayeredPane.PALETTE_LAYER);
 		screen.add(west, JLayeredPane.PALETTE_LAYER);
@@ -199,11 +197,11 @@ public class Window extends JFrame {
 		screen.add(south, JLayeredPane.PALETTE_LAYER);
 	}
 	
-	private JButton createButton(String file, String hoverText){
+	private JButton createButton(String file, String hoverText, int x, int y){
 		ImageIcon icon = new ImageIcon(file, hoverText);
 		JButton button = new JButton(icon);
 		button.setBorder(BorderFactory.createEmptyBorder());
-		//button.setBounds(5, 5, icon.getIconWidth(),icon.getIconHeight());
+		button.setBounds(x, y, icon.getIconWidth(),icon.getIconHeight());
 		button.setToolTipText(hoverText);
 		return button;
 	}
