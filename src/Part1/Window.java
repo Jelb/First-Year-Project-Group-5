@@ -145,13 +145,13 @@ public class Window extends JFrame {
 	 * the window has been resized. 
 	 */
 	public void updateMap() {
-		removeDefaultLayer();
 		long startTime = System.currentTimeMillis();
-		screen.add(Map.use(), JLayeredPane.DEFAULT_LAYER);
 		Map.use().setBounds(0, 0, (int)(640*WindowHandler.getRatio()), 640);
 		repaint();
 		validate();
 		if(background!= null){
+			removeDefaultLayer();
+			screen.add(Map.use(), JLayeredPane.DEFAULT_LAYER);
 			screen.setPreferredSize(new Dimension((int)(640*WindowHandler.getRatio()),640));
 			screen.remove(background);
 			addButtons();
@@ -271,7 +271,6 @@ public class Window extends JFrame {
 	 */
 	static class DrawRect extends JComponent {
         public void paint(Graphics g) {
-        	System.out.println("Mouse position: " + getMousePosition());
             super.paint(g);
             g.setColor(Color.orange);
             if(getMousePosition() != null) {
@@ -447,7 +446,7 @@ public class Window extends JFrame {
 							WindowHandler.pixelPan(2*(prevX-e.getX()), 2*(e.getY()-prevY));
 							prevX = e.getX();
 							prevY = e.getY();
-							updateMap();
+							//updateMap();
 						}
 					}
 					else {
@@ -490,40 +489,4 @@ public class Window extends JFrame {
 		
 	}
 	
-	private class mousePan extends MouseInputAdapter {
-		int prevX;
-		int prevY;
-		//boolean dragging;
-		long prevTime;
-		
-		
-		public void mouseDragged(MouseEvent e) {
-			//if (System.currentTimeMillis()-prevTime > 1000) dragging = false;
-			if (SwingUtilities.isLeftMouseButton(e)) {
-				if (dragging) {
-					int x = e.getX();
-					int y = e.getY();
-					int dist;
-					if (x > y) dist = Math.abs(x-prevX);
-					else dist = Math.abs(y-prevY);
-					System.out.println("distance dragged: " + dist);
-					if (dist > 1) {
-						System.out.println("Im Panning");
-						WindowHandler.pixelPan(2*(prevX-e.getX()), 2*(e.getY()-prevY));
-						prevX = e.getX();
-						prevY = e.getY();
-						updateMap();
-					}
-				}
-				else {
-					prevX = e.getX();
-					prevY = e.getY();
-					dragging = true;
-					System.out.println("Set dragging to true");
-				}
-			}
-			prevTime = System.currentTimeMillis();
-		}
-		
-	}
 }

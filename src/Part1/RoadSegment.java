@@ -27,6 +27,8 @@ public class RoadSegment extends JComponent {
 	private Color color;
 	private int roadWidth;
 	
+	// How much pixels should be shifted next time they are drawn
+	private static int xShift, yShift;
 	
 	/**
 	 * 
@@ -80,6 +82,13 @@ public class RoadSegment extends JComponent {
 	}
 	
 	/**
+	 * Shifts the map area known by the road segments
+	 */
+	public static void shiftMapSize(double deltaX, double deltaY) {
+		setMapSize(geoMaxX+deltaX, geoMaxY+deltaY, geoMinX+deltaX, geoMinY+deltaY);
+	}
+	
+	/**
 	 * Method used to receive the color used to paint the specific roadSegment.
 	 *
 	 * @param TYP An integer describing the road type.
@@ -103,6 +112,13 @@ public class RoadSegment extends JComponent {
 	 * @param g A Graphics object used for drawing
 	 */
 	protected void paintComponent(Graphics g) {
+		//Shift pixels
+		xStart += xShift;
+		xEnd += xShift;
+		yStart += yShift;
+		yEnd += yShift;
+		
+		
 		Graphics2D g2 = (Graphics2D) g;
 		
 		// enable anti-aliasing
@@ -116,6 +132,15 @@ public class RoadSegment extends JComponent {
 
 		// draw the road segment
 		g2.drawLine(xStart, yStart, xEnd, yEnd);
+	}
+	
+	/**
+	 * 
+	 * Moves the pixel in the direction specified next time they are drawn
+	 */
+	public static void shiftPixel(int deltaX, int deltaY) {
+		xShift = deltaX;
+		yShift = deltaY;
 	}
 	
 }
