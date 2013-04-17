@@ -19,6 +19,10 @@ public class WindowHandler {
 	static double offsetX;
 	static double offsetY;
 	static double ratio;
+	
+	//offsets last time the quad tree was queried 
+	static double prevOffsetX;
+	static double prevOffsetY;
 			
 	// Converts X-pixel to coordinate
 	private static double pixelToGeoX(int x) {
@@ -40,83 +44,52 @@ public class WindowHandler {
 		double maxMapHeight = DataReader.getMaxY()-DataReader.getMinY();
 		double maxMapWidth = DataReader.getMaxX()-DataReader.getMinX();
 		switch(d){
-<<<<<<< HEAD
 			case NORTH:
 				//If the diff between the border of the map and the view area is less than 0.1, go to the border
 				if((maxMapHeight - (offsetY + geoHeight)) < geoHeight*0.1) {
 					System.out.println("Pan North");
 					System.out.println("Difference less than 0.1");
 					pan(0, maxMapHeight - (offsetY + geoHeight));
-					Window.use().updateMap();
 				}
 				else if((offsetY + geoHeight) < maxMapHeight) {
 					System.out.println("OffsetY - geoHeight: " + (offsetY + geoHeight));
 					System.out.println("MaxY: " + maxMapHeight);
 					System.out.println("Pan North");
-					pan(0, geoHeight*0.1);
-					Window.use().updateMap();
+					pixelPan(0, (int)(Map.use().getHeight()*0.1));
 				}
 					break; 			
 			case SOUTH:
 				if(offsetY < geoHeight*0.1) {
 					System.out.println("Pan South");
 					pan(0, -offsetY);
-					Window.use().updateMap();
 				}
 				else if(offsetY > 0) {
 					System.out.println("Pan South");
-					pan(0, -geoHeight*0.1);
-					Window.use().updateMap();
+					pixelPan(0, (int)(-Map.use().getHeight()*0.1));
 				}
 					break;
 			case WEST:
 				if(offsetX < geoWidth*0.1) {
 					System.out.println("Pan West");
 					pan(-offsetX, 0);
-					Window.use().updateMap();
 				}
 				else if(offsetX > 0) {
 					System.out.println("Pan West");
-					pan(-geoWidth*0.1, 0);
-					Window.use().updateMap();
+					pixelPan((int)(-Map.use().getWidth()*0.1), 0);
 				}
 					break;
 			case EAST:
 				if((maxMapWidth - (offsetX + geoWidth)) < geoWidth*0.1) {
 					System.out.println("Pan East");
 					pan(maxMapWidth - (offsetX + geoWidth), 0);
-					Window.use().updateMap();
 				}
 				else if(offsetX + geoWidth < maxMapWidth) {
 					System.out.println("Pan East");
-					pan(geoWidth*0.1, 0);
-					Window.use().updateMap();
+					pixelPan((int)(Map.use().getWidth()*0.1), 0);
 				}
 					break; 
-=======
-			case NORTH: 
-				System.out.println("Pan North");
-				pan(0, geoHeight*0.1);
-				//Window.use().updateMap();
-				break;				
-			case SOUTH:
-				System.out.println("Pan South");
-				pan(0, -geoHeight*0.1);
-				//Window.use().updateMap();
-				break;
-			case WEST:
-				System.out.println("Pan West");
-				pan(-geoWidth*0.1, 0);
-				//Window.use().updateMap();
-				break;
-			case EAST:
-				System.out.println("Pan East");
-				pan(geoWidth*0.1, 0);
-				//Window.use().updateMap();
-				break;
->>>>>>> 463a8202479ba2d2ad0df3c9e320bee6ce8820df
 		}
-		Window.use().updateMap();
+		//Window.use().updateMap();
 		Window.use().requestFocus();
 	}
 	
@@ -126,13 +99,33 @@ public class WindowHandler {
 	//TODO: Optimize pan to take advantage of the points we already have loaded
 	public static void pan(double deltaX, double deltaY) {
 		search(deltaX, geoWidth+deltaX, deltaY, geoHeight+deltaY);
+		Window.use().updateMap();
 	}
 	
+	/**
+	 * pixelPan shifts the pixels of the nodes and redraws the map. If parts of the map that are not loaded is reached
+	 * a new search is done in the quad tree. 
+	 */
 	public static void pixelPan(int x, int y) {
+		RoadSegment.shiftPixel(0-x, y);
+		Window.use().updateMap();
+		
 		double deltaX = pixelToGeoX(x);
 		double deltaY = pixelToGeoY(y);
-		pan(deltaX, deltaY);
+		
+		offsetY += deltaY;
+		offsetX += deltaX;
+		RoadSegment.shiftMapSize(deltaX, deltaY);
+		
+		if (Math.abs(prevOffsetX-offsetX) > longestRoadsFloor || Math.abs(prevOffsetY-offsetY) > longestRoadsFloor) {
+			RoadSegment.shiftPixel(0, 0);
+			offsetX -= deltaX;
+			offsetY -= deltaY;
+			pan(deltaX, deltaY);
+			Window.use().updateMap();
+		}
 	}
+	
 	
 	public static void zoomOut() {
 		search(-geoWidth*0.1, geoWidth*1.1, -geoHeight*0.1, geoHeight*1.1);
@@ -214,6 +207,8 @@ public class WindowHandler {
 		System.out.println("Time to create list of road segments: " + (System.currentTimeMillis()-startTime)/1000.0);
 		offsetX += geoXMin;
 		offsetY += geoYMin;
+		prevOffsetX = offsetX;
+		prevOffsetY = offsetY;
 
 		
 		// check whether any of the longest roads intersect with the searched area
@@ -269,28 +264,28 @@ public class WindowHandler {
 	}
 	
 	//Adds road segments to arrayList within Map class
-	public static void calculatePixels() {
-		long time1 = 0;
-		long time2 = 0;
-		Map.use().newArrayList();
-		// For all the edges currently in the field of view,
-		// create a roadSegment and add it to the list
-		for (Edge e : edges) {
-			Long startTime = System.currentTimeMillis();
-			double x1 = e.getFromNode().getXCord();
-			double y1 = e.getFromNode().getYCord();
-			double x2 = e.getToNode().getXCord();
-			double y2 = e.getToNode().getYCord();
-			Long endTime = System.currentTimeMillis();
-			time1 += endTime-startTime;
-			startTime = System.currentTimeMillis();
-			Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, e.getType()));
-			endTime = System.currentTimeMillis();
-			time2 += endTime-startTime;
-		}
-		System.out.println("Time to read edges: " + (time1/1000.0) + "s");
-		System.out.println("Time to insert road segments: " + (time2/1000.0) + "s");
-	}
+//	public static void calculatePixels() {
+//		long time1 = 0;
+//		long time2 = 0;
+//		Map.use().newArrayList();
+//		// For all the edges currently in the field of view,
+//		// create a roadSegment and add it to the list
+//		for (Edge e : edges) {
+//			Long startTime = System.currentTimeMillis();
+//			double x1 = e.getFromNode().getXCord();
+//			double y1 = e.getFromNode().getYCord();
+//			double x2 = e.getToNode().getXCord();
+//			double y2 = e.getToNode().getYCord();
+//			Long endTime = System.currentTimeMillis();
+//			time1 += endTime-startTime;
+//			startTime = System.currentTimeMillis();
+//			Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, e.getType()));
+//			endTime = System.currentTimeMillis();
+//			time2 += endTime-startTime;
+//		}
+//		System.out.println("Time to read edges: " + (time1/1000.0) + "s");
+//		System.out.println("Time to insert road segments: " + (time2/1000.0) + "s");
+//	}
 	
 	public static void resetMap() {
 		setGeoHeight(DataReader.getMaxY()-DataReader.getMinY());
