@@ -13,8 +13,8 @@ public class WindowHandler {
 	static QuadTree QT;
 	static Graph graph;
 	static Window window;
-	static double geoWidth;
-	static double geoHeight;
+	static double geoWidth; //The width of the view area
+	static double geoHeight; //The height of the view area
 	static double offsetX;
 	static double offsetY;
 	static double ratio;
@@ -32,30 +32,65 @@ public class WindowHandler {
 	
 	/**
 	 * Pans the map 10% in the direction specified.
+	 * The if-statements makes sure that the user don't pan outside the map
 	 * @param keyEvent A key event holding the value of the key pressed.
 	 */
 	public static void pan(Direction d) {
+		double maxMapHeight = DataReader.getMaxY()-DataReader.getMinY();
+		double maxMapWidth = DataReader.getMaxX()-DataReader.getMinX();
 		switch(d){
-			case NORTH: 
-				System.out.println("Pan North");
-				pan(0, geoHeight*0.1);
-				Window.use().updateMap();
-				break;				
+			case NORTH:
+				//If the diff between the border of the map and the view area is less than 0.1, go to the border
+				if((maxMapHeight - (offsetY + geoHeight)) < geoHeight*0.1) {
+					System.out.println("Pan North");
+					System.out.println("Difference less than 0.1");
+					pan(0, maxMapHeight - (offsetY + geoHeight));
+					Window.use().updateMap();
+				}
+				else if((offsetY + geoHeight) < maxMapHeight) {
+					System.out.println("OffsetY - geoHeight: " + (offsetY + geoHeight));
+					System.out.println("MaxY: " + maxMapHeight);
+					System.out.println("Pan North");
+					pan(0, geoHeight*0.1);
+					Window.use().updateMap();
+				}
+					break; 			
 			case SOUTH:
-				System.out.println("Pan South");
-				pan(0, -geoHeight*0.1);
-				Window.use().updateMap();
-				break;
+				if(offsetY < geoHeight*0.1) {
+					System.out.println("Pan South");
+					pan(0, -offsetY);
+					Window.use().updateMap();
+				}
+				else if(offsetY > 0) {
+					System.out.println("Pan South");
+					pan(0, -geoHeight*0.1);
+					Window.use().updateMap();
+				}
+					break;
 			case WEST:
-				System.out.println("Pan West");
-				pan(-geoWidth*0.1, 0);
-				Window.use().updateMap();
-				break;
+				if(offsetX < geoWidth*0.1) {
+					System.out.println("Pan West");
+					pan(-offsetX, 0);
+					Window.use().updateMap();
+				}
+				else if(offsetX > 0) {
+					System.out.println("Pan West");
+					pan(-geoWidth*0.1, 0);
+					Window.use().updateMap();
+				}
+					break;
 			case EAST:
-				System.out.println("Pan East");
-				pan(geoWidth*0.1, 0);
-				Window.use().updateMap();
-				break;
+				if((maxMapWidth - (offsetX + geoWidth)) < geoWidth*0.1) {
+					System.out.println("Pan East");
+					pan(maxMapWidth - (offsetX + geoWidth), 0);
+					Window.use().updateMap();
+				}
+				else if(offsetX + geoWidth < maxMapWidth) {
+					System.out.println("Pan East");
+					pan(geoWidth*0.1, 0);
+					Window.use().updateMap();
+				}
+					break; 
 		}
 	}
 	
