@@ -58,9 +58,15 @@ public class WindowHandler {
 	/**
 	 * A general pan method that takes as parameter how much the viewport has moved on the x-axis and y-axis
 	 */
-	//TODO: Optimize pan to take advantage of the point we already have loaded
+	//TODO: Optimize pan to take advantage of the points we already have loaded
 	public static void pan(double deltaX, double deltaY) {
 		search(deltaX, geoWidth+deltaX, deltaY, geoHeight+deltaY);
+	}
+	
+	public static void pixelPan(int x, int y) {
+		double deltaX = pixelToGeoX(x);
+		double deltaY = pixelToGeoY(y);
+		pan(deltaX, deltaY);
 	}
 	
 	public static void zoomOut() {
