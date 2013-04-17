@@ -6,7 +6,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 
@@ -15,7 +14,6 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -23,6 +21,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 
 import java.awt.event.ActionEvent;
@@ -52,6 +51,7 @@ public class Window extends JFrame {
 	private static JLayeredPane screen;
 	private static Container contentPane;
 	private JLabel background;
+	private boolean dragging;
 	
 	//Fields used for drag zoom
 	private static int pressedX;
@@ -324,7 +324,10 @@ public class Window extends JFrame {
 					case KeyEvent.VK_RIGHT:
 						WindowHandler.pan(Direction.EAST);
 						break;
-				}				
+				}
+				
+
+			updateMap();
 		}
 	}
 	
@@ -376,29 +379,33 @@ public class Window extends JFrame {
 		 * Records which pixel the mouse is pressed on.
 		 *
 		public void mousePressed(MouseEvent e){	
-			pressedX = e.getX();
-			pressedY = e.getY();
-			
-			System.out.println("Pressed X : "+ pressedX);
-			System.out.println("Pressed Y : "+ pressedY);
+			if (SwingUtilities.isRightMouseButton(e)) {
+				pressedX = e.getX();
+				pressedY = e.getY();
+				
+				System.out.println("Pressed X : "+ pressedX);
+				System.out.println("Pressed Y : "+ pressedY);
+			}
 		}
 		
 		/**
 		 * Records which pixel the mouse is released on.
 		 *
 		public void mouseReleased(MouseEvent e){
-			releasedX = e.getX();
-			releasedY =  e.getY();
-			System.out.println("Released X : "+ releasedX);
-			System.out.println("Released Y : "+ releasedY);
-			
-
-			WindowHandler.pixelSearch(pressedX, releasedX, pressedY, releasedY);
-			
-			
-			//WindowHandler.calculatePixels();
-
-			updateMap();
+			if (SwingUtilities.isRightMouseButton(e)) {
+				releasedX = e.getX();
+				releasedY =  e.getY();
+				System.out.println("Released X : "+ releasedX);
+				System.out.println("Released Y : "+ releasedY);
+				
+	
+				WindowHandler.pixelSearch(pressedX, releasedX, pressedY, releasedY);
+	
+				updateMap();
+			}
+			if (SwingUtilities.isLeftMouseButton(e)) {
+				dragging = false;
+			}
 		}
 	}*/
 	
@@ -443,6 +450,43 @@ public class Window extends JFrame {
 	            WindowHandler.zoomOut();
 	        }
 	    }
+		
+	}
+	
+	private class mousePan extends MouseInputAdapter {
+		int prevX;
+		int prevY;
+		//boolean dragging;
+		long prevTime;
+		
+		
+		public void mouseDragged(MouseEvent e) {
+			//if (System.currentTimeMillis()-prevTime > 1000) dragging = false;
+			if (SwingUtilities.isLeftMouseButton(e)) {
+				if (dragging) {
+					int x = e.getX();
+					int y = e.getY();
+					int dist;
+					if (x > y) dist = Math.abs(x-prevX);
+					else dist = Math.abs(y-prevY);
+					System.out.println("distance dragged: " + dist);
+					if (dist > 1) {
+						System.out.println("Im Panning");
+						WindowHandler.pixelPan(2*(prevX-e.getX()), 2*(e.getY()-prevY));
+						prevX = e.getX();
+						prevY = e.getY();
+						updateMap();
+					}
+				}
+				else {
+					prevX = e.getX();
+					prevY = e.getY();
+					dragging = true;
+					System.out.println("Set dragging to true");
+				}
+			}
+			prevTime = System.currentTimeMillis();
+		}
 		
 	}
 }
