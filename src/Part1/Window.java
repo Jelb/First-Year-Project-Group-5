@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 
@@ -14,6 +15,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -21,6 +23,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.event.MouseInputAdapter;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,6 +52,14 @@ public class Window extends JFrame {
 	private static JLayeredPane screen;
 	private static Container contentPane;
 	private JLabel background;
+	
+	//Fields used for drag zoom
+	private static int pressedX;
+	private static int pressedY;
+	private static int releasedX;
+	private static int releasedY;
+	private static JComponent rect;
+	private static boolean mousePressed = false;
 
 	/**
 	 * Constructor for the window class.
@@ -119,8 +130,12 @@ public class Window extends JFrame {
 	private void addListeners() {
 		addKeyListener(new MKeyListener());
 		addComponentListener(new resizeListener());
-		Map.use().addMouseListener(new mouseZoom());
+		//Map.use().addMouseListener(new mouseZoom());
 		Map.use().addMouseWheelListener(new mouseWheelZoom());
+		//Listeners for when mouse is pressed, dragged or released
+		MouseListener mouseListener = new MouseListener();
+		Map.use().addMouseListener(mouseListener);
+		Map.use().addMouseMotionListener(mouseListener);
 	}
 	
 	/**
@@ -246,6 +261,41 @@ public class Window extends JFrame {
 	}
 	
 	/**
+	 * Method for drawing the rectangle to show where the user is dragging for zoom
+	 * The method compares where the user is dragging from and to, and hereby calculates
+	 * the rectangle.
+	 * 
+	 * @author Nico
+	 */
+	static class DrawRect extends JComponent {
+        public void paint(Graphics g) {
+        	System.out.println("Mouse position: " + getMousePosition());
+            super.paint(g);
+            g.setColor(Color.orange);
+            if(getMousePosition() != null) {
+            if(pressedX < getMousePosition().x && pressedY < getMousePosition().y) {
+            	g.drawRect(pressedX, pressedY, getMousePosition().x - pressedX, getMousePosition().y - pressedY);
+            	System.out.println("Box width: " + (getMousePosition().x - pressedX) + " and height: " + (getMousePosition().y - pressedY));
+            }
+            else if(pressedX > getMousePosition().x && pressedY > getMousePosition().y) {
+            	g.drawRect(getMousePosition().x, getMousePosition().y, pressedX - getMousePosition().x, pressedY - getMousePosition().y);
+            	System.out.println("Box width: " + (pressedX - getMousePosition().x) + " and height: " + (pressedY - getMousePosition().y));
+            }
+            else if(pressedX < getMousePosition().x && pressedY > getMousePosition().y) {
+            	g.drawRect(pressedX, getMousePosition().y, getMousePosition().x - pressedX, pressedY - getMousePosition().y);
+            	System.out.println("Box width: " + (getMousePosition().x - pressedX) + " and height: " + (pressedY - getMousePosition().y));
+            }
+            else if(pressedX > getMousePosition().x && pressedY < getMousePosition().y) {
+            	g.drawRect(getMousePosition().x, pressedY, pressedX - getMousePosition().x, getMousePosition().y - pressedY);
+            	System.out.println("Box width: " + (pressedX - getMousePosition().x) + " and height: " + (getMousePosition().y - pressedY));
+            }
+            }
+            //StdOut.println("drawing");
+            //System.out.println(getMousePosition());
+        }
+    }
+	
+	/**
 	 * Adds a key listener used to move around the map.
 	 * 
 	 * @author Tom (TMCH@ITU.DK)
@@ -315,7 +365,7 @@ public class Window extends JFrame {
 	/**
 	 * Adds a mouse listener used for "box zooming" on the map.
 	 * 
-	 */
+	 *
 	private class mouseZoom extends MouseAdapter {
 		private int pressedX;
 		private int pressedY;
@@ -324,7 +374,7 @@ public class Window extends JFrame {
 		
 		/**
 		 * Records which pixel the mouse is pressed on.
-		 */
+		 *
 		public void mousePressed(MouseEvent e){	
 			pressedX = e.getX();
 			pressedY = e.getY();
@@ -335,7 +385,7 @@ public class Window extends JFrame {
 		
 		/**
 		 * Records which pixel the mouse is released on.
-		 */
+		 *
 		public void mouseReleased(MouseEvent e){
 			releasedX = e.getX();
 			releasedY =  e.getY();
@@ -350,6 +400,38 @@ public class Window extends JFrame {
 
 			updateMap();
 		}
+	}*/
+	
+	private class MouseListener extends MouseInputAdapter {
+		  public void mousePressed(MouseEvent e) {
+			  System.out.println("Mouse pressed");
+				mousePressed = true;
+				pressedX = e.getX();
+				pressedY = e.getY();
+				
+				System.out.println("Pressed X : "+ pressedX);
+				System.out.println("Pressed Y : "+ pressedY);
+		  }
+
+		  public void mouseDragged(MouseEvent e) {
+			  System.out.println("Mouse dragged");
+				rect = new DrawRect();
+		        rect.setBounds(0, 0, contentPane.getWidth(), contentPane.getHeight());
+	        	screen.add(rect, JLayeredPane.POPUP_LAYER);
+		  }
+
+		  public void mouseReleased(MouseEvent e) {
+			  System.out.println("Mouse released");
+				mousePressed = false;
+				releasedX = e.getX();
+				releasedY =  e.getY();
+				System.out.println("Released X : "+ releasedX);
+				System.out.println("Released Y : "+ releasedY);
+				WindowHandler.pixelSearch(pressedX, releasedX, pressedY, releasedY);
+				//if(rect != null)
+				rect.setVisible(false); //Removes the rectangle when zoom box is chosen
+				updateMap();
+		  }
 	}
 	
 	private class mouseWheelZoom implements MouseWheelListener{
