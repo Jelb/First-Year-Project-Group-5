@@ -329,7 +329,7 @@ public class Window extends JFrame {
 				}
 				
 
-			updateMap();
+			//updateMap();
 		}
 	}
 	
@@ -412,34 +412,69 @@ public class Window extends JFrame {
 	}*/
 	
 	private class MouseListener extends MouseInputAdapter {
+		int prevX;
+		int prevY;
+		
 		  public void mousePressed(MouseEvent e) {
-			  System.out.println("Mouse pressed");
-				mousePressed = true;
-				pressedX = e.getX();
-				pressedY = e.getY();
-				
-				System.out.println("Pressed X : "+ pressedX);
-				System.out.println("Pressed Y : "+ pressedY);
+			  if (SwingUtilities.isRightMouseButton(e)) {
+				  System.out.println("Mouse pressed");
+					mousePressed = true;
+					pressedX = e.getX();
+					pressedY = e.getY();
+					
+					System.out.println("Pressed X : "+ pressedX);
+					System.out.println("Pressed Y : "+ pressedY);
+			  }
 		  }
 
 		  public void mouseDragged(MouseEvent e) {
-			  System.out.println("Mouse dragged");
-				rect = new DrawRect();
-		        rect.setBounds(0, 0, contentPane.getWidth(), contentPane.getHeight());
-	        	screen.add(rect, JLayeredPane.POPUP_LAYER);
+			  if (SwingUtilities.isRightMouseButton(e)) {
+				  System.out.println("Mouse dragged");
+					rect = new DrawRect();
+			        rect.setBounds(0, 0, contentPane.getWidth(), contentPane.getHeight());
+		        	screen.add(rect, JLayeredPane.POPUP_LAYER);
+			  }
+			  if (SwingUtilities.isLeftMouseButton(e)) {
+					if (dragging) {
+						int x = e.getX();
+						int y = e.getY();
+						int dist;
+						if (x > y) dist = Math.abs(x-prevX);
+						else dist = Math.abs(y-prevY);
+						System.out.println("distance dragged: " + dist);
+						if (dist > 1) {
+							System.out.println("Im Panning");
+							WindowHandler.pixelPan(2*(prevX-e.getX()), 2*(e.getY()-prevY));
+							prevX = e.getX();
+							prevY = e.getY();
+							updateMap();
+						}
+					}
+					else {
+						prevX = e.getX();
+						prevY = e.getY();
+						dragging = true;
+						System.out.println("Set dragging to true");
+					}
+				}
 		  }
 
 		  public void mouseReleased(MouseEvent e) {
-			  System.out.println("Mouse released");
-				mousePressed = false;
-				releasedX = e.getX();
-				releasedY =  e.getY();
-				System.out.println("Released X : "+ releasedX);
-				System.out.println("Released Y : "+ releasedY);
-				WindowHandler.pixelSearch(pressedX, releasedX, pressedY, releasedY);
-				//if(rect != null)
-				rect.setVisible(false); //Removes the rectangle when zoom box is chosen
-				updateMap();
+			  if (SwingUtilities.isRightMouseButton(e)) {
+				  System.out.println("Mouse released");
+					mousePressed = false;
+					releasedX = e.getX();
+					releasedY =  e.getY();
+					System.out.println("Released X : "+ releasedX);
+					System.out.println("Released Y : "+ releasedY);
+					WindowHandler.pixelSearch(pressedX, releasedX, pressedY, releasedY);
+					//if(rect != null)
+					rect.setVisible(false); //Removes the rectangle when zoom box is chosen
+					updateMap();
+			  }
+			  if (SwingUtilities.isLeftMouseButton(e)) {
+					dragging = false;
+			  }
 		  }
 	}
 	

@@ -39,24 +39,25 @@ public class WindowHandler {
 			case NORTH: 
 				System.out.println("Pan North");
 				pan(0, geoHeight*0.1);
-				Window.use().updateMap();
+				//Window.use().updateMap();
 				break;				
 			case SOUTH:
 				System.out.println("Pan South");
 				pan(0, -geoHeight*0.1);
-				Window.use().updateMap();
+				//Window.use().updateMap();
 				break;
 			case WEST:
 				System.out.println("Pan West");
 				pan(-geoWidth*0.1, 0);
-				Window.use().updateMap();
+				//Window.use().updateMap();
 				break;
 			case EAST:
 				System.out.println("Pan East");
 				pan(geoWidth*0.1, 0);
-				Window.use().updateMap();
+				//Window.use().updateMap();
 				break;
 		}
+		Window.use().updateMap();
 	}
 	
 	/**
