@@ -3,6 +3,7 @@ package Part1;
 import java.io.IOException;
 import java.util.List;
 
+import Part1.Window.MKeyListener;
 import QuadTree.QuadTree;
 
 public class WindowHandler {
@@ -61,7 +62,8 @@ public class WindowHandler {
 				//Window.use().updateMap();
 				break;
 		}
-		//Window.use().updateMap();
+		Window.use().updateMap();
+		Window.use().requestFocus();
 	}
 	
 	/**
