@@ -1,13 +1,10 @@
 package Part1;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.Toolkit;
 
 import javax.imageio.ImageIO;
@@ -19,12 +16,8 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
 
 import java.awt.event.ActionEvent;
@@ -33,13 +26,11 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 
 /*
  * Window class is the GUI of our program, which puts the map and other components together
@@ -63,7 +54,7 @@ public class Window extends JFrame {
 	private static int releasedX;
 	private static int releasedY;
 	private static JComponent rect;
-	private static boolean mousePressed = false;
+	private Timer timer;
 	
 	//Buttons to pan and zoom
 	private JButton resetZoom;
@@ -75,7 +66,6 @@ public class Window extends JFrame {
 	private JButton south;
 	private JTextField from;
 	private	JTextField to;
-	private final static String newline = "\n"; //Makes sure the text collected from text fields don't include new line (Enter)
 	
 
 	/**
@@ -107,6 +97,7 @@ public class Window extends JFrame {
 	 * @throws IOException 
 	 */
 	private void makeFrame() {	
+		setMinimumSize(new Dimension(640,640));
 		contentPane = getContentPane();
 		setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
 
@@ -392,10 +383,22 @@ public class Window extends JFrame {
 		int height;
 		int width;
 		int count;
-		boolean run;
-	
+		
+		
 		public void componentResized(ComponentEvent evt) {
-			//if(run){
+			if(timer == null){
+			timer = new Timer(100, new ResizeTask());
+			timer.start();
+			}
+			timer.restart();
+			
+	}
+	
+	private class ResizeTask implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			timer.stop();
 			if(Math.abs(width - Window.use().getWidth())>0){
 				Window.use().setPreferredSize(new Dimension(Window.use().getWidth(), (int)(Window.use().getWidth()/WindowHandler.getRatio())));
 			} else if(Math.abs(height - Window.use().getHeight())>0){
@@ -405,13 +408,14 @@ public class Window extends JFrame {
 			height = Window.use().getHeight();
 			width = Window.use().getWidth();
 			if(Map.use().getRoadSegments() != null)
-			Map.use().updatePix();
-			repaint();
-
+				Map.use().updatePix();
+			timer = null;
 			System.out.println(++count);
-//			}
-//			run =!run;
 		}
+			
+		}
+		
+		
 	}
 	
 	
@@ -466,7 +470,6 @@ public class Window extends JFrame {
 		  public void mousePressed(MouseEvent e) {
 			  if (SwingUtilities.isRightMouseButton(e)) {
 				  System.out.println("Mouse pressed");
-					mousePressed = true;
 					pressedX = e.getX();
 					pressedY = e.getY();
 					
@@ -510,7 +513,6 @@ public class Window extends JFrame {
 		  public void mouseReleased(MouseEvent e) {
 			  if (SwingUtilities.isRightMouseButton(e)) {
 				  System.out.println("Mouse released");
-					mousePressed = false;
 					releasedX = e.getX();
 					releasedY =  e.getY();
 					System.out.println("Released X : "+ releasedX);
