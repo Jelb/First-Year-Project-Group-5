@@ -62,6 +62,16 @@ public class Window extends JFrame {
 	private static int releasedY;
 	private static JComponent rect;
 	private static boolean mousePressed = false;
+	
+	//Buttons to pan and zoom
+	private JButton resetZoom;
+	private JButton zoomOut;
+	private JButton zoomIn;
+	private JButton west;
+	private JButton east;
+	private JButton north;
+	private JButton south;
+	
 
 	/**
 	 * Constructor for the window class.
@@ -129,7 +139,7 @@ public class Window extends JFrame {
 	/**
 	 * Adds the needed listeners to the window instance.
 	 */
-	private void addListeners() {
+	public void addListeners() {
 		addKeyListener(new MKeyListener());
 		addComponentListener(new resizeListener());
 		//Map.use().addMouseListener(new mouseZoom());
@@ -138,6 +148,8 @@ public class Window extends JFrame {
 		MouseListener mouseListener = new MouseListener();
 		Map.use().addMouseListener(mouseListener);
 		Map.use().addMouseMotionListener(mouseListener);
+		//Listener for the buttons for zoom, pan
+		addButtonListeners();
 	}
 	
 	/**
@@ -154,7 +166,8 @@ public class Window extends JFrame {
 		if(background!= null){
 			screen.setPreferredSize(new Dimension((int)(640*WindowHandler.getRatio()),640));
 			screen.remove(background);
-			addButtons();
+			createButtons();
+			addButtons();			
 			setResizable(true);
 			addListeners();
 			centerWindow(getPreferredSize().width, getPreferredSize().height);
@@ -164,14 +177,17 @@ public class Window extends JFrame {
 		System.out.println("Time to update map: " + (System.currentTimeMillis()-startTime)/1000.0);
 	}
 	
-	private void addButtons() {
-		JButton resetZoom = createButton("ResetZoom.png", "Reset zoom", 75, 75);
-		JButton zoomOut = createButton("ZoomOut.png", "Zoom out", 100, 175);
-		JButton zoomIn = createButton("ZoomIn.png", "Zoom in", 50, 175);
-		JButton west = createButton("West.png", "West", 25, 75);
-		JButton east = createButton("East.png", "East", 125, 75);
-		JButton north = createButton("North.png", "North",75, 25);
-		JButton south = createButton("South.png", "South", 75, 125);
+	private void createButtons() {
+		resetZoom = createButton("ResetZoom.png", "Reset zoom", 75, 75);
+		zoomOut = createButton("ZoomOut.png", "Zoom out", 100, 175);
+		zoomIn = createButton("ZoomIn.png", "Zoom in", 50, 175);
+		west = createButton("West.png", "West", 25, 75);
+		east = createButton("East.png", "East", 125, 75);
+		north = createButton("North.png", "North",75, 25);
+		south = createButton("South.png", "South", 75, 125);		
+	}
+	
+	private void addButtonListeners(){
 		
 		resetZoom.addActionListener(new ActionListener() {
 			
@@ -227,7 +243,10 @@ public class Window extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				WindowHandler.pan(Direction.SOUTH);
 			}
-		});		
+		});
+	}
+	
+	private void addButtons(){
 		
 		screen.add(resetZoom, JLayeredPane.PALETTE_LAYER);
 		screen.add(zoomOut, JLayeredPane.PALETTE_LAYER);
@@ -306,8 +325,8 @@ public class Window extends JFrame {
 		/**
 		 * Adds a key listener that sends the pressed button to the pan method of WindowHandler.
 		 */
-		public void keyPressed(KeyEvent event) {
-				switch(event.getKeyCode()){
+		public void keyPressed(KeyEvent e) {
+				switch(e.getKeyCode()){
 					case KeyEvent.VK_1:
 						WindowHandler.zoomOut();
 						break;
