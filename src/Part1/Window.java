@@ -23,6 +23,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 
@@ -38,6 +39,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 
 /*
  * Window class is the GUI of our program, which puts the map and other components together
@@ -71,6 +73,9 @@ public class Window extends JFrame {
 	private JButton east;
 	private JButton north;
 	private JButton south;
+	private JTextField from;
+	private	JTextField to;
+	private final static String newline = "\n"; //Makes sure the text collected from text fields don't include new line (Enter)
 	
 
 	/**
@@ -184,7 +189,14 @@ public class Window extends JFrame {
 		west = createButton("West.png", "West", 25, 75);
 		east = createButton("East.png", "East", 125, 75);
 		north = createButton("North.png", "North",75, 25);
-		south = createButton("South.png", "South", 75, 125);		
+		south = createButton("South.png", "South", 75, 125);
+		
+		from = new JTextField("From");
+		from.setBounds(25 , 225,150, 25);
+		from.setBackground(Color.PINK);
+		to = new JTextField("To");
+		to.setBounds(25, 270, 150,25);
+		to.setBackground(Color.PINK);
 	}
 	
 	private void addButtonListeners(){
@@ -244,6 +256,22 @@ public class Window extends JFrame {
 				WindowHandler.pan(Direction.SOUTH);
 			}
 		});
+		
+		from.addActionListener(new ActionListener(){
+			
+			public void actionPerformed(ActionEvent evt) {
+				String fromText = from.getText();				
+				System.out.println(fromText);
+		}
+		});
+		
+		to.addActionListener(new ActionListener(){
+			
+			public void actionPerformed(ActionEvent evt) {
+				String toText = from.getText();				
+				System.out.println(toText);				
+		}
+		});
 	}
 	
 	private void addButtons(){
@@ -255,6 +283,8 @@ public class Window extends JFrame {
 		screen.add(east, JLayeredPane.PALETTE_LAYER);
 		screen.add(north, JLayeredPane.PALETTE_LAYER);
 		screen.add(south, JLayeredPane.PALETTE_LAYER);
+		screen.add(from, JLayeredPane.PALETTE_LAYER);
+		screen.add(to, JLayeredPane.PALETTE_LAYER);
 	}
 	
 	private JButton createButton(String file, String hoverText, int x, int y){
