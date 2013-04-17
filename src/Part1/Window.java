@@ -65,6 +65,7 @@ public class Window extends JFrame {
 	private JButton east;
 	private JButton north;
 	private JButton south;
+	private JButton toms;
 	private JTextField from;
 	private	JTextField to;
 	
@@ -188,6 +189,9 @@ public class Window extends JFrame {
 		to = new JTextField("To");
 		to.setBounds(25, 270, 150,25);
 		to.setBackground(Color.PINK);
+		
+		toms = new JButton("Tom");
+		toms.setBounds(35, 350, 50,50);
 	}
 	
 	private void addButtonListeners(){
@@ -263,6 +267,13 @@ public class Window extends JFrame {
 				System.out.println(toText);				
 		}
 		});
+		
+		toms.addActionListener(new ActionListener(){
+			
+			public void actionPerformed(ActionEvent evt) {
+				System.out.println("Do something");				
+		}
+		});
 	}
 	
 	private void addButtons(){
@@ -276,6 +287,7 @@ public class Window extends JFrame {
 		screen.add(south, JLayeredPane.PALETTE_LAYER);
 		screen.add(from, JLayeredPane.PALETTE_LAYER);
 		screen.add(to, JLayeredPane.PALETTE_LAYER);
+		screen.add(toms, JLayeredPane.PALETTE_LAYER);
 	}
 	
 	private JButton createButton(String file, String hoverText, int x, int y){
