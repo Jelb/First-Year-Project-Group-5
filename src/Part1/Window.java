@@ -75,7 +75,6 @@ public class Window extends JFrame {
 	private JButton south;
 	private JTextField from;
 	private	JTextField to;
-	private final static String newline = "\n"; //Makes sure the text collected from text fields don't include new line (Enter)
 	
 
 	/**
@@ -107,6 +106,7 @@ public class Window extends JFrame {
 	 * @throws IOException 
 	 */
 	private void makeFrame() {	
+		setMinimumSize(new Dimension(640,640));
 		contentPane = getContentPane();
 		setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
 
