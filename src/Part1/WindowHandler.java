@@ -3,6 +3,7 @@ package Part1;
 import java.io.IOException;
 import java.util.List;
 
+import Part1.Window.MKeyListener;
 import QuadTree.QuadTree;
 
 public class WindowHandler {
@@ -39,6 +40,7 @@ public class WindowHandler {
 		double maxMapHeight = DataReader.getMaxY()-DataReader.getMinY();
 		double maxMapWidth = DataReader.getMaxX()-DataReader.getMinX();
 		switch(d){
+<<<<<<< HEAD
 			case NORTH:
 				//If the diff between the border of the map and the view area is less than 0.1, go to the border
 				if((maxMapHeight - (offsetY + geoHeight)) < geoHeight*0.1) {
@@ -91,15 +93,45 @@ public class WindowHandler {
 					Window.use().updateMap();
 				}
 					break; 
+=======
+			case NORTH: 
+				System.out.println("Pan North");
+				pan(0, geoHeight*0.1);
+				//Window.use().updateMap();
+				break;				
+			case SOUTH:
+				System.out.println("Pan South");
+				pan(0, -geoHeight*0.1);
+				//Window.use().updateMap();
+				break;
+			case WEST:
+				System.out.println("Pan West");
+				pan(-geoWidth*0.1, 0);
+				//Window.use().updateMap();
+				break;
+			case EAST:
+				System.out.println("Pan East");
+				pan(geoWidth*0.1, 0);
+				//Window.use().updateMap();
+				break;
+>>>>>>> 463a8202479ba2d2ad0df3c9e320bee6ce8820df
 		}
+		Window.use().updateMap();
+		Window.use().requestFocus();
 	}
 	
 	/**
 	 * A general pan method that takes as parameter how much the viewport has moved on the x-axis and y-axis
 	 */
-	//TODO: Optimize pan to take advantage of the point we already have loaded
+	//TODO: Optimize pan to take advantage of the points we already have loaded
 	public static void pan(double deltaX, double deltaY) {
 		search(deltaX, geoWidth+deltaX, deltaY, geoHeight+deltaY);
+	}
+	
+	public static void pixelPan(int x, int y) {
+		double deltaX = pixelToGeoX(x);
+		double deltaY = pixelToGeoY(y);
+		pan(deltaX, deltaY);
 	}
 	
 	public static void zoomOut() {

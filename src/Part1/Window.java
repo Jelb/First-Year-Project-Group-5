@@ -23,6 +23,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 
 import java.awt.event.ActionEvent;
@@ -52,6 +53,7 @@ public class Window extends JFrame {
 	private static JLayeredPane screen;
 	private static Container contentPane;
 	private JLabel background;
+	private boolean dragging;
 	
 	//Fields used for drag zoom
 	private static int pressedX;
@@ -60,6 +62,16 @@ public class Window extends JFrame {
 	private static int releasedY;
 	private static JComponent rect;
 	private static boolean mousePressed = false;
+	
+	//Buttons to pan and zoom
+	private JButton resetZoom;
+	private JButton zoomOut;
+	private JButton zoomIn;
+	private JButton west;
+	private JButton east;
+	private JButton north;
+	private JButton south;
+	
 
 	/**
 	 * Constructor for the window class.
@@ -127,7 +139,7 @@ public class Window extends JFrame {
 	/**
 	 * Adds the needed listeners to the window instance.
 	 */
-	private void addListeners() {
+	public void addListeners() {
 		addKeyListener(new MKeyListener());
 		addComponentListener(new resizeListener());
 		//Map.use().addMouseListener(new mouseZoom());
@@ -136,6 +148,8 @@ public class Window extends JFrame {
 		MouseListener mouseListener = new MouseListener();
 		Map.use().addMouseListener(mouseListener);
 		Map.use().addMouseMotionListener(mouseListener);
+		//Listener for the buttons for zoom, pan
+		addButtonListeners();
 	}
 	
 	/**
@@ -152,7 +166,8 @@ public class Window extends JFrame {
 		if(background!= null){
 			screen.setPreferredSize(new Dimension((int)(640*WindowHandler.getRatio()),640));
 			screen.remove(background);
-			addButtons();
+			createButtons();
+			addButtons();			
 			setResizable(true);
 			addListeners();
 			centerWindow(getPreferredSize().width, getPreferredSize().height);
@@ -162,14 +177,17 @@ public class Window extends JFrame {
 		System.out.println("Time to update map: " + (System.currentTimeMillis()-startTime)/1000.0);
 	}
 	
-	private void addButtons() {
-		JButton resetZoom = createButton("ResetZoom.png", "Reset zoom", 75, 75);
-		JButton zoomOut = createButton("ZoomOut.png", "Zoom out", 100, 175);
-		JButton zoomIn = createButton("ZoomIn.png", "Zoom in", 50, 175);
-		JButton west = createButton("West.png", "West", 25, 75);
-		JButton east = createButton("East.png", "East", 125, 75);
-		JButton north = createButton("North.png", "North",75, 25);
-		JButton south = createButton("South.png", "South", 75, 125);
+	private void createButtons() {
+		resetZoom = createButton("ResetZoom.png", "Reset zoom", 75, 75);
+		zoomOut = createButton("ZoomOut.png", "Zoom out", 100, 175);
+		zoomIn = createButton("ZoomIn.png", "Zoom in", 50, 175);
+		west = createButton("West.png", "West", 25, 75);
+		east = createButton("East.png", "East", 125, 75);
+		north = createButton("North.png", "North",75, 25);
+		south = createButton("South.png", "South", 75, 125);		
+	}
+	
+	private void addButtonListeners(){
 		
 		resetZoom.addActionListener(new ActionListener() {
 			
@@ -225,7 +243,10 @@ public class Window extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				WindowHandler.pan(Direction.SOUTH);
 			}
-		});		
+		});
+	}
+	
+	private void addButtons(){
 		
 		screen.add(resetZoom, JLayeredPane.PALETTE_LAYER);
 		screen.add(zoomOut, JLayeredPane.PALETTE_LAYER);
@@ -304,8 +325,8 @@ public class Window extends JFrame {
 		/**
 		 * Adds a key listener that sends the pressed button to the pan method of WindowHandler.
 		 */
-		public void keyPressed(KeyEvent event) {
-				switch(event.getKeyCode()){
+		public void keyPressed(KeyEvent e) {
+				switch(e.getKeyCode()){
 					case KeyEvent.VK_1:
 						WindowHandler.zoomOut();
 						break;
@@ -324,7 +345,10 @@ public class Window extends JFrame {
 					case KeyEvent.VK_RIGHT:
 						WindowHandler.pan(Direction.EAST);
 						break;
-				}				
+				}
+				
+
+			//updateMap();
 		}
 	}
 	
@@ -376,61 +400,100 @@ public class Window extends JFrame {
 		 * Records which pixel the mouse is pressed on.
 		 *
 		public void mousePressed(MouseEvent e){	
-			pressedX = e.getX();
-			pressedY = e.getY();
-			
-			System.out.println("Pressed X : "+ pressedX);
-			System.out.println("Pressed Y : "+ pressedY);
+			if (SwingUtilities.isRightMouseButton(e)) {
+				pressedX = e.getX();
+				pressedY = e.getY();
+				
+				System.out.println("Pressed X : "+ pressedX);
+				System.out.println("Pressed Y : "+ pressedY);
+			}
 		}
 		
 		/**
 		 * Records which pixel the mouse is released on.
 		 *
 		public void mouseReleased(MouseEvent e){
-			releasedX = e.getX();
-			releasedY =  e.getY();
-			System.out.println("Released X : "+ releasedX);
-			System.out.println("Released Y : "+ releasedY);
-			
-
-			WindowHandler.pixelSearch(pressedX, releasedX, pressedY, releasedY);
-			
-			
-			//WindowHandler.calculatePixels();
-
-			updateMap();
-		}
-	}*/
-	
-	private class MouseListener extends MouseInputAdapter {
-		  public void mousePressed(MouseEvent e) {
-			  System.out.println("Mouse pressed");
-				mousePressed = true;
-				pressedX = e.getX();
-				pressedY = e.getY();
-				
-				System.out.println("Pressed X : "+ pressedX);
-				System.out.println("Pressed Y : "+ pressedY);
-		  }
-
-		  public void mouseDragged(MouseEvent e) {
-			  System.out.println("Mouse dragged");
-				rect = new DrawRect();
-		        rect.setBounds(0, 0, contentPane.getWidth(), contentPane.getHeight());
-	        	screen.add(rect, JLayeredPane.POPUP_LAYER);
-		  }
-
-		  public void mouseReleased(MouseEvent e) {
-			  System.out.println("Mouse released");
-				mousePressed = false;
+			if (SwingUtilities.isRightMouseButton(e)) {
 				releasedX = e.getX();
 				releasedY =  e.getY();
 				System.out.println("Released X : "+ releasedX);
 				System.out.println("Released Y : "+ releasedY);
+				
+	
 				WindowHandler.pixelSearch(pressedX, releasedX, pressedY, releasedY);
-				//if(rect != null)
-				rect.setVisible(false); //Removes the rectangle when zoom box is chosen
+	
 				updateMap();
+			}
+			if (SwingUtilities.isLeftMouseButton(e)) {
+				dragging = false;
+			}
+		}
+	}*/
+	
+	private class MouseListener extends MouseInputAdapter {
+		int prevX;
+		int prevY;
+		
+		  public void mousePressed(MouseEvent e) {
+			  if (SwingUtilities.isRightMouseButton(e)) {
+				  System.out.println("Mouse pressed");
+					mousePressed = true;
+					pressedX = e.getX();
+					pressedY = e.getY();
+					
+					System.out.println("Pressed X : "+ pressedX);
+					System.out.println("Pressed Y : "+ pressedY);
+			  }
+		  }
+
+		  public void mouseDragged(MouseEvent e) {
+			  if (SwingUtilities.isRightMouseButton(e)) {
+				  System.out.println("Mouse dragged");
+					rect = new DrawRect();
+			        rect.setBounds(0, 0, contentPane.getWidth(), contentPane.getHeight());
+		        	screen.add(rect, JLayeredPane.POPUP_LAYER);
+			  }
+			  if (SwingUtilities.isLeftMouseButton(e)) {
+					if (dragging) {
+						int x = e.getX();
+						int y = e.getY();
+						int dist;
+						if (x > y) dist = Math.abs(x-prevX);
+						else dist = Math.abs(y-prevY);
+						System.out.println("distance dragged: " + dist);
+						if (dist > 1) {
+							System.out.println("Im Panning");
+							WindowHandler.pixelPan(2*(prevX-e.getX()), 2*(e.getY()-prevY));
+							prevX = e.getX();
+							prevY = e.getY();
+							updateMap();
+						}
+					}
+					else {
+						prevX = e.getX();
+						prevY = e.getY();
+						dragging = true;
+						System.out.println("Set dragging to true");
+					}
+				}
+		  }
+
+		  public void mouseReleased(MouseEvent e) {
+			  if (SwingUtilities.isRightMouseButton(e)) {
+				  System.out.println("Mouse released");
+					mousePressed = false;
+					releasedX = e.getX();
+					releasedY =  e.getY();
+					System.out.println("Released X : "+ releasedX);
+					System.out.println("Released Y : "+ releasedY);
+					WindowHandler.pixelSearch(pressedX, releasedX, pressedY, releasedY);
+					//if(rect != null)
+					rect.setVisible(false); //Removes the rectangle when zoom box is chosen
+					updateMap();
+			  }
+			  if (SwingUtilities.isLeftMouseButton(e)) {
+					dragging = false;
+			  }
 		  }
 	}
 	
@@ -443,6 +506,43 @@ public class Window extends JFrame {
 	            WindowHandler.zoomOut();
 	        }
 	    }
+		
+	}
+	
+	private class mousePan extends MouseInputAdapter {
+		int prevX;
+		int prevY;
+		//boolean dragging;
+		long prevTime;
+		
+		
+		public void mouseDragged(MouseEvent e) {
+			//if (System.currentTimeMillis()-prevTime > 1000) dragging = false;
+			if (SwingUtilities.isLeftMouseButton(e)) {
+				if (dragging) {
+					int x = e.getX();
+					int y = e.getY();
+					int dist;
+					if (x > y) dist = Math.abs(x-prevX);
+					else dist = Math.abs(y-prevY);
+					System.out.println("distance dragged: " + dist);
+					if (dist > 1) {
+						System.out.println("Im Panning");
+						WindowHandler.pixelPan(2*(prevX-e.getX()), 2*(e.getY()-prevY));
+						prevX = e.getX();
+						prevY = e.getY();
+						updateMap();
+					}
+				}
+				else {
+					prevX = e.getX();
+					prevY = e.getY();
+					dragging = true;
+					System.out.println("Set dragging to true");
+				}
+			}
+			prevTime = System.currentTimeMillis();
+		}
 		
 	}
 }
