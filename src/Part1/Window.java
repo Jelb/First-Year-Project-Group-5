@@ -485,7 +485,7 @@ public class Window extends JFrame {
 						System.out.println("distance dragged: " + dist);
 						if (dist > 1) {
 							System.out.println("Im Panning");
-							WindowHandler.pixelPan(2*(prevX-e.getX()), 2*(e.getY()-prevY));
+							WindowHandler.pixelPan((prevX-e.getX()), (e.getY()-prevY));
 							prevX = e.getX();
 							prevY = e.getY();
 							//updateMap();
