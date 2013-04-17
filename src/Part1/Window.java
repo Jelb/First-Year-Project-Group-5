@@ -98,7 +98,6 @@ public class Window extends JFrame {
 	 * @throws IOException 
 	 */
 	private void makeFrame() {	
-		setMinimumSize(new Dimension(640,640));
 		contentPane = getContentPane();
 		setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
 
@@ -377,26 +376,20 @@ public class Window extends JFrame {
 	 * Adds a listener to the window instance.
 	 * The listener recalculates the position of each edge so 
 	 * that it fits the screen.
-	 * 
-	 * @author Jonas (JELB@ITU.DK)
+
 	 */
 	public class resizeListener extends ComponentAdapter {
 		int height;
 		int width;
-		int count;
-		
-		
 		public void componentResized(ComponentEvent evt) {
 			if(timer == null){
 			timer = new Timer(100, new ResizeTask());
 			timer.start();
 			}
 			timer.restart();
-			
 	}
 	
-	private class ResizeTask implements ActionListener{
-
+	private class ResizeTask implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			timer.stop();
@@ -411,12 +404,8 @@ public class Window extends JFrame {
 			if(Map.use().getRoadSegments() != null)
 				Map.use().updatePix();
 			timer = null;
-			System.out.println(++count);
+			}
 		}
-			
-		}
-		
-		
 	}
 	
 	
