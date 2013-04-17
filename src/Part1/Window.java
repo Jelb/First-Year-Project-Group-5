@@ -292,7 +292,11 @@ public class Window extends JFrame {
 	
 	private JButton createButton(String file, String hoverText, int x, int y){
 		ImageIcon icon = new ImageIcon(file, hoverText);
-		JButton button = new JButton(icon);
+		JButton button = new JButton(icon);		
+		button.setBorderPainted(false); 
+		button.setContentAreaFilled(false); 
+		button.setFocusPainted(false); 
+		button.setOpaque(false);
 		button.setBorder(BorderFactory.createEmptyBorder());
 		button.setBounds(x, y, icon.getIconWidth(),icon.getIconHeight());
 		button.setToolTipText(hoverText);
