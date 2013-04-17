@@ -64,6 +64,8 @@ public class Window extends JFrame {
 	private JButton east;
 	private JButton north;
 	private JButton south;
+	private JTextField from;
+	private	JTextField to;
 	
 
 	/**
@@ -95,6 +97,7 @@ public class Window extends JFrame {
 	 * @throws IOException 
 	 */
 	private void makeFrame() {	
+		setMinimumSize(new Dimension(640,640));
 		contentPane = getContentPane();
 		setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
 
@@ -150,13 +153,13 @@ public class Window extends JFrame {
 	 * the window has been resized. 
 	 */
 	public void updateMap() {
-		removeDefaultLayer();
 		long startTime = System.currentTimeMillis();
-		screen.add(Map.use(), JLayeredPane.DEFAULT_LAYER);
 		Map.use().setBounds(0, 0, (int)(640*WindowHandler.getRatio()), 640);
 		repaint();
 		validate();
 		if(background!= null){
+			removeDefaultLayer();
+			screen.add(Map.use(), JLayeredPane.DEFAULT_LAYER);
 			screen.setPreferredSize(new Dimension((int)(640*WindowHandler.getRatio()),640));
 			screen.remove(background);
 			createButtons();
@@ -177,7 +180,14 @@ public class Window extends JFrame {
 		west = createButton("West.png", "West", 25, 75);
 		east = createButton("East.png", "East", 125, 75);
 		north = createButton("North.png", "North",75, 25);
-		south = createButton("South.png", "South", 75, 125);		
+		south = createButton("South.png", "South", 75, 125);
+		
+		from = new JTextField("From");
+		from.setBounds(25 , 225,150, 25);
+		from.setBackground(Color.PINK);
+		to = new JTextField("To");
+		to.setBounds(25, 270, 150,25);
+		to.setBackground(Color.PINK);
 	}
 	
 	private void addButtonListeners(){
@@ -237,6 +247,22 @@ public class Window extends JFrame {
 				WindowHandler.pan(Direction.SOUTH);
 			}
 		});
+		
+		from.addActionListener(new ActionListener(){
+			
+			public void actionPerformed(ActionEvent evt) {
+				String fromText = from.getText();				
+				System.out.println(fromText);
+		}
+		});
+		
+		to.addActionListener(new ActionListener(){
+			
+			public void actionPerformed(ActionEvent evt) {
+				String toText = from.getText();				
+				System.out.println(toText);				
+		}
+		});
 	}
 	
 	private void addButtons(){
@@ -248,6 +274,8 @@ public class Window extends JFrame {
 		screen.add(east, JLayeredPane.PALETTE_LAYER);
 		screen.add(north, JLayeredPane.PALETTE_LAYER);
 		screen.add(south, JLayeredPane.PALETTE_LAYER);
+		screen.add(from, JLayeredPane.PALETTE_LAYER);
+		screen.add(to, JLayeredPane.PALETTE_LAYER);
 	}
 	
 	private JButton createButton(String file, String hoverText, int x, int y){
@@ -283,7 +311,6 @@ public class Window extends JFrame {
 	 */
 	static class DrawRect extends JComponent {
         public void paint(Graphics g) {
-        	System.out.println("Mouse position: " + getMousePosition());
             super.paint(g);
             g.setColor(Color.orange);
             if(getMousePosition() != null) {
@@ -471,7 +498,7 @@ public class Window extends JFrame {
 							WindowHandler.pixelPan(2*(prevX-e.getX()), 2*(e.getY()-prevY));
 							prevX = e.getX();
 							prevY = e.getY();
-							updateMap();
+							//updateMap();
 						}
 					}
 					else {
@@ -513,40 +540,4 @@ public class Window extends JFrame {
 		
 	}
 	
-	private class mousePan extends MouseInputAdapter {
-		int prevX;
-		int prevY;
-		//boolean dragging;
-		long prevTime;
-		
-		
-		public void mouseDragged(MouseEvent e) {
-			//if (System.currentTimeMillis()-prevTime > 1000) dragging = false;
-			if (SwingUtilities.isLeftMouseButton(e)) {
-				if (dragging) {
-					int x = e.getX();
-					int y = e.getY();
-					int dist;
-					if (x > y) dist = Math.abs(x-prevX);
-					else dist = Math.abs(y-prevY);
-					System.out.println("distance dragged: " + dist);
-					if (dist > 1) {
-						System.out.println("Im Panning");
-						WindowHandler.pixelPan(2*(prevX-e.getX()), 2*(e.getY()-prevY));
-						prevX = e.getX();
-						prevY = e.getY();
-						updateMap();
-					}
-				}
-				else {
-					prevX = e.getX();
-					prevY = e.getY();
-					dragging = true;
-					System.out.println("Set dragging to true");
-				}
-			}
-			prevTime = System.currentTimeMillis();
-		}
-		
-	}
 }
