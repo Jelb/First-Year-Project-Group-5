@@ -46,6 +46,13 @@ public class DijkstraSP {
 		return distTo[v] < Double.POSITIVE_INFINITY;
 	}
 
+	public void printPath(Stack<Edge> path) {
+		while(path.empty() == false) {
+			Edge edge = path.pop();
+			System.out.println(edge.getFromNodeID() + " -> " + edge.getToNodeID());
+		}
+	}
+	
 	public  Iterable<Edge> pathTo(int v) {
 		if(!hasPathTo(v)) return null;
 		Stack<Edge> path = new Stack<Edge>();

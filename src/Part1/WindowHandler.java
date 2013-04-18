@@ -111,19 +111,22 @@ public class WindowHandler {
 		System.out.println("Calculations done. Picking random destination node: " + destinationNode);
 		route = (Stack<Edge>) dsp.pathTo(rnd.nextInt(graph.getV()));	// find route from start to destination node
 		
-		addRouteToMap();
+		dsp.printPath(route);	// printing all the nodes for good measure
+		
+		addRouteToMap();		// adding the route to the Map()
 	}
 	
 	/**
 	 * Adds the shortest path (static field 'route') to the roadSegments on the map.
 	 */
 	public static void addRouteToMap() {
-		for (Edge e : route) {
-			double x1 = e.getFromNode().getXCord();
-			double y1 = e.getFromNode().getYCord();
-			double x2 = e.getToNode().getXCord();
-			double y2 = e.getToNode().getYCord();
-			Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, 99));
+		while(!route.empty()) {
+			Edge edge = route.pop();
+			double x1 = edge.getFromNode().getXCord();
+			double y1 = edge.getFromNode().getYCord();
+			double x2 = edge.getToNode().getXCord();
+			double y2 = edge.getToNode().getYCord();
+			Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, 4242));
 		}
 	}
 	
