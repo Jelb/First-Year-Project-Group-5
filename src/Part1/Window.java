@@ -271,7 +271,8 @@ public class Window extends JFrame {
 		toms.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent evt) {
-				System.out.println("Do something");				
+				System.out.println("Do something");
+				WindowHandler.pathFindingTest();
 		}
 		});
 	}

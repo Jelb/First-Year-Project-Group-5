@@ -52,10 +52,4 @@ public class DijkstraSP {
 		for(Edge e = edgeTo[v]; e != null; e = edgeTo[e.getFromNodeID()]) path.push(e);
 		return path;
 	}
-	
-	public Iterable<Edge> shortestPathTest() {		
-		Stack<Edge> path = pathTo(rnd.nextInt(getV()));
-	}
-	
-
 }

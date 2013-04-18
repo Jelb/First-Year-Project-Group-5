@@ -45,6 +45,8 @@ public class RoadSegment extends JComponent {
 		geoEndX = xEndCoord;
 		geoEndY = yEndCoord;
 		color = getRoadSegmentColor(Type);
+		if(Type == 99) roadWidth = 4;
+		else roadWidth = 1;
 		calcPixel();
 	}
 	
@@ -96,12 +98,13 @@ public class RoadSegment extends JComponent {
 	 */
 	private static Color getRoadSegmentColor(int TYP){
 		switch(TYP) {
-		case 1 : return Color.red;		// Motor ways 	
-		case 2 : return Color.red;		// Motor traffic road
-		case 3 : return Color.blue; 	// Primary roads > 6 m 
-		case 4 : return Color.blue;		// Secondary roads > 6 m
-		case 5 : return Color.black;	// Roads between 3-6 meters
-		case 8 : return Color.green;	// paths
+		case 1  : return Color.red;		// Motor ways 	
+		case 2  : return Color.red;		// Motor traffic road
+		case 3  : return Color.blue; 	// Primary roads > 6 m 
+		case 4  : return Color.blue;	// Secondary roads > 6 m
+		case 5  : return Color.black;	// Roads between 3-6 meters
+		case 8  : return Color.green;	// paths
+		case 99 : return Color.black;   // route
 		default : return Color.gray; 	// everything else
 		}
 	}

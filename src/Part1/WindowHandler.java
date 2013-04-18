@@ -2,6 +2,8 @@ package Part1;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
+import java.util.Stack;
 
 import Part1.Window.MKeyListener;
 import QuadTree.QuadTree;
@@ -10,6 +12,7 @@ public class WindowHandler {
 	static List<Node> nodes;
 	static List<Edge> edges;
 	static List<Edge> longestRoads;
+	static Stack<Edge> route;
 	static int longestRoadsFloor;
 	static QuadTree QT;
 	static Graph graph;
@@ -91,6 +94,37 @@ public class WindowHandler {
 		}
 		//Window.use().updateMap();
 		Window.use().requestFocus();
+	}
+	
+	/**
+	 * Picks to nodes at random and calculates the shortest path between them.
+	 * For testing purposes only.
+	 */
+	public static void pathFindingTest() {
+		Random rnd = new Random();
+		int startNode = rnd.nextInt(graph.getV());			// picks a node at random
+		System.out.println("Calculating shortest path to all nodes from node: " + startNode + "...");
+		DijkstraSP dsp = new DijkstraSP(graph, startNode);	// use random node at our start node for shortest path calculation
+		
+		route = new Stack<Edge>();							// clears any previous route
+		int destinationNode = rnd.nextInt(graph.getV());	// pick another node at random
+		System.out.println("Calculations done. Picking random destination node: " + destinationNode);
+		route = (Stack<Edge>) dsp.pathTo(rnd.nextInt(graph.getV()));	// find route from start to destination node
+		
+		addRouteToMap();
+	}
+	
+	/**
+	 * Adds the shortest path (static field 'route') to the roadSegments on the map.
+	 */
+	public static void addRouteToMap() {
+		for (Edge e : route) {
+			double x1 = e.getFromNode().getXCord();
+			double y1 = e.getFromNode().getYCord();
+			double x2 = e.getToNode().getXCord();
+			double y2 = e.getToNode().getYCord();
+			Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, 99));
+		}
 	}
 	
 	/**
