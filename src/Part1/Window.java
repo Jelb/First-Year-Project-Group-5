@@ -528,6 +528,7 @@ public class Window extends JFrame {
 					//if(rect != null)
 					rect.setVisible(false); //Removes the rectangle when zoom box is chosen
 					updateMap();
+					requestFocus();
 			  }
 			  if (SwingUtilities.isLeftMouseButton(e)) {
 					dragging = false;
