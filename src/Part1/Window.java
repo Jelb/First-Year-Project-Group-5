@@ -5,16 +5,13 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Toolkit;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -30,7 +27,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.io.File;
+
 import java.io.IOException;
 
 /*
@@ -46,7 +43,6 @@ public class Window extends JFrame {
 	private static Window instance;
 	private static JLayeredPane screen;
 	private static Container contentPane;
-	private JLabel background;
 	private boolean dragging;
 	
 	//Fields used for drag zoom
@@ -58,23 +54,20 @@ public class Window extends JFrame {
 	private Timer timer;
 	
 	//Buttons to pan and zoom
-	private JButton resetZoom;
-	private JButton zoomOut;
-	private JButton zoomIn;
-	private JButton west;
-	private JButton east;
-	private JButton north;
-	private JButton south;
+	private JButton resetZoom, zoomOut, zoomIn;
+	private JButton west, east, north, south;
+	private JTextField from, to;
+	
+	
+	//Midlertidige felter
 	private JButton toms;
-	private JTextField from;
-	private	JTextField to;
 	
 
 	/**
 	 * Constructor for the window class.
 	 */
 	private Window(){
-		super("Better than apple maps");
+		super("Pytheas");
 	}
 
 	/**
@@ -86,7 +79,7 @@ public class Window extends JFrame {
 	public static Window use() {
 		if(instance == null) {
 			instance = new Window();
-			instance.makeFrame();
+			instance.makeContent();
 		}
 		return instance;
 }
@@ -95,42 +88,21 @@ public class Window extends JFrame {
 	 * The method is used to set up the initial instance of the window.
 	 * After setting the dimension and the layout a splash-screen
 	 * is displayed while the program is loading.
-	 * 
-	 * @throws IOException 
 	 */
-	private void makeFrame() {	
+	private void makeContent(){
 		contentPane = getContentPane();
 		setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
+		contentPane.setPreferredSize(new Dimension((int)(640*WindowHandler.getRatio()),640)); //Sets the dimension on the content pane.
+		System.out.println(contentPane.getPreferredSize().width +" x " + contentPane.getPreferredSize().height);
+		screen = new JLayeredPane();	
+		screen.add(Map.use(), JLayeredPane.DEFAULT_LAYER);
 
-		screen = new JLayeredPane();		
-		screen.setPreferredSize(new Dimension(1024,640)); //Sets the dimension on the content pane.
-
-        // Showed if the background image is unable to be loaded.
-        background = new JLabel("<html><center><b>Loading image could not load.<br>The map is loading...</b></html>", JLabel.CENTER);
-		try {
-			background = new JLabel(new ImageIcon(ImageIO.read(new File("splash.jpg"))));
-		} catch (IOException e) {
-			
-		}
-		background.setBounds(0, 0, 1024, 640);
-
-		
 		contentPane.add(screen);
-        screen.add(background, JLayeredPane.DRAG_LAYER);
-        screen.setVisible(true);
-        setResizable(false);
+		createButtons();
+		addButtons();			
         pack();
-        centerWindow(getWidth(), getHeight());
-        setVisible(true);
+		setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
-	
-	/**
-	 * Used to center the application on the screen at launch.
-	 */
-	private void centerWindow(int width, int height) {
-		setLocation((int)((Toolkit.getDefaultToolkit().getScreenSize().getWidth() - width)/2),
-				(int)((Toolkit.getDefaultToolkit().getScreenSize().getHeight() - height)/2));
 	}
 	
 	/**
@@ -155,22 +127,15 @@ public class Window extends JFrame {
 	 */
 	public void updateMap() {
 		long startTime = System.currentTimeMillis();
-		Map.use().setBounds(0, 0, (int)(640*WindowHandler.getRatio()), 640);
-		repaint();
 		validate();
-		if(background!= null){
-			removeDefaultLayer();
-			screen.add(Map.use(), JLayeredPane.DEFAULT_LAYER);
-			screen.setPreferredSize(new Dimension((int)(640*WindowHandler.getRatio()),640));
-			screen.remove(background);
-			createButtons();
-			addButtons();			
-			setResizable(true);
+		repaint();
+		if(!isVisible()){
+			Map.use().setBounds(0, 0, contentPane.getPreferredSize().width, contentPane.getPreferredSize().height);		
 			addListeners();
-			centerWindow(getPreferredSize().width, getPreferredSize().height);
-			pack();
-			background = null;
+			setVisible(true);
 		}
+
+
 		System.out.println("Time to update map: " + (System.currentTimeMillis()-startTime)/1000.0);
 	}
 	
@@ -303,14 +268,7 @@ public class Window extends JFrame {
 		button.setToolTipText(hoverText);
 		return button;
 	}
-	
-	
-	private void removeDefaultLayer() {
-		Component[] layer = screen.getComponentsInLayer(JLayeredPane.DEFAULT_LAYER);
-		for(Component c: layer)
-			screen.remove(c);
-	}
-	
+
 	public int getMapWidth() {
 		return contentPane.getWidth();
 	}

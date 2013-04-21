@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
+import Part1.Loader.Task;
 import Part1.Window.MKeyListener;
 import QuadTree.QuadTree;
 
@@ -352,29 +353,32 @@ public class WindowHandler {
 
 
 	public static void main(String[] args) throws IOException {
-		Window.use();
+		String nodeFile = "kdv_node_unload.txt";
+		String edgeFile = "kdv_unload.txt";
+		Loader.initialize(nodeFile, edgeFile);
+		Loader.use();
 		
 		// Timer for testing purposes
 		Long startTime = System.currentTimeMillis();
 		
 		//Initializing of data from KrakLoader
-		DataReader krakLoader = DataReader.use("kdv_node_unload.txt","kdv_unload.txt");
+		DataReader dataReader = DataReader.use("kdv_node_unload.txt","kdv_unload.txt");
 		
 		//ArraylList with Nodes
-		krakLoader.createNodeList();
+		dataReader.createNodeList();
 		
 		longestRoadsFloor = 10000;
 		
 		//All roads with length larger than the longest road floor are added to the longest roads list
 		//Makes graph object and list of roads longer than the longest roads floor
-		graph = krakLoader.createGraphAndLongestRoadsList(longestRoadsFloor);
+		graph = dataReader.createGraphAndLongestRoadsList(longestRoadsFloor);
 		
 		//Makes and returns a quadTree
-		QT = krakLoader.createQuadTree();
-		longestRoads = krakLoader.getLongestRoads();
+		QT = dataReader.createQuadTree();
+		longestRoads = dataReader.getLongestRoads();
 		
 		//Avoid loitering
-		krakLoader = null;
+		dataReader = null;
 		
 		// Counts and prints the time spent initializing
 		Long endTime = System.currentTimeMillis();
@@ -386,6 +390,7 @@ public class WindowHandler {
 		setGeoWidth(DataReader.getMaxX()-DataReader.getMinX());
 		
 		ratio = geoWidth/geoHeight;
+		Loader.use().setTaskName(Task.MAP);
 		
 		// Starts a new test timer
 		startTime = System.currentTimeMillis();
@@ -421,6 +426,7 @@ public class WindowHandler {
 		//MemoryMXBean mxbean = ManagementFactory.getMemoryMXBean();
 		//System.out.printf("Heap memory usage: %d MB%n", mxbean
 		//		.getHeapMemoryUsage().getUsed() / (1000000));
+		Loader.use().close();
 	}
 	
 }
