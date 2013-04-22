@@ -1,32 +1,49 @@
 package Part1;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
 import Part1.Loader.Task;
-import Part1.Window.MKeyListener;
 import QuadTree.QuadTree;
 
 public class WindowHandler {
 	static List<Node> nodes;
 	static List<Edge> edges;
 	static List<Edge> longestRoads;
+
+	static HashMap<String, HashSet<String>> roadToCityMap;
 	//static Stack<Edge> route;
+
 	static int longestRoadsFloor;
 	static QuadTree QT;
 	static Graph graph;
 	static Window window;
+	static AddressParser ap;
 	static double geoWidth; //The width of the view area
 	static double geoHeight; //The height of the view area
 	static double offsetX;
 	static double offsetY;
 	static double ratio;
+	static double maxMapHeight; // = DataReader.getMaxY()-DataReader.getMinY();
+	static double maxMapWidth; // = DataReader.getMaxX()-DataReader.getMinX();
 	
 	//offsets last time the quad tree was queried 
 	static double prevOffsetX;
 	static double prevOffsetY;
+	
+	private static double getMapHeight() {
+		maxMapHeight = DataReader.getMaxY()-DataReader.getMinY();
+		return maxMapHeight;
+	}
+	
+	private static double getMapWidth() {
+		maxMapWidth = DataReader.getMaxX()-DataReader.getMinX();
+		return maxMapWidth;
+	}
 			
 	// Converts X-pixel to coordinate
 	private static double pixelToGeoX(int x) {
@@ -45,8 +62,6 @@ public class WindowHandler {
 	 * @param keyEvent A key event holding the value of the key pressed.
 	 */
 	public static void pan(Direction d) {
-		double maxMapHeight = DataReader.getMaxY()-DataReader.getMinY();
-		double maxMapWidth = DataReader.getMaxX()-DataReader.getMinX();
 		switch(d){
 			case NORTH:
 				//If the diff between the border of the map and the view area is less than 0.1, go to the border
@@ -94,7 +109,6 @@ public class WindowHandler {
 					break; 
 		}
 		//Window.use().updateMap();
-		Window.use().requestFocus();
 	}
 	
 	/**
@@ -148,6 +162,23 @@ public class WindowHandler {
 	 */
 	//TODO: Optimize pan to take advantage of the points we already have loaded
 	public static void pan(double deltaX, double deltaY) {
+		//Hvis der er mindre end deltaY ud til kanten NORD
+		/**if(maxMapHeight - (offsetY + geoHeight) < deltaY) {
+			deltaY = maxMapHeight - (offsetY + geoHeight); 
+		}
+		//Hvis der er mindre end deltaX ud til kanten ØST
+		if(maxMapWidth - (offsetX + geoWidth) < deltaX) {
+			deltaX = maxMapWidth - (offsetX + geoWidth);
+		}
+		//Hvis der er mindre end deltaY ud til kanten SYD
+		if(-deltaY > offsetY){
+			deltaY = -offsetY;
+		}
+		//Hvis der er mindre end deltaX ud til kanten VEST
+		if(-deltaX > offsetX) {
+			deltaX = -offsetX;
+		}*/
+		
 		search(deltaX, geoWidth+deltaX, deltaY, geoHeight+deltaY);
 		Window.use().updateMap();
 	}
@@ -157,28 +188,73 @@ public class WindowHandler {
 	 * a new search is done in the quad tree. 
 	 */
 	public static void pixelPan(int x, int y) {
-		RoadSegment.shiftPixel(0-x, y);
-		Window.use().updateMap();
-		
+		//Checks if the shiftPixel will move the view area outside the map 
+		//by comparing the difference between the view area and the maxMax sizes and the distance we want to move
+		boolean isInside = true;
 		double deltaX = pixelToGeoX(x);
 		double deltaY = pixelToGeoY(y);
-		
-		offsetY += deltaY;
-		offsetX += deltaX;
-		RoadSegment.shiftMapSize(deltaX, deltaY);
-		
-		if (Math.abs(prevOffsetX-offsetX) > longestRoadsFloor || Math.abs(prevOffsetY-offsetY) > longestRoadsFloor) {
-			RoadSegment.shiftPixel(0, 0);
-			offsetX -= deltaX;
-			offsetY -= deltaY;
+		//Hvis der er mindre end deltaY ud til kanten NORD
+		if(maxMapHeight - (offsetY + geoHeight) < deltaY) {
+			deltaY = maxMapHeight - (offsetY + geoHeight);
 			pan(deltaX, deltaY);
+			isInside = false;
+		}
+		//Hvis der er mindre end deltaX ud til kanten ØST
+		if(maxMapWidth - (offsetX + geoWidth) < deltaX) {
+			deltaX = maxMapWidth - (offsetX + geoWidth);
+			pan(deltaX, deltaY);
+			isInside = false;
+		}
+		//Hvis der er mindre end deltaY ud til kanten SYD
+		if(-deltaY > offsetY){
+			deltaY = -offsetY;
+			pan(deltaX, deltaY);
+			isInside = false;
+		}
+		//Hvis der er mindre end deltaX ud til kanten VEST
+		if(-deltaX > offsetX) {
+			deltaX = -offsetX;
+			pan(deltaX, deltaY);
+			isInside = false;
+		}
+		//If the new view area is inside the map
+		if(isInside == true){
+			RoadSegment.shiftPixel(0-x, y);
 			Window.use().updateMap();
+		
+			offsetY += deltaY;
+			offsetX += deltaX;
+			RoadSegment.shiftMapSize(deltaX, deltaY);
+			
+			// Er vi nået til kanten af det vi kender?
+			if (Math.abs(prevOffsetX-offsetX) > longestRoadsFloor || Math.abs(prevOffsetY-offsetY) > longestRoadsFloor) {
+				RoadSegment.shiftPixel(0, 0);
+				offsetX -= deltaX;
+				offsetY -= deltaY;
+				pan(deltaX, deltaY);
+				Window.use().updateMap();
+			}
 		}
 	}
 	
 	
 	public static void zoomOut() {
-		search(-geoWidth*0.1, geoWidth*1.1, -geoHeight*0.1, geoHeight*1.1);
+		double minX = geoWidth*0.1, maxX = geoWidth*1.1, minY = geoHeight*0.1, maxY = geoHeight*1.1;
+		if((maxMapHeight - (offsetY + geoHeight)) < geoHeight*1.1) {
+			maxY = maxMapHeight - (offsetY + geoHeight) + geoHeight;
+		}
+		if(offsetY < geoHeight*0.1) {
+			minY = offsetY;
+		}
+		if(offsetX < geoWidth*0.1) {
+			minX = offsetX;
+		}
+		if((maxMapWidth - (offsetX + geoWidth)) < geoWidth*1.1) {
+			maxX = maxMapWidth - (offsetX + geoWidth) + geoWidth;
+		}
+		
+		search(-minX, maxX, -minY, maxY);
+		//search(-geoWidth*0.1, geoWidth*1.1, -geoHeight*0.1, geoHeight*1.1);
 		Window.use().updateMap();
 	}
 	
@@ -362,6 +438,10 @@ public class WindowHandler {
 	public static double getRatio() {
 		return ratio;
 	}
+	
+	public static HashMap<String, HashSet<String>> getRoadToCityMap() {
+		return roadToCityMap;
+	}
 
 
 	public static void main(String[] args) throws IOException {
@@ -389,6 +469,7 @@ public class WindowHandler {
 		//Makes and returns a quadTree
 		QT = dataReader.createQuadTree();
 		longestRoads = dataReader.getLongestRoads();
+		roadToCityMap = dataReader.getRoadToCityMap();
 		
 		//Avoid loitering
 		dataReader = null;
@@ -423,6 +504,8 @@ public class WindowHandler {
 		
 		System.out.println("Length of the result from full query: " + nodes.size());
 
+		maxMapHeight = DataReader.getMaxY()-DataReader.getMinY();
+		maxMapWidth = DataReader.getMaxX()-DataReader.getMinX();
 		// Creates and adds roadSegments to an the arraylist 'edges'
 		//calculatePixels();
 		

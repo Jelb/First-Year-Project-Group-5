@@ -33,12 +33,11 @@ public class Loader extends JFrame{
 		super();
 		setPreferredSize(new Dimension(850, 700));
 		setUndecorated(true);
-		setAlwaysOnTop(true);
 		setUp();
 		pack();
 		setLocationRelativeTo(null);
+		toFront();
 		setVisible(true);
-		System.out.println(getWidth() + " "+ getHeight());
 	}
 	
 	public static Loader use() {
