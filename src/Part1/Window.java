@@ -147,14 +147,14 @@ public class Window extends JFrame {
 		validate();
 		repaint();
 		if(!isVisible()){
+			Loader.use().setAlwaysOnTop(true);
 			Map.use().setBounds(0, 0, contentPane.getPreferredSize().width, contentPane.getPreferredSize().height);		
 			addListeners();
-			Loader.use().setAlwaysOnTop(true);
 			setVisible(true);
 			Loader.use().setAlwaysOnTop(false);
 		}
 
-		requestFocus();
+		//requestFocus();
 		System.out.println("Time to update map: " + (System.currentTimeMillis()-startTime)/1000.0);
 	}
 	
