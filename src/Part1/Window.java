@@ -29,6 +29,8 @@ import java.awt.event.MouseWheelListener;
 /*
  * Window class is the GUI of our program, which puts the map and other components together
  */ 
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Window extends JFrame {
 		
@@ -216,16 +218,22 @@ public class Window extends JFrame {
 		from.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent evt) {
-				String fromText = from.getText();				
-				System.out.println(fromText);
+				String fromText = from.getText();
+				String[] result = AddressParser.use().parseAddress(fromText);
+				HashSet<String> set = WindowHandler.getRoadToCityMap().get(result[0]);
+				for (String s : set) System.out.println(s);
+				AddressParser.use().print();
 		}
 		});
 		
 		to.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent evt) {
-				String toText = from.getText();				
-				System.out.println(toText);				
+				String fromText = from.getText();
+				String[] result = AddressParser.use().parseAddress(fromText);
+				HashSet<String> set = WindowHandler.getRoadToCityMap().get(result[0]);
+				for (String s : set) System.out.println(s);
+				AddressParser.use().print();				
 		}
 		});
 		
@@ -257,9 +265,9 @@ public class Window extends JFrame {
 		JButton button = new JButton(icon);		
 		button.setBorderPainted(false); 
 		button.setContentAreaFilled(false); 
-		button.setFocusPainted(false); 
-		button.setOpaque(false);
-		button.setBorder(BorderFactory.createEmptyBorder());
+		//button.setFocusPainted(false); 
+		//button.setOpaque(false);
+		//button.setBorder(BorderFactory.createEmptyBorder());
 		button.setBounds(x, y, icon.getIconWidth(),icon.getIconHeight());
 		button.setToolTipText(hoverText);
 		return button;
