@@ -13,7 +13,7 @@ public class WindowHandler {
 	static List<Node> nodes;
 	static List<Edge> edges;
 	static List<Edge> longestRoads;
-	static Stack<Edge> route;
+	//static Stack<Edge> route;
 	static int longestRoadsFloor;
 	static QuadTree QT;
 	static Graph graph;
@@ -104,23 +104,35 @@ public class WindowHandler {
 	public static void pathFindingTest() {
 		Random rnd = new Random();
 		int startNode = rnd.nextInt(graph.getV());			// picks a node at random
-		System.out.println("Calculating shortest path to all nodes from node: " + startNode + "...");
+		while(startNode == 0)
+			startNode = rnd.nextInt(graph.getV());	
+		
+		System.out.println("Start node: " + startNode);
+		
+		System.out.println("Creating SP object... ");
 		DijkstraSP dsp = new DijkstraSP(graph, startNode);	// use random node at our start node for shortest path calculation
 		
-		route = new Stack<Edge>();							// clears any previous route
-		int destinationNode = rnd.nextInt(graph.getV());	// pick another node at random
-		System.out.println("Calculations done. Picking random destination node: " + destinationNode);
-		route = (Stack<Edge>) dsp.pathTo(rnd.nextInt(graph.getV()));	// find route from start to destination node
+		Stack<Edge> route = new Stack<Edge>();				// clears any previous route
 		
-		dsp.printPath(route);	// printing all the nodes for good measure
+		int destinationNode = startNode;
+		while(destinationNode == startNode || destinationNode == 0)
+			destinationNode = rnd.nextInt(graph.getV());					// pick another node at random
 		
-		addRouteToMap();		// adding the route to the Map()
+		System.out.println("Start node: " + startNode);
+		System.out.println("Distance to destination node " + destinationNode + " is: " + dsp.distTo(destinationNode));
+		
+		System.out.println("Shortest path:");
+		route = (Stack<Edge>) dsp.pathTo(rnd.nextInt(destinationNode));	// find route from start to destination node
+		
+		dsp.printPath(route);		// printing all the nodes for good measure
+		
+		addRouteToMap(route);		// adding the route to the Map()
 	}
 	
 	/**
 	 * Adds the shortest path (static field 'route') to the roadSegments on the map.
 	 */
-	public static void addRouteToMap() {
+	public static void addRouteToMap(Stack<Edge> route) {
 		while(!route.empty()) {
 			Edge edge = route.pop();
 			double x1 = edge.getFromNode().getXCord();
@@ -362,7 +374,8 @@ public class WindowHandler {
 		Long startTime = System.currentTimeMillis();
 		
 		//Initializing of data from KrakLoader
-		DataReader dataReader = DataReader.use("kdv_node_unload.txt","kdv_unload.txt");
+		//DataReader dataReader = DataReader.use("kdv_node_unload.txt","kdv_unload.txt");
+		DataReader dataReader = DataReader.use("testNodes.txt","testEdges.txt");
 		
 		//ArraylList with Nodes
 		dataReader.createNodeList();
