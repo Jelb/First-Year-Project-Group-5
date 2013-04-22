@@ -5,8 +5,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
-
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -17,7 +15,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -27,21 +24,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 /*
  * Window class is the GUI of our program, which puts the map and other components together
  */ 
 
-
-
-
 public class Window extends JFrame {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private static Window instance;
 	private static JLayeredPane screen;
@@ -115,7 +105,6 @@ public class Window extends JFrame {
 	public void addListeners() {
 		addKeyListener(new MKeyListener());
 		addComponentListener(new resizeListener());
-		//Map.use().addMouseListener(new mouseZoom());
 		Map.use().addMouseWheelListener(new mouseWheelZoom());
 		//Listeners for when mouse is pressed, dragged or released
 		MouseListener mouseListener = new MouseListener();
@@ -150,11 +139,14 @@ public class Window extends JFrame {
 			setVisible(true);
 			Loader.use().setAlwaysOnTop(false);
 		} else {
-			requestFocus();
+			requestFocus();			
 		}
 		System.out.println("Time to update map: " + (System.currentTimeMillis()-startTime)/1000.0);
 	}
 
+	/**
+	 * Creates the buttons which makes up the GUI
+	 */
 	private void createButtons() {
 		resetZoom = createButton("ResetZoom.png", "Reset zoom", 75, 75);
 		zoomOut = createButton("ZoomOut.png", "Zoom out", 100, 175);
@@ -167,6 +159,7 @@ public class Window extends JFrame {
 		from = new JTextField("From");
 		from.setBounds(25 , 225,150, 25);
 		from.setBackground(Color.PINK);
+		
 		to = new JTextField("To");
 		to.setBounds(25, 270, 150,25);
 		to.setBackground(Color.PINK);
@@ -174,6 +167,10 @@ public class Window extends JFrame {
 		toms = new JButton("Tom");
 		toms.setBounds(35, 350, 50,50);
 	}
+	
+	/**
+	 * Each button gets a listener with a corresponding action
+	 */
 
 	private void addButtonListeners(){
 
@@ -258,14 +255,16 @@ public class Window extends JFrame {
 		toms.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				System.out.println("Do something");
 				WindowHandler.pathFindingTest();
 			}
 		});
 	}
+	
+	/**
+	 * Buttons added to the Pallette_Layer, above the map layer
+	 */
 
 	private void addButtons(){
-
 		screen.add(resetZoom, JLayeredPane.PALETTE_LAYER);
 		screen.add(zoomOut, JLayeredPane.PALETTE_LAYER);
 		screen.add(zoomIn, JLayeredPane.PALETTE_LAYER);
@@ -278,14 +277,15 @@ public class Window extends JFrame {
 		screen.add(toms, JLayeredPane.PALETTE_LAYER);
 	}
 
+	/**
+	 * Method to create buttons, only to avoid code duplication
+	 */
 	private JButton createButton(String file, String hoverText, int x, int y){
 		ImageIcon icon = new ImageIcon(file, hoverText);
 		JButton button = new JButton(icon);		
 		button.setBorderPainted(false); 
 		button.setContentAreaFilled(false); 
-		//button.setFocusPainted(false); 
-		//button.setOpaque(false);
-		//button.setBorder(BorderFactory.createEmptyBorder());
+		button.setFocusPainted(false); 
 		button.setBounds(x, y, icon.getIconWidth(),icon.getIconHeight());
 		button.setToolTipText(hoverText);
 		return button;
@@ -298,8 +298,6 @@ public class Window extends JFrame {
 	public int getMapHeight() {
 		return contentPane.getHeight();
 	}
-
-
 
 	/**
 	 * Method for drawing the rectangle to show where the user is dragging for zoom
@@ -409,51 +407,6 @@ public class Window extends JFrame {
 			}
 		}
 	}
-
-
-	/**
-	 * Adds a mouse listener used for "box zooming" on the map.
-	 * 
-	 *
-	private class mouseZoom extends MouseAdapter {
-		private int pressedX;
-		private int pressedY;
-		private int releasedX;
-		private int releasedY;
-
-		/**
-	 * Records which pixel the mouse is pressed on.
-	 *
-		public void mousePressed(MouseEvent e){	
-			if (SwingUtilities.isRightMouseButton(e)) {
-				pressedX = e.getX();
-				pressedY = e.getY();
-
-				System.out.println("Pressed X : "+ pressedX);
-				System.out.println("Pressed Y : "+ pressedY);
-			}
-		}
-
-		/**
-	 * Records which pixel the mouse is released on.
-	 *
-		public void mouseReleased(MouseEvent e){
-			if (SwingUtilities.isRightMouseButton(e)) {
-				releasedX = e.getX();
-				releasedY =  e.getY();
-				System.out.println("Released X : "+ releasedX);
-				System.out.println("Released Y : "+ releasedY);
-
-
-				WindowHandler.pixelSearch(pressedX, releasedX, pressedY, releasedY);
-
-				updateMap();
-			}
-			if (SwingUtilities.isLeftMouseButton(e)) {
-				dragging = false;
-			}
-		}
-	}*/
 
 	private class MouseListener extends MouseInputAdapter {
 		int prevX;

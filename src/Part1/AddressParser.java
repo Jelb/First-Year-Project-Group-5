@@ -202,12 +202,6 @@ public class AddressParser {
         }
     }
     
-//    public static void main(String[] arg) {
-//    	AddressParser ap = new AddressParser();
-//    	ap.parseAddress("Rued Langgaards Vej 77A 1. 4735 Mern");
-//    	ap.parseAddress("Hesseløgade 56 i København Ø");    	
-//    }
-    
     public void print() {
         System.out.println("----------------------------------------");
         System.out.println("Search string: ");

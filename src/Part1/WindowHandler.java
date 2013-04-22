@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Stack;
-
 import Part1.Loader.Task;
 import QuadTree.QuadTree;
 
@@ -14,10 +13,8 @@ public class WindowHandler {
 	static List<Node> nodes;
 	static List<Edge> edges;
 	static List<Edge> longestRoads;
-
 	static HashMap<String, HashSet<String>> roadToCityMap;
 	//static Stack<Edge> route;
-
 	static int longestRoadsFloor;
 	static QuadTree QT;
 	static Graph graph;
@@ -459,6 +456,7 @@ public class WindowHandler {
 		//Makes and returns a quadTree
 		QT = dataReader.createQuadTree();
 		longestRoads = dataReader.getLongestRoads();
+		
 		roadToCityMap = dataReader.getRoadToCityMap();
 		
 		//Avoid loitering
