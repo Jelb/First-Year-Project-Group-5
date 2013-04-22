@@ -200,6 +200,7 @@ public class WindowHandler {
 			pan(deltaX, deltaY);
 			isInside = false;
 		}
+		//If the new view area is inside the map
 		if(isInside == true){
 			RoadSegment.shiftPixel(0-x, y);
 			Window.use().updateMap();
@@ -221,7 +222,22 @@ public class WindowHandler {
 	
 	
 	public static void zoomOut() {
-		search(-geoWidth*0.1, geoWidth*1.1, -geoHeight*0.1, geoHeight*1.1);
+		double minX = geoWidth*0.1, maxX = geoWidth*1.1, minY = geoHeight*0.1, maxY = geoHeight*1.1;
+		if((maxMapHeight - (offsetY + geoHeight)) < geoHeight*1.1) {
+			maxY = maxMapHeight - (offsetY + geoHeight) + geoHeight;
+		}
+		if(offsetY < geoHeight*0.1) {
+			minY = offsetY;
+		}
+		if(offsetX < geoWidth*0.1) {
+			minX = offsetX;
+		}
+		if((maxMapWidth - (offsetX + geoWidth)) < geoWidth*1.1) {
+			maxX = maxMapWidth - (offsetX + geoWidth) + geoWidth;
+		}
+		
+		search(-minX, maxX, -minY, maxY);
+		//search(-geoWidth*0.1, geoWidth*1.1, -geoHeight*0.1, geoHeight*1.1);
 		Window.use().updateMap();
 	}
 	
