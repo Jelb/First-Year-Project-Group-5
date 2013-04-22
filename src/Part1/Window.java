@@ -47,6 +47,7 @@ public class Window extends JFrame {
 	private static JLayeredPane screen;
 	private static Container contentPane;
 	private boolean dragging;
+	private boolean noMoreBoxes;
 
 	//Fields used for drag zoom
 	private static int pressedX;
@@ -246,8 +247,8 @@ public class Window extends JFrame {
 		to.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				String fromText = from.getText();
-				String[] result = AddressParser.use().parseAddress(fromText);
+				String toText = to.getText();
+				String[] result = AddressParser.use().parseAddress(toText);
 				HashSet<String> set = WindowHandler.getRoadToCityMap().get(result[0]);
 				for (String s : set) System.out.println(s);
 				AddressParser.use().print();							
@@ -307,6 +308,7 @@ public class Window extends JFrame {
 	 * 
 	 * @author Nico
 	 */
+	@SuppressWarnings("serial")
 	static class DrawRect extends JComponent {
 		public void paint(Graphics g) {
 			super.paint(g);
@@ -469,13 +471,13 @@ public class Window extends JFrame {
 		}
 
 		public void mouseDragged(MouseEvent e) {
-			if (SwingUtilities.isRightMouseButton(e)) {
+			if (SwingUtilities.isRightMouseButton(e) && !noMoreBoxes) {
 				System.out.println("Mouse dragged");
 				rect = new DrawRect();
 				rect.setBounds(0, 0, contentPane.getWidth(), contentPane.getHeight());
 				screen.add(rect, JLayeredPane.POPUP_LAYER);
 			}
-			if (SwingUtilities.isLeftMouseButton(e)) {
+			else if (SwingUtilities.isLeftMouseButton(e)) {
 				if (dragging) {
 					int x = e.getX();
 					int y = e.getY();
@@ -510,10 +512,10 @@ public class Window extends JFrame {
 				WindowHandler.pixelSearch(pressedX, releasedX, pressedY, releasedY);
 				//if(rect != null)
 				rect.setVisible(false); //Removes the rectangle when zoom box is chosen
+				noMoreBoxes = true;
 				updateMap();
-				requestFocus();
 			}
-			if (SwingUtilities.isLeftMouseButton(e)) {
+			else if (SwingUtilities.isLeftMouseButton(e)) {
 				dragging = false;
 			}
 		}
