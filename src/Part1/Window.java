@@ -313,7 +313,7 @@ public class Window extends JFrame {
 		public void paint(Graphics g) {
 			super.paint(g);
 			g.setColor(Color.orange);
-			if(getMousePosition() != null) {
+			if(getMousePosition() != null && !Window.use().noMoreBoxes) {
 				if(pressedX < getMousePosition().x && pressedY < getMousePosition().y) {
 					g.drawRect(pressedX, pressedY, getMousePosition().x - pressedX, getMousePosition().y - pressedY);
 					System.out.println("Box width: " + (getMousePosition().x - pressedX) + " and height: " + (getMousePosition().y - pressedY));
@@ -464,6 +464,7 @@ public class Window extends JFrame {
 				System.out.println("Mouse pressed");
 				pressedX = e.getX();
 				pressedY = e.getY();
+				noMoreBoxes = false;
 
 				System.out.println("Pressed X : "+ pressedX);
 				System.out.println("Pressed Y : "+ pressedY);
