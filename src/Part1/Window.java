@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -24,12 +26,13 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+
 /*
  * Window class is the GUI of our program, which puts the map and other components together
  */ 
-
 public class Window extends JFrame {
 		
 	/**
@@ -48,6 +51,7 @@ public class Window extends JFrame {
 	private static int releasedY;
 	private static JComponent rect;
 	private Timer timer;
+	private static int maxHeight, maxWidth;
 	
 	//Buttons to pan and zoom
 	private JButton resetZoom, zoomOut, zoomIn;
@@ -86,13 +90,13 @@ public class Window extends JFrame {
 	 * is displayed while the program is loading.
 	 */
 	private void makeContent(){
+		getEffectiveScreenSize();
 		contentPane = getContentPane();
 		setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
+		setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
 		contentPane.setPreferredSize(new Dimension((int)(640*WindowHandler.getRatio()),640)); //Sets the dimension on the content pane.
-		System.out.println(contentPane.getPreferredSize().width +" x " + contentPane.getPreferredSize().height);
 		screen = new JLayeredPane();	
 		screen.add(Map.use(), JLayeredPane.DEFAULT_LAYER);
-
 		contentPane.add(screen);
 		createButtons();
 		addButtons();			
@@ -118,6 +122,24 @@ public class Window extends JFrame {
 	}
 	
 	/**
+	 * Used to get the effective size of the screen. 
+	 * The effective size of the screen is equals to the size of the screen 
+	 * excluding the size reserved for other objects such as docks and tool bars.
+	 */
+	private static void getEffectiveScreenSize() {
+//		try {
+//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//		} catch (ClassNotFoundException | InstantiationException
+//				| IllegalAccessException | UnsupportedLookAndFeelException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		maxHeight  = ge.getMaximumWindowBounds().height;
+		maxWidth = ge.getMaximumWindowBounds().width;
+	}
+	
+	/**
 	 * Redraws the map when its content has changed or 
 	 * the window has been resized. 
 	 */
@@ -128,10 +150,10 @@ public class Window extends JFrame {
 		if(!isVisible()){
 			Map.use().setBounds(0, 0, contentPane.getPreferredSize().width, contentPane.getPreferredSize().height);		
 			addListeners();
+			Loader.use().setAlwaysOnTop(true);
 			setVisible(true);
+			Loader.use().setAlwaysOnTop(false);
 		}
-
-
 		System.out.println("Time to update map: " + (System.currentTimeMillis()-startTime)/1000.0);
 	}
 	
@@ -273,6 +295,8 @@ public class Window extends JFrame {
 		return contentPane.getHeight();
 	}
 	
+
+	
 	/**
 	 * Method for drawing the rectangle to show where the user is dragging for zoom
 	 * The method compares where the user is dragging from and to, and hereby calculates
@@ -317,29 +341,26 @@ public class Window extends JFrame {
 		 * Adds a key listener that sends the pressed button to the pan method of WindowHandler.
 		 */
 		public void keyPressed(KeyEvent e) {
-				switch(e.getKeyCode()){
-					case KeyEvent.VK_1:
-						WindowHandler.zoomOut();
-						break;
-					case KeyEvent.VK_2:
-						WindowHandler.zoomIn();
-						break;
-					case KeyEvent.VK_UP:
-						WindowHandler.pan(Direction.NORTH);
-						break;
-					case KeyEvent.VK_DOWN:
-						WindowHandler.pan(Direction.SOUTH);
-						break;
-					case KeyEvent.VK_LEFT:
-						WindowHandler.pan(Direction.WEST);
-						break;
-					case KeyEvent.VK_RIGHT:
-						WindowHandler.pan(Direction.EAST);
-						break;
-				}
-				
-
-			//updateMap();
+			switch(e.getKeyCode()){
+			case KeyEvent.VK_1:
+				WindowHandler.zoomOut();
+				break;
+			case KeyEvent.VK_2:
+				WindowHandler.zoomIn();
+				break;
+			case KeyEvent.VK_UP:
+				WindowHandler.pan(Direction.NORTH);
+				break;
+			case KeyEvent.VK_DOWN:
+				WindowHandler.pan(Direction.SOUTH);
+				break;
+			case KeyEvent.VK_LEFT:
+				WindowHandler.pan(Direction.WEST);
+				break;
+			case KeyEvent.VK_RIGHT:
+				WindowHandler.pan(Direction.EAST);
+				break;
+			}
 		}
 	}
 	
@@ -347,37 +368,43 @@ public class Window extends JFrame {
 	 * Adds a listener to the window instance.
 	 * The listener recalculates the position of each edge so 
 	 * that it fits the screen.
-
 	 */
-	public class resizeListener extends ComponentAdapter {
+	private class resizeListener extends ComponentAdapter {
 		int height;
 		int width;
+
 		public void componentResized(ComponentEvent evt) {
 			if(timer == null){
-			timer = new Timer(100, new ResizeTask());
-			timer.start();
+				timer = new Timer(50, new ResizeTask());
+				timer.start();
 			}
 			timer.restart();
-	}
-	
-	private class ResizeTask implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			timer.stop();
-			if(Math.abs(width - Window.use().getWidth())>0){
-				Window.use().setPreferredSize(new Dimension(Window.use().getWidth(), (int)(Window.use().getWidth()/WindowHandler.getRatio())));
-			} else if(Math.abs(height - Window.use().getHeight())>0){
-				Window.use().setPreferredSize(new Dimension((int)(Window.use().getHeight()*WindowHandler.getRatio()), Window.use().getHeight()));
-			}
-			pack();
-			height = Window.use().getHeight();
-			width = Window.use().getWidth();
-			if(Map.use().getRoadSegments() != null)
-				Map.use().updatePix();
-			timer = null;
+		}
+
+		private class ResizeTask implements ActionListener {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				timer.stop();
+				if(Window.use().getHeight() < maxHeight && Window.use().getWidth()/WindowHandler.getRatio() < maxHeight) {
+					if(Math.abs(height - Window.use().getHeight())>0 && Window.use().getHeight() < maxHeight){
+						Window.use().setPreferredSize(new Dimension((int)(Window.use().getHeight()*WindowHandler.getRatio()), Window.use().getHeight()));
+					} else if(Math.abs(width - Window.use().getWidth())>0 && Window.use().getHeight() < maxHeight){
+						Window.use().setPreferredSize(new Dimension(Window.use().getWidth(), (int)(Window.use().getWidth()/WindowHandler.getRatio())));
+					}
+				} else {
+					Window.use().setPreferredSize(new Dimension((int)(maxHeight*WindowHandler.getRatio()), maxHeight));
+				}
+				pack();
+				Map.use().setSize(Window.use().getSize());
+				if(Map.use().getRoadSegments() != null)
+					Map.use().updatePix();
+				height = Window.use().getHeight();
+				width = Window.use().getWidth();
+				timer = null;
 			}
 		}
 	}
+	
 	
 	
 	/**
