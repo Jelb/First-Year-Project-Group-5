@@ -1,23 +1,26 @@
 package Part1;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
 import Part1.Loader.Task;
-import Part1.Window.MKeyListener;
 import QuadTree.QuadTree;
 
 public class WindowHandler {
 	static List<Node> nodes;
 	static List<Edge> edges;
 	static List<Edge> longestRoads;
+	static HashMap<String, HashSet<String>> roadToCityMap;
 	static Stack<Edge> route;
 	static int longestRoadsFloor;
 	static QuadTree QT;
 	static Graph graph;
 	static Window window;
+	static AddressParser ap;
 	static double geoWidth; //The width of the view area
 	static double geoHeight; //The height of the view area
 	static double offsetX;
@@ -421,6 +424,10 @@ public class WindowHandler {
 	public static double getRatio() {
 		return ratio;
 	}
+	
+	public static HashMap<String, HashSet<String>> getRoadToCityMap() {
+		return roadToCityMap;
+	}
 
 
 	public static void main(String[] args) throws IOException {
@@ -447,6 +454,7 @@ public class WindowHandler {
 		//Makes and returns a quadTree
 		QT = dataReader.createQuadTree();
 		longestRoads = dataReader.getLongestRoads();
+		roadToCityMap = dataReader.getRoadToCityMap();
 		
 		//Avoid loitering
 		dataReader = null;

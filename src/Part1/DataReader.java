@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.TreeMap;
+
 import javax.swing.JOptionPane;
 
 import Part1.Loader.Task;
@@ -23,8 +27,7 @@ import QuadTree.QuadTree;
  * 
  * The <b>DataReader</b> class implements the singleton design pattern. 
  * 
- * @author Jonas (JELB@ITU.DK)
- * @author Mads (MENJ@ITU.DK)
+ * 
  *
  */
 public class DataReader {
@@ -33,6 +36,7 @@ public class DataReader {
 	private ArrayList<Edge> longestRoads;
 	private final String nodeFile, edgeFile;
 	private static double maxX = 0, maxY = 0, minX = -1, minY = -1;
+	private HashMap<String, HashSet<String>> roadToCityMap;
 
 	/**
 	 * Constructor for the DataReader class. 
@@ -134,6 +138,9 @@ public class DataReader {
 		System.out.println("Adding " + (nodes.size()-1) + " nodes to graph");
 		longestRoads = new ArrayList<Edge>();
 		try {
+			// Create hash map where road name gets mapped to a list of zip codes			
+			roadToCityMap = new HashMap<String, HashSet<String>>();
+			
 			// Create a graph on the nodes
 			Graph graph = new Graph(nodes.size());
 	
@@ -143,13 +150,40 @@ public class DataReader {
 			br.readLine(); // again discarding column names
 			String line = br.readLine();
 			
+			FileScanner fs = new FileScanner();
+			HashMap<String, String> zipToCityMap = fs.zipToCityMap();
+			
 			while (line != null) {
 				String[] lineArray = line.split(",(?! |[a-zA-ZæÆøØåÅ])"); // Regex matches ',' not followed by spaces of letters.
 				Node fromNode = nodes.get(Integer.parseInt(lineArray[0]));
 				Node toNode = nodes.get(Integer.parseInt(lineArray[1]));
 				double length = Double.parseDouble(lineArray[2]);
 				int type = Integer.parseInt(lineArray[5]);
-				Edge edge = new Edge(fromNode, toNode, length, type); // Creates an edge.
+				String vejnavn = lineArray[6].substring(1,lineArray[6].length()-1);
+				String v_postnr = lineArray[17];
+				String h_postnr = lineArray[18];				
+				if (!vejnavn.equals("")) {
+					
+					String v_city = zipToCityMap.get(v_postnr);
+					String h_city;
+					if (!v_postnr.equals(h_postnr)) {
+						h_city = zipToCityMap.get(h_postnr);
+					}
+					else {
+						h_city = v_city;
+					}
+					if (roadToCityMap.containsKey(vejnavn)) {
+						roadToCityMap.get(vejnavn).add(v_city);
+						roadToCityMap.get(vejnavn).add(h_city);
+					}
+					else {
+						HashSet<String> set = new HashSet<String>();
+						set.add(v_city);
+						set.add(h_city);
+						roadToCityMap.put(vejnavn, set);
+					}
+				}
+				Edge edge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr); // Creates an edge.
 				if (length > longestRoadsFloor) longestRoads.add(edge);
 				graph.addEdge(edge); // Adds the newly created edge object to the graph.
 				line = br.readLine();
@@ -226,5 +260,9 @@ public class DataReader {
 	 */
 	public ArrayList<Edge> getLongestRoads() {
 		return longestRoads;
+	}
+	
+	public HashMap<String, HashSet<String>> getRoadToCityMap() {
+		return roadToCityMap;
 	}
 }
