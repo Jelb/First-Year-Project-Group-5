@@ -104,7 +104,6 @@ public class WindowHandler {
 					break; 
 		}
 		//Window.use().updateMap();
-		Window.use().requestFocus();
 	}
 	
 	/**
