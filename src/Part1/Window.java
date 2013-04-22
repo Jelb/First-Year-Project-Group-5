@@ -1,7 +1,6 @@
 package Part1;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -27,9 +26,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-
-import java.io.IOException;
-
 /*
  * Window class is the GUI of our program, which puts the map and other components together
  */ 
