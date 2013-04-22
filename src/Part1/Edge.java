@@ -63,6 +63,11 @@ public class Edge {
         else                                    return  0;
     }
 
+    public String printEdge() {
+    	String string = FNODE.getKdvID() + " -> " + TNODE.getKdvID();
+    	return string;
+    }
+    
      public String toString(){  
     	 String data = FNODE.getKdvID() + " " + TNODE.getKdvID() + " " + length() + " " + FNODE.getXCord() + " " + FNODE.getYCord() +
     			 " " + TNODE.getXCord() + " " + TNODE.getYCord() +" ";
