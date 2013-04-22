@@ -27,16 +27,16 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 /*
  * Window class is the GUI of our program, which puts the map and other components together
  */ 
-<<<<<<< HEAD
-import java.util.ArrayList;
-import java.util.HashSet;
 
-=======
->>>>>>> 8673ad332d9eb1e51be9c3a1d53fba7aa5b1886a
+
+
+
 public class Window extends JFrame {
 
 	/**
@@ -235,35 +235,23 @@ public class Window extends JFrame {
 		from.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-<<<<<<< HEAD
 				String fromText = from.getText();
 				String[] result = AddressParser.use().parseAddress(fromText);
 				HashSet<String> set = WindowHandler.getRoadToCityMap().get(result[0]);
 				for (String s : set) System.out.println(s);
 				AddressParser.use().print();
-		}
-=======
-				String fromText = from.getText();				
-				System.out.println(fromText);
 			}
->>>>>>> 8673ad332d9eb1e51be9c3a1d53fba7aa5b1886a
 		});
 
 		to.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-<<<<<<< HEAD
 				String fromText = from.getText();
 				String[] result = AddressParser.use().parseAddress(fromText);
 				HashSet<String> set = WindowHandler.getRoadToCityMap().get(result[0]);
 				for (String s : set) System.out.println(s);
-				AddressParser.use().print();				
-		}
-=======
-				String toText = from.getText();				
-				System.out.println(toText);				
+				AddressParser.use().print();							
 			}
->>>>>>> 8673ad332d9eb1e51be9c3a1d53fba7aa5b1886a
 		});
 
 		toms.addActionListener(new ActionListener(){
