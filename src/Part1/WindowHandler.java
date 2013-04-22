@@ -34,16 +34,6 @@ public class WindowHandler {
 	//offsets last time the quad tree was queried 
 	static double prevOffsetX;
 	static double prevOffsetY;
-	
-	private static double getMapHeight() {
-		maxMapHeight = DataReader.getMaxY()-DataReader.getMinY();
-		return maxMapHeight;
-	}
-	
-	private static double getMapWidth() {
-		maxMapWidth = DataReader.getMaxX()-DataReader.getMinX();
-		return maxMapWidth;
-	}
 			
 	// Converts X-pixel to coordinate
 	private static double pixelToGeoX(int x) {
@@ -454,8 +444,8 @@ public class WindowHandler {
 		Long startTime = System.currentTimeMillis();
 		
 		//Initializing of data from KrakLoader
-		//DataReader dataReader = DataReader.use("kdv_node_unload.txt","kdv_unload.txt");
-		DataReader dataReader = DataReader.use("testNodes.txt","testEdges.txt");
+		DataReader dataReader = DataReader.use("kdv_node_unload.txt","kdv_unload.txt");
+		//DataReader dataReader = DataReader.use("testNodes.txt","testEdges.txt");
 		
 		//ArraylList with Nodes
 		dataReader.createNodeList();
