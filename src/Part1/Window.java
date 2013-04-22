@@ -93,7 +93,6 @@ public class Window extends JFrame {
 		getEffectiveScreenSize();
 		contentPane = getContentPane();
 		setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
-		setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
 		contentPane.setPreferredSize(new Dimension((int)(640*WindowHandler.getRatio()),640)); //Sets the dimension on the content pane.
 		screen = new JLayeredPane();	
 		screen.add(Map.use(), JLayeredPane.DEFAULT_LAYER);
@@ -154,6 +153,8 @@ public class Window extends JFrame {
 			setVisible(true);
 			Loader.use().setAlwaysOnTop(false);
 		}
+
+		requestFocus();
 		System.out.println("Time to update map: " + (System.currentTimeMillis()-startTime)/1000.0);
 	}
 	
@@ -404,7 +405,6 @@ public class Window extends JFrame {
 			}
 		}
 	}
-	
 	
 	
 	/**
