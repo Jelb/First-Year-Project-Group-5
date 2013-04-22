@@ -131,7 +131,7 @@ public class Window extends JFrame {
 			setVisible(true);
 		}
 
-
+		requestFocus();
 		System.out.println("Time to update map: " + (System.currentTimeMillis()-startTime)/1000.0);
 	}
 	
@@ -482,7 +482,6 @@ public class Window extends JFrame {
 					//if(rect != null)
 					rect.setVisible(false); //Removes the rectangle when zoom box is chosen
 					updateMap();
-					requestFocus();
 			  }
 			  if (SwingUtilities.isLeftMouseButton(e)) {
 					dragging = false;
