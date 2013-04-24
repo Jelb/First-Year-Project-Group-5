@@ -27,76 +27,19 @@ public class WindowHandler {
 	static double ratio;
 	static double maxMapHeight; // = DataReader.getMaxY()-DataReader.getMinY();
 	static double maxMapWidth; // = DataReader.getMaxX()-DataReader.getMinX();
-	
-	//offsets last time the quad tree was queried 
-	static double prevOffsetX;
-	static double prevOffsetY;
+
 			
 	// Converts X-pixel to coordinate
-	private static double pixelToGeoX(int x) {
+	public static double pixelToGeoX(int x) {
 		return  (((double)x/ Window.use().getMapWidth()) * geoWidth);
 	}
 	
 	
 	// Converts Y-pixel to coordinate
-	private static double pixelToGeoY(int y) {
+	public static double pixelToGeoY(int y) {
 		return  (((double)y/(Window.use().getMapHeight()) * geoHeight));
 	}
-	
-	/**
-	 * Pans the map 10% in the direction specified.
-	 * The if-statements makes sure that the user don't pan outside the map
-	 * @param keyEvent A key event holding the value of the key pressed.
-	 */
-	public static void pan(Direction d) {
-		switch(d){
-			case NORTH:
-				//If the diff between the border of the map and the view area is less than 0.1, go to the border
-				if((maxMapHeight - (offsetY + geoHeight)) < geoHeight*0.1) {
-					System.out.println("Pan North");
-					System.out.println("Difference less than 0.1");
-					pan(0, maxMapHeight - (offsetY + geoHeight));
-				}
-				else if((offsetY + geoHeight) < maxMapHeight) {
-					System.out.println("OffsetY - geoHeight: " + (offsetY + geoHeight));
-					System.out.println("MaxY: " + maxMapHeight);
-					System.out.println("Pan North");
-					pixelPan(0, (int)(Map.use().getHeight()*0.1));
-				}
-					break; 			
-			case SOUTH:
-				if(offsetY < geoHeight*0.1) {
-					System.out.println("Pan South");
-					pan(0, -offsetY);
-				}
-				else if(offsetY > 0) {
-					System.out.println("Pan South");
-					pixelPan(0, (int)(-Map.use().getHeight()*0.1));
-				}
-					break;
-			case WEST:
-				if(offsetX < geoWidth*0.1) {
-					System.out.println("Pan West");
-					pan(-offsetX, 0);
-				}
-				else if(offsetX > 0) {
-					System.out.println("Pan West");
-					pixelPan((int)(-Map.use().getWidth()*0.1), 0);
-				}
-					break;
-			case EAST:
-				if((maxMapWidth - (offsetX + geoWidth)) < geoWidth*0.1) {
-					System.out.println("Pan East");
-					pan(maxMapWidth - (offsetX + geoWidth), 0);
-				}
-				else if(offsetX + geoWidth < maxMapWidth) {
-					System.out.println("Pan East");
-					pixelPan((int)(Map.use().getWidth()*0.1), 0);
-				}
-					break; 
-		}
-		//Window.use().updateMap();
-	}
+
 	
 	/**
 	 * Picks to nodes at random and calculates the shortest path between them.
@@ -144,90 +87,10 @@ public class WindowHandler {
 		}
 	}
 	
-	/**
-	 * A general pan method that takes as parameter how much the viewport has moved on the x-axis and y-axis
-	 */
-	//TODO: Optimize pan to take advantage of the points we already have loaded
-	public static void pan(double deltaX, double deltaY) {
-		//Hvis der er mindre end deltaY ud til kanten NORD
-		/**if(maxMapHeight - (offsetY + geoHeight) < deltaY) {
-			deltaY = maxMapHeight - (offsetY + geoHeight); 
-		}
-		//Hvis der er mindre end deltaX ud til kanten ØST
-		if(maxMapWidth - (offsetX + geoWidth) < deltaX) {
-			deltaX = maxMapWidth - (offsetX + geoWidth);
-		}
-		//Hvis der er mindre end deltaY ud til kanten SYD
-		if(-deltaY > offsetY){
-			deltaY = -offsetY;
-		}
-		//Hvis der er mindre end deltaX ud til kanten VEST
-		if(-deltaX > offsetX) {
-			deltaX = -offsetX;
-		}*/
-		
-		search(deltaX, geoWidth+deltaX, deltaY, geoHeight+deltaY);
-		Window.use().updateMap();
-	}
-	
-	/**
-	 * pixelPan shifts the pixels of the nodes and redraws the map. If parts of the map that are not loaded is reached
-	 * a new search is done in the quad tree. 
-	 */
-	public static void pixelPan(int x, int y) {
-		//Checks if the shiftPixel will move the view area outside the map 
-		//by comparing the difference between the view area and the maxMax sizes and the distance we want to move
-		boolean isInside = true;
-		double deltaX = pixelToGeoX(x);
-		double deltaY = pixelToGeoY(y);
-		//Hvis der er mindre end deltaY ud til kanten NORD
-		if(maxMapHeight - (offsetY + geoHeight) < deltaY) {
-			deltaY = maxMapHeight - (offsetY + geoHeight);
-			pan(deltaX, deltaY);
-			isInside = false;
-		}
-		//Hvis der er mindre end deltaX ud til kanten ØST
-		if(maxMapWidth - (offsetX + geoWidth) < deltaX) {
-			deltaX = maxMapWidth - (offsetX + geoWidth);
-			pan(deltaX, deltaY);
-			isInside = false;
-		}
-		//Hvis der er mindre end deltaY ud til kanten SYD
-		if(-deltaY > offsetY){
-			deltaY = -offsetY;
-			pan(deltaX, deltaY);
-			isInside = false;
-		}
-		//Hvis der er mindre end deltaX ud til kanten VEST
-		if(-deltaX > offsetX) {
-			deltaX = -offsetX;
-			pan(deltaX, deltaY);
-			isInside = false;
-		}
-		//If the new view area is inside the map
-		if(isInside == true){
-			RoadSegment.shiftPixel(0-x, y);
-			Window.use().updateMap();
-		
-			offsetY += deltaY;
-			offsetX += deltaX;
-			RoadSegment.shiftMapSize(deltaX, deltaY);
-			
-			// Er vi nået til kanten af det vi kender?
-			if (Math.abs(prevOffsetX-offsetX) > longestRoadsFloor || Math.abs(prevOffsetY-offsetY) > longestRoadsFloor) {
-				RoadSegment.shiftPixel(0, 0);
-				offsetX -= deltaX;
-				offsetY -= deltaY;
-				pan(deltaX, deltaY);
-				Window.use().updateMap();
-			}
-		}
-	}
-	
 	
 	public static void zoomOut() {
 		double minX = geoWidth*0.1, maxX = geoWidth*1.1, minY = geoHeight*0.1, maxY = geoHeight*1.1;
-		if((maxMapHeight - (offsetY + geoHeight)) < geoHeight*1.1) {
+		if((maxMapHeight - (offsetY + geoHeight)) < geoHeight*0.1) {
 			maxY = maxMapHeight - (offsetY + geoHeight) + geoHeight;
 		}
 		if(offsetY < geoHeight*0.1) {
@@ -236,12 +99,10 @@ public class WindowHandler {
 		if(offsetX < geoWidth*0.1) {
 			minX = offsetX;
 		}
-		if((maxMapWidth - (offsetX + geoWidth)) < geoWidth*1.1) {
+		if((maxMapWidth - (offsetX + geoWidth)) < geoWidth*0.1) {
 			maxX = maxMapWidth - (offsetX + geoWidth) + geoWidth;
 		}
-		
 		search(-minX, maxX, -minY, maxY);
-		//search(-geoWidth*0.1, geoWidth*1.1, -geoHeight*0.1, geoHeight*1.1);
 		Window.use().updateMap();
 	}
 	
@@ -280,7 +141,6 @@ public class WindowHandler {
 	
 	// Takes a search area in UTM-coordinates, and saves a list of all the edges to be drawn on the map
 	public static void search(double geoXMin, double geoXMax, double geoYMin, double geoYMax) {
-		//TODO: Add the longestRoadsFloor to each border of the search area and use this to optimize panning.
 		
 		//ensures that the search area is wider than 200m
 		if (geoXMax - geoXMin < 500) {
@@ -293,8 +153,11 @@ public class WindowHandler {
 		}
 		//System.out.println("Start point: (" + geoXMin + ", " + geoYMin + ")");
 		//System.out.println("End point: (" + geoXMax + ", " + geoYMax + ")");
+		
+		
 		geoWidth = geoXMax - geoXMin;
 		geoHeight = geoYMax - geoYMin;
+		
 		// recalculate the search area to fit the aspect ratio
 		if (geoWidth > geoHeight * ratio) {
 			double newGeoHeight = geoWidth / ratio;
@@ -308,8 +171,12 @@ public class WindowHandler {
 			double diff = (newGeoWidth - geoWidth) / 2;
 			geoXMax += diff;
 			geoXMin -= diff;
+			System.out.println("Gammel width: " + geoWidth);
+			System.out.println("Ny width:" + newGeoWidth);
 			geoWidth = newGeoWidth;
 		}
+		
+		
 		long startTime = System.currentTimeMillis();
 		nodes = QT.query(geoXMin+offsetX-longestRoadsFloor, geoYMin+offsetY-longestRoadsFloor,
 				geoXMax+offsetX+longestRoadsFloor, geoYMax+offsetY+longestRoadsFloor);
@@ -320,8 +187,6 @@ public class WindowHandler {
 		System.out.println("Time to create list of road segments: " + (System.currentTimeMillis()-startTime)/1000.0);
 		offsetX += geoXMin;
 		offsetY += geoYMin;
-		prevOffsetX = offsetX;
-		prevOffsetY = offsetY;
 
 		
 		// check whether any of the longest roads intersect with the searched area
@@ -376,30 +241,6 @@ public class WindowHandler {
 		}
 	}
 	
-	//Adds road segments to arrayList within Map class
-//	public static void calculatePixels() {
-//		long time1 = 0;
-//		long time2 = 0;
-//		Map.use().newArrayList();
-//		// For all the edges currently in the field of view,
-//		// create a roadSegment and add it to the list
-//		for (Edge e : edges) {
-//			Long startTime = System.currentTimeMillis();
-//			double x1 = e.getFromNode().getXCord();
-//			double y1 = e.getFromNode().getYCord();
-//			double x2 = e.getToNode().getXCord();
-//			double y2 = e.getToNode().getYCord();
-//			Long endTime = System.currentTimeMillis();
-//			time1 += endTime-startTime;
-//			startTime = System.currentTimeMillis();
-//			Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, e.getType()));
-//			endTime = System.currentTimeMillis();
-//			time2 += endTime-startTime;
-//		}
-//		System.out.println("Time to read edges: " + (time1/1000.0) + "s");
-//		System.out.println("Time to insert road segments: " + (time2/1000.0) + "s");
-//	}
-	
 	public static void resetMap() {
 		setGeoHeight(DataReader.getMaxY()-DataReader.getMinY());
 		setGeoWidth(DataReader.getMaxX()-DataReader.getMinX());
@@ -422,6 +263,36 @@ public class WindowHandler {
 		WindowHandler.geoHeight = geoHeight;
 	}
 	
+	public static double getGeoWidth() {
+		return geoWidth;
+	}
+
+
+	public static double getGeoHeight() {
+		return geoHeight;
+	}
+
+
+	public static double getOffsetX() {
+		return offsetX;
+	}
+
+
+	public static double getOffsetY() {
+		return offsetY;
+	}
+
+
+	public static double getMaxMapHeight() {
+		return maxMapHeight;
+	}
+
+
+	public static double getMaxMapWidth() {
+		return maxMapWidth;
+	}
+
+
 	public static double getRatio() {
 		return ratio;
 	}

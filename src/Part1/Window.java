@@ -202,7 +202,7 @@ public class Window extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				WindowHandler.pan(Direction.WEST);
+				PanHandler.directionPan(Direction.WEST);
 			}
 		});
 
@@ -210,7 +210,7 @@ public class Window extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				WindowHandler.pan(Direction.EAST);
+				PanHandler.directionPan(Direction.EAST);
 			}
 		});
 
@@ -218,7 +218,7 @@ public class Window extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				WindowHandler.pan(Direction.NORTH);
+				PanHandler.directionPan(Direction.NORTH);
 			}
 		});
 
@@ -226,7 +226,7 @@ public class Window extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				WindowHandler.pan(Direction.SOUTH);
+				PanHandler.directionPan(Direction.SOUTH);
 			}
 		});
 
@@ -352,16 +352,16 @@ public class Window extends JFrame {
 				WindowHandler.zoomIn();
 				break;
 			case KeyEvent.VK_UP:
-				WindowHandler.pan(Direction.NORTH);
+				PanHandler.directionPan(Direction.NORTH);
 				break;
 			case KeyEvent.VK_DOWN:
-				WindowHandler.pan(Direction.SOUTH);
+				PanHandler.directionPan(Direction.SOUTH);
 				break;
 			case KeyEvent.VK_LEFT:
-				WindowHandler.pan(Direction.WEST);
+				PanHandler.directionPan(Direction.WEST);
 				break;
 			case KeyEvent.VK_RIGHT:
-				WindowHandler.pan(Direction.EAST);
+				PanHandler.directionPan(Direction.EAST);
 				break;
 			}
 		}
@@ -441,7 +441,7 @@ public class Window extends JFrame {
 					System.out.println("distance dragged: " + dist);
 					if (dist > 1) {
 						System.out.println("Im Panning");
-						WindowHandler.pixelPan((prevX-e.getX()), (e.getY()-prevY));
+						PanHandler.pixelPan((prevX-e.getX()), (e.getY()-prevY));
 						prevX = e.getX();
 						prevY = e.getY();
 						//updateMap();
