@@ -133,11 +133,11 @@ public class Window extends JFrame {
 		validate();
 		repaint();
 		if(!isVisible()){
-			Loader.use().setAlwaysOnTop(true);
+			SplashScreen.use().setAlwaysOnTop(true);
 			Map.use().setBounds(0, 0, contentPane.getPreferredSize().width, contentPane.getPreferredSize().height);		
 			addListeners();
 			setVisible(true);
-			Loader.use().setAlwaysOnTop(false);
+			SplashScreen.use().setAlwaysOnTop(false);
 		} else {
 			requestFocus();			
 		}
