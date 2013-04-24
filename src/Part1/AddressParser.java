@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
 
 public class AddressParser {
 	
-	private FileScanner fs;
+	private StreetNameReader fs;
 	private String[] result = new String[6];
 	private String INPUT;
     private Pattern p1;
@@ -50,7 +50,7 @@ public class AddressParser {
 			result[i] = "";
 		}
 		try {
-			fs = new FileScanner();
+			fs = new StreetNameReader();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -65,7 +65,7 @@ public class AddressParser {
 	public String[] parseAddress(String input) {
 		clearResults();
 		try {
-			fs = new FileScanner();
+			fs = new StreetNameReader();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

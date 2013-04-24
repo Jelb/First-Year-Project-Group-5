@@ -10,14 +10,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-public class FileScanner   {
+public class StreetNameReader   {
 
 private FileInputStream street, zip;
 private DataInputStream inStreet, inZip;
 private BufferedReader brStreet, brZip;
 private HashMap<String, String> zipToCityMap;
 	
-	public FileScanner() throws FileNotFoundException{
+	public StreetNameReader() throws FileNotFoundException{
 		street = new FileInputStream("src/names.txt");
 		zip = new FileInputStream("src/post.txt");
 		inStreet = new DataInputStream(street);

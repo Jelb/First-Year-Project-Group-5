@@ -10,7 +10,7 @@ import java.util.TreeMap;
 
 import javax.swing.JOptionPane;
 
-import Part1.Loader.Task;
+import Part1.SplashScreen.Task;
 import QuadTree.QuadTree;
 
 
@@ -76,7 +76,7 @@ public class DataReader {
 	 * file is unreadable. 
 	 */
 	public void createNodeList(){
-		Loader.use().setTaskName(Task.NODES);
+		SplashScreen.use().setTaskName(Task.NODES);
 		// open the file containing the list of nodes
 		try {
 		BufferedReader br = new BufferedReader(new FileReader(nodeFile));
@@ -104,7 +104,7 @@ public class DataReader {
 				minY = y;
 
 			nodes.add(new Node(x, y, id));
-			Loader.use().updateProgress();
+			SplashScreen.use().updateProgress();
 			line = br.readLine();
 		}
 		
@@ -134,7 +134,7 @@ public class DataReader {
 	 * @return Returns a <b>Graph</b> object based on the content <i>edgeFile</i>.
 	 */
 	public Graph createGraphAndLongestRoadsList(int longestRoadsFloor) {
-		Loader.use().setTaskName(Task.EDGES);
+		SplashScreen.use().setTaskName(Task.EDGES);
 		System.out.println("Adding " + (nodes.size()-1) + " nodes to graph");
 		longestRoads = new ArrayList<Edge>();
 		try {
@@ -150,7 +150,7 @@ public class DataReader {
 			br.readLine(); // again discarding column names
 			String line = br.readLine();
 			
-			FileScanner fs = new FileScanner();
+			StreetNameReader fs = new StreetNameReader();
 			HashMap<String, String> zipToCityMap = fs.zipToCityMap();
 			
 			while (line != null) {
@@ -187,7 +187,7 @@ public class DataReader {
 				if (length > longestRoadsFloor) longestRoads.add(edge);
 				graph.addEdge(edge); // Adds the newly created edge object to the graph.
 				line = br.readLine();
-				Loader.use().updateProgress();
+				SplashScreen.use().updateProgress();
 			}
 			br.close();
 			return graph;
@@ -206,7 +206,7 @@ public class DataReader {
 	 * @return Returns a <b>QuadTree</b> object containing all nodes created in the <i>createNodeList()</i> method.
 	 */
 	public QuadTree createQuadTree() {
-		Loader.use().setTaskName(Task.GRAPH);
+		SplashScreen.use().setTaskName(Task.GRAPH);
 		if(nodes == null) createNodeList();
 		// Create QuadTree
 		QuadTree QT = new QuadTree(5, maxX - minX, maxY - minY);

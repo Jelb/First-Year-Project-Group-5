@@ -16,8 +16,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-public class Loader extends JFrame{
+public class SplashScreen extends JFrame{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Enums used to describe the allowed tasks for the Loader class
 	 */
@@ -25,11 +30,11 @@ public class Loader extends JFrame{
 		NODES, EDGES, GRAPH, MAP	
 	}	
 	
-	private static Loader instance;
+	private static SplashScreen instance;
 	private static int noOfNodes, noOfEdges;
 	private JProgressBar mainBar, overview;
 	
-	private Loader() {
+	private SplashScreen() {
 		super();
 		setPreferredSize(new Dimension(850, 700));
 		setUndecorated(true);
@@ -40,9 +45,9 @@ public class Loader extends JFrame{
 		setVisible(true);
 	}
 	
-	public static Loader use() {
+	public static SplashScreen use() {
 		if(instance == null) {
-			instance = new Loader();
+			instance = new SplashScreen();
 		}
 		return instance;
 	}

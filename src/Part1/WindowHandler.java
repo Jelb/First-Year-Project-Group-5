@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Stack;
-import Part1.Loader.Task;
+import Part1.SplashScreen.Task;
 import QuadTree.QuadTree;
 
 public class WindowHandler {
@@ -434,8 +434,8 @@ public class WindowHandler {
 	public static void main(String[] args) throws IOException {
 		String nodeFile = "kdv_node_unload.txt";
 		String edgeFile = "kdv_unload.txt";
-		Loader.initialize(nodeFile, edgeFile);
-		Loader.use();
+		SplashScreen.initialize(nodeFile, edgeFile);
+		SplashScreen.use();
 		
 		// Timer for testing purposes
 		Long startTime = System.currentTimeMillis();
@@ -472,7 +472,7 @@ public class WindowHandler {
 		setGeoWidth(DataReader.getMaxX()-DataReader.getMinX());
 		
 		ratio = geoWidth/geoHeight;
-		Loader.use().setTaskName(Task.MAP);
+		SplashScreen.use().setTaskName(Task.MAP);
 		
 		// Starts a new test timer
 		startTime = System.currentTimeMillis();
@@ -510,7 +510,7 @@ public class WindowHandler {
 		//MemoryMXBean mxbean = ManagementFactory.getMemoryMXBean();
 		//System.out.printf("Heap memory usage: %d MB%n", mxbean
 		//		.getHeapMemoryUsage().getUsed() / (1000000));
-		Loader.use().close();
+		SplashScreen.use().close();
 	}
 	
 }
