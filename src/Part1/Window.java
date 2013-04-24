@@ -8,6 +8,7 @@ import java.awt.GraphicsEnvironment;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
@@ -50,8 +51,10 @@ public class Window extends JFrame {
 
 	//Buttons to pan and zoom
 	private JButton resetZoom, zoomOut, zoomIn;
-	private JButton west, east, north, south;
+	private JButton west, east, north, south, navigate;
 	private JTextField from, to;
+	private JComboBox searchResultBox;
+	private boolean navigateVisible=false;
 
 
 	//Midlertidige felter
@@ -155,17 +158,24 @@ public class Window extends JFrame {
 		east = createButton("East.png", "East", 125, 75);
 		north = createButton("North.png", "North",75, 25);
 		south = createButton("South.png", "South", 75, 125);
+		
+		navigate = new JButton("Navigate");
+		navigate.setBounds(50, 225, 85,40);
+		
+		searchResultBox = new JComboBox();
 
 		from = new JTextField("From");
-		from.setBounds(25 , 225,150, 25);
-		from.setBackground(Color.PINK);
+		from.setBounds(25 , 275,150, 25);
+		from.setBackground(Color.WHITE);
+		from.setVisible(false);
 		
 		to = new JTextField("To");
-		to.setBounds(25, 270, 150,25);
-		to.setBackground(Color.PINK);
-
+		to.setBounds(25, 310, 150,25);
+		to.setBackground(Color.WHITE);
+		to.setVisible(false);
+		
 		toms = new JButton("Tom");
-		toms.setBounds(35, 350, 50,50);
+		toms.setBounds(35, 400, 100,50);
 	}
 	
 	/**
@@ -234,10 +244,7 @@ public class Window extends JFrame {
 
 			public void actionPerformed(ActionEvent evt) {
 				String fromText = from.getText();
-				String[] result = AddressParser.use().parseAddress(fromText);
-				HashSet<String> set = WindowHandler.getRoadToCityMap().get(result[0]);
-				for (String s : set) System.out.println(s);
-				AddressParser.use().print();
+				addressParse(fromText, 185, 275);
 			}
 		});
 
@@ -245,10 +252,7 @@ public class Window extends JFrame {
 
 			public void actionPerformed(ActionEvent evt) {
 				String toText = to.getText();
-				String[] result = AddressParser.use().parseAddress(toText);
-				HashSet<String> set = WindowHandler.getRoadToCityMap().get(result[0]);
-				for (String s : set) System.out.println(s);
-				AddressParser.use().print();							
+				addressParse(toText, 185, 310);
 			}
 		});
 
@@ -258,7 +262,54 @@ public class Window extends JFrame {
 				WindowHandler.pathFindingTest();
 			}
 		});
+		
+		navigate.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent evt) {
+				if(!navigateVisible){
+					to.setVisible(true);
+					from.setVisible(true);
+					navigateVisible= true;
+				}
+				else{
+					to.setVisible(false);
+					from.setVisible(false);
+					searchResultBox.setVisible(false);
+					navigateVisible= false;
+				}
+				
+			}
+		});
 	}
+	
+	private void addressParse(String text, int x,int y){		
+		String[] result = AddressParser.use().parseAddress(text);
+		if(result[0]==""){
+			createSearchBox(new String[]{"No Results"},x,y);
+		}
+		else{					
+		HashSet<String> set = WindowHandler.getRoadToCityMap().get(result[0]);
+		String[] setArray = set.toArray(new String[0]);							
+		createSearchBox(setArray,x,y);
+		}
+	}
+	
+	private void createSearchBox(String[] array, int x, int y){
+		searchResultBox.setVisible(false);
+		searchResultBox = null;
+		searchResultBox = new JComboBox(array);
+		searchResultBox.setBounds(x,y ,150,25);	
+		searchResultBox.addActionListener(new ActionListener(){ 
+			
+			public void actionPerformed(ActionEvent e) {
+				String selectedItem = (String)searchResultBox.getSelectedItem();
+				System.out.println(selectedItem);
+			}
+	});
+		
+		screen.add(searchResultBox, JLayeredPane.PALETTE_LAYER);			
+	}
+	
 	
 	/**
 	 * Buttons added to the Pallette_Layer, above the map layer
@@ -275,6 +326,7 @@ public class Window extends JFrame {
 		screen.add(from, JLayeredPane.PALETTE_LAYER);
 		screen.add(to, JLayeredPane.PALETTE_LAYER);
 		screen.add(toms, JLayeredPane.PALETTE_LAYER);
+		screen.add(navigate, JLayeredPane.PALETTE_LAYER);
 	}
 
 	/**
