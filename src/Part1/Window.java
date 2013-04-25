@@ -12,6 +12,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -51,10 +52,13 @@ public class Window extends JFrame {
 
 	//Buttons to pan and zoom
 	private JButton resetZoom, zoomOut, zoomIn;
-	private JButton west, east, north, south, navigate;
+	private JButton west, east, north, south, findPath;
 	private JTextField from, to;
 	private JComboBox searchResultBox;
 	private boolean navigateVisible=false;
+	
+	//GUI background
+	private JPanel background;
 
 
 	//Midlertidige felter
@@ -151,6 +155,7 @@ public class Window extends JFrame {
 	 * Creates the buttons which makes up the GUI
 	 */
 	private void createButtons() {
+		//Icons from http://www.iconfinder.com/search/?q=iconset%3Abrightmix
 		resetZoom = createButton("ResetZoom.png", "Reset zoom", 75, 75);
 		zoomOut = createButton("ZoomOut.png", "Zoom out", 100, 175);
 		zoomIn = createButton("ZoomIn.png", "Zoom in", 50, 175);
@@ -158,24 +163,42 @@ public class Window extends JFrame {
 		east = createButton("East.png", "East", 125, 75);
 		north = createButton("North.png", "North",75, 25);
 		south = createButton("South.png", "South", 75, 125);
-		
-		navigate = new JButton("Navigate");
-		navigate.setBounds(50, 225, 85,40);
+		findPath = createButton("FindPath.png", "Find Path", 75, 240);		
 		
 		searchResultBox = new JComboBox();
 
 		from = new JTextField("From");
-		from.setBounds(25 , 275,150, 25);
+		from.setBounds(25 , 275,140, 25);
 		from.setBackground(Color.WHITE);
 		from.setVisible(false);
 		
 		to = new JTextField("To");
-		to.setBounds(25, 310, 150,25);
+		to.setBounds(25, 310, 140,25);
 		to.setBackground(Color.WHITE);
 		to.setVisible(false);
 		
+		//Internet magic from http://tips4java.wordpress.com/2009/05/31/backgrounds-with-transparency/
+		background = new JPanel()
+		{
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			protected void paintComponent(Graphics g)
+		    {
+		        g.setColor( getBackground() );
+		        g.fillRect(0, 0, getWidth(), getHeight());
+		        super.paintComponent(g);
+		    }
+		};
+		background.setOpaque(false);		
+		//background.setBackground(new Color(255,255,255,200)); White
+		background.setBackground(new Color(0,0,0,20));
+		background.setBounds(10,20,165,340);
+		
 		toms = new JButton("Tom");
-		toms.setBounds(35, 400, 100,50);
+		toms.setBounds(35, 400, 20,20);
 	}
 	
 	/**
@@ -263,7 +286,7 @@ public class Window extends JFrame {
 			}
 		});
 		
-		navigate.addActionListener(new ActionListener(){
+		findPath.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
 				if(!navigateVisible){
@@ -326,7 +349,8 @@ public class Window extends JFrame {
 		screen.add(from, JLayeredPane.PALETTE_LAYER);
 		screen.add(to, JLayeredPane.PALETTE_LAYER);
 		screen.add(toms, JLayeredPane.PALETTE_LAYER);
-		screen.add(navigate, JLayeredPane.PALETTE_LAYER);
+		screen.add(findPath, JLayeredPane.PALETTE_LAYER);
+		screen.add(background, JLayeredPane.PALETTE_LAYER);
 	}
 
 	/**
