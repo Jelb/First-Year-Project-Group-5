@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.TreeMap;
 
 import javax.swing.JOptionPane;
 
@@ -117,7 +116,7 @@ public class DataReader {
 		System.out.println("Height of map: " + (maxY-minY));
 		br.close();
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "The \"nodeFile\" was not foud. \nThe will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "The \"nodeFile\" was not found. \nThe program will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
 	}
@@ -161,7 +160,8 @@ public class DataReader {
 				int type = Integer.parseInt(lineArray[5]);
 				String vejnavn = lineArray[6].substring(1,lineArray[6].length()-1);
 				String v_postnr = lineArray[17];
-				String h_postnr = lineArray[18];				
+				String h_postnr = lineArray[18];
+				String oneway = lineArray[27].replace("'", "");
 				if (!vejnavn.equals("")) {
 					
 					String v_city = zipToCityMap.get(v_postnr);
@@ -183,9 +183,26 @@ public class DataReader {
 						roadToCityMap.put(vejnavn, set);
 					}
 				}
-				Edge edge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr); // Creates an edge.
-				if (length > longestRoadsFloor) longestRoads.add(edge);
-				graph.addEdge(edge); // Adds the newly created edge object to the graph.
+				
+				// Check if the road is one way or two way
+				if (oneway.equals("ft")) {
+					Edge edge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, true);
+					if (length > longestRoadsFloor) longestRoads.add(edge);
+					graph.addEdge(edge);
+				}
+				else if (oneway.equals("tf")) {
+					Edge edge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, true);
+					if (length > longestRoadsFloor) longestRoads.add(edge);
+					graph.addEdge(edge);
+				}
+				else {
+					Edge fEdge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, true);
+					Edge tEdge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, false);
+					if (length > longestRoadsFloor) longestRoads.add(fEdge);
+					graph.addEdge(fEdge);
+					graph.addEdge(tEdge);
+				}
+				
 				line = br.readLine();
 				SplashScreen.use().updateProgress();
 			}
@@ -193,7 +210,6 @@ public class DataReader {
 			return graph;
 		} 
 		catch (IOException e) {
-			//
 			JOptionPane.showMessageDialog(null, "The \"edgeFile\" was not foud. \nThe will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}

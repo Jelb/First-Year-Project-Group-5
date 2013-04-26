@@ -24,42 +24,20 @@ public class Graph {
 	
 	// adds an edge to the nodes that the edge connects
 	public void addEdge(Edge e) {
-		//int v = e.either(), w = e.other(v);
-		//adj[v].add(e);
-		//adj[w].add(e);
-		//E++;
-		adj[e.getFromNodeID()].add(e);		// new changes
-		E++;								// new changes
+		adj[e.from()].add(e);
+		E++;
 	}
 	
 	// returns adjacency list for the given node
 	public Iterable<Edge> adj(int v) { return adj[v]; }
-		
-	// returns all outgoing edges from a given node
-	public Iterable<Edge> adjOut(int v) {
-		LinkedList<Edge> outEdges = new LinkedList<Edge>();
-		for (Edge e : adj[v])
-			if (e.getFromNodeID() == v)
-				outEdges.add(e);
-		return outEdges;
-	}
-	
-	// returns all incoming edges to a given node
-	public Iterable<Edge> adjIn(int v) {
-		LinkedList<Edge>  inEdges = new LinkedList<Edge>();
-		for (Edge e : adj[v])
-			if (e.getToNodeID() == v)
-				inEdges.add(e);
-		return inEdges;
-	}
+
 
 	// returns linked list all edges in the graph
 	public Iterable<Edge> edges() {
 		LinkedList<Edge> list = new LinkedList<Edge>();
 		for (int v = 0; v < V; v++)
 			for (Edge e : adj[v])
-				//if (e.other(v) > v) list.add(e);
-				list.add(e);							// new changes
+				list.add(e);
 		return list;
 	}
 }

@@ -47,9 +47,7 @@ public class WindowHandler {
 	 */
 	public static void pathFindingTest() {
 		Random rnd = new Random();
-		int startNode = rnd.nextInt(graph.getV());			// picks a node at random
-		while(startNode == 0)
-			startNode = rnd.nextInt(graph.getV());	
+		int startNode = rnd.nextInt(graph.getV()-1)+1;			// picks a node at random
 		
 		System.out.println("Start node: " + startNode);
 		
@@ -65,12 +63,10 @@ public class WindowHandler {
 		System.out.println("Start node: " + startNode);
 		System.out.println("Distance to destination node " + destinationNode + " is: " + dsp.distTo(destinationNode));
 		
-		System.out.println("Shortest path:");
-		route = (Stack<Edge>) dsp.pathTo(rnd.nextInt(destinationNode));	// find route from start to destination node
-		
-		dsp.printPath(route);		// printing all the nodes for good measure
+		route = (Stack<Edge>) dsp.pathTo(destinationNode);	// find route from start to destination node
 		
 		addRouteToMap(route);		// adding the route to the Map()
+		Window.use().updateMap();
 	}
 	
 	/**
@@ -224,13 +220,11 @@ public class WindowHandler {
 	
 	// Gets all the edges that go out from each Node in the list of nodes
 	public static void getEdgesFromNodes() {
-		//edges = new LinkedList<Edge>();
 		Map.use().newArrayList();
 		for (Node n : nodes) {
-			Iterable<Edge> edgesFromNode = graph.adjOut(n.getKdvID());
+			Iterable<Edge> edgesFromNode = graph.adj(n.getKdvID());
 			for (Edge e : edgesFromNode) {
-				if (includeEdge(e)) {
-					//edges.add(e);
+				if (e.isDrawable() && includeEdge(e)) {
 					double x1 = e.getFromNode().getXCord();
 					double y1 = e.getFromNode().getYCord();
 					double x2 = e.getToNode().getXCord();
@@ -249,7 +243,6 @@ public class WindowHandler {
 		nodes = QT.query(0, 0, geoWidth, geoHeight);
 		RoadSegment.setMapSize(geoWidth, geoHeight, 0.0, 0.0);
 		getEdgesFromNodes();
-		//calculatePixels();
 		Window.use().updateMap();
 	}
 

@@ -27,8 +27,6 @@ public class RoadSegment extends JComponent {
 	private Color color;
 	private int roadWidth;
 	
-	// How much pixels should be shifted next time they are drawn
-	private static int xShift, yShift;
 	
 	/**
 	 * 
@@ -104,7 +102,7 @@ public class RoadSegment extends JComponent {
 		case 4    : return Color.blue;		// Secondary roads > 6 m
 		case 5    : return Color.black;		// Roads between 3-6 meters
 		case 8    : return Color.green;		// paths
-		case 4242 : return Color.black;		// route
+		case 4242 : return Color.orange;		// route
 		default   : return Color.gray; 		// everything else
 		}
 	}
@@ -115,12 +113,6 @@ public class RoadSegment extends JComponent {
 	 * @param g A Graphics object used for drawing
 	 */
 	protected void paintComponent(Graphics g) {
-		//Shift pixels
-		xStart += xShift;
-		xEnd += xShift;
-		yStart += yShift;
-		yEnd += yShift;
-		
 		
 		Graphics2D g2 = (Graphics2D) g;
 		
@@ -135,15 +127,8 @@ public class RoadSegment extends JComponent {
 
 		// draw the road segment
 		g2.drawLine(xStart, yStart, xEnd, yEnd);
+
 	}
 	
-	/**
-	 * 
-	 * Moves the pixel in the direction specified next time they are drawn
-	 */
-	public static void shiftPixel(int deltaX, int deltaY) {
-		xShift = deltaX;
-		yShift = deltaY;
-	}
 	
 }

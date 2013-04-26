@@ -21,43 +21,12 @@ public class DijkstraSP {
 		distTo[s] = 0.0;
 		
 		pq.insert(s, distTo[s]);
-		while(!pq.isEmpty()) {
-			// lists the distTo[] array as it looks so far
-			//System.out.println("********************");
-			//System.out.println("distTo[]:");
-			//for(int i = 1; i < distTo.length; i++) 
-			//	System.out.println(i + " = " + distTo[i]);	
-			
-			// lists the edgeTo[] array as it looks so far
-			//System.out.println("");
-			//System.out.println("edgeTo[]:");
-			//for(int i = 1; i < edgeTo.length; i++) {
-			//	if(edgeTo[i] != null)
-			//		System.out.println(i + ": -> " + edgeTo[i].getFromNodeID());
-			//	else System.out.println(i + ": - > ???");
-			//}
-
-			//System.out.println("********************");
-			
+		while(!pq.isEmpty()) {			
 			int v = pq.delMin();
-			//System.out.println("Relax edges emminating from node: " + v);
+			Iterable<Edge> adj = G.adj(v);
 			for (Edge e : G.adj(v))
                 relax(e);
 		}
-		System.out.println("PQ is EMPTY! :D");
-		System.out.println("********************");
-		System.out.println("distTo[]:");
-		for(int i = 1; i < distTo.length; i++) 
-			System.out.println(i + " = " + distTo[i]);	
-		
-		System.out.println("");
-		System.out.println("edgeTo[]:");
-		for(int i = 1; i < edgeTo.length; i++) {
-			if(edgeTo[i] != null)
-				System.out.println("edgeTo[" + i + "] = " + edgeTo[i].getFromNodeID());
-			else System.out.println("edgeTo[" + i + "] = ???");
-		}
-		System.out.println("");
 	}
 	
 	private void relax(Edge e) {
@@ -76,10 +45,7 @@ public class DijkstraSP {
             																		//System.out.println("Adding node " + w + " to priority queue of nodes whose edges we need to relax");
             	pq.insert(w, distTo[w]);
             }
-        } else {
-																					//System.out.println("NO new shortest path to " + w);
         }
-																					//System.out.println();
     }
 	
 	public double distTo(int v) {
@@ -89,20 +55,13 @@ public class DijkstraSP {
 	public boolean hasPathTo(int v) {
 		return distTo[v] < Double.POSITIVE_INFINITY;
 	}
-
-	public void printPath(Stack<Edge> path) {
-		while(!path.empty()) {
-			Edge edge = path.pop();
-			System.out.println(edge.printEdge());
-		}
-	}
 	
 	public Iterable<Edge> pathTo(int v) {
+		Stack<Edge> path = new Stack<Edge>();
 		if(!hasPathTo(v)) {
 			System.out.println("No path to node " + v);
-			return null;
+			return path;
 		}
-		Stack<Edge> path = new Stack<Edge>();
 		for(Edge e = edgeTo[v]; e != null; e = edgeTo[e.getFromNodeID()]) path.push(e);
 		return path;
 	}

@@ -7,12 +7,13 @@ public class Node {
 	private int kdvID;
 	private static double xOffset;
 	private static double yOffset;
-	//private static Node[] nodeArray = new Node[675901];
+//	private LinkedList<Edge> edges;
 	
 	public Node(double xCord, double yCord, int kdvID) {
 		this.xCord = xCord;
 		this.yCord = yCord;
 		this.kdvID = kdvID;
+//		edges = new LinkedList<Edge>();
 	}
 	
 	public double getXCord(){
@@ -39,13 +40,12 @@ public class Node {
 		return (xCord == n.getXCord() && yCord == n.getYCord());
 	}
 	
-//	public static void insertNode(Node node){
-//		int i = node.getKdvID();
-//		nodeArray[i] = node;
+//	public void addEdge(Edge edge) {
+//		edges.add(edge);
 //	}
 //	
-//	public static Node getNode(int index) {
-//		return nodeArray[index];
+//	public LinkedList<Edge> getEdges() {
+//		return edges;
 //	}
 
 }
