@@ -1,5 +1,6 @@
 package Part1;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 // Based on code on p. 611 in Algorithms 4. ed. Sedgewick, Wayne
@@ -29,8 +30,16 @@ public class Graph {
 	}
 	
 	// returns adjacency list for the given node
-	public Iterable<Edge> adj(int v) { return adj[v]; }
+	public Iterable<Edge> adj(int v) { 
+		return adj[v]; 
+	}
 
+	// returns adjacency list for the given node
+	public Iterable<Edge> adjArr(int v) { 
+		ArrayList<Edge> arr = new ArrayList<Edge>();
+		arr.addAll(adj[v]);
+		return arr;
+	}
 
 	// returns linked list all edges in the graph
 	public Iterable<Edge> edges() {

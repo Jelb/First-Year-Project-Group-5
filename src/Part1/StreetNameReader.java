@@ -15,7 +15,7 @@ public class StreetNameReader   {
 private FileInputStream street, zip;
 private DataInputStream inStreet, inZip;
 private BufferedReader brStreet, brZip;
-private HashMap<String, String> zipToCityMap;
+private static HashMap<String, String> zipToCityMap;
 	
 	public StreetNameReader() throws FileNotFoundException{
 		street = new FileInputStream("src/names.txt");
@@ -34,6 +34,10 @@ private HashMap<String, String> zipToCityMap;
 			if(input.contains(strLine.toLowerCase()) && strLine.length() > street.length())
 				street = strLine;
 		return street;
+	}
+	
+	public static HashMap<String, String> getZipToCityMap(){
+		return zipToCityMap;
 	}
 	
 	/**

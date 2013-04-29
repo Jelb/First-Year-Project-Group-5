@@ -7,6 +7,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Stack;
+
+import Part1.DijkstraSP.CompareType;
+import Part1.DijkstraSP.TransportWay;
 import Part1.SplashScreen.Task;
 import QuadTree.QuadTree;
 
@@ -40,6 +43,7 @@ public class WindowHandler {
 		return  (((double)y/(Window.use().getMapHeight()) * geoHeight));
 	}
 
+<<<<<<< HEAD
 	/**
 	 * Return the closest node to a given in-window pixel coordinate.
 	 * @param x		Pixel x input coordinate
@@ -110,16 +114,30 @@ public class WindowHandler {
 //		return closestEdge;
 	}
 	 
+=======
+	public static void pathFindingTest2(){
+		
+	}
+	
+>>>>>>> 981ab9f5ba7202f558c2c8aa1fe80b285b3dd03d
 	
 	/**
 	 * Picks to nodes at random and calculates the shortest path between them.
 	 * For testing purposes only.
 	 */
+	
 	public static void pathFindingTest() {
 		Random rnd = new Random();
 		int startNode = rnd.nextInt(graph.getV()-1)+1;			// picks a node at random
 		
+<<<<<<< HEAD
 		DijkstraSP dsp = new DijkstraSP(graph, startNode);		// use random node at our start node for shortest path calculation
+=======
+		System.out.println("Start node: " + startNode);
+		
+		System.out.println("Creating SP object... ");
+		DijkstraSP dsp = new DijkstraSP(graph, startNode, TransportWay.CAR, CompareType.FASTEST);	// use random node at our start node for shortest path calculation
+>>>>>>> 981ab9f5ba7202f558c2c8aa1fe80b285b3dd03d
 		
 		Stack<Edge> route = new Stack<Edge>();					// clears any previous route
 		
@@ -362,9 +380,14 @@ public class WindowHandler {
 	public static HashMap<String, HashSet<String>> getRoadToCityMap() {
 		return roadToCityMap;
 	}
+	
+	public static List<Edge> getEdges(){
+		return edges;
+	}
 
 
 	public static void main(String[] args) throws IOException {
+		System.out.println(java.lang.Runtime.getRuntime().maxMemory());
 		String nodeFile = "kdv_node_unload.txt";
 		String edgeFile = "kdv_unload.txt";
 		SplashScreen.initialize(nodeFile, edgeFile);
@@ -391,6 +414,9 @@ public class WindowHandler {
 		longestRoads = dataReader.getLongestRoads();
 		
 		roadToCityMap = dataReader.getRoadToCityMap();
+		
+		//set arraylist of all egdes
+		edges = dataReader.getEdges();
 		
 		//Avoid loitering
 		dataReader = null;
