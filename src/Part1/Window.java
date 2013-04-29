@@ -138,6 +138,7 @@ public class Window extends JFrame {
 	 */
 	public void updateMap() {
 		long startTime = System.currentTimeMillis();
+		Map.use().updatePath();
 		validate();
 		repaint();
 		if(!isVisible()){

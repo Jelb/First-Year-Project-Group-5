@@ -164,6 +164,7 @@ public class DataReader {
 				String vejnavn = lineArray[6].substring(1,lineArray[6].length()-1);
 				String v_postnr = lineArray[17];
 				String h_postnr = lineArray[18];
+				double driveTime = Double.parseDouble(lineArray[26]);
 				String oneway = lineArray[27].replace("'", "");
 				if (!vejnavn.equals("")) {
 					
@@ -189,20 +190,21 @@ public class DataReader {
 				
 				// Check if the road is one way or two way
 				if (oneway.equals("ft")) {
-					Edge edge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, true);
+					Edge edge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, driveTime, true);
 					if (length > longestRoadsFloor) longestRoads.add(edge);
 					edges.add(edge);
 					graph.addEdge(edge);
 				}
 				else if (oneway.equals("tf")) {
-					Edge edge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, true);
+					Edge edge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, driveTime, true);
 					if (length > longestRoadsFloor) longestRoads.add(edge);
 					edges.add(edge);
 					graph.addEdge(edge);
 				}
+				// if the road is two way, only one of the ways is drawn
 				else {
-					Edge fEdge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, true);
-					Edge tEdge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, false);
+					Edge fEdge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, driveTime, true);
+					Edge tEdge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, driveTime, false);
 					if (length > longestRoadsFloor) longestRoads.add(fEdge);
 					edges.add(tEdge);
 					edges.add(tEdge);

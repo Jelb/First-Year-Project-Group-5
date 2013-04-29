@@ -7,6 +7,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Stack;
+
+import Part1.DijkstraSP.CompareType;
+import Part1.DijkstraSP.TransportWay;
 import Part1.SplashScreen.Task;
 import QuadTree.QuadTree;
 
@@ -15,7 +18,6 @@ public class WindowHandler {
 	static List<Edge> edges;
 	static List<Edge> longestRoads;
 	static HashMap<String, HashSet<String>> roadToCityMap;
-	//static Stack<Edge> route;
 	static int longestRoadsFloor;
 	static QuadTree QT;
 	static Graph graph;
@@ -58,7 +60,7 @@ public class WindowHandler {
 		System.out.println("Start node: " + startNode);
 		
 		System.out.println("Creating SP object... ");
-		DijkstraSP dsp = new DijkstraSP(graph, startNode);	// use random node at our start node for shortest path calculation
+		DijkstraSP dsp = new DijkstraSP(graph, startNode, TransportWay.CAR, CompareType.FASTEST);	// use random node at our start node for shortest path calculation
 		
 		Stack<Edge> route = new Stack<Edge>();				// clears any previous route
 		
@@ -79,14 +81,16 @@ public class WindowHandler {
 	 * Adds the shortest path (static field 'route') to the roadSegments on the map.
 	 */
 	public static void addRouteToMap(Stack<Edge> route) {
+		ArrayList<RoadSegment> path = new ArrayList<RoadSegment>();
 		while(!route.empty()) {
 			Edge edge = route.pop();
 			double x1 = edge.getFromNode().getXCord();
 			double y1 = edge.getFromNode().getYCord();
 			double x2 = edge.getToNode().getXCord();
 			double y2 = edge.getToNode().getYCord();
-			Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, 4242));
+			path.add(new RoadSegment(x1, y1, x2, y2, 4242));
 		}
+		Map.use().setPath(path);
 	}
 	
 	
