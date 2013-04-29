@@ -53,8 +53,8 @@ public class DataReaderTest {
 		//Graph graph = DR.createGraphAndLongestRoadsList(10000);
 		//System.out.println("Graph adj(1): " + graph.adj(1));
 		ArrayList<Edge> arrTest = new ArrayList<Edge>();
-		Edge edge1 = new Edge(DR.nodes.get(1), DR.nodes.get(2), 58.63325, "", 8, "0", "0", true);
-		Edge edge2 = new Edge(DR.nodes.get(1), DR.nodes.get(3), 136.81998, "", 8, "0", "0", true);
+		Edge edge1 = new Edge(DR.nodes.get(1), DR.nodes.get(2), 58.63325, "", 8, "0", "0", 0.135, true);
+		Edge edge2 = new Edge(DR.nodes.get(1), DR.nodes.get(3), 136.81998, "", 8, "0", "0", 0.315, true);
 		arrTest.add(edge1);
 		arrTest.add(edge2);
 		//Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, true);
@@ -66,7 +66,7 @@ public class DataReaderTest {
 		//Graph graph = DR.createGraphAndLongestRoadsList(10000);
 		//System.out.println("Graph adj(3): " + graph.adj(3));
 		ArrayList<Edge> arrTest = new ArrayList<Edge>();
-		Edge edge = new Edge(DR.nodes.get(3), DR.nodes.get(4), 20.01746, "", 8, "0", "0", true);
+		Edge edge = new Edge(DR.nodes.get(3), DR.nodes.get(4), 20.01746, "", 8, "0", "0", 0.046, true);
 		arrTest.add(edge);
 		assertEquals(arrTest, graph.adjArr(3));
 	}
@@ -76,20 +76,21 @@ public class DataReaderTest {
 		//Graph graph = DR.createGraphAndLongestRoadsList(10000);
 		//System.out.println("Graph adj(4): " + graph.adj(4));
 		ArrayList<Edge> arrTest = new ArrayList<Edge>();
-		assertEquals(arrTest, graph.adjArr(4));
+		assertEquals(arrTest, graph.adjArr(2));
 	}
 	
 	//Problem: man må ikke have to instanser af DataReader åbne!
-	@Test (expected = Exception.class)
+	@Test 
 	public void wrongNodeFile() {
 		DataReader DR2 = DataReader.use("wrongFile.txt", "10edgestest.txt");
 		DR2.createNodeList();
 	}
 	
-	@Test (expected = Exception.class)
+	@Test
 	public void wrongEdgeFile() {
 		DataReader DR2 = DataReader.use("10nodestest.txt", "wrongFile.txt");
 		DR2.createGraphAndLongestRoadsList(10000);
+		//The program will cloose down and do nothing
 	}
 	
 	@Test

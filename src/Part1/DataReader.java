@@ -32,7 +32,7 @@ import QuadTree.QuadTree;
  */
 public class DataReader {
 	private static DataReader instance;
-	private ArrayList<Node> nodes;
+	public ArrayList<Node> nodes;
 	private ArrayList<Edge> edges;
 	private ArrayList<Edge> longestRoads;
 	private final String nodeFile, edgeFile;
