@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -31,7 +32,12 @@ import QuadTree.QuadTree;
  */
 public class DataReader {
 	private static DataReader instance;
+<<<<<<< HEAD
 	public ArrayList<Node> nodes;
+=======
+	private ArrayList<Node> nodes;
+	private ArrayList<Edge> edges;
+>>>>>>> cfcfab3b478e87720708c772b30306f639cf2449
 	private ArrayList<Edge> longestRoads;
 	private final String nodeFile, edgeFile;
 	public static double maxX = 0, maxY = 0, minX = -1, minY = -1;
@@ -151,6 +157,7 @@ public class DataReader {
 			
 			StreetNameReader fs = new StreetNameReader();
 			HashMap<String, String> zipToCityMap = fs.zipToCityMap();
+			edges = new ArrayList<Edge>();
 			
 			while (line != null) {
 				String[] lineArray = line.split(",(?! |[a-zA-ZæÆøØåÅ])"); // Regex matches ',' not followed by spaces of letters.
@@ -161,6 +168,7 @@ public class DataReader {
 				String vejnavn = lineArray[6].substring(1,lineArray[6].length()-1);
 				String v_postnr = lineArray[17];
 				String h_postnr = lineArray[18];
+				double driveTime = Double.parseDouble(lineArray[26]);
 				String oneway = lineArray[27].replace("'", "");
 				if (!vejnavn.equals("")) {
 					
@@ -186,19 +194,24 @@ public class DataReader {
 				
 				// Check if the road is one way or two way
 				if (oneway.equals("ft")) {
-					Edge edge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, true);
+					Edge edge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, driveTime, true);
 					if (length > longestRoadsFloor) longestRoads.add(edge);
+					edges.add(edge);
 					graph.addEdge(edge);
 				}
 				else if (oneway.equals("tf")) {
-					Edge edge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, true);
+					Edge edge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, driveTime, true);
 					if (length > longestRoadsFloor) longestRoads.add(edge);
+					edges.add(edge);
 					graph.addEdge(edge);
 				}
+				// if the road is two way, only one of the ways is drawn
 				else {
-					Edge fEdge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, true);
-					Edge tEdge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, false);
+					Edge fEdge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, driveTime, true);
+					Edge tEdge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, driveTime, false);
 					if (length > longestRoadsFloor) longestRoads.add(fEdge);
+					edges.add(tEdge);
+					edges.add(tEdge);
 					graph.addEdge(fEdge);
 					graph.addEdge(tEdge);
 				}
@@ -280,5 +293,9 @@ public class DataReader {
 	
 	public HashMap<String, HashSet<String>> getRoadToCityMap() {
 		return roadToCityMap;
+	}
+
+	public List<Edge> getEdges() {
+		return edges;
 	}
 }

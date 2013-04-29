@@ -56,6 +56,7 @@ public class Window extends JFrame {
 	private JTextField from, to;
 	private JComboBox searchResultBox;
 	private boolean navigateVisible=false;
+	private String[] result;
 	
 	//GUI background
 	private JPanel background;
@@ -137,6 +138,7 @@ public class Window extends JFrame {
 	 */
 	public void updateMap() {
 		long startTime = System.currentTimeMillis();
+		Map.use().updatePath();
 		validate();
 		repaint();
 		if(!isVisible()){
@@ -306,27 +308,41 @@ public class Window extends JFrame {
 	}
 	
 	private void addressParse(String text, int x,int y){		
-		String[] result = AddressParser.use().parseAddress(text);
+		result = AddressParser.use().parseAddress(text);
+		String[] setArray;
 		if(result[0]==""){
 			createSearchBox(new String[]{"No Results"},x,y);
-		}
-		else{					
-		HashSet<String> set = WindowHandler.getRoadToCityMap().get(result[0]);
-		String[] setArray = set.toArray(new String[0]);							
+		}		
+		if(!(result[4]=="")){
+			setArray = new String[1]; 
+			setArray[0] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " i " + StreetNameReader.getZipToCityMap().get(result[4]);
+			setArray[0] = setArray[0].replaceAll("\\s+", " ");
+			}		
+		else{
+			HashSet<String> set = WindowHandler.getRoadToCityMap().get(result[0]);
+			setArray = set.toArray(new String[0]);
+			for(int i = 0; i < setArray.length; i++){
+				setArray[i] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " i " + setArray[i];
+				setArray[i] = setArray[i].replaceAll("\\s+", " ");				
+				}						
+			}
 		createSearchBox(setArray,x,y);
-		}
 	}
 	
 	private void createSearchBox(String[] array, int x, int y){
 		searchResultBox.setVisible(false);
 		searchResultBox = null;
 		searchResultBox = new JComboBox(array);
-		searchResultBox.setBounds(x,y ,150,25);	
+		searchResultBox.setBounds(x,y ,175,25);	
 		searchResultBox.addActionListener(new ActionListener(){ 
 			
 			public void actionPerformed(ActionEvent e) {
 				String selectedItem = (String)searchResultBox.getSelectedItem();
-				System.out.println(selectedItem);
+				for(Edge edge : WindowHandler.getEdges()){
+						if(edge.getVEJNAVN().equals(result[0])&& (edge.getV_POSTNR()== result[4] || edge.getH_POSTNR()== result[4] )){
+							edge.getFromNode();
+						}
+				}
 			}
 	});
 		
