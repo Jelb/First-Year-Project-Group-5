@@ -17,7 +17,9 @@ public class WindowHandler {
 	static List<Node> nodes;
 	static List<Edge> edges;
 	static List<Edge> longestRoads;
-	static HashMap<String, HashSet<String>> roadToCityMap;
+	static int startNode;
+	static int endNode;
+	static HashMap<String, HashSet<String>> roadToZipMap;
 	static int longestRoadsFloor;
 	static QuadTree QT;
 	static Graph graph;
@@ -30,6 +32,7 @@ public class WindowHandler {
 	static double ratio;
 	static double maxMapHeight; // = DataReader.getMaxY()-DataReader.getMinY();
 	static double maxMapWidth; // = DataReader.getMaxX()-DataReader.getMinX();
+	private static HashMap<String, String> zipToCityMap;
 
 			
 	// Converts X-pixel to coordinate
@@ -43,7 +46,6 @@ public class WindowHandler {
 		return  (((double)y/(Window.use().getMapHeight()) * geoHeight));
 	}
 
-<<<<<<< HEAD
 	/**
 	 * Return the closest node to a given in-window pixel coordinate.
 	 * @param x		Pixel x input coordinate
@@ -113,13 +115,15 @@ public class WindowHandler {
 			System.out.println("noname road :(");
 //		return closestEdge;
 	}
-	 
-=======
-	public static void pathFindingTest2(){
-		
+	public static void setNode(int node, boolean from){
+		if(from){
+			WindowHandler.startNode = node;
+		}
+		else{
+			WindowHandler.endNode = node;
+		}
+			
 	}
-	
->>>>>>> 981ab9f5ba7202f558c2c8aa1fe80b285b3dd03d
 	
 	/**
 	 * Picks to nodes at random and calculates the shortest path between them.
@@ -128,16 +132,12 @@ public class WindowHandler {
 	
 	public static void pathFindingTest() {
 		Random rnd = new Random();
-		int startNode = rnd.nextInt(graph.getV()-1)+1;			// picks a node at random
+		//startNode = rnd.nextInt(graph.getV()-1)+1;			// picks a node at random
 		
-<<<<<<< HEAD
-		DijkstraSP dsp = new DijkstraSP(graph, startNode);		// use random node at our start node for shortest path calculation
-=======
 		System.out.println("Start node: " + startNode);
 		
 		System.out.println("Creating SP object... ");
 		DijkstraSP dsp = new DijkstraSP(graph, startNode, TransportWay.CAR, CompareType.FASTEST);	// use random node at our start node for shortest path calculation
->>>>>>> 981ab9f5ba7202f558c2c8aa1fe80b285b3dd03d
 		
 		Stack<Edge> route = new Stack<Edge>();					// clears any previous route
 		
@@ -148,7 +148,7 @@ public class WindowHandler {
 		System.out.println("Start node: " + startNode);
 		System.out.println("  End node: " + destinationNode);
 		
-		route = (Stack<Edge>) dsp.pathTo(destinationNode);		// find route from start to destination node
+		route = (Stack<Edge>) dsp.pathTo(endNode);	// find route from start to destination node
 		
 		addRouteToMap(route);									// adding the route to the Map()
 		Window.use().updateMap();
@@ -377,8 +377,8 @@ public class WindowHandler {
 		return ratio;
 	}
 	
-	public static HashMap<String, HashSet<String>> getRoadToCityMap() {
-		return roadToCityMap;
+	public static HashMap<String, HashSet<String>> getRoadToZipMap() {
+		return roadToZipMap;
 	}
 	
 	public static List<Edge> getEdges(){
@@ -413,7 +413,12 @@ public class WindowHandler {
 		QT = dataReader.createQuadTree();
 		longestRoads = dataReader.getLongestRoads();
 		
-		roadToCityMap = dataReader.getRoadToCityMap();
+		roadToZipMap = dataReader.getRoadToZipMap();
+		
+		// Create zip to city map
+		StreetNameReader snr = new StreetNameReader();
+		zipToCityMap = snr.zipToCityMap();
+		snr = null;
 		
 		//set arraylist of all egdes
 		edges = dataReader.getEdges();
@@ -470,6 +475,11 @@ public class WindowHandler {
 		//System.out.printf("Heap memory usage: %d MB%n", mxbean
 		//		.getHeapMemoryUsage().getUsed() / (1000000));
 		SplashScreen.use().close();
+	}
+
+
+	public static HashMap<String, String> getZipToCityMap() {
+		return zipToCityMap;
 	}
 	
 }

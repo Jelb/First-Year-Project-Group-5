@@ -57,6 +57,8 @@ public class Window extends JFrame {
 	private JComboBox searchResultBox;
 	private boolean navigateVisible=false;
 	private String[] result;
+	private String[] zipArray;
+	private static boolean fromBool;
 	
 	//GUI background
 	private JPanel background;
@@ -269,7 +271,7 @@ public class Window extends JFrame {
 
 			public void actionPerformed(ActionEvent evt) {
 				String fromText = from.getText();
-				addressParse(fromText, 185, 275);
+				addressParse(fromText, 185, 275, true);
 			}
 		});
 
@@ -277,7 +279,7 @@ public class Window extends JFrame {
 
 			public void actionPerformed(ActionEvent evt) {
 				String toText = to.getText();
-				addressParse(toText, 185, 310);
+				addressParse(toText, 185, 310,false);
 			}
 		});
 
@@ -307,40 +309,55 @@ public class Window extends JFrame {
 		});
 	}
 	
-	private void addressParse(String text, int x,int y){		
+	private void addressParse(String text, int x,int y, boolean fromBool){		
 		result = AddressParser.use().parseAddress(text);
 		String[] setArray;
-		if(result[0]==""){
-			createSearchBox(new String[]{"No Results"},x,y);
-		}		
-		if(!(result[4]=="")){
-			setArray = new String[1]; 
-			setArray[0] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " i " + StreetNameReader.getZipToCityMap().get(result[4]);
-			setArray[0] = setArray[0].replaceAll("\\s+", " ");
-			}		
-		else{
-			HashSet<String> set = WindowHandler.getRoadToCityMap().get(result[0]);
-			setArray = set.toArray(new String[0]);
-			for(int i = 0; i < setArray.length; i++){
-				setArray[i] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " i " + setArray[i];
-				setArray[i] = setArray[i].replaceAll("\\s+", " ");				
+		if(result[0].equals("")){
+			createSearchBox(new String[]{"No Results"},x,y,fromBool);
+		}
+		else {
+			if(!(result[4].equals(""))){
+				setArray = new String[1]; 
+				setArray[0] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " " + result[4]+ " " + WindowHandler.getZipToCityMap().get(result[4]);
+				setArray[0] = setArray[0].replaceAll("\\s+", " ");
+				zipArray = new String[]{result[4]};
+				}		
+			else{
+				HashSet<String> set = WindowHandler.getRoadToZipMap().get(result[0]);
+				setArray = set.toArray(new String[0]);
+				zipArray = new String[setArray.length];
+				for (int i = 0; i < setArray.length; i++) {
+					zipArray[i] = setArray[i];
+				}
+				for(int i = 0; i < setArray.length; i++){
+					String city = WindowHandler.getZipToCityMap().get(setArray[i]);
+					setArray[i] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " " + setArray[i] + " " + city;
+					setArray[i] = setArray[i].replaceAll("\\s+", " ");				
 				}						
 			}
-		createSearchBox(setArray,x,y);
+			createSearchBox(setArray,x,y,fromBool);
+		}
 	}
 	
-	private void createSearchBox(String[] array, int x, int y){
+	private void createSearchBox(String[] array, int x, int y,boolean fromBool){
+		Window.fromBool = fromBool;
 		searchResultBox.setVisible(false);
 		searchResultBox = null;
 		searchResultBox = new JComboBox(array);
-		searchResultBox.setBounds(x,y ,175,25);	
+		searchResultBox.setBounds(x,y ,200,25);	
 		searchResultBox.addActionListener(new ActionListener(){ 
 			
 			public void actionPerformed(ActionEvent e) {
-				String selectedItem = (String)searchResultBox.getSelectedItem();
+				int i = searchResultBox.getSelectedIndex(); 
+				
+				System.out.println(result[0]);
+				System.out.println(zipArray[i]);
 				for(Edge edge : WindowHandler.getEdges()){
-						if(edge.getVEJNAVN().equals(result[0])&& (edge.getV_POSTNR()== result[4] || edge.getH_POSTNR()== result[4] )){
-							edge.getFromNode();
+						//System.out.println(edge.getVEJNAVN());
+						if(edge.getVEJNAVN().equals(result[0]) && (edge.getV_POSTNR().equals(zipArray[i]) || edge.getH_POSTNR().equals(zipArray[i]) )){
+							//WindowHandler.pathFindingTest(edge.getFromNode().getKdvID());
+							WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
+							break;
 						}
 				}
 			}
