@@ -32,12 +32,8 @@ import QuadTree.QuadTree;
  */
 public class DataReader {
 	private static DataReader instance;
-<<<<<<< HEAD
-	public ArrayList<Node> nodes;
-=======
 	private ArrayList<Node> nodes;
 	private ArrayList<Edge> edges;
->>>>>>> cfcfab3b478e87720708c772b30306f639cf2449
 	private ArrayList<Edge> longestRoads;
 	private final String nodeFile, edgeFile;
 	public static double maxX = 0, maxY = 0, minX = -1, minY = -1;
