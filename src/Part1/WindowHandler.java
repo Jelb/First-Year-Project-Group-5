@@ -17,7 +17,9 @@ public class WindowHandler {
 	static List<Node> nodes;
 	static List<Edge> edges;
 	static List<Edge> longestRoads;
-	static HashMap<String, HashSet<String>> roadToCityMap;
+	static int startNode;
+	static int endNode;
+	static HashMap<String, HashSet<String>> roadToZipMap;
 	static int longestRoadsFloor;
 	static QuadTree QT;
 	static Graph graph;
@@ -30,6 +32,7 @@ public class WindowHandler {
 	static double ratio;
 	static double maxMapHeight; // = DataReader.getMaxY()-DataReader.getMinY();
 	static double maxMapWidth; // = DataReader.getMaxX()-DataReader.getMinX();
+	private static HashMap<String, String> zipToCityMap;
 
 			
 	// Converts X-pixel to coordinate
@@ -46,7 +49,15 @@ public class WindowHandler {
 	public static void pathFindingTest2(){
 		
 	}
-	
+	public static void setNode(int node, boolean from){
+		if(from){
+			WindowHandler.startNode = node;
+		}
+		else{
+			WindowHandler.endNode = node;
+		}
+			
+	}
 	
 	/**
 	 * Picks to nodes at random and calculates the shortest path between them.
@@ -55,7 +66,7 @@ public class WindowHandler {
 	
 	public static void pathFindingTest() {
 		Random rnd = new Random();
-		int startNode = rnd.nextInt(graph.getV()-1)+1;			// picks a node at random
+		//startNode = rnd.nextInt(graph.getV()-1)+1;			// picks a node at random
 		
 		System.out.println("Start node: " + startNode);
 		
@@ -71,7 +82,7 @@ public class WindowHandler {
 		System.out.println("Start node: " + startNode);
 		System.out.println("Distance to destination node " + destinationNode + " is: " + dsp.distTo(destinationNode));
 		
-		route = (Stack<Edge>) dsp.pathTo(destinationNode);	// find route from start to destination node
+		route = (Stack<Edge>) dsp.pathTo(endNode);	// find route from start to destination node
 		
 		addRouteToMap(route);		// adding the route to the Map()
 		Window.use().updateMap();
@@ -300,8 +311,8 @@ public class WindowHandler {
 		return ratio;
 	}
 	
-	public static HashMap<String, HashSet<String>> getRoadToCityMap() {
-		return roadToCityMap;
+	public static HashMap<String, HashSet<String>> getRoadToZipMap() {
+		return roadToZipMap;
 	}
 	
 	public static List<Edge> getEdges(){
@@ -336,7 +347,12 @@ public class WindowHandler {
 		QT = dataReader.createQuadTree();
 		longestRoads = dataReader.getLongestRoads();
 		
-		roadToCityMap = dataReader.getRoadToCityMap();
+		roadToZipMap = dataReader.getRoadToZipMap();
+		
+		// Create zip to city map
+		StreetNameReader snr = new StreetNameReader();
+		zipToCityMap = snr.zipToCityMap();
+		snr = null;
 		
 		//set arraylist of all egdes
 		edges = dataReader.getEdges();
@@ -393,6 +409,11 @@ public class WindowHandler {
 		//System.out.printf("Heap memory usage: %d MB%n", mxbean
 		//		.getHeapMemoryUsage().getUsed() / (1000000));
 		SplashScreen.use().close();
+	}
+
+
+	public static HashMap<String, String> getZipToCityMap() {
+		return zipToCityMap;
 	}
 	
 }

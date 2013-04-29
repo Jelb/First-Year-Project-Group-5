@@ -15,7 +15,6 @@ public class StreetNameReader   {
 private FileInputStream street, zip;
 private DataInputStream inStreet, inZip;
 private BufferedReader brStreet, brZip;
-private static HashMap<String, String> zipToCityMap;
 	
 	public StreetNameReader() throws FileNotFoundException{
 		street = new FileInputStream("src/names.txt");
@@ -36,10 +35,6 @@ private static HashMap<String, String> zipToCityMap;
 		return street;
 	}
 	
-	public static HashMap<String, String> getZipToCityMap(){
-		return zipToCityMap;
-	}
-	
 	/**
 	 * 
 	 * @param input The whole search string
@@ -47,14 +42,10 @@ private static HashMap<String, String> zipToCityMap;
 	 * @throws IOException
 	 */
 	public String zipScan(String input) throws IOException {
-		zipToCityMap = new HashMap<String, String>();
 		String strLine;
 		String zipAndName = "";
 		while((strLine = brZip.readLine()) != null) {
 			String zipCode = strLine.split(" ", 2)[0];
-			String cityName = strLine.split(" ", 2)[1];
-
-			zipToCityMap.put(zipCode, cityName);
 			
 			if(input.contains(zipCode) && zipCode.length() > 3)
 				zipAndName = strLine;
@@ -63,7 +54,7 @@ private static HashMap<String, String> zipToCityMap;
 	}	
 	
 	public HashMap<String, String> zipToCityMap() throws IOException{
-		zipToCityMap = new HashMap<String, String>();
+		HashMap<String, String> zipToCityMap = new HashMap<String, String>();
 		String strLine;
 		while((strLine = brZip.readLine()) != null) {
 			String zipCode = strLine.split(" ", 2)[0];

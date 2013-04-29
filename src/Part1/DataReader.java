@@ -37,7 +37,7 @@ public class DataReader {
 	private ArrayList<Edge> longestRoads;
 	private final String nodeFile, edgeFile;
 	private static double maxX = 0, maxY = 0, minX = -1, minY = -1;
-	private HashMap<String, HashSet<String>> roadToCityMap;
+	private HashMap<String, HashSet<String>> roadToZipMap;
 
 	/**
 	 * Constructor for the DataReader class. 
@@ -140,7 +140,7 @@ public class DataReader {
 		longestRoads = new ArrayList<Edge>();
 		try {
 			// Create hash map where road name gets mapped to a list of zip codes			
-			roadToCityMap = new HashMap<String, HashSet<String>>();
+			roadToZipMap = new HashMap<String, HashSet<String>>();
 			
 			// Create a graph on the nodes
 			Graph graph = new Graph(nodes.size());
@@ -151,8 +151,6 @@ public class DataReader {
 			br.readLine(); // again discarding column names
 			String line = br.readLine();
 			
-			StreetNameReader fs = new StreetNameReader();
-			HashMap<String, String> zipToCityMap = fs.zipToCityMap();
 			edges = new ArrayList<Edge>();
 			
 			while (line != null) {
@@ -167,24 +165,15 @@ public class DataReader {
 				double driveTime = Double.parseDouble(lineArray[26]);
 				String oneway = lineArray[27].replace("'", "");
 				if (!vejnavn.equals("")) {
-					
-					String v_city = zipToCityMap.get(v_postnr);
-					String h_city;
-					if (!v_postnr.equals(h_postnr)) {
-						h_city = zipToCityMap.get(h_postnr);
-					}
-					else {
-						h_city = v_city;
-					}
-					if (roadToCityMap.containsKey(vejnavn)) {
-						roadToCityMap.get(vejnavn).add(v_city);
-						roadToCityMap.get(vejnavn).add(h_city);
+					if (roadToZipMap.containsKey(vejnavn)) {
+						roadToZipMap.get(vejnavn).add(v_postnr);
+						roadToZipMap.get(vejnavn).add(h_postnr);
 					}
 					else {
 						HashSet<String> set = new HashSet<String>();
-						set.add(v_city);
-						set.add(h_city);
-						roadToCityMap.put(vejnavn, set);
+						set.add(v_postnr);
+						set.add(h_postnr);
+						roadToZipMap.put(vejnavn, set);
 					}
 				}
 				
@@ -287,8 +276,8 @@ public class DataReader {
 		return longestRoads;
 	}
 	
-	public HashMap<String, HashSet<String>> getRoadToCityMap() {
-		return roadToCityMap;
+	public HashMap<String, HashSet<String>> getRoadToZipMap() {
+		return roadToZipMap;
 	}
 
 	public List<Edge> getEdges() {
