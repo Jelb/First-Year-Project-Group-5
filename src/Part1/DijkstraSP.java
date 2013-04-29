@@ -14,7 +14,7 @@ public class DijkstraSP {
 	private IndexMinPQ<Double> pq;
 	private static HashMap<TransportWay, HashSet<Integer>> disallowedTypes;
 	
-	public DijkstraSP(Graph G, int s, TransportWay t) {
+	public DijkstraSP(Graph G, int s, TransportWay t, CompareType c) {
 		if (disallowedTypes == null) {
 			createDisallowedTypes();
 		}
@@ -30,15 +30,19 @@ public class DijkstraSP {
 		pq.insert(s, distTo[s]);
 		while(!pq.isEmpty()) {			
 			int v = pq.delMin();
-			// if an edge is not allowed for the chosen transportation then it is skipped
 			for (Edge e : G.adj(v)) {
+				// if an edge is not allowed for the chosen transportation then it is skipped
 				if (disallowedTypes.get(t).contains(e.getType())) continue;
-                relax(e);
+				if (c.equals(CompareType.SHORTEST)) relaxLength(e);
+				else if (c.equals(CompareType.FASTEST)) relaxDriveTime(e);
 			}
 		}
 	}
 	
-	private void relax(Edge e) {
+	/**
+	 * compares edges according to their length
+	 */
+	private void relaxLength(Edge e) {
         int v = e.getFromNodeID(), w = e.getToNodeID();
         																			//System.out.println("Relaxing edge " + v + " -> " + w);
 
@@ -56,6 +60,24 @@ public class DijkstraSP {
             }
         }
     }
+	
+	/**
+	 * compares edges according to their drive time
+	 */
+	private void relaxDriveTime(Edge e) {
+		int v = e.getFromNodeID(), w = e.getToNodeID();
+
+		if (distTo[w] > distTo[v] + e.length()) {
+			distTo[w] = distTo[v] + e.length();
+			edgeTo[w] = e;
+			if (pq.contains(w)) { 
+				pq.decreaseKey(w, distTo[w]);
+			}
+			else {
+				pq.insert(w, distTo[w]);
+			}
+		}
+	}
 	
 	public double distTo(int v) {
 		return distTo[v];
@@ -83,5 +105,9 @@ public class DijkstraSP {
 	
 	public enum TransportWay {
 		CAR, BIKE;
+	}
+	
+	public enum CompareType {
+		SHORTEST, FASTEST;
 	}
 }
