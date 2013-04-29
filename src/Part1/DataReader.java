@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -32,6 +33,7 @@ import QuadTree.QuadTree;
 public class DataReader {
 	private static DataReader instance;
 	private ArrayList<Node> nodes;
+	private ArrayList<Edge> edges;
 	private ArrayList<Edge> longestRoads;
 	private final String nodeFile, edgeFile;
 	private static double maxX = 0, maxY = 0, minX = -1, minY = -1;
@@ -151,6 +153,7 @@ public class DataReader {
 			
 			StreetNameReader fs = new StreetNameReader();
 			HashMap<String, String> zipToCityMap = fs.zipToCityMap();
+			edges = new ArrayList<Edge>();
 			
 			while (line != null) {
 				String[] lineArray = line.split(",(?! |[a-zA-ZæÆøØåÅ])"); // Regex matches ',' not followed by spaces of letters.
@@ -188,17 +191,21 @@ public class DataReader {
 				if (oneway.equals("ft")) {
 					Edge edge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, true);
 					if (length > longestRoadsFloor) longestRoads.add(edge);
+					edges.add(edge);
 					graph.addEdge(edge);
 				}
 				else if (oneway.equals("tf")) {
 					Edge edge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, true);
 					if (length > longestRoadsFloor) longestRoads.add(edge);
+					edges.add(edge);
 					graph.addEdge(edge);
 				}
 				else {
 					Edge fEdge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, true);
 					Edge tEdge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, false);
 					if (length > longestRoadsFloor) longestRoads.add(fEdge);
+					edges.add(tEdge);
+					edges.add(tEdge);
 					graph.addEdge(fEdge);
 					graph.addEdge(tEdge);
 				}
@@ -280,5 +287,9 @@ public class DataReader {
 	
 	public HashMap<String, HashSet<String>> getRoadToCityMap() {
 		return roadToCityMap;
+	}
+
+	public List<Edge> getEdges() {
+		return edges;
 	}
 }

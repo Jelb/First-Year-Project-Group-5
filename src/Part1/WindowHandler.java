@@ -1,6 +1,7 @@
 package Part1;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,11 +41,16 @@ public class WindowHandler {
 		return  (((double)y/(Window.use().getMapHeight()) * geoHeight));
 	}
 
+	public static void pathFindingTest2(){
+		
+	}
+	
 	
 	/**
 	 * Picks to nodes at random and calculates the shortest path between them.
 	 * For testing purposes only.
 	 */
+	
 	public static void pathFindingTest() {
 		Random rnd = new Random();
 		int startNode = rnd.nextInt(graph.getV()-1)+1;			// picks a node at random
@@ -293,9 +299,14 @@ public class WindowHandler {
 	public static HashMap<String, HashSet<String>> getRoadToCityMap() {
 		return roadToCityMap;
 	}
+	
+	public static List<Edge> getEdges(){
+		return edges;
+	}
 
 
 	public static void main(String[] args) throws IOException {
+		System.out.println(java.lang.Runtime.getRuntime().maxMemory());
 		String nodeFile = "kdv_node_unload.txt";
 		String edgeFile = "kdv_unload.txt";
 		SplashScreen.initialize(nodeFile, edgeFile);
@@ -322,6 +333,9 @@ public class WindowHandler {
 		longestRoads = dataReader.getLongestRoads();
 		
 		roadToCityMap = dataReader.getRoadToCityMap();
+		
+		//set arraylist of all egdes
+		edges = dataReader.getEdges();
 		
 		//Avoid loitering
 		dataReader = null;

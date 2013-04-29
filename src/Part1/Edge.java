@@ -43,6 +43,14 @@ public class Edge {
 //				Integer.toString(V_POSTNR), Integer.toString(H_POSTNR), Double.toString(DRIVETIME)};
 	}
 	
+	public String getV_POSTNR(){
+		return V_POSTNR;
+	}
+	
+	public String getH_POSTNR(){
+		return H_POSTNR;
+	}
+	
 	public double length(){  
 		return length;  
 	}
