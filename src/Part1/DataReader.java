@@ -195,6 +195,7 @@ public class DataReader {
 					if (length > longestRoadsFloor) longestRoads.add(edge);
 					graph.addEdge(edge);
 				}
+				// if the road is two way, only one of the ways is drawn
 				else {
 					Edge fEdge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, true);
 					Edge tEdge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, false);
