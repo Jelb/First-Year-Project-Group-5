@@ -31,10 +31,10 @@ import QuadTree.QuadTree;
  */
 public class DataReader {
 	private static DataReader instance;
-	private ArrayList<Node> nodes;
+	public ArrayList<Node> nodes;
 	private ArrayList<Edge> longestRoads;
 	private final String nodeFile, edgeFile;
-	private static double maxX = 0, maxY = 0, minX = -1, minY = -1;
+	public static double maxX = 0, maxY = 0, minX = -1, minY = -1;
 	private HashMap<String, HashSet<String>> roadToCityMap;
 
 	/**
