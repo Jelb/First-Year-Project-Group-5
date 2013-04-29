@@ -18,6 +18,7 @@ import org.junit.Test;
 public class DataReaderTest {
 	
 	DataReader DR;
+	DataReader DR2;
 	Graph graph;
 	
 	@Before
@@ -68,7 +69,7 @@ public class DataReaderTest {
 		ArrayList<Edge> arrTest = new ArrayList<Edge>();
 		Edge edge = new Edge(DR.nodes.get(3), DR.nodes.get(4), 20.01746, "", 8, "0", "0", 0.046, true);
 		arrTest.add(edge);
-		assertEquals(arrTest, graph.adjArr(3));
+		assertEquals(arrTest.iterator(), graph.adjArr(3));
 	}
 	
 	@Test
@@ -79,25 +80,27 @@ public class DataReaderTest {
 		assertEquals(arrTest, graph.adjArr(2));
 	}
 	
-	//Problem: man må ikke have to instanser af DataReader åbne!
-	@Test 
-	public void wrongNodeFile() {
-		DataReader DR2 = DataReader.use("wrongFile.txt", "10edgestest.txt");
-		DR2.createNodeList();
-	}
-	
-	@Test
-	public void wrongEdgeFile() {
-		DataReader DR2 = DataReader.use("10nodestest.txt", "wrongFile.txt");
-		DR2.createGraphAndLongestRoadsList(10000);
-		//The program will cloose down and do nothing
-	}
-	
 	@Test
 	public void maxAndMinValues() {
 		assertEquals(595308.61090, DR.minX, 0.1);
 		assertEquals(596860.47877, DR.maxX, 0.1);
 		assertEquals(6401221.77721, DR.minY, 0.1);
 		assertEquals(6402050.98297, DR.maxY, 0.1);
+	}
+	
+	//TODO: Evt. tjek hvis forkert fil
+	@Test 
+	public void wrongNodeFile() {
+		DR.setInstance();
+		DR2 = DataReader.use("wrongFile.txt", "10edgestest.txt");
+		DR2.createNodeList();
+	}
+	
+	@Test 
+	public void wrongEdgeFile() {
+		DR2.setInstance();
+		DataReader DR3 = DataReader.use("10nodestest.txt", "wrongFile.txt");
+		DR2.createGraphAndLongestRoadsList(10000);
+		//The program will cloose down and do nothing
 	}
 }

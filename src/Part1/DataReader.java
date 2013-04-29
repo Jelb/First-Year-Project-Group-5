@@ -53,6 +53,10 @@ public class DataReader {
 		this.edgeFile = edgeFile;
 	}
 	
+	public void setInstance() {
+		instance = null;
+	}
+	
 	/**
 	 * This method makes this the <b>DataReader</b> class to a singleton. 
 	 * The method checks if an instance of the class already has been created
