@@ -40,6 +40,76 @@ public class WindowHandler {
 		return  (((double)y/(Window.use().getMapHeight()) * geoHeight));
 	}
 
+	/**
+	 * Return the closest node to a given in-window pixel coordinate.
+	 * @param x		Pixel x input coordinate
+	 * @param y		Pixel y input coordinate
+	 * @return		The node closest to the coordinate
+	 */
+	public static Node closestNode(int x, int y) {
+		double shortestDist = Double.MAX_VALUE;
+		Node closestNode = null;
+		for(Node node : nodes) {
+			double deltaX = Math.abs((node.getXCord() - x));
+			double deltaY = Math.abs((node.getYCord() - y));
+			double dist = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+			if(dist < shortestDist) {
+				shortestDist = dist;
+				closestNode = node;
+			}
+		}
+//		try {
+			return closestNode;
+//		} catch (Exception e) {
+//			System.out.println("No nodes in view");
+//		}
+	}
+	
+	/**
+	 * Given a pixel coordinate, return the nearest visible edge.
+	 * @param x		X value of pixel coordinate
+	 * @param y		Y value of pixel coordinate
+	 * @return		The edge nearest the coordinate
+	 */
+	public static void closestEdge(int pixelX, int pixelY) {
+		double x = pixelToGeoX(pixelX);
+		double y = pixelToGeoY(pixelY);
+		Map.use().newArrayList();
+		Edge closestEdge = null;
+		double shortestDist = Double.MAX_VALUE;
+		for (Node n : nodes) {
+			Iterable<Edge> edgesFromNode = graph.adj(n.getKdvID());
+			for (Edge e : edgesFromNode) {
+				if (e.isDrawable() && includeEdge(e)) {
+					double x1 = e.getFromNode().getXCord();
+					double y1 = e.getFromNode().getYCord();
+					double x2 = e.getToNode().getXCord();
+					double y2 = e.getToNode().getYCord();
+					double a = 0;
+					double b;
+					if(x2 != x1) {													// check to not divide by zero
+						a = (y2 - y1) / (x2 - x1);
+						b = y1 - (a * x1);
+					} else {
+						b = x1;														// the line is vertical
+					}
+					double dist = Math.abs(a * x + b - y) / Math.sqrt(a * a + 1);	// calc distance from point to line
+					if(dist < shortestDist) {
+						shortestDist = dist;
+						closestEdge = e;
+						System.out.println("Better...: " + closestEdge.getVEJNAVN());
+					}
+				}
+			}
+		}
+		System.out.print("Closest edge: ");
+		if(!closestEdge.getVEJNAVN().equals(""))
+			System.out.println(closestEdge.getVEJNAVN());
+		else
+			System.out.println("noname road :(");
+//		return closestEdge;
+	}
+	 
 	
 	/**
 	 * Picks to nodes at random and calculates the shortest path between them.
@@ -49,23 +119,20 @@ public class WindowHandler {
 		Random rnd = new Random();
 		int startNode = rnd.nextInt(graph.getV()-1)+1;			// picks a node at random
 		
-		System.out.println("Start node: " + startNode);
+		DijkstraSP dsp = new DijkstraSP(graph, startNode);		// use random node at our start node for shortest path calculation
 		
-		System.out.println("Creating SP object... ");
-		DijkstraSP dsp = new DijkstraSP(graph, startNode);	// use random node at our start node for shortest path calculation
-		
-		Stack<Edge> route = new Stack<Edge>();				// clears any previous route
+		Stack<Edge> route = new Stack<Edge>();					// clears any previous route
 		
 		int destinationNode = startNode;
 		while(destinationNode == startNode || destinationNode == 0)
-			destinationNode = rnd.nextInt(graph.getV());					// pick another node at random
+			destinationNode = rnd.nextInt(graph.getV());				// pick another node at random
 		
 		System.out.println("Start node: " + startNode);
-		System.out.println("Distance to destination node " + destinationNode + " is: " + dsp.distTo(destinationNode));
+		System.out.println("  End node: " + destinationNode);
 		
-		route = (Stack<Edge>) dsp.pathTo(destinationNode);	// find route from start to destination node
+		route = (Stack<Edge>) dsp.pathTo(destinationNode);		// find route from start to destination node
 		
-		addRouteToMap(route);		// adding the route to the Map()
+		addRouteToMap(route);									// adding the route to the Map()
 		Window.use().updateMap();
 	}
 	

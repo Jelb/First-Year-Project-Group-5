@@ -498,6 +498,11 @@ public class Window extends JFrame {
 
 				System.out.println("Pressed X : "+ pressedX);
 				System.out.println("Pressed Y : "+ pressedY);
+			} else if (SwingUtilities.isLeftMouseButton(e)) {
+				pressedX = e.getX();
+				pressedY = e.getY();
+				
+				WindowHandler.closestEdge(pressedX, pressedY);
 			}
 		}
 

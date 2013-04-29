@@ -62,7 +62,10 @@ public class DijkstraSP {
 			System.out.println("No path to node " + v);
 			return path;
 		}
-		for(Edge e = edgeTo[v]; e != null; e = edgeTo[e.getFromNodeID()]) path.push(e);
+		for(Edge e = edgeTo[v]; e != null; e = edgeTo[e.getFromNodeID()]) {
+			path.push(e);
+			System.out.println(e.getFromNodeID() + " -> " + e.getToNodeID());			
+		}
 		return path;
 	}
 }
