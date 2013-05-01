@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -345,27 +346,39 @@ public class Window extends JFrame {
 		searchResultBox = null;
 		searchResultBox = new JComboBox(array);
 		searchResultBox.setBounds(x,y ,200,25);	
-		searchResultBox.addActionListener(new ActionListener(){ 
-			
+		searchResultBox.addActionListener(new ActionListener(){ 						
+
 			public void actionPerformed(ActionEvent e) {
 				int i = searchResultBox.getSelectedIndex(); 
-				
-				System.out.println(result[0]);
-				System.out.println(zipArray[i]);
+				Node flagNode = null;
+				String text = (String) searchResultBox.getSelectedItem();
 				for(Edge edge : WindowHandler.getEdges()){
 						//System.out.println(edge.getVEJNAVN());
 						if(edge.getVEJNAVN().equals(result[0]) && (edge.getV_POSTNR().equals(zipArray[i]) || edge.getH_POSTNR().equals(zipArray[i]) )){
-							//WindowHandler.pathFindingTest(edge.getFromNode().getKdvID());
+							flagNode = edge.getFromNode();
 							WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
 							break;
 						}
+				}
+				if(Window.fromBool){
+					from.setText(text);
+					double x = flagNode.getXCord();
+					double y = flagNode.getYCord();
+					new Flag(x,y,Window.fromBool);
+					Window.use().updateMap();
+				}
+				else{
+					to.setText(text);
+					double x = flagNode.getXCord();
+					double y = flagNode.getYCord();
+					new Flag(x,y,Window.fromBool);
+					Window.use().updateMap();
 				}
 			}
 	});
 		
 		screen.add(searchResultBox, JLayeredPane.PALETTE_LAYER);			
 	}
-	
 	
 	/**
 	 * Buttons added to the Pallette_Layer, above the map layer
