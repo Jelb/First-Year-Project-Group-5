@@ -6,18 +6,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
-import javax.swing.JComponent;
-
-@SuppressWarnings("serial")
-public class RoadSegment extends JComponent {
+public class RoadSegment extends DrawableItem {
 	/**
 	 * The objects of this class are the JComponents which make up the lines on the map
 	 */
-	
-	// The current minimum and maximum values of the area of the map we're looking at.
-	private static double geoMaxX, geoMaxY, geoMinX, geoMinY;
-	
-	
+
 	// The start and end points of the road segment in UTM-values 
 	private double geoStartX, geoStartY, geoEndX, geoEndY;
 	
@@ -26,7 +19,6 @@ public class RoadSegment extends JComponent {
 	
 	private Color color;
 	private int roadWidth;
-	
 	
 	/**
 	 * 
@@ -45,47 +37,14 @@ public class RoadSegment extends JComponent {
 		color = getRoadSegmentColor(Type);
 		if(Type == 4242) roadWidth = 6;
 		else roadWidth = 1;
-		calcPixel();
+		updatePosition();
 	}
 	
-	/**
-	 * Used to convert the UTM coordinate to pixel.
-	 */
-	public void calcPixel(){
-		double diffX = (geoMaxX - geoMinX);
-		double diffY = (geoMaxY - geoMinY);
-		int width = Window.use().getMapWidth();
-		int height = Window.use().getMapHeight();
-		int x1 =(int)(((geoStartX-geoMinX)/diffX)*width);
-		int y1 =(int)(height-(((geoStartY-geoMinY)/diffY)*height));
-		int x2 =(int)(((geoEndX-geoMinX)/diffX)*width);
-		int y2 =(int)(height-(((geoEndY-geoMinY)/diffY)*height));
-		xStart = x1;
-		yStart = y1;
-		xEnd = x2;
-		yEnd = y2;
-	}
-	
-	/**
-	 * Used to set maximum and minimum coordinate set of the map.
-	 * 
-	 * @param geoMaxX The max X-coordinate of the current displayed map.
-	 * @param geoMaxY The max Y-coordinate of the current displayed map.
-	 * @param geoMinX The min X-coordinate of the current displayed map.
-	 * @param geoMinY The min Y-coordinate of the current displayed map.
-	 */
-	public static void setMapSize(double geoMaxX, double geoMaxY, double geoMinX, double geoMinY){
-		RoadSegment.geoMaxX = geoMaxX;
-		RoadSegment.geoMaxY = geoMaxY;
-		RoadSegment.geoMinX = geoMinX;
-		RoadSegment.geoMinY = geoMinY;
-	}
-	
-	/**
-	 * Shifts the map area known by the road segments
-	 */
-	public static void shiftMapSize(double deltaX, double deltaY) {
-		setMapSize(geoMaxX+deltaX, geoMaxY+deltaY, geoMinX+deltaX, geoMinY+deltaY);
+	public void updatePosition(){
+		xStart = calcPixelX(geoStartX);
+		yStart = calcPixelY(geoStartY);
+		xEnd = calcPixelX(geoEndX);
+		yEnd = calcPixelY(geoEndY);
 	}
 	
 	/**
@@ -112,7 +71,7 @@ public class RoadSegment extends JComponent {
 	 * 
 	 * @param g A Graphics object used for drawing
 	 */
-	protected void paintComponent(Graphics g) {
+	public void paintComponent(Graphics g) {
 		
 		Graphics2D g2 = (Graphics2D) g;
 		
