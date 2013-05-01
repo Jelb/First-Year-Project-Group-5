@@ -8,12 +8,8 @@ import org.junit.Test;
 import Part1.DataReader;
 import Part1.Edge;
 import Part1.Graph;
-import Part1.Node;
-import QuadTree.QuadTree;
 
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 public class DataReaderTest {
 	
