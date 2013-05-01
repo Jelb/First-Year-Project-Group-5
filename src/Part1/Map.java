@@ -10,7 +10,7 @@ public class Map extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<RoadSegment> segments;
-	private ArrayList<RoadSegment> path;
+	private ArrayList<DrawableItem> path;
 	private static Map instance = null;
 	
 	private Map() {
@@ -20,7 +20,7 @@ public class Map extends JPanel {
 	public static Map use() {
 		if(instance == null) {
 			instance = new Map();
-			instance.path = new ArrayList<RoadSegment>();
+			instance.path = new ArrayList<DrawableItem>();
 		}
 		return instance;
 	}
@@ -30,7 +30,7 @@ public class Map extends JPanel {
         	if(r == null) continue;
             r.paintComponent(g);
         }
-        for(RoadSegment r : path) r.paintComponent(g);
+        for(DrawableItem r : path) r.paintComponent(g);
     }
     
     /**
@@ -65,19 +65,23 @@ public class Map extends JPanel {
     public void updatePix(){
     	for(RoadSegment r: segments){
     		if(r == null) continue;
-    		r.calcPixel();
+    		r.updatePosition();
     	}
-    	for(RoadSegment r : path) r.calcPixel();
+    	for(DrawableItem r : path) r.updatePosition();
     }
     
     /**
      * Recalculate position of path
      */
     public void updatePath() {
-    	for (RoadSegment r : path) r.calcPixel();
+    	for (DrawableItem r : path) r.updatePosition();
     }
     
-    public void setPath(ArrayList<RoadSegment> path) {
+    public void setPath(ArrayList<DrawableItem> path) {
     	this.path = path;
+    }
+    
+    public void addDrawableItemToPath(DrawableItem i){
+    	path.add(i);
     }
 }

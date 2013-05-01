@@ -367,6 +367,8 @@ public class Window extends JFrame {
 				Edge randomCorrectEdge = null;
 				System.out.println(result[0]);
 				System.out.println(zipArray[i]);
+				Node flagNode = null;
+				String text = (String) searchResultBox.getSelectedItem();
 				for(Edge edge : WindowHandler.getEdges()){
 						if(edge.getVEJNAVN().equals(result[0]) && (edge.getV_POSTNR().equals(zipArray[i]) || edge.getH_POSTNR().equals(zipArray[i]) )){
 							randomCorrectEdge = edge;
@@ -376,28 +378,49 @@ public class Window extends JFrame {
 								if (houseNumber % 2 == 0) {
 									if (houseNumber >= edge.getHouseNumberMinEven() && houseNumber <= edge.getHouseNumberMaxEven()) {
 										WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
+										flagNode = edge.getFromNode();
 										break;
 									}
 								}
 								else if (houseNumber >= edge.getHouseNumberMinOdd() && houseNumber <= edge.getHouseNumberMaxOdd()) {
 										WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
+										flagNode = edge.getFromNode();
 										break;
 								}
 							}
 							else {
 								WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
+								flagNode = edge.getFromNode();
 								break;
 							}
 						}
 				}
-				if (randomCorrectEdge != null) WindowHandler.setNode(randomCorrectEdge.getFromNode().getKdvID(), Window.fromBool);
+				if (randomCorrectEdge != null){
+					WindowHandler.setNode(randomCorrectEdge.getFromNode().getKdvID(), Window.fromBool);
+					flagNode = randomCorrectEdge.getFromNode();
+				}
 				searchResultBox.setVisible(false);
+				if (flagNode != null) {
+					if(Window.fromBool){
+						from.setText(text);
+						double x = flagNode.getXCord();
+						double y = flagNode.getYCord();
+						new Flag(x,y,Window.fromBool);
+						Window.use().updateMap();
+					}
+					else{
+						to.setText(text);
+						double x = flagNode.getXCord();
+						double y = flagNode.getYCord();
+						new Flag(x,y,Window.fromBool);
+						Window.use().updateMap();
+					}
+				}
 			}
 	});
 		
 		screen.add(searchResultBox, JLayeredPane.PALETTE_LAYER);			
 	}
-	
 	
 	/**
 	 * Buttons added to the Pallette_Layer, above the map layer

@@ -158,7 +158,7 @@ public class WindowHandler {
 	 * Adds the shortest path (static field 'route') to the roadSegments on the map.
 	 */
 	public static void addRouteToMap(Stack<Edge> route) {
-		ArrayList<RoadSegment> path = new ArrayList<RoadSegment>();
+		ArrayList<DrawableItem> path = new ArrayList<DrawableItem>();
 		while(!route.empty()) {
 			Edge edge = route.pop();
 			double x1 = edge.getFromNode().getXCord();
@@ -187,12 +187,15 @@ public class WindowHandler {
 		}
 		search(-minX, maxX, -minY, maxY);
 		Window.use().updateMap();
+		System.out.println("geoWidth = " + geoWidth);
 	}
 	
 	public static void zoomIn() {
 		search(geoWidth*0.1, geoWidth*0.9, geoHeight*0.1, geoHeight*0.9);
 		Window.use().updateMap();
+		System.out.println("geoWidth = " + geoWidth);
 	}
+	
 	
 	// Searches an area using pixel-values
 	public static void pixelSearch(int x1, int x2, int y1, int y2) {
@@ -264,7 +267,7 @@ public class WindowHandler {
 		nodes = QT.query(geoXMin+offsetX-longestRoadsFloor, geoYMin+offsetY-longestRoadsFloor,
 				geoXMax+offsetX+longestRoadsFloor, geoYMax+offsetY+longestRoadsFloor);
 		System.out.println("Time for query in quadtree: " + (System.currentTimeMillis()-startTime)/1000.0);
-		RoadSegment.setMapSize(geoXMax+offsetX, geoYMax+offsetY, geoXMin+offsetX, geoYMin+offsetY);
+		DrawableItem.setMapSize(geoXMax+offsetX, geoYMax+offsetY, geoXMin+offsetX, geoYMin+offsetY);
 		startTime = System.currentTimeMillis();
 		getEdgesFromNodes();
 		System.out.println("Time to create list of road segments: " + (System.currentTimeMillis()-startTime)/1000.0);
@@ -299,9 +302,12 @@ public class WindowHandler {
 	// returns true if the given edge will be shown on the map with the current zoom level
 	private static boolean includeEdge(Edge e) {
 		int t = e.getType();
-		if (t == 1 || t == 2 || t == 3 || t == 4 || t==80) return true;
-		else if (geoWidth < 100000 && (t == 5)) return true;
-		else if (geoWidth < 30000) return true;
+		//if (t == 1 || t == 2 || t == 3 || t == 4 || t == 80) return true;
+		if (t == 1 || t == 2 || t == 3 || t == 80) return true;
+		else if (geoWidth < 250000 && (t == 4)) return true;
+		else if (geoWidth < 60000 && (t == 5)) return true;
+		//else if (geoWidth < 100000 && (t == 5)) return true;
+		else if (geoWidth < 13000) return true;
 		else return false;
 	}
 	
@@ -328,7 +334,7 @@ public class WindowHandler {
 		offsetX = 0;
 		offsetY = 0;
 		nodes = QT.query(0, 0, geoWidth, geoHeight);
-		RoadSegment.setMapSize(geoWidth, geoHeight, 0.0, 0.0);
+		DrawableItem.setMapSize(geoWidth, geoHeight, 0.0, 0.0);
 		getEdgesFromNodes();
 		Window.use().updateMap();
 	}
@@ -387,7 +393,6 @@ public class WindowHandler {
 
 
 	public static void main(String[] args) throws IOException {
-		System.out.println(java.lang.Runtime.getRuntime().maxMemory());
 		String nodeFile = "kdv_node_unload.txt";
 		String edgeFile = "kdv_unload.txt";
 		SplashScreen.initialize(nodeFile, edgeFile);
@@ -443,7 +448,7 @@ public class WindowHandler {
 		
 		// Finds all the nodes in the view area
 		nodes = QT.query(0, 0, geoWidth, geoHeight);
-		RoadSegment.setMapSize(geoWidth, geoHeight, 0.0, 0.0);
+		DrawableItem.setMapSize(geoWidth, geoHeight, 0.0, 0.0);
 		
 		// Finds all the edges for these nodes
 		getEdgesFromNodes();
