@@ -187,12 +187,15 @@ public class WindowHandler {
 		}
 		search(-minX, maxX, -minY, maxY);
 		Window.use().updateMap();
+		System.out.println("geoWidth = " + geoWidth);
 	}
 	
 	public static void zoomIn() {
 		search(geoWidth*0.1, geoWidth*0.9, geoHeight*0.1, geoHeight*0.9);
 		Window.use().updateMap();
+		System.out.println("geoWidth = " + geoWidth);
 	}
+	
 	
 	// Searches an area using pixel-values
 	public static void pixelSearch(int x1, int x2, int y1, int y2) {
@@ -299,9 +302,12 @@ public class WindowHandler {
 	// returns true if the given edge will be shown on the map with the current zoom level
 	private static boolean includeEdge(Edge e) {
 		int t = e.getType();
-		if (t == 1 || t == 2 || t == 3 || t == 4 || t==80) return true;
-		else if (geoWidth < 100000 && (t == 5)) return true;
-		else if (geoWidth < 30000) return true;
+		//if (t == 1 || t == 2 || t == 3 || t == 4 || t == 80) return true;
+		if (t == 1 || t == 2 || t == 3 || t == 80) return true;
+		else if (geoWidth < 250000 && (t == 4)) return true;
+		else if (geoWidth < 60000 && (t == 5)) return true;
+		//else if (geoWidth < 100000 && (t == 5)) return true;
+		else if (geoWidth < 13000) return true;
 		else return false;
 	}
 	
