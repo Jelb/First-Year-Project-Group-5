@@ -141,12 +141,12 @@ public class WindowHandler {
 		
 		Stack<Edge> route = new Stack<Edge>();					// clears any previous route
 		
-		int destinationNode = startNode;
-		while(destinationNode == startNode || destinationNode == 0)
-			destinationNode = rnd.nextInt(graph.getV());				// pick another node at random
+//		int destinationNode = startNode;
+//		while(destinationNode == startNode || destinationNode == 0)
+//			destinationNode = rnd.nextInt(graph.getV());				// pick another node at random
 		
 		System.out.println("Start node: " + startNode);
-		System.out.println("  End node: " + destinationNode);
+		System.out.println("  End node: " + endNode);
 		
 		route = (Stack<Edge>) dsp.pathTo(endNode);	// find route from start to destination node
 		

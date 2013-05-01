@@ -309,6 +309,14 @@ public class Window extends JFrame {
 		});
 	}
 	
+	/**
+	 * Parses the address from the search text field to the search box
+	 * 
+	 * @param text The text to search for cities with
+	 * @param x The x-position of the search box to be created
+	 * @param y The y-position of the search box to be created
+	 * @param fromBool Set to true if the search comes from the "from-field". Set to false if the search comes from the "to-field"
+	 */
 	private void addressParse(String text, int x,int y, boolean fromBool){		
 		result = AddressParser.use().parseAddress(text);
 		String[] setArray;
@@ -339,9 +347,16 @@ public class Window extends JFrame {
 		}
 	}
 	
+	/**
+	 * Creates a search box which shows the search results from the address search fields
+	 * 
+	 * @param array Holds the cities that matches the search
+	 * @param x The x-position of the search box
+	 * @param y The y-position of the search box
+	 * @param fromBool Set to true if the search text field is the "from field", set to false if the search text field if the "to field"
+	 */
 	private void createSearchBox(String[] array, int x, int y,boolean fromBool){
 		Window.fromBool = fromBool;
-		searchResultBox.setVisible(false);
 		searchResultBox = null;
 		searchResultBox = new JComboBox(array);
 		searchResultBox.setBounds(x,y ,200,25);	
@@ -349,17 +364,34 @@ public class Window extends JFrame {
 			
 			public void actionPerformed(ActionEvent e) {
 				int i = searchResultBox.getSelectedIndex(); 
-				
+				Edge randomCorrectEdge = null;
 				System.out.println(result[0]);
 				System.out.println(zipArray[i]);
 				for(Edge edge : WindowHandler.getEdges()){
-						//System.out.println(edge.getVEJNAVN());
 						if(edge.getVEJNAVN().equals(result[0]) && (edge.getV_POSTNR().equals(zipArray[i]) || edge.getH_POSTNR().equals(zipArray[i]) )){
-							//WindowHandler.pathFindingTest(edge.getFromNode().getKdvID());
-							WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
-							break;
+							randomCorrectEdge = edge;
+							String houseNumberString = result[1];
+							if (!houseNumberString.equals("")) {
+								int houseNumber = Integer.parseInt(houseNumberString);
+								if (houseNumber % 2 == 0) {
+									if (houseNumber >= edge.getHouseNumberMinEven() && houseNumber <= edge.getHouseNumberMaxEven()) {
+										WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
+										break;
+									}
+								}
+								else if (houseNumber >= edge.getHouseNumberMinOdd() && houseNumber <= edge.getHouseNumberMaxOdd()) {
+										WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
+										break;
+								}
+							}
+							else {
+								WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
+								break;
+							}
 						}
 				}
+				if (randomCorrectEdge != null) WindowHandler.setNode(randomCorrectEdge.getFromNode().getKdvID(), Window.fromBool);
+				searchResultBox.setVisible(false);
 			}
 	});
 		

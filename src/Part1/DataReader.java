@@ -163,6 +163,14 @@ public class DataReader {
 				Node toNode = nodes.get(Integer.parseInt(lineArray[1]));
 				double length = Double.parseDouble(lineArray[2]);
 				int type = Integer.parseInt(lineArray[5]);
+				int houseNumberFromLeft = 0;
+				int houseNumberToLeft = 0;
+				int houseNumberFromRight = 0;
+				int houseNumberToRight = 0;
+				if (!lineArray[7].equals("''")) houseNumberFromLeft = Integer.parseInt(lineArray[7]);
+				if (!lineArray[8].equals("''")) houseNumberToLeft = Integer.parseInt(lineArray[8]);
+				if (!lineArray[9].equals("''")) houseNumberFromRight = Integer.parseInt(lineArray[9]);
+				if (!lineArray[10].equals("''")) houseNumberToRight = Integer.parseInt(lineArray[10]);
 				String vejnavn = lineArray[6].substring(1,lineArray[6].length()-1);
 				String v_postnr = lineArray[17];
 				String h_postnr = lineArray[18];
@@ -183,21 +191,25 @@ public class DataReader {
 				
 				// Check if the road is one way or two way
 				if (oneway.equals("ft")) {
-					Edge edge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, driveTime, true);
+					Edge edge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, driveTime,
+							houseNumberFromLeft, houseNumberToLeft, houseNumberFromRight, houseNumberToRight, true);
 					if (length > longestRoadsFloor) longestRoads.add(edge);
 					edges.add(edge);
 					graph.addEdge(edge);
 				}
 				else if (oneway.equals("tf")) {
-					Edge edge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, driveTime, true);
+					Edge edge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, driveTime,
+							houseNumberFromLeft, houseNumberToLeft, houseNumberFromRight, houseNumberToRight, true);
 					if (length > longestRoadsFloor) longestRoads.add(edge);
 					edges.add(edge);
 					graph.addEdge(edge);
 				}
 				// if the road is two way, only one of the ways is drawn
 				else {
-					Edge fEdge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, driveTime, true);
-					Edge tEdge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, driveTime, false);
+					Edge fEdge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, driveTime,
+							houseNumberFromLeft, houseNumberToLeft, houseNumberFromRight, houseNumberToRight, true);
+					Edge tEdge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, driveTime,
+							houseNumberFromLeft, houseNumberToLeft, houseNumberFromRight, houseNumberToRight, false);
 					if (length > longestRoadsFloor) longestRoads.add(fEdge);
 					edges.add(tEdge);
 					edges.add(tEdge);
