@@ -26,6 +26,7 @@ public class RoadSegment extends JComponent {
 	
 	private Color color;
 	private static float roadWidth;
+	private static int roadType4242;
 	
 	
 	/**
@@ -43,9 +44,8 @@ public class RoadSegment extends JComponent {
 		geoEndX = xEndCoord;
 		geoEndY = yEndCoord;
 		color = getRoadSegmentColor(Type);
+		setRoadWidth(Type);
 		if(Type == 4242) roadWidth = 5;
-		//else roadWidth = 1;
-		else setRoadWidth();
 		calcPixel();
 	}
 	
@@ -111,29 +111,18 @@ public class RoadSegment extends JComponent {
 	/**
 	 * Changes the road width according to the zoom level
 	 */
-	private static void setRoadWidth() {
-		//System.out.println("geoWidth = " + WindowHandler.geoWidth);
+	private static void setRoadWidth(int type) {
 		roadWidth = 1;
-		//if (WindowHandler.geoWidth > 100000) {
-		//	roadWidth = 1; }
 		if(WindowHandler.geoWidth < 20000 && WindowHandler.geoWidth > 5000) {
 			roadWidth = 1.2f; }
-			//System.out.println("geoWidth less than 20.000, width = 1.2"); }
 		else if(WindowHandler.geoWidth < 5000 && WindowHandler.geoWidth > 4000) {
 			roadWidth = 1.4f; }
-			//System.out.println("geoWidth less than 5.000, width = 1.4"); }
-		//else if(WindowHandler.geoWidth < 4000 && WindowHandler.geoWidth > 3000) {
-		//	roadWidth = 1.6f;
-		//	System.out.println("geoWidth less than 4.000, width = 1.6"); }
 		else if (WindowHandler.geoWidth < 4000 && WindowHandler.geoWidth > 1500) {
 			roadWidth = 1.8f; }
-			//System.out.println("geoWidth less than 4.000, width = 1.8"); }
 		else if (WindowHandler.geoWidth < 1500 && WindowHandler.geoWidth > 600) {
 			roadWidth = 3; }
-			//System.out.println("geoWidth less than 1500, width = 3"); }
 		else if (WindowHandler.geoWidth < 600) {
 			roadWidth = 5; }
-			//System.out.println("geoWidth less than 1500, width = 4"); }
 	}
 	
 	/**
