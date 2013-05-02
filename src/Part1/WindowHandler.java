@@ -34,6 +34,23 @@ public class WindowHandler {
 	static double maxMapWidth; // = DataReader.getMaxX()-DataReader.getMinX();
 	private static HashMap<String, String> zipToCityMap;
 
+	/**
+	 * Calculates the absolute geo X coordinate of a given pixel value X.
+	 * @param x		The positive pixel value X
+	 * @return		The UTM geo coordinate X
+	 */
+	public static double pixelToAbsoluteGeoX(int x) {
+		return offsetX + pixelToGeoX(x);
+	}
+	
+	/**
+	 * Calculates the absolute geo Y coordinate of a given pixel value Y.
+	 * @param y		The positive pixel value Y
+	 * @return		The UTM geo coordinate Y
+	 */
+	public static double pixelToAbsoluteGeoY(int y) {
+		return offsetY + (geoHeight - pixelToGeoX(y));
+	}
 			
 	// Converts X-pixel to coordinate
 	public static double pixelToGeoX(int x) {
