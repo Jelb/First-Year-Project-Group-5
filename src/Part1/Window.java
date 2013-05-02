@@ -208,7 +208,6 @@ public class Window extends JFrame {
 	/**
 	 * Each button gets a listener with a corresponding action
 	 */
-
 	private void addButtonListeners(){
 
 		resetZoom.addActionListener(new ActionListener() {
@@ -286,7 +285,7 @@ public class Window extends JFrame {
 		toms.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				WindowHandler.pathFindingTest();
+				WindowHandler.randomSPtest();
 			}
 		});
 		

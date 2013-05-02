@@ -16,14 +16,58 @@ public class Node {
 //		edges = new LinkedList<Edge>();
 	}
 	
+	/**
+	 * Returns the absolute UTM X offset of the 'outer' map constraints
+	 * @return	UTM X coordinate
+	 */
+	public static double getAbsoluteXoffset() {
+		return xOffset;
+	}
+	
+	/**
+	 * Returns the absolute UTM Y offset of the 'outer' map constraints
+	 * @return	UTM Y coordinate
+	 */
+	public static double getAbsoluteYoffset() {
+		return yOffset;
+	}
+	
+	/**
+	 * Returns the absolute UTM X coordinate of node
+	 * @return	UTM X coordinate
+	 */
+	public double getAbsoluteXCoordinate() {
+		return xCord;
+	}
+	
+	/**
+	 * Returns the absolute UTM Y coordinate of node
+	 * @return	UTM Y coordinate
+	 */
+	public double getAbsoluteYCoordinate() {
+		return yCord;
+	}
+	
+	/**
+	 * Returns the UTM X coordinate relative to the 'outer' map constraints
+	 * @return 'Relative' UTM X coordinate
+	 */
 	public double getXCord(){
 		return xCord - xOffset;
 	}
 	
+	/**
+	 * Returns the UTM Y coordinate relative to the 'outer' map constraints
+	 * @return 'Relative' UTM Y coordinate
+	 */
 	public double getYCord(){
 		return yCord - yOffset;
 	}
 	
+	/**
+	 * Return the ID of the node.
+	 * @return	Node ID number
+	 */
 	public int getKdvID(){
 		return kdvID;
 	}

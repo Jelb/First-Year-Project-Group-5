@@ -25,13 +25,13 @@ public class WindowHandler {
 	static Graph graph;
 	static Window window;
 	static AddressParser ap;
-	static double geoWidth; //The width of the view area
-	static double geoHeight; //The height of the view area
-	static double offsetX;
-	static double offsetY;
+	static double geoWidth;		// The  width of the view area in meters
+	static double geoHeight;	// The height of the view area in meters
+	static double offsetX;		// Offset of the current view area relative to the 'outer' map constraints
+	static double offsetY;		// Offset of the current view area relative to the 'outer' map constraints
 	static double ratio;
-	static double maxMapHeight; // = DataReader.getMaxY()-DataReader.getMinY();
-	static double maxMapWidth; // = DataReader.getMaxX()-DataReader.getMinX();
+	static double maxMapHeight;	// = DataReader.getMaxY()-DataReader.getMinY();
+	static double maxMapWidth;	// = DataReader.getMaxX()-DataReader.getMinX();
 	private static HashMap<String, String> zipToCityMap;
 
 	/**
@@ -40,52 +40,38 @@ public class WindowHandler {
 	 * @return		The UTM geo coordinate X
 	 */
 	public static double pixelToAbsoluteGeoX(int x) {
-		return offsetX + pixelToGeoX(x);
+		return Node.getAbsoluteXoffset() + pixelToGeoX(x) + offsetX;
 	}
 	
 	/**
-	 * Calculates the absolute geo Y coordinate of a given pixel value Y.
+	 * Calculates the absolute geo Y coordinate.
+	 * of a given pixel value Y.
 	 * @param y		The positive pixel value Y
 	 * @return		The UTM geo coordinate Y
 	 */
 	public static double pixelToAbsoluteGeoY(int y) {
-		return offsetY + (geoHeight - pixelToGeoX(y));
+		return Node.getAbsoluteYoffset() + (geoHeight - pixelToGeoY(y)) + offsetY;
 	}
 			
-	// Converts X-pixel to coordinate
+	/**
+	 * Calculates the window-relative geo X coordinate.
+	 * The method returns the geo X coordinate measured from the current windows origo.
+	 * @param x		The positive pixel value X
+	 * @return		Meters from the left side of the window to the pixel
+	 */
 	public static double pixelToGeoX(int x) {
 		return  (((double)x/ Window.use().getMapWidth()) * geoWidth);
 	}
 	
 	
-	// Converts Y-pixel to coordinate
+	/**
+	 * Calculates the window-relative geo Y coordinate.
+	 * The method returns the geo Y coordinate measured from the current windows origo.
+	 * @param y		The positive pixel value Y
+	 * @return		Meters down from the top of the window to the pixel
+	 */
 	public static double pixelToGeoY(int y) {
 		return  (((double)y/(Window.use().getMapHeight()) * geoHeight));
-	}
-
-	/**
-	 * Return the closest node to a given in-window pixel coordinate.
-	 * @param x		Pixel x input coordinate
-	 * @param y		Pixel y input coordinate
-	 * @return		The node closest to the coordinate
-	 */
-	public static Node closestNode(int x, int y) {
-		double shortestDist = Double.MAX_VALUE;
-		Node closestNode = null;
-		for(Node node : nodes) {
-			double deltaX = Math.abs((node.getXCord() - x));
-			double deltaY = Math.abs((node.getYCord() - y));
-			double dist = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
-			if(dist < shortestDist) {
-				shortestDist = dist;
-				closestNode = node;
-			}
-		}
-//		try {
-			return closestNode;
-//		} catch (Exception e) {
-//			System.out.println("No nodes in view");
-//		}
 	}
 	
 	/**
@@ -95,43 +81,101 @@ public class WindowHandler {
 	 * @return		The edge nearest the coordinate
 	 */
 	public static void closestEdge(int pixelX, int pixelY) {
-		double x = pixelToGeoX(pixelX);
-		double y = pixelToGeoY(pixelY);
+		double x = pixelToAbsoluteGeoX(pixelX);
+		double y = pixelToAbsoluteGeoY(pixelY);
+
 		Map.use().newArrayList();
 		Edge closestEdge = null;
 		double shortestDist = Double.MAX_VALUE;
+
 		for (Node n : nodes) {
 			Iterable<Edge> edgesFromNode = graph.adj(n.getKdvID());
 			for (Edge e : edgesFromNode) {
 				if (e.isDrawable() && includeEdge(e)) {
-					double x1 = e.getFromNode().getXCord();
-					double y1 = e.getFromNode().getYCord();
-					double x2 = e.getToNode().getXCord();
-					double y2 = e.getToNode().getYCord();
-					double a = 0;
-					double b;
-					if(x2 != x1) {													// check to not divide by zero
-						a = (y2 - y1) / (x2 - x1);
-						b = y1 - (a * x1);
-					} else {
-						b = x1;														// the line is vertical
-					}
-					double dist = Math.abs(a * x + b - y) / Math.sqrt(a * a + 1);	// calc distance from point to line
-					if(dist < shortestDist) {
-						shortestDist = dist;
+					double x1 = e.getFromNode().getAbsoluteXCoordinate();
+					double y1 = e.getFromNode().getAbsoluteYCoordinate();
+					double x2 = e.getToNode().getAbsoluteXCoordinate();
+					double y2 = e.getToNode().getAbsoluteYCoordinate();
+					
+					double tempDist = pointToPointDistance(x1, y1, x, y);
+					if(tempDist < shortestDist) {
+						shortestDist = tempDist;
 						closestEdge = e;
-						System.out.println("Better...: " + closestEdge.getVEJNAVN());
+						tempDist = pointToPointDistance(x2, y2, x, y);
+						if(tempDist < shortestDist) {
+							shortestDist = tempDist;
+							closestEdge = e;
+						}
 					}
 				}
 			}
 		}
+		testDrawClosestEdge(closestEdge);
 		System.out.print("Closest edge: ");
-		if(!closestEdge.getVEJNAVN().equals(""))
+		if(closestEdge.getVEJNAVN().length() > 0)
 			System.out.println(closestEdge.getVEJNAVN());
-		else
-			System.out.println("noname road :(");
-//		return closestEdge;
+		else {
+			String streetname;
+			streetname = closestEdge.lookForStreetname(closestEdge);
+			System.out.println(streetname);
+		}
 	}
+	
+	public static double pointToPointDistance(double x1, double y1, double x2, double y2) {
+		return vectorLength(createVector(x1, y1, x2, y2));
+	}
+	
+	/**
+	 * Calculates the length of a 2D vector.
+	 * @param vector	A double array of 2 values, describing the vector
+	 * @return			The length of the vector
+	 */
+	public static double vectorLength(double[] vector) {
+		return Math.sqrt(Math.pow(vector[0], 2) + Math.pow(vector[1], 2));
+	}
+	
+	/** 
+	 * Calculates the scalar product of the 2D vectors.
+	 * @param vectorA	A double array of 2 values, describing the first vector
+	 * @param vectorB	A double array of 2 values, describing the second vector
+	 * @return			The scalar product
+	 */
+	public static double scalarProduct(double[] vectorA, double[] vectorB) {
+		return (vectorA[0] * vectorB[0]) + (vectorA[1] * vectorB[1]);
+	}
+	
+	/**
+	 * Calculates the cosine value of the angle between 2 vectors.
+	 * @param vectorA	A double array of 2 values, describing the first vector
+	 * @param vectorB	A double array of 2 values, describing the second vector
+	 * @return			The cosine angle
+	 */
+	public static double cosVectorAngle(double[] vectorA, double[] vectorB) {
+		return (scalarProduct(vectorA, vectorB) / (vectorLength(vectorA) * vectorLength(vectorB)));
+	}
+	
+	/**
+	 * Creates a double array 
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
+	 * @return
+	 */
+	public static double[] createVector(double x1, double y1, double x2, double y2) {
+		double[] vector = new double[2];
+		vector[0] = x2 - x1;
+		vector[1] = y2 - y1;
+		return vector;
+	}
+	
+	public static void randomSPtest() {
+		Random rnd = new Random();
+		startNode = rnd.nextInt(graph.getV()-1)+1;
+		endNode = rnd.nextInt(graph.getV()-1)+1;
+		pathFindingTest();
+	}
+	
 	public static void setNode(int node, boolean from){
 		if(from){
 			WindowHandler.startNode = node;
@@ -146,7 +190,6 @@ public class WindowHandler {
 	 * Picks to nodes at random and calculates the shortest path between them.
 	 * For testing purposes only.
 	 */
-	
 	public static void pathFindingTest() {
 		Random rnd = new Random();
 		//startNode = rnd.nextInt(graph.getV()-1)+1;			// picks a node at random
@@ -172,6 +215,20 @@ public class WindowHandler {
 	}
 	
 	/**
+	 * Test method, draws the closest edge as a shortest path.
+	 * @param edge	The 'closest' edge
+	 */
+	public static void testDrawClosestEdge(Edge edge) {
+		ArrayList<DrawableItem> path = new ArrayList<DrawableItem>();
+		double x1 = edge.getFromNode().getXCord();
+		double y1 = edge.getFromNode().getYCord();
+		double x2 = edge.getToNode().getXCord();
+		double y2 = edge.getToNode().getYCord();
+		path.add(new RoadSegment(x1, y1, x2, y2, 4242));
+		Map.use().setPath(path);
+	}
+	
+	/**
 	 * Adds the shortest path (static field 'route') to the roadSegments on the map.
 	 */
 	public static void addRouteToMap(Stack<Edge> route) {
@@ -186,7 +243,6 @@ public class WindowHandler {
 		}
 		Map.use().setPath(path);
 	}
-	
 	
 	public static void zoomOut() {
 		double minX = geoWidth*0.1, maxX = geoWidth*1.1, minY = geoHeight*0.1, maxY = geoHeight*1.1;
@@ -212,7 +268,6 @@ public class WindowHandler {
 		Window.use().updateMap();
 		System.out.println("geoWidth = " + geoWidth);
 	}
-	
 	
 	// Searches an area using pixel-values
 	public static void pixelSearch(int x1, int x2, int y1, int y2) {
@@ -344,6 +399,7 @@ public class WindowHandler {
 			}
 		}
 	}
+
 	
 	public static void resetMap() {
 		setGeoHeight(DataReader.getMaxY()-DataReader.getMinY());

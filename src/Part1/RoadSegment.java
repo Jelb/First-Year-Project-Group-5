@@ -18,7 +18,7 @@ public class RoadSegment extends DrawableItem {
 	private int xStart, yStart, xEnd, yEnd;
 	
 	private Color color;
-	private static float roadWidth;
+	private float roadWidth;
 	private static int roadType4242;
 	
 	/**
@@ -70,7 +70,7 @@ public class RoadSegment extends DrawableItem {
 	/**
 	 * Changes the road width according to the zoom level
 	 */
-	private static void setRoadWidth() {
+	private void setRoadWidth() {
 		roadWidth = 1;
 		if(WindowHandler.geoWidth < 20000 && WindowHandler.geoWidth > 5000) {
 			roadWidth = 1.2f; }

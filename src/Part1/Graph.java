@@ -29,12 +29,12 @@ public class Graph {
 		E++;
 	}
 	
-	// returns adjacency list for the given node
+	// returns adjacency list for the given node, as a LinkedList
 	public Iterable<Edge> adj(int v) { 
 		return adj[v]; 
 	}
 
-	// returns adjacency list for the given node
+	// returns adjacency list for the given node, as an ArrayList
 	public Iterable<Edge> adjArr(int v) { 
 		ArrayList<Edge> arr = new ArrayList<Edge>();
 		arr.addAll(adj[v]);
