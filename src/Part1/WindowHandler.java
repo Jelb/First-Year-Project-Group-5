@@ -115,9 +115,10 @@ public class WindowHandler {
 		if(closestEdge.getVEJNAVN().length() > 0)
 			System.out.println(closestEdge.getVEJNAVN());
 		else {
-			String streetname;
-			streetname = closestEdge.lookForStreetname(closestEdge);
-			System.out.println(streetname);
+//			String streetname;
+//			streetname = closestEdge.lookForStreetname(closestEdge);
+//			System.out.println(streetname);
+			System.out.println("No name found");
 		}
 	}
 	
@@ -499,7 +500,7 @@ public class WindowHandler {
 		snr = null;
 		
 		//set arraylist of all egdes
-		edges = dataReader.getEdges();
+//		edges = dataReader.getEdges();
 		
 		//Avoid loitering
 		dataReader = null;
