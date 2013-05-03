@@ -23,6 +23,7 @@ public class WindowHandler {
 	static int longestRoadsFloor;
 	static QuadTree QT;
 	static Graph graph;
+//	static MultiGraph multiGraph;
 	static Window window;
 	static AddressParser ap;
 	static double geoWidth;		// The  width of the view area in meters
@@ -89,6 +90,7 @@ public class WindowHandler {
 		double shortestDist = Double.MAX_VALUE;
 
 		for (Node n : nodes) {
+//			Iterable<Edge> edgesFromNode = multiGraph.adj(n.getKdvID(),1);
 			Iterable<Edge> edgesFromNode = graph.adj(n.getKdvID());
 			for (Edge e : edgesFromNode) {
 				if (e.isDrawable() && includeEdge(e)) {
@@ -172,6 +174,8 @@ public class WindowHandler {
 	
 	public static void randomSPtest() {
 		Random rnd = new Random();
+//		startNode = rnd.nextInt(multiGraph.getV(1)-1)+1;
+//		endNode = rnd.nextInt(multiGraph.getV(1)-1)+1;
 		startNode = rnd.nextInt(graph.getV()-1)+1;
 		endNode = rnd.nextInt(graph.getV()-1)+1;
 		pathFindingTest();
@@ -389,15 +393,19 @@ public class WindowHandler {
 		Map.use().newArrayList();
 		for (Node n : nodes) {
 			Iterable<Edge> edgesFromNode = graph.adj(n.getKdvID());
+//			for (int type = 1; type < 4; type++) {
+//			Iterable<Edge> edgesFromNode = multiGraph.adj(n.getKdvID(), type);
 			for (Edge e : edgesFromNode) {
 				if (e.isDrawable() && includeEdge(e)) {
 					double x1 = e.getFromNode().getXCord();
 					double y1 = e.getFromNode().getYCord();
 					double x2 = e.getToNode().getXCord();
 					double y2 = e.getToNode().getYCord();
-					Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, e.getType()));
+					Map.use().addRoadSegment(
+							new RoadSegment(x1, y1, x2, y2, e.getType()));
 				}
 			}
+//			}
 		}
 	}
 
@@ -487,6 +495,7 @@ public class WindowHandler {
 		//All roads with length larger than the longest road floor are added to the longest roads list
 		//Makes graph object and list of roads longer than the longest roads floor
 		graph = dataReader.createGraphAndLongestRoadsList(longestRoadsFloor);
+//		multiGraph = dataReader.createGraphAndLongestRoadsList(longestRoadsFloor);
 		
 		//Makes and returns a quadTree
 		QT = dataReader.createQuadTree();
@@ -550,6 +559,7 @@ public class WindowHandler {
 		System.out.println("Time to update map the first time: " + duration/1000.0 + "s");
 		
 		System.out.printf("Graph has %d edges%n", graph.getE());
+//		System.out.printf("Graph has %d edges%n", multiGraph.getE(1));
 		//MemoryMXBean mxbean = ManagementFactory.getMemoryMXBean();
 		//System.out.printf("Heap memory usage: %d MB%n", mxbean
 		//		.getHeapMemoryUsage().getUsed() / (1000000));
