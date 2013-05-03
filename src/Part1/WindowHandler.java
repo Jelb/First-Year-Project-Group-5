@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
+import sun.misc.Queue;
+
 import Part1.DijkstraSP.CompareType;
 import Part1.DijkstraSP.TransportWay;
 import Part1.SplashScreen.Task;
@@ -31,6 +33,7 @@ public class WindowHandler {
 	static double offsetX;		// Offset of the current view area relative to the 'outer' map constraints
 	static double offsetY;		// Offset of the current view area relative to the 'outer' map constraints
 	static double ratio;
+	static double minLength;
 	static double maxMapHeight;	// = DataReader.getMaxY()-DataReader.getMinY();
 	static double maxMapWidth;	// = DataReader.getMaxX()-DataReader.getMinX();
 	private static HashMap<String, String> zipToCityMap;
@@ -99,11 +102,11 @@ public class WindowHandler {
 					double x2 = e.getToNode().getAbsoluteXCoordinate();
 					double y2 = e.getToNode().getAbsoluteYCoordinate();
 					
-					double tempDist = pointToPointDistance(x1, y1, x, y);
+					double tempDist = distanceBetweenPoints(x1, y1, x, y);
 					if(tempDist < shortestDist) {
 						shortestDist = tempDist;
 						closestEdge = e;
-						tempDist = pointToPointDistance(x2, y2, x, y);
+						tempDist = distanceBetweenPoints(x2, y2, x, y);
 						if(tempDist < shortestDist) {
 							shortestDist = tempDist;
 							closestEdge = e;
@@ -124,8 +127,39 @@ public class WindowHandler {
 		}
 	}
 	
-	public static double pointToPointDistance(double x1, double y1, double x2, double y2) {
-		return vectorLength(createVector(x1, y1, x2, y2));
+	/**
+	 * Creates a 2D vector based on a set of nodes.
+	 * @param fnode		The 'from' node
+	 * @param tnode		The 'to' node
+	 * @return			The vector between the two
+	 */
+	public static double[] nodeToVector(Node fnode, Node tnode) {
+		double[] vector = new double[2];
+		vector[0] = tnode.getAbsoluteXCoordinate() - fnode.getAbsoluteXCoordinate();
+		vector[1] = tnode.getAbsoluteYCoordinate() - fnode.getAbsoluteYCoordinate();
+		return vector;
+	}
+	
+	/**
+	 * Calculates the distance between two nodes.
+	 * @param fnode		The 'from' node
+	 * @param tnode		The 'to' node
+	 * @return			The distance between the two
+	 */
+	public static double distanceBetweenNodes(Node fnode, Node tnode) {
+		return vectorLength(nodeToVector(fnode, tnode));
+	}
+	
+	/**
+	 * Calculates the distance between two points.
+	 * @param x1		X coord, first point
+	 * @param y1		Y coord, first point
+	 * @param x2		X coord, second point
+	 * @param y2		Y coord, second point
+	 * @return			The distance between the two points
+	 */
+	public static double distanceBetweenPoints(double x1, double y1, double x2, double y2) {
+		return vectorLength(pointsToVector(x1, y1, x2, y2));
 	}
 	
 	/**
@@ -158,14 +192,14 @@ public class WindowHandler {
 	}
 	
 	/**
-	 * Creates a double array 
-	 * @param x1
-	 * @param y1
-	 * @param x2
-	 * @param y2
-	 * @return
+	 * Creates a 2D vector from two points
+	 * @param x1		X coord, first point
+	 * @param y1		Y coord, first point
+	 * @param x2		X coord, second point
+	 * @param y2		Y coord, second point
+	 * @return			The resulting vector between the two
 	 */
-	public static double[] createVector(double x1, double y1, double x2, double y2) {
+	public static double[] pointsToVector(double x1, double y1, double x2, double y2) {
 		double[] vector = new double[2];
 		vector[0] = x2 - x1;
 		vector[1] = y2 - y1;
@@ -408,7 +442,6 @@ public class WindowHandler {
 //			}
 		}
 	}
-
 	
 	public static void resetMap() {
 		setGeoHeight(DataReader.getMaxY()-DataReader.getMinY());
@@ -485,7 +518,7 @@ public class WindowHandler {
 		
 		//Initializing of data from KrakLoader
 		DataReader dataReader = DataReader.use("kdv_node_unload.txt","kdv_unload.txt");
-		//DataReader dataReader = DataReader.use("testNodes.txt","testEdges.txt");
+//		DataReader dataReader = DataReader.use("testNodes.txt","testEdges.txt");
 		
 		//ArraylList with Nodes
 		dataReader.createNodeList();

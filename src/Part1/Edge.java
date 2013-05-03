@@ -113,7 +113,7 @@ public class Edge {
 	 * @param n		The one node
 	 * @return		The other node
 	 */
-	private  Node otherNode(Node n) {
+	public Node otherNode(Node n) {
 		if(n == FNODE)
 			return TNODE;
 		else

@@ -20,6 +20,18 @@ public class Graph {
 		
 	}
 	
+	/**
+	 * Tells if a node has no more than 2 adjacent edges.
+	 * @param v		Node
+	 * @return		True, if the node has a max of 2 adjacent edges.
+	 */
+	public boolean hasTwoEdges(int v) {
+		if(adj[v].size() == 2)
+			return true;
+		else
+			return false;
+	}
+	
 	public int getV() { return V; }
 	public int getE() { return E; }
 	
