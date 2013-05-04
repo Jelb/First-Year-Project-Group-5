@@ -30,6 +30,7 @@ public class Map extends JPanel {
 	}
 	
 	public void paint(Graphics g) {
+		RoadSegment.setZoomLevel();
 		g.drawImage(dbImage, Window.use().getMousePanX(), Window.use().getMousePanY(), this);
 	}
 	

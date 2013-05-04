@@ -263,7 +263,8 @@ public class WindowHandler {
 		double y1 = edge.getFromNode().getYCord();
 		double x2 = edge.getToNode().getXCord();
 		double y2 = edge.getToNode().getYCord();
-		path.add(new RoadSegment(x1, y1, x2, y2, 4242));
+		boolean border = false;											// for now, no borders will be drawn
+		path.add(new RoadSegment(x1, y1, x2, y2, 4242, border));
 		Map.use().setPath(path);
 	}
 	
@@ -278,7 +279,8 @@ public class WindowHandler {
 			double y1 = edge.getFromNode().getYCord();
 			double x2 = edge.getToNode().getXCord();
 			double y2 = edge.getToNode().getYCord();
-			path.add(new RoadSegment(x1, y1, x2, y2, 4242));
+			boolean border = false;											// for now, no borders will be drawn
+			path.add(new RoadSegment(x1, y1, x2, y2, 4242, border));
 		}
 		Map.use().setPath(path);
 	}
@@ -392,8 +394,9 @@ public class WindowHandler {
 			double y1 = e.getFromNode().getYCord();
 			double x2 = e.getToNode().getXCord();
 			double y2 = e.getToNode().getYCord();
+			boolean border = false;											// for now, no borders will be drawn
 			if(lineIntersects(geoXMin, geoXMax, geoYMin, geoYMax, x1, x2,
-				y1, y2)) Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, e.getType()));
+				y1, y2)) Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, e.getType(),border));
 		}
 		
 	}
@@ -435,8 +438,9 @@ public class WindowHandler {
 					double y1 = e.getFromNode().getYCord();
 					double x2 = e.getToNode().getXCord();
 					double y2 = e.getToNode().getYCord();
+					boolean border = false;											// for now, no borders will be drawn
 					Map.use().addRoadSegment(
-							new RoadSegment(x1, y1, x2, y2, e.getType()));
+							new RoadSegment(x1, y1, x2, y2, e.getType(),border));
 				}
 			}
 //			}
@@ -565,6 +569,9 @@ public class WindowHandler {
 		// Finds all the nodes in the view area
 		nodes = QT.query(0, 0, geoWidth, geoHeight);
 		DrawableItem.setMapSize(geoWidth, geoHeight, 0.0, 0.0);
+		
+		// Constructs the GoogleMaps style colors
+		RoadSegment.setColors();
 		
 		// Finds all the edges for these nodes
 		getEdgesFromNodes();
