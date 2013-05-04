@@ -196,7 +196,7 @@ public class DataReader {
 					Edge edge = new Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, driveTime,
 							houseNumberFromLeft, houseNumberToLeft, houseNumberFromRight, houseNumberToRight, true);
 					if (length > longestRoadsFloor) longestRoads.add(edge);
-//					edges.add(edge);
+					edges.add(edge);
 //					WindowHandler.graph.addEdge(edge);
 					graph.addEdge(edge);
 				}
@@ -204,7 +204,7 @@ public class DataReader {
 					Edge edge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, driveTime,
 							houseNumberFromLeft, houseNumberToLeft, houseNumberFromRight, houseNumberToRight, true);
 					if (length > longestRoadsFloor) longestRoads.add(edge);
-//					edges.add(edge);
+					edges.add(edge);
 					graph.addEdge(edge);
 //					multiGraph.addEdge(edge);
 				}
@@ -215,8 +215,8 @@ public class DataReader {
 					Edge tEdge = new Edge(toNode, fromNode, length, vejnavn, type, v_postnr, h_postnr, driveTime,
 							houseNumberFromLeft, houseNumberToLeft, houseNumberFromRight, houseNumberToRight, false);
 					if (length > longestRoadsFloor) longestRoads.add(fEdge);
-//					edges.add(tEdge);
-//					edges.add(tEdge);
+					edges.add(tEdge);
+					edges.add(tEdge);
 					graph.addEdge(fEdge);
 					graph.addEdge(tEdge);
 //					multiGraph.addEdge(fEdge);
@@ -302,7 +302,7 @@ public class DataReader {
 		return roadToZipMap;
 	}
 
-//	public List<Edge> getEdges() {
-//		return edges;
-//	}
+	public List<Edge> getEdges() {
+		return edges;
+	}
 }

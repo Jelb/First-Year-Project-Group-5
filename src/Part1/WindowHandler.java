@@ -542,7 +542,7 @@ public class WindowHandler {
 		snr = null;
 		
 		//set arraylist of all egdes
-//		edges = dataReader.getEdges();
+		edges = dataReader.getEdges();
 		
 		//Avoid loitering
 		dataReader = null;
