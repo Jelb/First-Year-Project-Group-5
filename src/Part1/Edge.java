@@ -27,11 +27,7 @@ public class Edge {
 	}
 	
 	private void setHouseNumbers(int houseNumberFrom1, int houseNumberTo1, int houseNumberFrom2, int houseNumberTo2) {
-//		System.out.println("House number from 1: " + houseNumberFrom1);
-//		System.out.println("House number to 1: " + houseNumberTo1);
-//		System.out.println("House number from 2: " + houseNumberFrom2);
-//		System.out.println("House number to 2: " + houseNumberTo2);
-		if (houseNumberFrom1 % 2 == 0 && houseNumberFrom2 % 2 != 0) {
+		if (houseNumberFrom1 % 2 == 0 && houseNumberTo1 % 2 == 0) {
 			if (houseNumberFrom1 < houseNumberTo1) {
 				houseNumberMinEven = houseNumberFrom1;
 				houseNumberMaxEven = houseNumberTo1;
@@ -40,24 +36,8 @@ public class Edge {
 				houseNumberMinEven = houseNumberTo1;
 				houseNumberMaxEven = houseNumberFrom1;
 			}
-			if (houseNumberFrom2 < houseNumberTo2) {
-				houseNumberMinOdd = houseNumberFrom2;
-				houseNumberMaxOdd = houseNumberTo2;
-			}
-			else {
-				houseNumberMinOdd = houseNumberTo2;
-				houseNumberMaxOdd = houseNumberFrom2;
-			}
 		}
-		else if (houseNumberFrom1 % 2 != 0 && houseNumberFrom2 % 2 == 0) {
-			if (houseNumberFrom2 < houseNumberTo2) {
-				houseNumberMinEven = houseNumberFrom2;
-				houseNumberMaxEven = houseNumberTo2;
-			}
-			else {
-				houseNumberMinEven = houseNumberTo2;
-				houseNumberMaxEven = houseNumberFrom2;
-			}
+		else if (houseNumberFrom1 % 2 != 0 && houseNumberTo1 % 2 != 0) {
 			if (houseNumberFrom1 < houseNumberTo1) {
 				houseNumberMinOdd = houseNumberFrom1;
 				houseNumberMaxOdd = houseNumberTo1;
@@ -67,8 +47,25 @@ public class Edge {
 				houseNumberMaxOdd = houseNumberFrom1;
 			}
 		}
-		else {
-//			System.out.println("House numbers are not ordered as even on one side and uneven on the other for " + VEJNAVN);
+		if (houseNumberFrom2 % 2 == 0 && houseNumberTo2 % 2 == 0) {
+			if (houseNumberFrom2 < houseNumberTo2) {
+				houseNumberMinEven = houseNumberFrom2;
+				houseNumberMaxEven = houseNumberTo2;
+			}
+			else {
+				houseNumberMinEven = houseNumberTo2;
+				houseNumberMaxEven = houseNumberFrom2;
+			}
+		}
+		else if (houseNumberFrom2 % 2 != 0 && houseNumberTo2 % 2 != 0) {
+			if (houseNumberFrom2 < houseNumberTo2) {
+				houseNumberMinOdd = houseNumberFrom2;
+				houseNumberMaxOdd = houseNumberTo2;
+			}
+			else {
+				houseNumberMinOdd = houseNumberTo2;
+				houseNumberMaxOdd = houseNumberFrom2;
+			}
 		}
 	}
 	

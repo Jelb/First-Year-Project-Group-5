@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
-import sun.misc.Queue;
-
 import Part1.DijkstraSP.CompareType;
 import Part1.DijkstraSP.TransportWay;
 import Part1.SplashScreen.Task;
@@ -230,19 +228,12 @@ public class WindowHandler {
 	 * For testing purposes only.
 	 */
 	public static void pathFindingTest() {
-		Random rnd = new Random();
-		//startNode = rnd.nextInt(graph.getV()-1)+1;			// picks a node at random
-		
 		System.out.println("Start node: " + startNode);
 		
 		System.out.println("Creating SP object... ");
 		DijkstraSP dsp = new DijkstraSP(graph, startNode, TransportWay.CAR, CompareType.FASTEST);	// use random node at our start node for shortest path calculation
 		
 		Stack<Edge> route = new Stack<Edge>();					// clears any previous route
-		
-//		int destinationNode = startNode;
-//		while(destinationNode == startNode || destinationNode == 0)
-//			destinationNode = rnd.nextInt(graph.getV());				// pick another node at random
 		
 		System.out.println("Start node: " + startNode);
 		System.out.println("  End node: " + endNode);

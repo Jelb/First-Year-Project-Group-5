@@ -294,7 +294,7 @@ public class Window extends JFrame {
 		toms.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				WindowHandler.randomSPtest();
+				WindowHandler.pathFindingTest();
 			}
 		});
 		
@@ -353,6 +353,7 @@ public class Window extends JFrame {
 			}
 			createSearchBox(setArray,x,y,fromBool);
 		}
+		updateMap();
 	}
 	
 	/**
@@ -387,12 +388,14 @@ public class Window extends JFrame {
 									if (houseNumber >= edge.getHouseNumberMinEven() && houseNumber <= edge.getHouseNumberMaxEven()) {
 										WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
 										flagNode = edge.getFromNode();
+										randomCorrectEdge = null;
 										break;
 									}
 								}
 								else if (houseNumber >= edge.getHouseNumberMinOdd() && houseNumber <= edge.getHouseNumberMaxOdd()) {
 										WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
 										flagNode = edge.getFromNode();
+										randomCorrectEdge = null;
 										break;
 								}
 							}
@@ -614,22 +617,6 @@ public class Window extends JFrame {
 					setMousePanX(e.getX() - prevX);
 					setMousePanY(e.getY() - prevY);
 					repaint();
-					
-					
-//					int x = e.getX();
-//					int y = e.getY();
-//					
-//					int dist;
-//					if (x > y) dist = Math.abs(x-prevX);
-//					else dist = Math.abs(y-prevY);
-//					System.out.println("distance dragged: " + dist);
-//					if (dist > 1) {
-//						System.out.println("Im Panning");
-//						PanHandler.pixelPan((prevX-e.getX()), (e.getY()-prevY));
-//						prevX = e.getX();
-//						prevY = e.getY();
-//						updateMap();
-//					}
 				}
 				else {
 					prevX = e.getX();
@@ -654,10 +641,12 @@ public class Window extends JFrame {
 				updateMap();
 			}
 			else if (SwingUtilities.isLeftMouseButton(e)) {
-				PanHandler.pixelPan((prevX-e.getX()), (e.getY()-prevY));
-				setMousePanX(0);
-				setMousePanY(0);
-				dragging = false;
+				if (dragging) {
+					PanHandler.pixelPan((prevX-e.getX()), (e.getY()-prevY));
+					setMousePanX(0);
+					setMousePanY(0);
+					dragging = false;
+				}
 			}
 			Map.use().flipImageBuffer();
 		}

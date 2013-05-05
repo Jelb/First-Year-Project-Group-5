@@ -195,7 +195,7 @@ public class AddressParser {
      * Checks if the input contains any illegal characters.
      */
     private void randomCheck() {
-        p1 = Pattern.compile("[^\\w\\d\\s.,æÆøØåÅ]");
+        p1 = Pattern.compile("[^\\w\\d\\s.,æÆøØåÅéÉ]");
         m1 = p1.matcher(INPUT.trim());
         if(m1.find()) {                                                         // CHECK 01
             throw new RuntimeException();
