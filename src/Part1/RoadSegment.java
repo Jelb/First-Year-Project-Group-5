@@ -46,8 +46,6 @@ public class RoadSegment extends DrawableItem {
 		updatePosition();
 	}
 	
-//	public static int 
-	
 	/**
 	 * Changes the road width according to the zoom level
 	 */
