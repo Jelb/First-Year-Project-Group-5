@@ -382,12 +382,16 @@ public class Window extends JFrame {
 				Set<String> zips = zipToCityMap.keySet();
 				ArrayList<String> zipList = new ArrayList<String>();
 				for (String zip : zips) {
-					if (result[5].toLowerCase().equals(zipToCityMap.get(zip).toLowerCase())) zipList.add(zip);
+					if (result[5].toLowerCase().equals(zipToCityMap.get(zip).toLowerCase())) {
+						if (WindowHandler.getRoadToZipMap().get(result[0]).contains(zip)) {
+							zipList.add(zip);
+						}
+					}
 				}
 				setArray = new String[zipList.size()];
 				for (int i = 0; i < setArray.length; i++) {
-					setArray[i] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " " + result[4]+ " " + zipList.get(i) + " " + result[5];
-					setArray[i] = setArray[0].replaceAll("\\s+", " ");
+					setArray[i] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " " + zipList.get(i) + " " + result[5];
+					setArray[i] = setArray[i].replaceAll("\\s+", " ");
 				}
 				zipArray = Arrays.copyOf(zipList.toArray(), zipList.size(), String[].class);
 			}
