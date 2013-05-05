@@ -181,10 +181,8 @@ public class Window extends JFrame {
 		findPath = createButton("FindPath.png", "Find Path", 75, 240);	
 		
 		bike = createButton("cycle.png", "By bike or walking", 45, 350);
-		//bike.setBounds(50, 350, 25, 25);
 		bike.setVisible(false);
 		car = createButton("motor.png", "By car", 105, 350);
-		//car.setSize(new Dimension(25,25));
 		car.setVisible(false);
 		
 		searchResultBox = new JComboBox();
@@ -378,7 +376,9 @@ public class Window extends JFrame {
 					setArray[i] = setArray[i].replaceAll("\\s+", " ");				
 				}						
 			}
-			createSearchBox(setArray,x,y,fromBool);
+			//if(setArray.length > 1) {
+				createSearchBox(setArray,x,y,fromBool);
+			//}
 		}
 		updateMap();
 	}
