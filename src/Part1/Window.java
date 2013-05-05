@@ -3,8 +3,10 @@ package Part1;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
+import java.awt.Insets;
 import java.awt.Rectangle;
 
 import javax.swing.BoxLayout;
@@ -61,7 +63,7 @@ public class Window extends JFrame {
 	private static int maxHeight;
 
 	//Buttons to pan and zoom
-	private JButton resetZoom, zoomOut, zoomIn;
+	private JButton resetZoom, zoomOut, zoomIn, korteste, hurtigste;
 	private JButton west, east, north, south, findPath, bike, blueBike, car, blueCar;
 	private JTextField from, to;
 	private JComboBox searchResultBox;
@@ -188,7 +190,7 @@ public class Window extends JFrame {
 		east = createButton("East.png", "East", 125, 75);
 		north = createButton("North.png", "North",75, 25);
 		south = createButton("South.png", "South", 75, 125);
-		findPath = createButton("FindPath.png", "Find Path", 75, 240);	
+		findPath = createButton("FindPath.png", "Find Path", 75, 240);
 		
 		bike = createButton("cycle.png", "By bike or walking", 45, 350);
 		bike.setVisible(false);
@@ -199,17 +201,32 @@ public class Window extends JFrame {
 		blueCar = createButton("motor_blue.png", "By car", 105, 350);
 		blueCar.setVisible(false);
 		
+		korteste = new JButton("Shortest");
+		korteste.setMargin(new Insets(5,5,5,5));
+		korteste.setBounds(20, 395, 70, 20);
+		korteste.setVisible(false);
+		hurtigste = new JButton("Fastest");
+		hurtigste.setMargin(new Insets(5,5,5,5));
+		hurtigste.setBounds(95, 395, 70, 20);
+		hurtigste.setVisible(false);
+		
 		searchResultBox = new JComboBox();
 
 		from = new JTextField("From");
-		from.setBounds(25 , 275,140, 25);
+		from.setBounds(20, 280, 145, 25);
 		from.setBackground(Color.WHITE);
 		from.setVisible(false);
 		
 		to = new JTextField("To");
-		to.setBounds(25, 310, 140,25);
+		to.setBounds(20, 315, 145, 25);
 		to.setBackground(Color.WHITE);
 		to.setVisible(false);
+		
+		toms = new JButton("Search");
+		toms.setBounds(20, 425,70, 20);
+		toms.setMargin(new Insets(5,5,5,5));
+		toms.setFont(null);
+		toms.setVisible(false);
 		
 		//Internet magic from http://tips4java.wordpress.com/2009/05/31/backgrounds-with-transparency/
 		background = new JPanel()
@@ -229,10 +246,7 @@ public class Window extends JFrame {
 		background.setOpaque(false);		
 		//background.setBackground(new Color(255,255,255,200)); White
 		background.setBackground(new Color(0,0,0,20));
-		background.setBounds(10,20,165,400);
-		
-		toms = new JButton("Tom");
-		toms.setBounds(35, 400, 20,20);
+		background.setBounds(10,20,165,275);
 	}
 	
 	/**
@@ -321,6 +335,9 @@ public class Window extends JFrame {
 				car.setVisible(true);
 				blueBike.setVisible(true);
 				bike.setVisible(false);
+				korteste.setVisible(false);
+				hurtigste.setVisible(false);
+				toms.setBounds(20, 395,70, 20);
 			}
 		});
 		
@@ -333,6 +350,31 @@ public class Window extends JFrame {
 				car.setVisible(false);
 				blueBike.setVisible(false);
 				bike.setVisible(true);
+				korteste.setVisible(true);
+				hurtigste.setVisible(true);
+				toms.setBounds(20, 425,70, 20);
+			}
+		});
+		
+		hurtigste.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent evt) {
+				System.out.println("Hurtigste rute valgt");
+				//hurtigste.setBackground(Color.blue.brighter());
+				hurtigste.setFont(new Font("Fastest", Font.BOLD, 12));
+				//korteste.setBackground(null);
+				korteste.setFont(null);
+			}
+		});
+		
+		korteste.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent evt) {
+				System.out.println("Korteste rute valgt");
+				//korteste.setBackground(Color.blue.brighter());
+				korteste.setFont(new Font("Shortest", Font.BOLD, 12));
+				//hurtigste.setBackground(null);
+				hurtigste.setFont(null);
 			}
 		});
 
@@ -359,6 +401,13 @@ public class Window extends JFrame {
 					bike.setVisible(true);
 					blueCar.setVisible(true);
 					navigateVisible = true;
+					korteste.setVisible(true);
+					hurtigste.setVisible(true);
+					//korteste.setBackground(Color.blue.brighter());
+					korteste.setFont(new Font("Shortest", Font.BOLD, 12));
+					hurtigste.setFont(null);
+					toms.setVisible(true);
+					background.setBounds(10,20,165,440);
 				}
 				else {
 					to.setVisible(false);
@@ -369,6 +418,10 @@ public class Window extends JFrame {
 					blueCar.setVisible(false);
 					searchResultBox.setVisible(false);
 					navigateVisible = false;
+					korteste.setVisible(false);
+					hurtigste.setVisible(false);
+					toms.setVisible(false);
+					background.setBounds(10,20,165,275);
 				}
 				
 			}
@@ -530,6 +583,8 @@ public class Window extends JFrame {
 		screen.add(car, JLayeredPane.PALETTE_LAYER);
 		screen.add(blueBike, JLayeredPane.PALETTE_LAYER);
 		screen.add(blueCar, JLayeredPane.PALETTE_LAYER);
+		screen.add(hurtigste, JLayeredPane.PALETTE_LAYER);
+		screen.add(korteste, JLayeredPane.PALETTE_LAYER);
 	}
 
 	/**
