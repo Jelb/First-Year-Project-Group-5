@@ -1,9 +1,12 @@
 package Part1;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Polygon;
 import java.util.ArrayList;
 import javax.swing.JPanel;
+
 
 public class Map extends JPanel {
 	/**
@@ -13,6 +16,8 @@ public class Map extends JPanel {
 	private ArrayList<RoadSegment> segments;
 	private ArrayList<DrawableItem> path;
 	private static Map instance = null;
+	private static ArrayList<Polygon> poly;
+
 	
 	private Image dbImage;
 	private Graphics dbg;
@@ -41,12 +46,43 @@ public class Map extends JPanel {
 	}
 	
     public void paintComponent(Graphics g) {
+    	poly = new ArrayList<Polygon>();
+    	Polygon current = new Polygon();
+        g.setColor(Color.green);
+    	for(CoastPoint[] c: WindowHandler.getCoast()) {
+    		current = new Polygon();
+    		for(int i = 0; i < c.length; i++) {
+    			current.addPoint(calcPixelX(c[i].getX()-DataReader.getMinX()), calcPixelY(c[i].getY()-DataReader.getMinY()));
+    		}
+    		poly.add(current);
+    	}
+    	int po = 0;
+    	for(Polygon p : poly) {
+    		g.fillPolygon(p);
+    		g.drawPolygon(p);
+    		po++;
+    	}
+    	System.out.println("number og polygons: " + po);
         for(RoadSegment r : segments) {
         	if(r == null) continue;
             r.paintComponent(g);
         }
         for(DrawableItem r : path) r.paintComponent(g);
     }
+    
+	public int calcPixelX(double geoCord){
+		double diffX = (DrawableItem.geoMaxX - DrawableItem.geoMinX);
+		int width = Window.use().getMapWidth();		
+		int x =(int)(((geoCord-DrawableItem.geoMinX)/diffX)*width);
+		return x;
+	}
+	
+	public int calcPixelY(double geoCord){
+		double diffY = (DrawableItem.geoMaxY - DrawableItem.geoMinY);
+		int height = Window.use().getMapHeight();		
+		int y =(int)(height-(((geoCord-DrawableItem.geoMinY)/diffY)*height));
+		return y;
+	}
     
     /**
      * Getter method for the segments field.

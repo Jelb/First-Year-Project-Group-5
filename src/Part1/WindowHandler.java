@@ -35,6 +35,7 @@ public class WindowHandler {
 	static double maxMapHeight;	// = DataReader.getMaxY()-DataReader.getMinY();
 	static double maxMapWidth;	// = DataReader.getMaxX()-DataReader.getMinX();
 	private static HashMap<String, String> zipToCityMap;
+	private static ArrayList<CoastPoint[]> coast; 
 
 	/**
 	 * Calculates the absolute geo X coordinate of a given pixel value X.
@@ -524,6 +525,7 @@ public class WindowHandler {
 		
 		//ArraylList with Nodes
 		dataReader.createNodeList();
+		coast = dataReader.readCoast();
 		
 		longestRoadsFloor = 10000;
 		
@@ -606,7 +608,10 @@ public class WindowHandler {
 
 
 	public static HashMap<String, String> getZipToCityMap() {
-		return zipToCityMap;
+		return zipToCityMap;	
 	}
 	
+	public static ArrayList<CoastPoint[]> getCoast() {
+		return coast;
+	}
 }
