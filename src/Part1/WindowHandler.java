@@ -440,13 +440,7 @@ public class WindowHandler {
 	}
 	
 	public static void resetMap() {
-		setGeoHeight(DataReader.getMaxY()-DataReader.getMinY());
-		setGeoWidth(DataReader.getMaxX()-DataReader.getMinX());
-		offsetX = 0;
-		offsetY = 0;
-		nodes = QT.query(0, 0, geoWidth, geoHeight);
-		DrawableItem.setMapSize(geoWidth, geoHeight, 0.0, 0.0);
-		getEdgesFromNodes();
+		search(-offsetX, maxMapWidth-offsetX, -offsetY, maxMapHeight-offsetY);
 		Window.use().updateMap();
 	}
 

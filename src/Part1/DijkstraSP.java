@@ -63,8 +63,8 @@ public class DijkstraSP {
 	private void relaxDriveTime(Edge e) {
 		int v = e.getFromNodeID(), w = e.getToNodeID();
 
-		if (distTo[w] > distTo[v] + e.length()) {
-			distTo[w] = distTo[v] + e.length();
+		if (distTo[w] > distTo[v] + e.getDriveTime()) {
+			distTo[w] = distTo[v] + e.getDriveTime();
 			edgeTo[w] = e;
 			if (pq.contains(w)) { 
 				pq.decreaseKey(w, distTo[w]);
