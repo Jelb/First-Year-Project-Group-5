@@ -26,7 +26,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 /*
  * Window class is the GUI of our program, which puts the map and other components together
@@ -332,12 +337,29 @@ public class Window extends JFrame {
 			createSearchBox(new String[]{"No Results"},x,y,fromBool);
 		}
 		else {
-			if(!(result[4].equals(""))){
+			// If there has been typed in a city name
+			if (!result[5].equals("")) {
+				HashMap<String, String> zipToCityMap = WindowHandler.getZipToCityMap();
+				Set<String> zips = zipToCityMap.keySet();
+				ArrayList<String> zipList = new ArrayList<String>();
+				for (String zip : zips) {
+					if (result[5].toLowerCase().equals(zipToCityMap.get(zip).toLowerCase())) zipList.add(zip);
+				}
+				setArray = new String[zipList.size()];
+				for (int i = 0; i < setArray.length; i++) {
+					setArray[i] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " " + result[4]+ " " + zipList.get(i) + " " + result[5];
+					setArray[i] = setArray[0].replaceAll("\\s+", " ");
+				}
+				zipArray = Arrays.copyOf(zipList.toArray(), zipList.size(), String[].class);
+			}
+			// If there has been typed in a zip code
+			else if(!(result[4].equals(""))){
 				setArray = new String[1]; 
 				setArray[0] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " " + result[4]+ " " + WindowHandler.getZipToCityMap().get(result[4]);
 				setArray[0] = setArray[0].replaceAll("\\s+", " ");
 				zipArray = new String[]{result[4]};
-				}		
+				}
+			// If there has been typed in no city name or zip code
 			else{
 				HashSet<String> set = WindowHandler.getRoadToZipMap().get(result[0]);
 				setArray = set.toArray(new String[0]);
@@ -401,6 +423,7 @@ public class Window extends JFrame {
 							else {
 								WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
 								flagNode = edge.getFromNode();
+								randomCorrectEdge = null;
 								break;
 							}
 						}
@@ -416,16 +439,15 @@ public class Window extends JFrame {
 						double x = flagNode.getXCord();
 						double y = flagNode.getYCord();
 						new Flag(x,y,Window.fromBool);
-						Window.use().updateMap();
 					}
 					else{
 						to.setText(text);
 						double x = flagNode.getXCord();
 						double y = flagNode.getYCord();
 						new Flag(x,y,Window.fromBool);
-						Window.use().updateMap();
 					}
 				}
+				updateMap();
 			}
 	});
 		
