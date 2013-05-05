@@ -3,8 +3,12 @@ package Part1;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
+import java.awt.Insets;
+import java.awt.Rectangle;
+
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -17,6 +21,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
+
+import Part1.DijkstraSP.CompareType;
+import Part1.DijkstraSP.TransportWay;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -26,7 +34,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 /*
  * Window class is the GUI of our program, which puts the map and other components together
@@ -51,14 +64,17 @@ public class Window extends JFrame {
 	private static int maxHeight;
 
 	//Buttons to pan and zoom
-	private JButton resetZoom, zoomOut, zoomIn;
-	private JButton west, east, north, south, findPath;
+	private JButton resetZoom, zoomOut, zoomIn, korteste, hurtigste;
+	private JButton west, east, north, south, findPath, bike, blueBike, car, blueCar;
 	private JTextField from, to;
 	private JComboBox searchResultBox;
-	private boolean navigateVisible=false;
+	private boolean navigateVisible = false;
 	private String[] result;
 	private String[] zipArray;
 	private static boolean fromBool;
+	
+	private boolean byCar = true;
+	private boolean fastest = true;
 	
 	//GUI background
 	private JPanel background;
@@ -176,19 +192,43 @@ public class Window extends JFrame {
 		east = createButton("East.png", "East", 125, 75);
 		north = createButton("North.png", "North",75, 25);
 		south = createButton("South.png", "South", 75, 125);
-		findPath = createButton("FindPath.png", "Find Path", 75, 240);		
+		findPath = createButton("FindPath.png", "Find Path", 75, 240);
+		
+		bike = createButton("cycle.png", "By bike or walking", 45, 350);
+		bike.setVisible(false);
+		blueBike = createButton("cycle_blue.png", "By bike or walking", 45, 350);
+		blueBike.setVisible(false);
+		car = createButton("motor.png", "By car", 105, 350);
+		car.setVisible(false);
+		blueCar = createButton("motor_blue.png", "By car", 105, 350);
+		blueCar.setVisible(false);
+		
+		korteste = new JButton("Shortest");
+		korteste.setMargin(new Insets(5,5,5,5));
+		korteste.setBounds(20, 395, 70, 20);
+		korteste.setVisible(false);
+		hurtigste = new JButton("Fastest");
+		hurtigste.setMargin(new Insets(5,5,5,5));
+		hurtigste.setBounds(95, 395, 70, 20);
+		hurtigste.setVisible(false);
 		
 		searchResultBox = new JComboBox();
 
 		from = new JTextField("From");
-		from.setBounds(25 , 275,140, 25);
+		from.setBounds(20, 280, 145, 25);
 		from.setBackground(Color.WHITE);
 		from.setVisible(false);
 		
 		to = new JTextField("To");
-		to.setBounds(25, 310, 140,25);
+		to.setBounds(20, 315, 145, 25);
 		to.setBackground(Color.WHITE);
 		to.setVisible(false);
+		
+		toms = new JButton("Search");
+		toms.setBounds(20, 425,70, 20);
+		toms.setMargin(new Insets(5,5,5,5));
+		toms.setFont(null);
+		toms.setVisible(false);
 		
 		//Internet magic from http://tips4java.wordpress.com/2009/05/31/backgrounds-with-transparency/
 		background = new JPanel()
@@ -208,10 +248,7 @@ public class Window extends JFrame {
 		background.setOpaque(false);		
 		//background.setBackground(new Color(255,255,255,200)); White
 		background.setBackground(new Color(0,0,0,20));
-		background.setBounds(10,20,165,340);
-		
-		toms = new JButton("Tom");
-		toms.setBounds(35, 400, 20,20);
+		background.setBounds(10,20,165,275);
 	}
 	
 	/**
@@ -290,27 +327,102 @@ public class Window extends JFrame {
 				addressParse(toText, 185, 310,false);
 			}
 		});
-
-		toms.addActionListener(new ActionListener(){
+		
+		bike.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				WindowHandler.randomSPtest();
+				System.out.println("bike");
+				byCar = false;
+				blueCar.setVisible(false);
+				car.setVisible(true);
+				blueBike.setVisible(true);
+				bike.setVisible(false);
+				korteste.setVisible(false);
+				hurtigste.setVisible(false);
+				toms.setBounds(20, 395,70, 20);
 			}
 		});
 		
-		findPath.addActionListener(new ActionListener(){
+		car.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent evt) {
+				System.out.println("car");
+				byCar = true;
+				blueCar.setVisible(true);
+				car.setVisible(false);
+				blueBike.setVisible(false);
+				bike.setVisible(true);
+				korteste.setVisible(true);
+				hurtigste.setVisible(true);
+				toms.setBounds(20, 425,70, 20);
+			}
+		});
+		
+		hurtigste.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent evt) {
+				System.out.println("Hurtigste rute valgt");
+				hurtigste.setFont(new Font("Fastest", Font.BOLD, 12));
+				korteste.setFont(null);
+				fastest = true;
+			}
+		});
+		
+		korteste.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent evt) {
+				System.out.println("Korteste rute valgt");
+				korteste.setFont(new Font("Shortest", Font.BOLD, 12));
+				hurtigste.setFont(null);
+				fastest = false;
+			}
+		});
+
+		toms.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent evt) {	
+				//Checks if the user is going by car or bike, and if they want the shortest or fastest route
+				if(byCar) { 
+					if(fastest) {
+						WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.FASTEST);
+					} else {
+						WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.SHORTEST);
+					}
+				} else {
+					WindowHandler.pathFindingTest(TransportWay.BIKE, CompareType.SHORTEST);
+				}
+			}
+		});
+		
+		findPath.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent evt) {
 				if(!navigateVisible){
 					to.setVisible(true);
 					from.setVisible(true);
-					navigateVisible= true;
+					bike.setVisible(true);
+					blueCar.setVisible(true);
+					navigateVisible = true;
+					korteste.setVisible(true);
+					hurtigste.setVisible(true);
+					korteste.setFont(new Font("Shortest", Font.BOLD, 12));
+					hurtigste.setFont(null);
+					toms.setVisible(true);
+					background.setBounds(10,20,165,440);
 				}
-				else{
+				else {
 					to.setVisible(false);
 					from.setVisible(false);
+					bike.setVisible(false);
+					blueBike.setVisible(false);
+					car.setVisible(false);
+					blueCar.setVisible(false);
 					searchResultBox.setVisible(false);
-					navigateVisible= false;
+					navigateVisible = false;
+					korteste.setVisible(false);
+					hurtigste.setVisible(false);
+					toms.setVisible(false);
+					background.setBounds(10,20,165,275);
 				}
 				
 			}
@@ -332,12 +444,33 @@ public class Window extends JFrame {
 			createSearchBox(new String[]{"No Results"},x,y,fromBool);
 		}
 		else {
-			if(!(result[4].equals(""))){
+			// If there has been typed in a city name
+			if (!result[5].equals("")) {
+				HashMap<String, String> zipToCityMap = WindowHandler.getZipToCityMap();
+				Set<String> zips = zipToCityMap.keySet();
+				ArrayList<String> zipList = new ArrayList<String>();
+				for (String zip : zips) {
+					if (result[5].toLowerCase().equals(zipToCityMap.get(zip).toLowerCase())) {
+						if (WindowHandler.getRoadToZipMap().get(result[0]).contains(zip)) {
+							zipList.add(zip);
+						}
+					}
+				}
+				setArray = new String[zipList.size()];
+				for (int i = 0; i < setArray.length; i++) {
+					setArray[i] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " " + zipList.get(i) + " " + result[5];
+					setArray[i] = setArray[i].replaceAll("\\s+", " ");
+				}
+				zipArray = Arrays.copyOf(zipList.toArray(), zipList.size(), String[].class);
+			}
+			// If there has been typed in a zip code
+			else if(!(result[4].equals(""))){
 				setArray = new String[1]; 
 				setArray[0] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " " + result[4]+ " " + WindowHandler.getZipToCityMap().get(result[4]);
 				setArray[0] = setArray[0].replaceAll("\\s+", " ");
 				zipArray = new String[]{result[4]};
-				}		
+				}
+			// If there has been typed in no city name or zip code
 			else{
 				HashSet<String> set = WindowHandler.getRoadToZipMap().get(result[0]);
 				setArray = set.toArray(new String[0]);
@@ -351,7 +484,9 @@ public class Window extends JFrame {
 					setArray[i] = setArray[i].replaceAll("\\s+", " ");				
 				}						
 			}
-			createSearchBox(setArray,x,y,fromBool);
+			//if(setArray.length > 1) {
+				createSearchBox(setArray,x,y,fromBool);
+			//}
 		}
 	}
 	
@@ -365,7 +500,7 @@ public class Window extends JFrame {
 	 */
 	private void createSearchBox(String[] array, int x, int y,boolean fromBool){
 		Window.fromBool = fromBool;
-		searchResultBox = null;
+		screen.remove(searchResultBox);
 		searchResultBox = new JComboBox(array);
 		searchResultBox.setBounds(x,y ,200,25);	
 		searchResultBox.addActionListener(new ActionListener(){ 
@@ -387,18 +522,21 @@ public class Window extends JFrame {
 									if (houseNumber >= edge.getHouseNumberMinEven() && houseNumber <= edge.getHouseNumberMaxEven()) {
 										WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
 										flagNode = edge.getFromNode();
+										randomCorrectEdge = null;
 										break;
 									}
 								}
 								else if (houseNumber >= edge.getHouseNumberMinOdd() && houseNumber <= edge.getHouseNumberMaxOdd()) {
 										WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
 										flagNode = edge.getFromNode();
+										randomCorrectEdge = null;
 										break;
 								}
 							}
 							else {
 								WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
 								flagNode = edge.getFromNode();
+								randomCorrectEdge = null;
 								break;
 							}
 						}
@@ -414,16 +552,15 @@ public class Window extends JFrame {
 						double x = flagNode.getXCord();
 						double y = flagNode.getYCord();
 						new Flag(x,y,Window.fromBool);
-						Window.use().updateMap();
 					}
 					else{
 						to.setText(text);
 						double x = flagNode.getXCord();
 						double y = flagNode.getYCord();
 						new Flag(x,y,Window.fromBool);
-						Window.use().updateMap();
 					}
 				}
+				updateMap();
 			}
 	});
 		
@@ -447,6 +584,12 @@ public class Window extends JFrame {
 		screen.add(toms, JLayeredPane.PALETTE_LAYER);
 		screen.add(findPath, JLayeredPane.PALETTE_LAYER);
 		screen.add(background, JLayeredPane.PALETTE_LAYER);
+		screen.add(bike, JLayeredPane.PALETTE_LAYER);
+		screen.add(car, JLayeredPane.PALETTE_LAYER);
+		screen.add(blueBike, JLayeredPane.PALETTE_LAYER);
+		screen.add(blueCar, JLayeredPane.PALETTE_LAYER);
+		screen.add(hurtigste, JLayeredPane.PALETTE_LAYER);
+		screen.add(korteste, JLayeredPane.PALETTE_LAYER);
 	}
 
 	/**
@@ -614,22 +757,6 @@ public class Window extends JFrame {
 					setMousePanX(e.getX() - prevX);
 					setMousePanY(e.getY() - prevY);
 					repaint();
-					
-					
-//					int x = e.getX();
-//					int y = e.getY();
-//					
-//					int dist;
-//					if (x > y) dist = Math.abs(x-prevX);
-//					else dist = Math.abs(y-prevY);
-//					System.out.println("distance dragged: " + dist);
-//					if (dist > 1) {
-//						System.out.println("Im Panning");
-//						PanHandler.pixelPan((prevX-e.getX()), (e.getY()-prevY));
-//						prevX = e.getX();
-//						prevY = e.getY();
-//						updateMap();
-//					}
 				}
 				else {
 					prevX = e.getX();
@@ -654,10 +781,12 @@ public class Window extends JFrame {
 				updateMap();
 			}
 			else if (SwingUtilities.isLeftMouseButton(e)) {
-				PanHandler.pixelPan((prevX-e.getX()), (e.getY()-prevY));
-				setMousePanX(0);
-				setMousePanY(0);
-				dragging = false;
+				if (dragging) {
+					PanHandler.pixelPan((prevX-e.getX()), (e.getY()-prevY));
+					setMousePanX(0);
+					setMousePanY(0);
+					dragging = false;
+				}
 			}
 			Map.use().flipImageBuffer();
 		}
