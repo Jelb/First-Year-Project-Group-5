@@ -20,6 +20,18 @@ public class Graph {
 		
 	}
 	
+	/**
+	 * Tells if a node has no more than 2 adjacent edges.
+	 * @param v		Node
+	 * @return		True, if the node has a max of 2 adjacent edges.
+	 */
+	public boolean hasTwoEdges(int v) {
+		if(adj[v].size() == 2)
+			return true;
+		else
+			return false;
+	}
+	
 	public int getV() { return V; }
 	public int getE() { return E; }
 	
@@ -29,12 +41,12 @@ public class Graph {
 		E++;
 	}
 	
-	// returns adjacency list for the given node
+	// returns adjacency list for the given node, as a LinkedList of edges
 	public Iterable<Edge> adj(int v) { 
 		return adj[v]; 
 	}
 
-	// returns adjacency list for the given node
+	// returns adjacency list for the given node, as an ArrayList of edges
 	public Iterable<Edge> adjArr(int v) { 
 		ArrayList<Edge> arr = new ArrayList<Edge>();
 		arr.addAll(adj[v]);

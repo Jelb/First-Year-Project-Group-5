@@ -1,6 +1,7 @@
 package Part1;
 
 import java.awt.Graphics;
+import java.awt.Image;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 
@@ -13,6 +14,9 @@ public class Map extends JPanel {
 	private ArrayList<DrawableItem> path;
 	private static Map instance = null;
 	
+	private Image dbImage;
+	private Graphics dbg;
+	
 	private Map() {
 	}
 	
@@ -23,6 +27,17 @@ public class Map extends JPanel {
 			instance.path = new ArrayList<DrawableItem>();
 		}
 		return instance;
+	}
+	
+	public void paint(Graphics g) {
+		RoadSegment.setZoomLevel();
+		g.drawImage(dbImage, Window.use().getMousePanX(), Window.use().getMousePanY(), this);
+	}
+	
+	public void flipImageBuffer() {
+		dbImage = createImage(getWidth(), getHeight());
+		dbg = dbImage.getGraphics();
+		paintComponent(dbg);
 	}
 	
     public void paintComponent(Graphics g) {

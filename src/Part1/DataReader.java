@@ -139,6 +139,7 @@ public class DataReader {
 	 * @return Returns a <b>Graph</b> object based on the content <i>edgeFile</i>.
 	 */
 	public Graph createGraphAndLongestRoadsList(int longestRoadsFloor) {
+//	public MultiGraph createGraphAndLongestRoadsList(int longestRoadsFloor) {
 		SplashScreen.use().setTaskName(Task.EDGES);
 		System.out.println("Adding " + (nodes.size()-1) + " nodes to graph");
 		longestRoads = new ArrayList<Edge>();
@@ -148,7 +149,8 @@ public class DataReader {
 			
 			// Create a graph on the nodes
 			Graph graph = new Graph(nodes.size());
-	
+//			MultiGraph multiGraph = new MultiGraph();
+			
 			// Reads the "kdv_unload.txt" file into the buffer.
 			BufferedReader br = new BufferedReader(new FileReader(edgeFile));
 	
@@ -195,6 +197,7 @@ public class DataReader {
 							houseNumberFromLeft, houseNumberToLeft, houseNumberFromRight, houseNumberToRight, true);
 					if (length > longestRoadsFloor) longestRoads.add(edge);
 					edges.add(edge);
+//					WindowHandler.graph.addEdge(edge);
 					graph.addEdge(edge);
 				}
 				else if (oneway.equals("tf")) {
@@ -203,6 +206,7 @@ public class DataReader {
 					if (length > longestRoadsFloor) longestRoads.add(edge);
 					edges.add(edge);
 					graph.addEdge(edge);
+//					multiGraph.addEdge(edge);
 				}
 				// if the road is two way, only one of the ways is drawn
 				else {
@@ -215,6 +219,8 @@ public class DataReader {
 					edges.add(tEdge);
 					graph.addEdge(fEdge);
 					graph.addEdge(tEdge);
+//					multiGraph.addEdge(fEdge);
+//					multiGraph.addEdge(tEdge);
 				}
 				
 				line = br.readLine();

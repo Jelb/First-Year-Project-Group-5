@@ -95,7 +95,7 @@ public class PanHandler {
 	public static void pixelPan(int deltaX, int deltaY) {
 		double x = WindowHandler.pixelToGeoX(deltaX);
 		double y = WindowHandler.pixelToGeoY(deltaY);
-		pan(x, y);
+		pan(x,y);
 	}
 	
 	 /* 

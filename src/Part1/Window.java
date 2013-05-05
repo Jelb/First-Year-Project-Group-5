@@ -63,6 +63,12 @@ public class Window extends JFrame {
 	//GUI background
 	private JPanel background;
 
+	private int mousePanX = 0;
+	private int mousePanY = 0;
+	
+	
+
+	
 
 	//Midlertidige felter
 	private JButton toms;
@@ -142,7 +148,8 @@ public class Window extends JFrame {
 		long startTime = System.currentTimeMillis();
 		Map.use().updatePath();
 		validate();
-		repaint();
+		
+		
 		if(!isVisible()){
 			SplashScreen.use().setAlwaysOnTop(true);
 			Map.use().setBounds(0, 0, contentPane.getPreferredSize().width, contentPane.getPreferredSize().height);		
@@ -152,6 +159,8 @@ public class Window extends JFrame {
 		} else {
 			requestFocus();			
 		}
+		Map.use().flipImageBuffer();
+		repaint();
 		System.out.println("Time to update map: " + (System.currentTimeMillis()-startTime)/1000.0);
 	}
 
@@ -208,7 +217,6 @@ public class Window extends JFrame {
 	/**
 	 * Each button gets a listener with a corresponding action
 	 */
-
 	private void addButtonListeners(){
 
 		resetZoom.addActionListener(new ActionListener() {
@@ -286,7 +294,7 @@ public class Window extends JFrame {
 		toms.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				WindowHandler.pathFindingTest();
+				WindowHandler.randomSPtest();
 			}
 		});
 		
@@ -568,6 +576,7 @@ public class Window extends JFrame {
 				height = Window.use().getHeight();
 				width = Window.use().getWidth();
 				timer = null;
+				Map.use().flipImageBuffer();
 			}
 		}
 	}
@@ -589,7 +598,7 @@ public class Window extends JFrame {
 				pressedX = e.getX();
 				pressedY = e.getY();
 				
-				WindowHandler.closestEdge(pressedX, pressedY);
+//				WindowHandler.closestEdge(pressedX, pressedY);
 			}
 		}
 
@@ -602,19 +611,25 @@ public class Window extends JFrame {
 			}
 			else if (SwingUtilities.isLeftMouseButton(e)) {
 				if (dragging) {
-					int x = e.getX();
-					int y = e.getY();
-					int dist;
-					if (x > y) dist = Math.abs(x-prevX);
-					else dist = Math.abs(y-prevY);
-					System.out.println("distance dragged: " + dist);
-					if (dist > 1) {
-						System.out.println("Im Panning");
-						PanHandler.pixelPan((prevX-e.getX()), (e.getY()-prevY));
-						prevX = e.getX();
-						prevY = e.getY();
-						//updateMap();
-					}
+					setMousePanX(e.getX() - prevX);
+					setMousePanY(e.getY() - prevY);
+					repaint();
+					
+					
+//					int x = e.getX();
+//					int y = e.getY();
+//					
+//					int dist;
+//					if (x > y) dist = Math.abs(x-prevX);
+//					else dist = Math.abs(y-prevY);
+//					System.out.println("distance dragged: " + dist);
+//					if (dist > 1) {
+//						System.out.println("Im Panning");
+//						PanHandler.pixelPan((prevX-e.getX()), (e.getY()-prevY));
+//						prevX = e.getX();
+//						prevY = e.getY();
+//						updateMap();
+//					}
 				}
 				else {
 					prevX = e.getX();
@@ -639,8 +654,12 @@ public class Window extends JFrame {
 				updateMap();
 			}
 			else if (SwingUtilities.isLeftMouseButton(e)) {
+				PanHandler.pixelPan((prevX-e.getX()), (e.getY()-prevY));
+				setMousePanX(0);
+				setMousePanY(0);
 				dragging = false;
 			}
+			Map.use().flipImageBuffer();
 		}
 	}
 
@@ -652,6 +671,24 @@ public class Window extends JFrame {
 			} else {	            
 				WindowHandler.zoomOut();
 			}
+			Map.use().flipImageBuffer();
 		}
 	}
+	
+	public int getMousePanX() {
+		return mousePanX;
+	}
+
+	public void setMousePanX(int mousePanX) {
+		this.mousePanX = mousePanX;
+	}
+
+	public int getMousePanY() {
+		return mousePanY;
+	}
+
+	public void setMousePanY(int mousePanY) {
+		this.mousePanY = mousePanY;
+	}
+	
 }
