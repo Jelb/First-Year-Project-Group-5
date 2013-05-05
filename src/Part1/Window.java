@@ -353,7 +353,6 @@ public class Window extends JFrame {
 			}
 			createSearchBox(setArray,x,y,fromBool);
 		}
-		updateMap();
 	}
 	
 	/**
@@ -366,7 +365,7 @@ public class Window extends JFrame {
 	 */
 	private void createSearchBox(String[] array, int x, int y,boolean fromBool){
 		Window.fromBool = fromBool;
-		searchResultBox = null;
+		screen.remove(searchResultBox);
 		searchResultBox = new JComboBox(array);
 		searchResultBox.setBounds(x,y ,200,25);	
 		searchResultBox.addActionListener(new ActionListener(){ 
