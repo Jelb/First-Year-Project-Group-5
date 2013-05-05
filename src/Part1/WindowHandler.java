@@ -227,11 +227,11 @@ public class WindowHandler {
 	 * Picks to nodes at random and calculates the shortest path between them.
 	 * For testing purposes only.
 	 */
-	public static void pathFindingTest(TransportWay transport) {
+	public static void pathFindingTest(TransportWay transport, CompareType compareType) {
 		System.out.println("Start node: " + startNode);
 		
 		System.out.println("Creating SP object... ");
-		DijkstraSP dsp = new DijkstraSP(graph, startNode, transport, CompareType.FASTEST);	// use random node at our start node for shortest path calculation
+		DijkstraSP dsp = new DijkstraSP(graph, startNode, transport, compareType);	// use random node at our start node for shortest path calculation
 		
 		Stack<Edge> route = new Stack<Edge>();					// clears any previous route
 		

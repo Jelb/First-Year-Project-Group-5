@@ -22,6 +22,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
 
+import Part1.DijkstraSP.CompareType;
 import Part1.DijkstraSP.TransportWay;
 
 import java.awt.event.ActionEvent;
@@ -73,6 +74,7 @@ public class Window extends JFrame {
 	private static boolean fromBool;
 	
 	private boolean byCar = true;
+	private boolean fastest = true;
 	
 	//GUI background
 	private JPanel background;
@@ -360,10 +362,9 @@ public class Window extends JFrame {
 
 			public void actionPerformed(ActionEvent evt) {
 				System.out.println("Hurtigste rute valgt");
-				//hurtigste.setBackground(Color.blue.brighter());
 				hurtigste.setFont(new Font("Fastest", Font.BOLD, 12));
-				//korteste.setBackground(null);
 				korteste.setFont(null);
+				fastest = true;
 			}
 		});
 		
@@ -371,28 +372,29 @@ public class Window extends JFrame {
 
 			public void actionPerformed(ActionEvent evt) {
 				System.out.println("Korteste rute valgt");
-				//korteste.setBackground(Color.blue.brighter());
 				korteste.setFont(new Font("Shortest", Font.BOLD, 12));
-				//hurtigste.setBackground(null);
 				hurtigste.setFont(null);
+				fastest = false;
 			}
 		});
 
 		toms.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {	
-				if(byCar) {
-					WindowHandler.pathFindingTest(TransportWay.CAR);
-					System.out.println("Search by car");
+				//Checks if the user is going by car or bike, and if they want the shortest or fastest route
+				if(byCar) { 
+					if(fastest) {
+						WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.FASTEST);
+					} else {
+						WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.SHORTEST);
+					}
 				} else {
-					WindowHandler.pathFindingTest(TransportWay.BIKE);
-					System.out.println("Search by bike");
+					WindowHandler.pathFindingTest(TransportWay.BIKE, CompareType.SHORTEST);
 				}
-					
 			}
 		});
 		
-		findPath.addActionListener(new ActionListener(){
+		findPath.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent evt) {
 				if(!navigateVisible){
@@ -403,7 +405,6 @@ public class Window extends JFrame {
 					navigateVisible = true;
 					korteste.setVisible(true);
 					hurtigste.setVisible(true);
-					//korteste.setBackground(Color.blue.brighter());
 					korteste.setFont(new Font("Shortest", Font.BOLD, 12));
 					hurtigste.setFont(null);
 					toms.setVisible(true);
