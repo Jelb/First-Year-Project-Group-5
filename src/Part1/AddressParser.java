@@ -12,9 +12,8 @@ import java.util.regex.Matcher;
  * 2. [1] Building no.<br>
  * 3. [2] Building letter<br>
  * 4. [3] Floor<br>
- * 5. [4] Door no.<br>
- * 6. [5] Zipcode<br>
- * 7. [6] City<br>
+ * 6. [4] Zipcode<br>
+ * 7. [5] City<br>
  * 
  * If any of the components are omitted the class will try to determind which of the components 
  * is omitted and split the rest of the input.
