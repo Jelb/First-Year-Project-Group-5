@@ -210,7 +210,7 @@ public class WindowHandler {
 //		endNode = rnd.nextInt(multiGraph.getV(1)-1)+1;
 		startNode = rnd.nextInt(graph.getV()-1)+1;
 		endNode = rnd.nextInt(graph.getV()-1)+1;
-		pathFindingTest();
+		//pathFindingTest();
 	}
 	
 	public static void setNode(int node, boolean from){
@@ -227,11 +227,11 @@ public class WindowHandler {
 	 * Picks to nodes at random and calculates the shortest path between them.
 	 * For testing purposes only.
 	 */
-	public static void pathFindingTest() {
+	public static void pathFindingTest(TransportWay transport) {
 		System.out.println("Start node: " + startNode);
 		
 		System.out.println("Creating SP object... ");
-		DijkstraSP dsp = new DijkstraSP(graph, startNode, TransportWay.CAR, CompareType.FASTEST);	// use random node at our start node for shortest path calculation
+		DijkstraSP dsp = new DijkstraSP(graph, startNode, transport, CompareType.FASTEST);	// use random node at our start node for shortest path calculation
 		
 		Stack<Edge> route = new Stack<Edge>();					// clears any previous route
 		

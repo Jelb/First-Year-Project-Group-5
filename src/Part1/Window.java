@@ -19,6 +19,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
+
+import Part1.DijkstraSP.TransportWay;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -57,10 +60,12 @@ public class Window extends JFrame {
 	private JButton west, east, north, south, findPath, bike, car;
 	private JTextField from, to;
 	private JComboBox searchResultBox;
-	private boolean navigateVisible=false;
+	private boolean navigateVisible = false;
 	private String[] result;
 	private String[] zipArray;
 	private static boolean fromBool;
+	
+	private boolean byCar = true;
 	
 	//GUI background
 	private JPanel background;
@@ -302,6 +307,7 @@ public class Window extends JFrame {
 
 			public void actionPerformed(ActionEvent evt) {
 				System.out.println("bike");
+				byCar = false;
 			}
 		});
 		
@@ -309,13 +315,21 @@ public class Window extends JFrame {
 
 			public void actionPerformed(ActionEvent evt) {
 				System.out.println("car");
+				byCar = true;
 			}
 		});
 
 		toms.addActionListener(new ActionListener(){
 
-			public void actionPerformed(ActionEvent evt) {
-				WindowHandler.pathFindingTest();
+			public void actionPerformed(ActionEvent evt) {	
+				if(byCar) {
+					WindowHandler.pathFindingTest(TransportWay.CAR);
+					System.out.println("Search by car");
+				} else {
+					WindowHandler.pathFindingTest(TransportWay.BIKE);
+					System.out.println("Search by bike");
+				}
+					
 			}
 		});
 		
@@ -327,15 +341,15 @@ public class Window extends JFrame {
 					from.setVisible(true);
 					bike.setVisible(true);
 					car.setVisible(true);
-					navigateVisible= true;
+					navigateVisible = true;
 				}
-				else{
+				else {
 					to.setVisible(false);
 					from.setVisible(false);
 					bike.setVisible(false);
 					car.setVisible(false);
 					searchResultBox.setVisible(false);
-					navigateVisible= false;
+					navigateVisible = false;
 				}
 				
 			}
