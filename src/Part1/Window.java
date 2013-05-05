@@ -5,6 +5,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
+
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -57,7 +59,7 @@ public class Window extends JFrame {
 
 	//Buttons to pan and zoom
 	private JButton resetZoom, zoomOut, zoomIn;
-	private JButton west, east, north, south, findPath;
+	private JButton west, east, north, south, findPath, bike, car;
 	private JTextField from, to;
 	private JComboBox searchResultBox;
 	private boolean navigateVisible=false;
@@ -181,7 +183,12 @@ public class Window extends JFrame {
 		east = createButton("East.png", "East", 125, 75);
 		north = createButton("North.png", "North",75, 25);
 		south = createButton("South.png", "South", 75, 125);
-		findPath = createButton("FindPath.png", "Find Path", 75, 240);		
+		findPath = createButton("FindPath.png", "Find Path", 75, 240);	
+		
+		bike = createButton("cycle.png", "By bike or walking", 45, 350);
+		bike.setVisible(false);
+		car = createButton("motor.png", "By car", 105, 350);
+		car.setVisible(false);
 		
 		searchResultBox = new JComboBox();
 
@@ -213,7 +220,7 @@ public class Window extends JFrame {
 		background.setOpaque(false);		
 		//background.setBackground(new Color(255,255,255,200)); White
 		background.setBackground(new Color(0,0,0,20));
-		background.setBounds(10,20,165,340);
+		background.setBounds(10,20,165,400);
 		
 		toms = new JButton("Tom");
 		toms.setBounds(35, 400, 20,20);
@@ -295,6 +302,20 @@ public class Window extends JFrame {
 				addressParse(toText, 185, 310,false);
 			}
 		});
+		
+		bike.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent evt) {
+				System.out.println("bike");
+			}
+		});
+		
+		car.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent evt) {
+				System.out.println("car");
+			}
+		});
 
 		toms.addActionListener(new ActionListener(){
 
@@ -309,11 +330,15 @@ public class Window extends JFrame {
 				if(!navigateVisible){
 					to.setVisible(true);
 					from.setVisible(true);
+					bike.setVisible(true);
+					car.setVisible(true);
 					navigateVisible= true;
 				}
 				else{
 					to.setVisible(false);
 					from.setVisible(false);
+					bike.setVisible(false);
+					car.setVisible(false);
 					searchResultBox.setVisible(false);
 					navigateVisible= false;
 				}
@@ -373,7 +398,9 @@ public class Window extends JFrame {
 					setArray[i] = setArray[i].replaceAll("\\s+", " ");				
 				}						
 			}
-			createSearchBox(setArray,x,y,fromBool);
+			//if(setArray.length > 1) {
+				createSearchBox(setArray,x,y,fromBool);
+			//}
 		}
 	}
 	
@@ -471,6 +498,8 @@ public class Window extends JFrame {
 		screen.add(toms, JLayeredPane.PALETTE_LAYER);
 		screen.add(findPath, JLayeredPane.PALETTE_LAYER);
 		screen.add(background, JLayeredPane.PALETTE_LAYER);
+		screen.add(bike, JLayeredPane.PALETTE_LAYER);
+		screen.add(car, JLayeredPane.PALETTE_LAYER);
 	}
 
 	/**
