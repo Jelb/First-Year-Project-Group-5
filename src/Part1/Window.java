@@ -62,7 +62,7 @@ public class Window extends JFrame {
 
 	//Buttons to pan and zoom
 	private JButton resetZoom, zoomOut, zoomIn;
-	private JButton west, east, north, south, findPath, bike, car;
+	private JButton west, east, north, south, findPath, bike, blueBike, car, blueCar;
 	private JTextField from, to;
 	private JComboBox searchResultBox;
 	private boolean navigateVisible = false;
@@ -192,8 +192,12 @@ public class Window extends JFrame {
 		
 		bike = createButton("cycle.png", "By bike or walking", 45, 350);
 		bike.setVisible(false);
+		blueBike = createButton("cycle_blue.png", "By bike or walking", 45, 350);
+		blueBike.setVisible(false);
 		car = createButton("motor.png", "By car", 105, 350);
 		car.setVisible(false);
+		blueCar = createButton("motor_blue.png", "By car", 105, 350);
+		blueCar.setVisible(false);
 		
 		searchResultBox = new JComboBox();
 
@@ -313,6 +317,10 @@ public class Window extends JFrame {
 			public void actionPerformed(ActionEvent evt) {
 				System.out.println("bike");
 				byCar = false;
+				blueCar.setVisible(false);
+				car.setVisible(true);
+				blueBike.setVisible(true);
+				bike.setVisible(false);
 			}
 		});
 		
@@ -321,6 +329,10 @@ public class Window extends JFrame {
 			public void actionPerformed(ActionEvent evt) {
 				System.out.println("car");
 				byCar = true;
+				blueCar.setVisible(true);
+				car.setVisible(false);
+				blueBike.setVisible(false);
+				bike.setVisible(true);
 			}
 		});
 
@@ -345,14 +357,16 @@ public class Window extends JFrame {
 					to.setVisible(true);
 					from.setVisible(true);
 					bike.setVisible(true);
-					car.setVisible(true);
+					blueCar.setVisible(true);
 					navigateVisible = true;
 				}
 				else {
 					to.setVisible(false);
 					from.setVisible(false);
 					bike.setVisible(false);
+					blueBike.setVisible(false);
 					car.setVisible(false);
+					blueCar.setVisible(false);
 					searchResultBox.setVisible(false);
 					navigateVisible = false;
 				}
@@ -518,6 +532,8 @@ public class Window extends JFrame {
 		screen.add(background, JLayeredPane.PALETTE_LAYER);
 		screen.add(bike, JLayeredPane.PALETTE_LAYER);
 		screen.add(car, JLayeredPane.PALETTE_LAYER);
+		screen.add(blueBike, JLayeredPane.PALETTE_LAYER);
+		screen.add(blueCar, JLayeredPane.PALETTE_LAYER);
 	}
 
 	/**
