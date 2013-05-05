@@ -44,18 +44,14 @@ public class DijkstraSP {
 	 */
 	private void relaxLength(Edge e) {
         int v = e.getFromNodeID(), w = e.getToNodeID();
-        																			//System.out.println("Relaxing edge " + v + " -> " + w);
 
         if (distTo[w] > distTo[v] + e.length()) {
         	distTo[w] = distTo[v] + e.length();
             edgeTo[w] = e;
-            																		//System.out.println("New shortest path to " + w + ": " + distTo[w]);
-            if (pq.contains(w)) {
-                																	//System.out.println("Removing node " + w + " from PQ"); 
+            if (pq.contains(w)) { 
             	pq.decreaseKey(w, distTo[w]);
             }
             else {
-            																		//System.out.println("Adding node " + w + " to priority queue of nodes whose edges we need to relax");
             	pq.insert(w, distTo[w]);
             }
         }
