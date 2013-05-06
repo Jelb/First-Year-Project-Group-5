@@ -193,6 +193,7 @@ public class Window extends JFrame {
 		shortest.setMargin(new Insets(5,5,5,5));
 		shortest.setBounds(20, 395, 70, 20);
 		shortest.setVisible(false);
+		
 		fastestButton = new JButton("Fastest");
 		fastestButton.setMargin(new Insets(5,5,5,5));
 		fastestButton.setBounds(95, 395, 70, 20);
@@ -347,7 +348,7 @@ public class Window extends JFrame {
 			}
 		});
 		
-		shortest.addActionListener(new ActionListener(){
+		fastestButton.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
 				System.out.println("Hurtigste rute valgt");
