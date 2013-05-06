@@ -412,6 +412,8 @@ public class Window extends JFrame {
 				from.setText(null);
 				to.setText(null);
 				screen.remove(searchResultBox);
+				Map.use().resetPath();
+				updateMap();
 			}
 		});
 
