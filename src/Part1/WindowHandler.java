@@ -35,7 +35,8 @@ public class WindowHandler {
 	static double maxMapHeight;	// = DataReader.getMaxY()-DataReader.getMinY();
 	static double maxMapWidth;	// = DataReader.getMaxX()-DataReader.getMinX();
 	private static HashMap<String, String> zipToCityMap;
-	private static ArrayList<CoastPoint[]> coast; 
+	private static ArrayList<CoastPoint[]> coast;
+	static ArrayList<DrawableItem> path = new ArrayList<DrawableItem>();;
 
 	/**
 	 * Calculates the absolute geo X coordinate of a given pixel value X.
@@ -263,8 +264,7 @@ public class WindowHandler {
 	/**
 	 * Adds the shortest path (static field 'route') to the roadSegments on the map.
 	 */
-	public static void addRouteToMap(Stack<Edge> route) {
-		ArrayList<DrawableItem> path = new ArrayList<DrawableItem>();
+	public static void addRouteToMap(Stack<Edge> route) {		
 		while(!route.empty()) {
 			Edge edge = route.pop();
 			double x1 = edge.getFromNode().getXCord();
