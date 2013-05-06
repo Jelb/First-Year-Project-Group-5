@@ -316,7 +316,7 @@ public class Window extends JFrame {
 
 			public void actionPerformed(ActionEvent evt) {
 				String fromText = from.getText();
-				addressParse(fromText, 185, 275, true);
+				addressParse(fromText, 185, 280, true);
 			}
 		});
 
@@ -324,7 +324,7 @@ public class Window extends JFrame {
 
 			public void actionPerformed(ActionEvent evt) {
 				String toText = to.getText();
-				addressParse(toText, 185, 310,false);
+				addressParse(toText, 185, 315,false);
 			}
 		});
 		
