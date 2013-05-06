@@ -59,7 +59,7 @@ public class Window extends JFrame {
 	private static int maxHeight;
 
 	//Buttons to pan and zoom
-	private JButton resetZoom, zoomOut, zoomIn, shortest, fastestsButton, ship, blueShip;
+	private JButton resetZoom, zoomOut, zoomIn, shortest, fastestsButton, ship, blueShip, search;
 	private JButton west, east, north, south, findPath, bike, blueBike, car, blueCar, reset;
 	private JTextField from, to;
 	private JComboBox searchResultBox;
@@ -77,10 +77,6 @@ public class Window extends JFrame {
 
 	private int mousePanX = 0;
 	private int mousePanY = 0;
-	
-	//Midlertidige felter
-	private JButton search;
-
 
 	/**
 	 * Constructor for the window class.
