@@ -302,7 +302,7 @@ public class Window extends JFrame {
 
 			public void actionPerformed(ActionEvent evt) {
 				String fromText = from.getText();
-				addressParse(fromText, 185, 275, true);
+				addressParse(fromText, 185, 280, true);
 			}
 		});
 
@@ -310,7 +310,7 @@ public class Window extends JFrame {
 
 			public void actionPerformed(ActionEvent evt) {
 				String toText = to.getText();
-				addressParse(toText, 185, 310,false);
+				addressParse(toText, 185, 315,false);
 			}
 		});
 		
@@ -326,6 +326,7 @@ public class Window extends JFrame {
 				shortest.setVisible(false);
 				fastestButton.setVisible(false);
 				search.setBounds(20, 395,70, 20);
+				fastest = false; //We want the shortest route if by bike
 			}
 		});
 		
@@ -340,7 +341,9 @@ public class Window extends JFrame {
 				bike.setVisible(true);
 				shortest.setVisible(true);
 				fastestButton.setVisible(true);
+				fastestButton.setFont(new Font("Shortest", Font.BOLD, 12));
 				search.setBounds(20, 425,70, 20);
+				fastest = true; //We want the fastest route by default if by car
 			}
 		});
 		
@@ -371,11 +374,14 @@ public class Window extends JFrame {
 				if(byCar) { 
 					if(fastest) {
 						WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.FASTEST);
+						System.out.println("By car, fastest route");
 					} else {
 						WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.SHORTEST);
+						System.out.println("By car, shortest route");
 					}
 				} else {
 					WindowHandler.pathFindingTest(TransportWay.BIKE, CompareType.SHORTEST);
+					System.out.println("By bike, shortest route");
 				}
 			}
 		});
@@ -389,10 +395,11 @@ public class Window extends JFrame {
 					bike.setVisible(true);
 					blueCar.setVisible(true);
 					navigateVisible = true;
+					
 					shortest.setVisible(true);
 					fastestButton.setVisible(true);
-					shortest.setFont(new Font("Shortest", Font.BOLD, 12));
-					fastestButton.setFont(null);
+					fastestButton.setFont(new Font("Shortest", Font.BOLD, 12));
+					shortest.setFont(null);
 					search.setVisible(true);
 					background.setBounds(10,20,165,440);
 				}
@@ -410,7 +417,6 @@ public class Window extends JFrame {
 					search.setVisible(false);
 					background.setBounds(10,20,165,275);
 				}
-				
 			}
 		});
 	}
