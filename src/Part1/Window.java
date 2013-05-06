@@ -340,6 +340,7 @@ public class Window extends JFrame {
 				korteste.setVisible(false);
 				hurtigste.setVisible(false);
 				toms.setBounds(20, 395,70, 20);
+				fastest = false; //We want the shortest route if by bike
 			}
 		});
 		
@@ -353,8 +354,11 @@ public class Window extends JFrame {
 				blueBike.setVisible(false);
 				bike.setVisible(true);
 				korteste.setVisible(true);
+				korteste.setFont(null);
 				hurtigste.setVisible(true);
+				hurtigste.setFont(new Font("Shortest", Font.BOLD, 12));
 				toms.setBounds(20, 425,70, 20);
+				fastest = true; //We want the fastest route by default if by car
 			}
 		});
 		
@@ -385,11 +389,14 @@ public class Window extends JFrame {
 				if(byCar) { 
 					if(fastest) {
 						WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.FASTEST);
+						System.out.println("By car, fastest route");
 					} else {
 						WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.SHORTEST);
+						System.out.println("By car, shortest route");
 					}
 				} else {
 					WindowHandler.pathFindingTest(TransportWay.BIKE, CompareType.SHORTEST);
+					System.out.println("By bike, shortest route");
 				}
 			}
 		});
@@ -405,8 +412,8 @@ public class Window extends JFrame {
 					navigateVisible = true;
 					korteste.setVisible(true);
 					hurtigste.setVisible(true);
-					korteste.setFont(new Font("Shortest", Font.BOLD, 12));
-					hurtigste.setFont(null);
+					hurtigste.setFont(new Font("Shortest", Font.BOLD, 12));
+					korteste.setFont(null);
 					toms.setVisible(true);
 					background.setBounds(10,20,165,440);
 				}
@@ -424,7 +431,6 @@ public class Window extends JFrame {
 					toms.setVisible(false);
 					background.setBounds(10,20,165,275);
 				}
-				
 			}
 		});
 	}
