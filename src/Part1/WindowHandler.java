@@ -391,6 +391,9 @@ public class WindowHandler {
 				y1, y2)) Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, e.getType(),border));
 		}
 		
+		Map.use().createBufferImage();
+		Window.use().repaint();
+		
 	}
 	
 	//TODO: Write code to detect intersection between area of interest and road.
