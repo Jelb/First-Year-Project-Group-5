@@ -7,8 +7,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
-import java.awt.Rectangle;
-
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -21,10 +19,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
-
 import Part1.DijkstraSP.CompareType;
 import Part1.DijkstraSP.TransportWay;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -36,7 +32,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -64,7 +59,7 @@ public class Window extends JFrame {
 	private static int maxHeight;
 
 	//Buttons to pan and zoom
-	private JButton resetZoom, zoomOut, zoomIn, shortest, fastestsButton, ship, blueShip;
+	private JButton resetZoom, zoomOut, zoomIn, shortest, fastestsButton, ship, blueShip, search;
 	private JButton west, east, north, south, findPath, bike, blueBike, car, blueCar, reset;
 	private JTextField from, to;
 	private JComboBox searchFromResultBox, searchToResultBox;
@@ -84,10 +79,6 @@ public class Window extends JFrame {
 
 	private int mousePanX = 0;
 	private int mousePanY = 0;
-	
-	//Midlertidige felter
-	private JButton search;
-
 
 	/**
 	 * Constructor for the window class.
@@ -257,7 +248,7 @@ public class Window extends JFrame {
 		};
 		background.setOpaque(false);		
 		//background.setBackground(new Color(255,255,255,200)); White
-		background.setBackground(new Color(0,0,0,20));
+		background.setBackground(new Color(0,0,0,50));
 		background.setBounds(10,20,165,275);
 	}
 	
