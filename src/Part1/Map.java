@@ -137,4 +137,8 @@ public class Map extends JPanel {
     public void addDrawableItemToPath(DrawableItem i){
     	path.add(i);
     }
+    
+    public void resetPath() {
+    	path = new ArrayList<DrawableItem>();
+    }
 }
