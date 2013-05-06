@@ -517,7 +517,7 @@ public class Window extends JFrame {
 				}
 				setArray = new String[zipList.size()];
 				for (int i = 0; i < setArray.length; i++) {
-					setArray[i] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " " + zipList.get(i) + " " + result[5];
+					setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + zipList.get(i) + " " + result[5];
 					setArray[i] = setArray[i].replaceAll("\\s+", " ");
 				}
 				zipArray = Arrays.copyOf(zipList.toArray(), zipList.size(), String[].class);
@@ -525,7 +525,7 @@ public class Window extends JFrame {
 			// If there has been typed in a zip code
 			else if(!(result[4].equals(""))){
 				setArray = new String[1]; 
-				setArray[0] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " " + result[4]+ " " + WindowHandler.getZipToCityMap().get(result[4]);
+				setArray[0] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + result[4]+ " " + WindowHandler.getZipToCityMap().get(result[4]);
 				setArray[0] = setArray[0].replaceAll("\\s+", " ");
 				zipArray = new String[]{result[4]};
 				}
@@ -539,7 +539,7 @@ public class Window extends JFrame {
 				}
 				for(int i = 0; i < setArray.length; i++){
 					String city = WindowHandler.getZipToCityMap().get(setArray[i]);
-					setArray[i] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " " + setArray[i] + " " + city;
+					setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + setArray[i] + " " + city;
 					setArray[i] = setArray[i].replaceAll("\\s+", " ");				
 				}						
 			}

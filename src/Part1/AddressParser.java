@@ -170,7 +170,7 @@ public class AddressParser {
     }
 	
 	private void findBuildingLetter() {
-		p1 = Pattern.compile("[a-z]^[a-z]");
+		p1 = Pattern.compile("\\b[a-z]\\b");
 		m1 = p1.matcher(INPUT);
 		
 		if (m1.find()) {
