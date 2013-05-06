@@ -35,7 +35,8 @@ public class WindowHandler {
 	static double maxMapHeight;	// = DataReader.getMaxY()-DataReader.getMinY();
 	static double maxMapWidth;	// = DataReader.getMaxX()-DataReader.getMinX();
 	private static HashMap<String, String> zipToCityMap;
-	private static ArrayList<CoastPoint[]> coast; 
+	private static ArrayList<CoastPoint[]> coast;
+	static ArrayList<DrawableItem> path = new ArrayList<DrawableItem>();;
 
 	/**
 	 * Calculates the absolute geo X coordinate of a given pixel value X.
@@ -263,8 +264,7 @@ public class WindowHandler {
 	/**
 	 * Adds the shortest path (static field 'route') to the roadSegments on the map.
 	 */
-	public static void addRouteToMap(Stack<Edge> route) {
-		ArrayList<DrawableItem> path = new ArrayList<DrawableItem>();
+	public static void addRouteToMap(Stack<Edge> route) {		
 		while(!route.empty()) {
 			Edge edge = route.pop();
 			double x1 = edge.getFromNode().getXCord();
@@ -496,6 +496,13 @@ public class WindowHandler {
 		return edges;
 	}
 
+	public static HashMap<String, String> getZipToCityMap() {
+		return zipToCityMap;	
+	}
+	
+	public static ArrayList<CoastPoint[]> getCoast() {
+		return coast;
+	}
 
 	public static void main(String[] args) throws IOException {
 		String nodeFile = "kdv_node_unload.txt";
@@ -591,14 +598,5 @@ public class WindowHandler {
 		//System.out.printf("Heap memory usage: %d MB%n", mxbean
 		//		.getHeapMemoryUsage().getUsed() / (1000000));
 		SplashScreen.use().close();
-	}
-
-
-	public static HashMap<String, String> getZipToCityMap() {
-		return zipToCityMap;	
-	}
-	
-	public static ArrayList<CoastPoint[]> getCoast() {
-		return coast;
 	}
 }

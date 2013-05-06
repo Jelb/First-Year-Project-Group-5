@@ -36,7 +36,7 @@ public class SplashScreen extends JFrame{
 	
 	private SplashScreen() {
 		super();
-		setPreferredSize(new Dimension(850, 700));
+		//setPreferredSize(new Dimension(850, 700));
 		setUndecorated(true);
 		setUp();
 		pack();
@@ -68,7 +68,7 @@ public class SplashScreen extends JFrame{
 		overview.setOpaque(false);
 		overview.setStringPainted(true);
 		JPanel center = new JPanel();
-		center.setPreferredSize(new Dimension(500, 50));
+		//center.setPreferredSize(new Dimension(500, 50));
 		center.setLayout(new BorderLayout());
 		center.setOpaque(false);
 		center.add(mainBar, BorderLayout.NORTH);

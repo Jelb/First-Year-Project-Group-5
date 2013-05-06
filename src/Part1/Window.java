@@ -83,10 +83,6 @@ public class Window extends JFrame {
 	private int mousePanX = 0;
 	private int mousePanY = 0;
 	
-	
-
-	
-
 	//Midlertidige felter
 	private JButton search;
 
@@ -421,8 +417,6 @@ public class Window extends JFrame {
 				from.setText(null);
 				to.setText(null);
 				screen.remove(searchResultBox);
-				WindowHandler.addRouteToMap(null);
-				Flag.removeFlags();
 			}
 		});
 
