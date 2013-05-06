@@ -7,8 +7,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
-import java.awt.Rectangle;
-
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -21,10 +19,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
-
 import Part1.DijkstraSP.CompareType;
 import Part1.DijkstraSP.TransportWay;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -36,7 +32,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -64,7 +59,7 @@ public class Window extends JFrame {
 	private static int maxHeight;
 
 	//Buttons to pan and zoom
-	private JButton resetZoom, zoomOut, zoomIn, korteste, hurtigste;
+	private JButton resetZoom, zoomOut, zoomIn, shortest, fastestButton, search;;
 	private JButton west, east, north, south, findPath, bike, blueBike, car, blueCar;
 	private JTextField from, to;
 	private JComboBox searchResultBox;
@@ -78,18 +73,9 @@ public class Window extends JFrame {
 	
 	//GUI background
 	private JPanel background;
-
 	private int mousePanX = 0;
 	private int mousePanY = 0;
 	
-	
-
-	
-
-	//Midlertidige felter
-	private JButton toms;
-
-
 	/**
 	 * Constructor for the window class.
 	 */
@@ -203,14 +189,14 @@ public class Window extends JFrame {
 		blueCar = createButton("motor_blue.png", "By car", 105, 350);
 		blueCar.setVisible(false);
 		
-		korteste = new JButton("Shortest");
-		korteste.setMargin(new Insets(5,5,5,5));
-		korteste.setBounds(20, 395, 70, 20);
-		korteste.setVisible(false);
-		hurtigste = new JButton("Fastest");
-		hurtigste.setMargin(new Insets(5,5,5,5));
-		hurtigste.setBounds(95, 395, 70, 20);
-		hurtigste.setVisible(false);
+		shortest = new JButton("Shortest");
+		shortest.setMargin(new Insets(5,5,5,5));
+		shortest.setBounds(20, 395, 70, 20);
+		shortest.setVisible(false);
+		fastestButton = new JButton("Fastest");
+		fastestButton.setMargin(new Insets(5,5,5,5));
+		fastestButton.setBounds(95, 395, 70, 20);
+		fastestButton.setVisible(false);
 		
 		searchResultBox = new JComboBox();
 
@@ -224,11 +210,11 @@ public class Window extends JFrame {
 		to.setBackground(Color.WHITE);
 		to.setVisible(false);
 		
-		toms = new JButton("Search");
-		toms.setBounds(20, 425,70, 20);
-		toms.setMargin(new Insets(5,5,5,5));
-		toms.setFont(null);
-		toms.setVisible(false);
+		search = new JButton("Search");
+		search.setBounds(20, 425,70, 20);
+		search.setMargin(new Insets(5,5,5,5));
+		search.setFont(null);
+		search.setVisible(false);
 		
 		//Internet magic from http://tips4java.wordpress.com/2009/05/31/backgrounds-with-transparency/
 		background = new JPanel()
@@ -247,7 +233,7 @@ public class Window extends JFrame {
 		};
 		background.setOpaque(false);		
 		//background.setBackground(new Color(255,255,255,200)); White
-		background.setBackground(new Color(0,0,0,20));
+		background.setBackground(new Color(0,0,0,50));
 		background.setBounds(10,20,165,275);
 	}
 	
@@ -337,9 +323,9 @@ public class Window extends JFrame {
 				car.setVisible(true);
 				blueBike.setVisible(true);
 				bike.setVisible(false);
-				korteste.setVisible(false);
-				hurtigste.setVisible(false);
-				toms.setBounds(20, 395,70, 20);
+				shortest.setVisible(false);
+				fastestButton.setVisible(false);
+				search.setBounds(20, 395,70, 20);
 			}
 		});
 		
@@ -352,33 +338,33 @@ public class Window extends JFrame {
 				car.setVisible(false);
 				blueBike.setVisible(false);
 				bike.setVisible(true);
-				korteste.setVisible(true);
-				hurtigste.setVisible(true);
-				toms.setBounds(20, 425,70, 20);
+				shortest.setVisible(true);
+				fastestButton.setVisible(true);
+				search.setBounds(20, 425,70, 20);
 			}
 		});
 		
-		hurtigste.addActionListener(new ActionListener(){
+		shortest.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
 				System.out.println("Hurtigste rute valgt");
-				hurtigste.setFont(new Font("Fastest", Font.BOLD, 12));
-				korteste.setFont(null);
+				fastestButton.setFont(new Font("Fastest", Font.BOLD, 12));
+				shortest.setFont(null);
 				fastest = true;
 			}
 		});
 		
-		korteste.addActionListener(new ActionListener(){
+		shortest.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
 				System.out.println("Korteste rute valgt");
-				korteste.setFont(new Font("Shortest", Font.BOLD, 12));
-				hurtigste.setFont(null);
+				shortest.setFont(new Font("Shortest", Font.BOLD, 12));
+				fastestButton.setFont(null);
 				fastest = false;
 			}
 		});
 
-		toms.addActionListener(new ActionListener(){
+		search.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {	
 				//Checks if the user is going by car or bike, and if they want the shortest or fastest route
@@ -403,11 +389,11 @@ public class Window extends JFrame {
 					bike.setVisible(true);
 					blueCar.setVisible(true);
 					navigateVisible = true;
-					korteste.setVisible(true);
-					hurtigste.setVisible(true);
-					korteste.setFont(new Font("Shortest", Font.BOLD, 12));
-					hurtigste.setFont(null);
-					toms.setVisible(true);
+					shortest.setVisible(true);
+					fastestButton.setVisible(true);
+					shortest.setFont(new Font("Shortest", Font.BOLD, 12));
+					fastestButton.setFont(null);
+					search.setVisible(true);
 					background.setBounds(10,20,165,440);
 				}
 				else {
@@ -419,9 +405,9 @@ public class Window extends JFrame {
 					blueCar.setVisible(false);
 					searchResultBox.setVisible(false);
 					navigateVisible = false;
-					korteste.setVisible(false);
-					hurtigste.setVisible(false);
-					toms.setVisible(false);
+					shortest.setVisible(false);
+					fastestButton.setVisible(false);
+					search.setVisible(false);
 					background.setBounds(10,20,165,275);
 				}
 				
@@ -581,15 +567,15 @@ public class Window extends JFrame {
 		screen.add(south, JLayeredPane.PALETTE_LAYER);
 		screen.add(from, JLayeredPane.PALETTE_LAYER);
 		screen.add(to, JLayeredPane.PALETTE_LAYER);
-		screen.add(toms, JLayeredPane.PALETTE_LAYER);
+		screen.add(search, JLayeredPane.PALETTE_LAYER);
 		screen.add(findPath, JLayeredPane.PALETTE_LAYER);
 		screen.add(background, JLayeredPane.PALETTE_LAYER);
 		screen.add(bike, JLayeredPane.PALETTE_LAYER);
 		screen.add(car, JLayeredPane.PALETTE_LAYER);
 		screen.add(blueBike, JLayeredPane.PALETTE_LAYER);
 		screen.add(blueCar, JLayeredPane.PALETTE_LAYER);
-		screen.add(hurtigste, JLayeredPane.PALETTE_LAYER);
-		screen.add(korteste, JLayeredPane.PALETTE_LAYER);
+		screen.add(fastestButton, JLayeredPane.PALETTE_LAYER);
+		screen.add(shortest, JLayeredPane.PALETTE_LAYER);
 	}
 
 	/**
