@@ -49,9 +49,4 @@ public class Flag extends DrawableItem {
 	public void paintComponent(Graphics g) {
 		g.drawImage(icon, pixelXCord , pixelYCord, null);
 	}
-	
-	public static void removeFlags() {
-		icon = null;
-	}
-
 }
