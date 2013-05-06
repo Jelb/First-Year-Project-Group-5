@@ -67,11 +67,13 @@ public class Window extends JFrame {
 	private JButton resetZoom, zoomOut, zoomIn, shortest, fastestsButton, ship, blueShip;
 	private JButton west, east, north, south, findPath, bike, blueBike, car, blueCar, reset;
 	private JTextField from, to;
-	private JComboBox searchResultBox;
+	private JComboBox searchFromResultBox, searchToResultBox;
 	private boolean navigateVisible = false;
 	private String[] result;
 	private String[] zipArray;
 	private static boolean fromBool;
+	private boolean fromMarked = false;
+	private boolean toMarked = false;
 	
 	private boolean byCar = true;
 	private boolean fastest = true;
@@ -213,7 +215,8 @@ public class Window extends JFrame {
 		fastestsButton.setBounds(95, 395, 70, 20);
 		fastestsButton.setVisible(false);
 		
-		searchResultBox = new JComboBox();
+		searchFromResultBox = new JComboBox();
+		searchToResultBox = new JComboBox();
 
 		from = new JTextField("From");
 		from.setBounds(20, 280, 145, 25);
@@ -416,7 +419,10 @@ public class Window extends JFrame {
 				System.out.println("reset");
 				from.setText(null);
 				to.setText(null);
-				screen.remove(searchResultBox);
+				screen.remove(searchFromResultBox);
+				screen.remove(searchToResultBox);
+				fromMarked = false;
+				toMarked = false;
 				Map.use().resetPath();
 				updateMap();
 			}
@@ -424,16 +430,27 @@ public class Window extends JFrame {
 
 		search.addActionListener(new ActionListener(){
 
-			public void actionPerformed(ActionEvent evt) {	
-				//Checks if the user is going by car or bike, and if they want the shortest or fastest route
-				if(byCar) { 
-					if(fastest) {
-						WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.FASTEST);
+			public void actionPerformed(ActionEvent evt) {
+				if(!fromMarked || !toMarked) {
+					String fromText = from.getText();
+					addressParse(fromText, 185, 280, true);
+					
+					String toText = to.getText();
+					addressParse(toText, 185, 315,false);
+				}
+				
+				if(fromMarked && toMarked) {
+					System.out.println("searching for route");
+					//Checks if the user is going by car or bike, and if they want the shortest or fastest route
+					if(byCar) { 
+						if(fastest) {
+							WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.FASTEST);
+						} else {
+							WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.SHORTEST);
+						}
 					} else {
-						WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.SHORTEST);
+						WindowHandler.pathFindingTest(TransportWay.BIKE, CompareType.SHORTEST);
 					}
-				} else {
-					WindowHandler.pathFindingTest(TransportWay.BIKE, CompareType.SHORTEST);
 				}
 			}
 		});
@@ -463,7 +480,8 @@ public class Window extends JFrame {
 					blueBike.setVisible(false);
 					car.setVisible(false);
 					blueCar.setVisible(false);
-					searchResultBox.setVisible(false);
+					searchFromResultBox.setVisible(false);
+					searchToResultBox.setVisible(false);
 					navigateVisible = false;
 					shortest.setVisible(false);
 					fastestsButton.setVisible(false);
@@ -546,73 +564,21 @@ public class Window extends JFrame {
 	 * @param y The y-position of the search box
 	 * @param fromBool Set to true if the search text field is the "from field", set to false if the search text field if the "to field"
 	 */
-	private void createSearchBox(String[] array, int x, int y,boolean fromBool){
+	private void createSearchBox(String[] array, int x, int y, boolean fromBool){
 		Window.fromBool = fromBool;
-		screen.remove(searchResultBox);
-		searchResultBox = new JComboBox(array);
-		searchResultBox.setBounds(x,y ,200,25);	
-		searchResultBox.addActionListener(new ActionListener(){ 
-			
-			public void actionPerformed(ActionEvent e) {
-				int i = searchResultBox.getSelectedIndex(); 
-				Edge randomCorrectEdge = null;
-				System.out.println(result[0]);
-				System.out.println(zipArray[i]);
-				Node flagNode = null;
-				String text = (String) searchResultBox.getSelectedItem();
-				for(Edge edge : WindowHandler.getEdges()){
-						if(edge.getVEJNAVN().equals(result[0]) && (edge.getV_POSTNR().equals(zipArray[i]) || edge.getH_POSTNR().equals(zipArray[i]) )){
-							randomCorrectEdge = edge;
-							String houseNumberString = result[1];
-							if (!houseNumberString.equals("")) {
-								int houseNumber = Integer.parseInt(houseNumberString);
-								if (houseNumber % 2 == 0) {
-									if (houseNumber >= edge.getHouseNumberMinEven() && houseNumber <= edge.getHouseNumberMaxEven()) {
-										WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
-										flagNode = edge.getFromNode();
-										randomCorrectEdge = null;
-										break;
-									}
-								}
-								else if (houseNumber >= edge.getHouseNumberMinOdd() && houseNumber <= edge.getHouseNumberMaxOdd()) {
-										WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
-										flagNode = edge.getFromNode();
-										randomCorrectEdge = null;
-										break;
-								}
-							}
-							else {
-								WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
-								flagNode = edge.getFromNode();
-								randomCorrectEdge = null;
-								break;
-							}
-						}
-				}
-				if (randomCorrectEdge != null){
-					WindowHandler.setNode(randomCorrectEdge.getFromNode().getKdvID(), Window.fromBool);
-					flagNode = randomCorrectEdge.getFromNode();
-				}
-				searchResultBox.setVisible(false);
-				if (flagNode != null) {
-					if(Window.fromBool){
-						from.setText(text);
-						double x = flagNode.getXCord();
-						double y = flagNode.getYCord();
-						new Flag(x,y,Window.fromBool);
-					}
-					else{
-						to.setText(text);
-						double x = flagNode.getXCord();
-						double y = flagNode.getYCord();
-						new Flag(x,y,Window.fromBool);
-					}
-				}
-				updateMap();
-			}
-	});
-		
-		screen.add(searchResultBox, JLayeredPane.PALETTE_LAYER);			
+		if(fromBool) {
+			screen.remove(searchFromResultBox);
+			searchFromResultBox = new JComboBox(array);
+			searchFromResultBox.setBounds(x,y ,200,25);	
+			searchFromResultBox.addActionListener(new comboBoxListener(searchFromResultBox, fromBool));
+			screen.add(searchFromResultBox, JLayeredPane.PALETTE_LAYER);
+		} else {
+			screen.remove(searchToResultBox);
+			searchToResultBox = new JComboBox(array);
+			searchToResultBox.setBounds(x,y ,200,25);
+			searchToResultBox.addActionListener(new comboBoxListener(searchToResultBox, fromBool));
+			screen.add(searchToResultBox, JLayeredPane.PALETTE_LAYER);
+		}	
 	}
 	
 	/**
@@ -730,6 +696,86 @@ public class Window extends JFrame {
 				PanHandler.directionPan(Direction.EAST);
 				break;
 			}
+		}
+	}
+	
+	private class comboBoxListener implements ActionListener {
+		JComboBox searchResultBox;
+		Boolean fromBool;
+		
+		public comboBoxListener(JComboBox searchResultBox, boolean fromBool) {
+			this.searchResultBox = searchResultBox;
+			this.fromBool = fromBool;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+					
+			if(fromBool) fromMarked = true; //register if the from or to combo box is marked
+			else toMarked = true;
+			// TODO Auto-generated method stub
+			int i = searchResultBox.getSelectedIndex();
+			Edge randomCorrectEdge = null;
+			System.out.println(result[0]);
+			System.out.println(zipArray[i]);
+			Node flagNode = null;
+			String text = (String) searchResultBox.getSelectedItem();
+			for(Edge edge : WindowHandler.getEdges()){
+					if(edge.getVEJNAVN().equals(result[0]) && (edge.getV_POSTNR().equals(zipArray[i]) || edge.getH_POSTNR().equals(zipArray[i]) )){
+						randomCorrectEdge = edge;
+						String houseNumberString = result[1];
+						if (!houseNumberString.equals("")) {
+							int houseNumber = Integer.parseInt(houseNumberString);
+							if (houseNumber % 2 == 0) {
+								if (houseNumber >= edge.getHouseNumberMinEven() && houseNumber <= edge.getHouseNumberMaxEven()) {
+									WindowHandler.setNode(edge.getFromNode().getKdvID(), fromBool);
+									flagNode = edge.getFromNode();
+									randomCorrectEdge = null;
+									break;
+								}
+							}
+							else if (houseNumber >= edge.getHouseNumberMinOdd() && houseNumber <= edge.getHouseNumberMaxOdd()) {
+									WindowHandler.setNode(edge.getFromNode().getKdvID(), fromBool);
+									flagNode = edge.getFromNode();
+									randomCorrectEdge = null;
+									break;
+							}
+						}
+						else {
+							WindowHandler.setNode(edge.getFromNode().getKdvID(), fromBool);
+							flagNode = edge.getFromNode();
+							randomCorrectEdge = null;
+							break;
+						}
+					}
+			}
+			if (randomCorrectEdge != null){
+				WindowHandler.setNode(randomCorrectEdge.getFromNode().getKdvID(), fromBool);
+				flagNode = randomCorrectEdge.getFromNode();
+			}
+			searchResultBox.setVisible(false);
+			if (flagNode != null) {
+				//if(Window.fromBool){
+				if(fromBool){
+//					boolean equals = false; //Test
+//					if(Window.fromBool == fromBool) equals = true;
+//					System.out.println(equals);
+					
+					from.setText(text);
+					System.out.println("Drawing green (start) flag. From bool =" + fromBool);
+					double x = flagNode.getXCord();
+					double y = flagNode.getYCord();
+					new Flag(x,y,fromBool);
+				}
+				else {
+					to.setText(text);
+					System.out.println("Drawing red (end) flag. From bool =" + fromBool);
+					double x = flagNode.getXCord();
+					double y = flagNode.getYCord();
+					new Flag(x,y,fromBool);
+				}
+			}
+			updateMap();
 		}
 	}
 

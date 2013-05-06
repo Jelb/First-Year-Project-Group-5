@@ -13,7 +13,7 @@ public class Flag extends DrawableItem {
 	private double geoYCord;
 	private int pixelXCord;
 	private int pixelYCord;
-	private static BufferedImage icon;
+	private BufferedImage icon;
 	
 	public Flag(double x, double y, boolean fromBool){
 		this.geoXCord = x;
