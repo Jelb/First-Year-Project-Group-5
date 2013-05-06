@@ -357,6 +357,8 @@ public class Window extends JFrame {
 				bike.setVisible(true);
 				shortest.setVisible(true);
 				shortest.setFont(null);
+				//reset.setVisible(true);
+				reset.setBounds(95, 425, 70, 20);
 				fastestsButton.setVisible(true);
 				fastestsButton.setFont(new Font("Shortest", Font.BOLD, 12));
 				search.setBounds(20, 425,70, 20);
