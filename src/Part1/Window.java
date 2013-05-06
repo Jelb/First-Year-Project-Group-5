@@ -64,8 +64,8 @@ public class Window extends JFrame {
 	private static int maxHeight;
 
 	//Buttons to pan and zoom
-	private JButton resetZoom, zoomOut, zoomIn, korteste, hurtigste;
-	private JButton west, east, north, south, findPath, bike, blueBike, car, blueCar;
+	private JButton resetZoom, zoomOut, zoomIn, korteste, hurtigste, ship, blueShip;
+	private JButton west, east, north, south, findPath, bike, blueBike, car, blueCar, reset;
 	private JTextField from, to;
 	private JComboBox searchResultBox;
 	private boolean navigateVisible = false;
@@ -75,6 +75,7 @@ public class Window extends JFrame {
 	
 	private boolean byCar = true;
 	private boolean fastest = true;
+	private boolean byShip = true;
 	
 	//GUI background
 	private JPanel background;
@@ -87,7 +88,7 @@ public class Window extends JFrame {
 	
 
 	//Midlertidige felter
-	private JButton toms;
+	private JButton search;
 
 
 	/**
@@ -194,14 +195,18 @@ public class Window extends JFrame {
 		south = createButton("South.png", "South", 75, 125);
 		findPath = createButton("FindPath.png", "Find Path", 75, 240);
 		
-		bike = createButton("cycle.png", "By bike or walking", 45, 350);
+		bike = createButton("cycle.png", "By bike or walking", 25, 350);
 		bike.setVisible(false);
-		blueBike = createButton("cycle_blue.png", "By bike or walking", 45, 350);
+		blueBike = createButton("cycle_blue.png", "By bike or walking", 25, 350);
 		blueBike.setVisible(false);
-		car = createButton("motor.png", "By car", 105, 350);
+		car = createButton("motor.png", "By car", 78, 350);
 		car.setVisible(false);
-		blueCar = createButton("motor_blue.png", "By car", 105, 350);
+		blueCar = createButton("motor_blue.png", "By car", 78, 350);
 		blueCar.setVisible(false);
+		ship = createButton("ship.png", "If fastest or shortest, I would like to travel with ferry", 125, 347);
+		ship.setVisible(false);
+		blueShip = createButton("ship_blue.png", "If fastest or shortest, I would like to travel with ferry", 125, 347);
+		blueShip.setVisible(false);
 		
 		korteste = new JButton("Shortest");
 		korteste.setMargin(new Insets(5,5,5,5));
@@ -224,11 +229,17 @@ public class Window extends JFrame {
 		to.setBackground(Color.WHITE);
 		to.setVisible(false);
 		
-		toms = new JButton("Search");
-		toms.setBounds(20, 425,70, 20);
-		toms.setMargin(new Insets(5,5,5,5));
-		toms.setFont(null);
-		toms.setVisible(false);
+		search = new JButton("Search");
+		search.setBounds(20, 425,70, 20);
+		search.setMargin(new Insets(5,5,5,5));
+		search.setFont(null);
+		search.setVisible(false);
+		
+		reset = new JButton("Reset");
+		reset.setBounds(95, 425, 70, 20);
+		reset.setMargin(new Insets(5,5,5,5));
+		reset.setFont(null);
+		reset.setVisible(false);
 		
 		//Internet magic from http://tips4java.wordpress.com/2009/05/31/backgrounds-with-transparency/
 		background = new JPanel()
@@ -339,7 +350,8 @@ public class Window extends JFrame {
 				bike.setVisible(false);
 				korteste.setVisible(false);
 				hurtigste.setVisible(false);
-				toms.setBounds(20, 395,70, 20);
+				search.setBounds(20, 395,70, 20);
+				reset.setBounds(95, 395, 70, 20);
 				fastest = false; //We want the shortest route if by bike
 			}
 		});
@@ -357,8 +369,28 @@ public class Window extends JFrame {
 				korteste.setFont(null);
 				hurtigste.setVisible(true);
 				hurtigste.setFont(new Font("Shortest", Font.BOLD, 12));
-				toms.setBounds(20, 425,70, 20);
+				search.setBounds(20, 425,70, 20);
 				fastest = true; //We want the fastest route by default if by car
+			}
+		});
+		
+		ship.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent evt) {
+				System.out.println("ship");
+				ship.setVisible(false);
+				blueShip.setVisible(true);
+				byShip = true;
+			}
+		});
+		
+		blueShip.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent evt) {
+				System.out.println("Blue ship");
+				blueShip.setVisible(false);
+				ship.setVisible(true);
+				byShip = false;
 			}
 		});
 		
@@ -381,22 +413,31 @@ public class Window extends JFrame {
 				fastest = false;
 			}
 		});
+		
+		reset.addActionListener(new ActionListener(){
 
-		toms.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt) {
+				System.out.println("reset");
+				from.setText(null);
+				to.setText(null);
+				screen.remove(searchResultBox);
+				WindowHandler.addRouteToMap(null);
+				Flag.removeFlags();
+			}
+		});
+
+		search.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {	
 				//Checks if the user is going by car or bike, and if they want the shortest or fastest route
 				if(byCar) { 
 					if(fastest) {
 						WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.FASTEST);
-						System.out.println("By car, fastest route");
 					} else {
 						WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.SHORTEST);
-						System.out.println("By car, shortest route");
 					}
 				} else {
 					WindowHandler.pathFindingTest(TransportWay.BIKE, CompareType.SHORTEST);
-					System.out.println("By bike, shortest route");
 				}
 			}
 		});
@@ -414,7 +455,9 @@ public class Window extends JFrame {
 					hurtigste.setVisible(true);
 					hurtigste.setFont(new Font("Shortest", Font.BOLD, 12));
 					korteste.setFont(null);
-					toms.setVisible(true);
+					blueShip.setVisible(true);
+					search.setVisible(true);
+					reset.setVisible(true);
 					background.setBounds(10,20,165,440);
 				}
 				else {
@@ -428,7 +471,10 @@ public class Window extends JFrame {
 					navigateVisible = false;
 					korteste.setVisible(false);
 					hurtigste.setVisible(false);
-					toms.setVisible(false);
+					ship.setVisible(false);
+					blueShip.setVisible(false);
+					search.setVisible(false);
+					reset.setVisible(false);
 					background.setBounds(10,20,165,275);
 				}
 			}
@@ -587,7 +633,7 @@ public class Window extends JFrame {
 		screen.add(south, JLayeredPane.PALETTE_LAYER);
 		screen.add(from, JLayeredPane.PALETTE_LAYER);
 		screen.add(to, JLayeredPane.PALETTE_LAYER);
-		screen.add(toms, JLayeredPane.PALETTE_LAYER);
+		screen.add(search, JLayeredPane.PALETTE_LAYER);
 		screen.add(findPath, JLayeredPane.PALETTE_LAYER);
 		screen.add(background, JLayeredPane.PALETTE_LAYER);
 		screen.add(bike, JLayeredPane.PALETTE_LAYER);
@@ -596,6 +642,9 @@ public class Window extends JFrame {
 		screen.add(blueCar, JLayeredPane.PALETTE_LAYER);
 		screen.add(hurtigste, JLayeredPane.PALETTE_LAYER);
 		screen.add(korteste, JLayeredPane.PALETTE_LAYER);
+		screen.add(ship, JLayeredPane.PALETTE_LAYER);
+		screen.add(blueShip, JLayeredPane.PALETTE_LAYER);
+		screen.add(reset, JLayeredPane.PALETTE_LAYER);
 	}
 
 	/**

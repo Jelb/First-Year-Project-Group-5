@@ -13,7 +13,7 @@ public class Flag extends DrawableItem {
 	private double geoYCord;
 	private int pixelXCord;
 	private int pixelYCord;
-	private BufferedImage icon;
+	private static BufferedImage icon;
 	
 	public Flag(double x, double y, boolean fromBool){
 		this.geoXCord = x;
@@ -48,6 +48,10 @@ public class Flag extends DrawableItem {
 
 	public void paintComponent(Graphics g) {
 		g.drawImage(icon, pixelXCord , pixelYCord, null);
+	}
+	
+	public static void removeFlags() {
+		icon = null;
 	}
 
 }
