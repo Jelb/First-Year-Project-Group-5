@@ -472,14 +472,29 @@ public class Window extends JFrame {
 				if(!navigateVisible){
 					to.setVisible(true);
 					from.setVisible(true);
-					bike.setVisible(true);
-					blueCar.setVisible(true);
+					if (byCar) {
+						bike.setVisible(true);
+						blueCar.setVisible(true);
+						if (fastest) {
+							shortest.setVisible(true);
+							fastestsButton.setVisible(true);
+							fastestsButton.setFont(new Font("Fastest", Font.BOLD, 12));
+							shortest.setFont(null);
+						}
+						else {
+							shortest.setVisible(true);
+							fastestsButton.setVisible(true);
+							shortest.setFont(new Font("Shortest", Font.BOLD, 12));
+							fastestsButton.setFont(null);
+						}
+					}
+					else {
+						blueBike.setVisible(true);
+						car.setVisible(true);
+					}
 					navigateVisible = true;
-					shortest.setVisible(true);
-					fastestsButton.setVisible(true);
-					fastestsButton.setFont(new Font("Shortest", Font.BOLD, 12));
-					shortest.setFont(null);
-					blueShip.setVisible(true);
+					if (byShip) blueShip.setVisible(true);
+					else ship.setVisible(true);
 					search.setVisible(true);
 					reset.setVisible(true);
 					background.setBounds(10,20,165,440);

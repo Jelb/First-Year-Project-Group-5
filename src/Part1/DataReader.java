@@ -112,6 +112,12 @@ public class DataReader {
 			SplashScreen.use().updateProgress();
 			line = br.readLine();
 		}
+		// Increases the area of the map
+		int increase = 75000;
+		minX -= increase;
+		maxX += increase;
+		minY -= increase;
+		maxY += increase;
 		
 		// The coordinates of every node is corrected for the offset
 		System.out.println("Offset x: " + minX);
