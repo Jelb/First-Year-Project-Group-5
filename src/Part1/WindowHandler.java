@@ -11,6 +11,7 @@ import java.util.Stack;
 import Part1.DijkstraSP.CompareType;
 import Part1.DijkstraSP.TransportWay;
 import Part1.SplashScreen.Task;
+import Part1.Window.TextType;
 import QuadTree.QuadTree;
 
 public class WindowHandler {
@@ -35,7 +36,7 @@ public class WindowHandler {
 	private static double maxMapHeight;	// = DataReader.getMaxY()-DataReader.getMinY();
 	private static double maxMapWidth;	// = DataReader.getMaxX()-DataReader.getMinX();
 	private static HashMap<String, String> zipToCityMap;
-	private static ArrayList<CoastPoint[]> coast, lakes, islands, border; 
+	private static ArrayList<CoastPoint[]> coast, lakes, islands, border;
 
 	/**
 	 * Calculates the absolute geo X coordinate of a given pixel value X.
@@ -211,11 +212,11 @@ public class WindowHandler {
 		//pathFindingTest();
 	}
 	
-	public static void setNode(int node, boolean from){
-		if(from){
+	public static void setNode(int node, TextType t){
+		if(t == TextType.FROM){
 			WindowHandler.startNode = node;
 		}
-		else{
+		else if (t == TextType.TO){
 			WindowHandler.endNode = node;
 		}
 			
@@ -236,7 +237,6 @@ public class WindowHandler {
 		System.out.println("  End node: " + endNode);
 		
 		route = (Stack<Edge>) dsp.pathTo(endNode);	// find route from start to destination node
-		
 		addRouteToMap(route);									// adding the route to the Map()
 		Window.use().updateMap();
 	}
@@ -258,19 +258,43 @@ public class WindowHandler {
 	
 	/**
 	 * Adds the shortest path (static field 'route') to the roadSegments on the map.
+	 * Makes a search in the QuadTree containing the entire path
 	 */
 	public static void addRouteToMap(Stack<Edge> route) {
 		ArrayList<DrawableItem> path = new ArrayList<DrawableItem>();
+		double minX = Double.MAX_VALUE, maxX = 0,  minY = Double.MAX_VALUE, maxY = 0;
 		while(!route.empty()) {
 			Edge edge = route.pop();
 			double x1 = edge.getFromNode().getXCord();
+			if (x1 < minX) minX = x1;
+			if (x1 > maxX) maxX = x1;
 			double y1 = edge.getFromNode().getYCord();
+			if (y1 < minY) minY = y1;
+			if (y1 > maxY) maxY = y1;
 			double x2 = edge.getToNode().getXCord();
+			if (x2 < minX) minX = x2;
+			if (x2 > maxX) maxX = x2;
 			double y2 = edge.getToNode().getYCord();
+			if (y2 < minY) minY = y2;
+			if (y2 > maxY) maxY = y2;
 			boolean border = false;											// for now, no borders will be drawn
 			path.add(new RoadSegment(x1, y1, x2, y2, 4242, border));
 		}
 		Map.use().setPath(path);
+		if (!path.isEmpty()) {
+			double deltaX = (maxX-minX)*0.1;
+			double deltaY = (maxY-minY)*0.1; 
+			search(minX-deltaX-offsetX, maxX+deltaX-offsetX, minY-deltaY-offsetY, maxY+deltaY-offsetY);
+		}
+	}
+	
+	/**
+	 * Centers the view on the given node
+	 */
+	public static void centerOnNode(Node node) {
+		double distance = 2000;
+		search(node.getXCord()-distance-offsetX, node.getXCord()+distance-offsetX, 
+				node.getYCord()-distance-offsetY, node.getYCord()+distance-offsetY);
 	}
 	
 	public static void zoomOut() {

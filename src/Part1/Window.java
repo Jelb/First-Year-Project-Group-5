@@ -60,13 +60,12 @@ public class Window extends JFrame {
 	private static int maxHeight;
 
 	//Buttons to pan and zoom
-	private JButton resetZoom, zoomOut, zoomIn, shortest, fastestsButton, ship, blueShip, search;
+	private JButton resetZoom, zoomOut, zoomIn, shortest, fastestsButton, ship, blueShip, search, findButton;
 	private JButton west, east, north, south, findPath, bike, blueBike, car, blueCar, reset;
-	private JTextField from, to;
-	private JComboBox searchFromResultBox, searchToResultBox;
+	private JTextField from, to, find;
+	private JComboBox searchFromResultBox, searchToResultBox, searchFindResultBox;
 	private boolean navigateVisible = false;
-	private boolean fromMarked = false;
-	private boolean toMarked = false;
+	private boolean fromMarked, toMarked, findMarked;
 	
 	private boolean byCar = true;
 	private boolean fastest = true;
@@ -79,6 +78,10 @@ public class Window extends JFrame {
 	// Currently saved from and to text
 	private String fromText;
 	private String toText;
+	private String findText;
+	
+	//Currently saved node to search for
+	private Node findNode;
 	
 	//GUI background
 	private JPanel background;
@@ -215,6 +218,7 @@ public class Window extends JFrame {
 		
 		searchFromResultBox = new JComboBox();
 		searchToResultBox = new JComboBox();
+		searchFindResultBox = new JComboBox();
 
 		from = new JTextField("From");
 		fromText = "From";
@@ -228,11 +232,23 @@ public class Window extends JFrame {
 		to.setBackground(Color.WHITE);
 		to.setVisible(false);
 		
+		find = new JTextField("Enter address");
+		findText = "Enter address";
+		find.setBounds(20, 280, 145, 25);
+		find.setBackground(Color.WHITE);
+		find.setVisible(true);
+		
 		search = new JButton("Search");
 		search.setBounds(20, 425,70, 20);
 		search.setMargin(new Insets(5,5,5,5));
 		search.setFont(null);
 		search.setVisible(false);
+		
+		findButton = new JButton("Find");
+		findButton.setBounds(25, 315,70, 20);
+		findButton.setMargin(new Insets(5,5,5,5));
+		findButton.setFont(null);
+		findButton.setVisible(true);
 		
 		reset = new JButton("Reset");
 		reset.setBounds(95, 425, 70, 20);
@@ -258,7 +274,7 @@ public class Window extends JFrame {
 		background.setOpaque(false);		
 		//background.setBackground(new Color(255,255,255,200)); White
 		background.setBackground(new Color(0,0,0,50));
-		background.setBounds(10,20,165,275);
+		background.setBounds(10,20,165,335);
 	}
 	
 	/**
@@ -326,21 +342,30 @@ public class Window extends JFrame {
 
 			public void actionPerformed(ActionEvent evt) {
 				fromText = from.getText();
-				addressParse(fromText, 185, 280, true);
+				addressParse(fromText, 185, 280, TextType.FROM);
 			}
 		});
 		
-		from.addMouseListener(new mouseOnText(true));
+		from.addMouseListener(new mouseOnText(TextType.FROM));
 
 		to.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
 				toText = to.getText();
-				addressParse(toText, 185, 315,false);
+				addressParse(toText, 185, 315, TextType.TO);
 			}
 		});
 		
-		to.addMouseListener(new mouseOnText(false));
+		to.addMouseListener(new mouseOnText(TextType.TO));
+		
+		find.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				findText = find.getText();
+				addressParse(findText, 185, 280, TextType.FIND);
+			}
+		});
+		
+		find.addMouseListener(new mouseOnText(TextType.FIND));
 		
 		bike.addActionListener(new ActionListener(){
 
@@ -443,11 +468,11 @@ public class Window extends JFrame {
 				
 				if(!fromMarked) {
 					String fromText = from.getText();
-					addressParse(fromText, 185, 280, true);
+					addressParse(fromText, 185, 280, TextType.FROM);
 				}
 				if (!toMarked) {	
 					String toText = to.getText();
-					addressParse(toText, 185, 315,false);
+					addressParse(toText, 185, 315,TextType.TO);
 				}
 				
 				if(fromMarked && toMarked) {
@@ -466,12 +491,31 @@ public class Window extends JFrame {
 			}
 		});
 		
+		findButton.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent evt) {
+				// If the text has been changed the user must choose a new address
+				if (!findText.equals(find.getText())) findMarked = false;
+				
+				if(!findMarked) {
+					String findText = find.getText();
+					addressParse(findText, 185, 280, TextType.FIND);
+				}
+				
+				if(findMarked) {
+					WindowHandler.centerOnNode(findNode);
+					updateMap();
+				}
+			}
+		});
+		
 		findPath.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent evt) {
 				if(!navigateVisible){
 					to.setVisible(true);
 					from.setVisible(true);
+					find.setVisible(false);
 					if (byCar) {
 						bike.setVisible(true);
 						blueCar.setVisible(true);
@@ -496,10 +540,13 @@ public class Window extends JFrame {
 					if (byShip) blueShip.setVisible(true);
 					else ship.setVisible(true);
 					search.setVisible(true);
+					findButton.setVisible(false);
 					reset.setVisible(true);
+					searchFindResultBox.setVisible(false);
 					background.setBounds(10,20,165,440);
 				}
 				else {
+					find.setVisible(true);
 					to.setVisible(false);
 					from.setVisible(false);
 					bike.setVisible(false);
@@ -514,8 +561,9 @@ public class Window extends JFrame {
 					ship.setVisible(false);
 					blueShip.setVisible(false);
 					search.setVisible(false);
+					findButton.setVisible(true);
 					reset.setVisible(false);
-					background.setBounds(10,20,165,275);
+					background.setBounds(10,20,165,335);
 				}
 			}
 		});
@@ -529,7 +577,7 @@ public class Window extends JFrame {
 	 * @param y The y-position of the search box to be created
 	 * @param fromBool Set to true if the search comes from the "from-field". Set to false if the search comes from the "to-field"
 	 */
-	private void addressParse(String text, int x,int y, boolean fromBool){		
+	private void addressParse(String text, int x,int y, TextType t){		
 		String[] result = AddressParser.use().parseAddress(text);
 		String[] setArray = new String[0];
 		String[] zipArray;
@@ -580,7 +628,7 @@ public class Window extends JFrame {
 			}
 		}
 		if (zipArray.length == 0) setArray = new String[]{"No results"};
-		createSearchBox(setArray,zipArray,result,x,y,fromBool);
+		createSearchBox(setArray,zipArray,result,x,y,t);
 	}
 	
 	/**
@@ -593,20 +641,27 @@ public class Window extends JFrame {
 	 * @param y The y-position of the search box
 	 * @param fromBool Set to true if the search text field is the "from field", set to false if the search text field if the "to field"
 	 */
-	private void createSearchBox(String[] addressArray, String[] zipArray, String[] textArray, int x, int y, boolean fromBool){
-		if(fromBool) {
+	private void createSearchBox(String[] addressArray, String[] zipArray, String[] textArray, int x, int y, TextType t){
+		if(t == TextType.FROM) {
 			screen.remove(searchFromResultBox);
 			searchFromResultBox = new JComboBox(addressArray);
 			searchFromResultBox.setBounds(x,y ,200,25);	
-			searchFromResultBox.addActionListener(new comboBoxListener(searchFromResultBox, zipArray, textArray, fromBool));
+			searchFromResultBox.addActionListener(new comboBoxListener(searchFromResultBox, zipArray, textArray, t));
 			screen.add(searchFromResultBox, JLayeredPane.PALETTE_LAYER);
-		} else {
+		} else if (t == TextType.TO) {
 			screen.remove(searchToResultBox);
 			searchToResultBox = new JComboBox(addressArray);
 			searchToResultBox.setBounds(x,y ,200,25);
-			searchToResultBox.addActionListener(new comboBoxListener(searchToResultBox, zipArray, textArray, fromBool));
+			searchToResultBox.addActionListener(new comboBoxListener(searchToResultBox, zipArray, textArray, t));
 			screen.add(searchToResultBox, JLayeredPane.PALETTE_LAYER);
 		}	
+		else if (t == TextType.FIND) {
+			screen.remove(searchFindResultBox);
+			searchFindResultBox = new JComboBox(addressArray);
+			searchFindResultBox.setBounds(x, y, 200, 25);
+			searchFindResultBox.addActionListener(new comboBoxListener(searchFindResultBox, zipArray, textArray, t));
+			screen.add(searchFindResultBox, JLayeredPane.PALETTE_LAYER);
+		}
 	}
 	
 	/**
@@ -623,7 +678,9 @@ public class Window extends JFrame {
 		screen.add(south, JLayeredPane.PALETTE_LAYER);
 		screen.add(from, JLayeredPane.PALETTE_LAYER);
 		screen.add(to, JLayeredPane.PALETTE_LAYER);
+		screen.add(find, JLayeredPane.PALETTE_LAYER);
 		screen.add(search, JLayeredPane.PALETTE_LAYER);
+		screen.add(findButton, JLayeredPane.PALETTE_LAYER);
 		screen.add(findPath, JLayeredPane.PALETTE_LAYER);
 		screen.add(background, JLayeredPane.PALETTE_LAYER);
 		screen.add(bike, JLayeredPane.PALETTE_LAYER);
@@ -730,12 +787,12 @@ public class Window extends JFrame {
 	
 	private class comboBoxListener implements ActionListener {
 		JComboBox searchResultBox;
-		Boolean fromBool;
+		TextType t;
 		String[] zipArray, textArray;
 		
-		public comboBoxListener(JComboBox searchResultBox, String[] zipArray, String[] textArray, boolean fromBool) {
+		public comboBoxListener(JComboBox searchResultBox, String[] zipArray, String[] textArray, TextType t) {
 			this.searchResultBox = searchResultBox;
-			this.fromBool = fromBool;
+			this.t = t;
 			this.zipArray = zipArray;
 			this.textArray = textArray;
 		}
@@ -745,8 +802,9 @@ public class Window extends JFrame {
 			// if the zip array is empty, the search yielded no results
 			if (zipArray.length == 0) return;
 			
-			if(fromBool) fromMarked = true; //register if the from or to combo box is marked
-			else toMarked = true;
+			if(t == TextType.FROM) fromMarked = true; //register if the from or to combo box is marked
+			else if (t == TextType.TO) toMarked = true;
+			else if (t == TextType.FIND) findMarked = true;
 			int i = searchResultBox.getSelectedIndex();
 			Edge randomCorrectEdge = null;
 			System.out.println(textArray[0]);
@@ -761,21 +819,21 @@ public class Window extends JFrame {
 							int houseNumber = Integer.parseInt(houseNumberString);
 							if (houseNumber % 2 == 0) {
 								if (houseNumber >= edge.getHouseNumberMinEven() && houseNumber <= edge.getHouseNumberMaxEven()) {
-									WindowHandler.setNode(edge.getFromNode().getKdvID(), fromBool);
+									WindowHandler.setNode(edge.getFromNode().getKdvID(), t);
 									flagNode = edge.getFromNode();
 									randomCorrectEdge = null;
 									break;
 								}
 							}
 							else if (houseNumber >= edge.getHouseNumberMinOdd() && houseNumber <= edge.getHouseNumberMaxOdd()) {
-									WindowHandler.setNode(edge.getFromNode().getKdvID(), fromBool);
+									WindowHandler.setNode(edge.getFromNode().getKdvID(), t);
 									flagNode = edge.getFromNode();
 									randomCorrectEdge = null;
 									break;
 							}
 						}
 						else {
-							WindowHandler.setNode(edge.getFromNode().getKdvID(), fromBool);
+							WindowHandler.setNode(edge.getFromNode().getKdvID(), t);
 							flagNode = edge.getFromNode();
 							randomCorrectEdge = null;
 							break;
@@ -783,29 +841,31 @@ public class Window extends JFrame {
 					}
 			}
 			if (randomCorrectEdge != null){
-				WindowHandler.setNode(randomCorrectEdge.getFromNode().getKdvID(), fromBool);
+				WindowHandler.setNode(randomCorrectEdge.getFromNode().getKdvID(), t);
 				flagNode = randomCorrectEdge.getFromNode();
 			}
 			searchResultBox.setVisible(false);
 			if (flagNode != null) {
-				System.out.println("From bool:" + fromBool);
-				if(fromBool){
+				if(t == TextType.FROM){
 					from.setText(text);
 					fromText = text;
-					System.out.println("Drawing green (start) flag. From bool =" + fromBool);
 					double x = flagNode.getXCord();
 					double y = flagNode.getYCord();
 					fromFlag.setPosition(x, y);
 					Map.use().addFlag(fromFlag);
 				}
-				else {
+				else if (t == TextType.TO) {
 					to.setText(text);
 					toText = text;
-					System.out.println("Drawing red (end) flag. From bool =" + fromBool);
 					double x = flagNode.getXCord();
 					double y = flagNode.getYCord();
 					toFlag.setPosition(x, y);
 					Map.use().addFlag(toFlag);
+				}
+				else if (t == TextType.FIND) {
+					find.setText(text);
+					findText = text;
+					findNode = flagNode;
 				}
 			}
 			updateMap();
@@ -935,16 +995,17 @@ public class Window extends JFrame {
 	}
 	
 	private class mouseOnText extends MouseAdapter {
-		private boolean isFrom;
+		private TextType t;
 		
-		mouseOnText(boolean from) {
-			this.isFrom = from;
+		mouseOnText(TextType t) {
+			this.t = t;
 		}
 		
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if (isFrom && from.getText().equals("From")) from.setText("");
-			else if (!isFrom && to.getText().equals("To")) to.setText("");
+			if (TextType.FROM == t && from.getText().equals("From")) from.setText("");
+			else if (t == TextType.TO && to.getText().equals("To")) to.setText("");
+			else if (t == TextType.FIND && find.getText().equals("Enter address")) find.setText("");
 			
 		}
 	}
@@ -963,6 +1024,10 @@ public class Window extends JFrame {
 
 	public void setMousePanY(int inputMousePanY) {
 		mousePanY = inputMousePanY;
+	}
+	
+	public enum TextType {
+		FIND, TO, FROM;
 	}
 	
 }
