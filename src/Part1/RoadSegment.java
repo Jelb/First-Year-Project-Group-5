@@ -179,20 +179,19 @@ public class RoadSegment extends DrawableItem {
 	
 	public static void setZoomLevel() {
 //		zoomLevel = 1;
-		
-		if(WindowHandler.geoWidth < 200000.0 && WindowHandler.geoWidth > 50000.0) {
+		if(WindowHandler.getGeoWidth() > 50000.0) {
 			zoomLevel = 1; 
 			}
-		else if(WindowHandler.geoWidth < 50000.0 && WindowHandler.geoWidth > 40000.0) {
+		else if(WindowHandler.getGeoWidth() < 50000.0 && WindowHandler.getGeoWidth() > 40000.0) {
 			zoomLevel = 2; 
 			}
-		else if (WindowHandler.geoWidth < 40000.0 && WindowHandler.geoWidth > 15000.0) {
+		else if (WindowHandler.getGeoWidth() < 40000.0 && WindowHandler.getGeoWidth() > 15000.0) {
 			zoomLevel = 3; 
 			}
-		else if (WindowHandler.geoWidth < 15000.0 && WindowHandler.geoWidth > 6000.0) {
+		else if (WindowHandler.getGeoWidth() < 15000.0 && WindowHandler.getGeoWidth() > 6000.0) {
 			zoomLevel = 4; 
 			}
-		else if (WindowHandler.geoWidth < 6000.0) {
+		else if (WindowHandler.getGeoWidth() < 6000.0) {
 			zoomLevel = 5; 
 			}
 		

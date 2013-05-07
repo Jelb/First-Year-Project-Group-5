@@ -14,29 +14,29 @@ import Part1.SplashScreen.Task;
 import QuadTree.QuadTree;
 
 public class WindowHandler {
-	static List<Node> nodes;
-	static List<Edge> edges;
-	static List<Edge> longestRoads;
-	static int startNode;
-	static int endNode;
-	static HashMap<String, HashSet<String>> roadToZipMap;
-	static int longestRoadsFloor;
-	static QuadTree QT;
-	static Graph graph;
+	private static List<Node> nodes;
+	private static List<Edge> edges;
+	private static List<Edge> longestRoads;
+	private static int startNode;
+	private static int endNode;
+	private static HashMap<String, HashSet<String>> roadToZipMap;
+	private static int longestRoadsFloor;
+	private static QuadTree QT;
+	private static Graph graph;
 //	static MultiGraph multiGraph;
-	static Window window;
-	static AddressParser ap;
-	static double geoWidth;		// The  width of the view area in meters
-	static double geoHeight;	// The height of the view area in meters
-	static double offsetX;		// Offset of the current view area relative to the 'outer' map constraints
-	static double offsetY;		// Offset of the current view area relative to the 'outer' map constraints
-	static double ratio;
-	static double minLength;
-	static double maxMapHeight;	// = DataReader.getMaxY()-DataReader.getMinY();
-	static double maxMapWidth;	// = DataReader.getMaxX()-DataReader.getMinX();
+	private static Window window;
+	private static AddressParser ap;
+	private static double geoWidth;		// The  width of the view area in meters
+	private static double geoHeight;	// The height of the view area in meters
+	private static double offsetX;		// Offset of the current view area relative to the 'outer' map constraints
+	private static double offsetY;		// Offset of the current view area relative to the 'outer' map constraints
+	private static double ratio;
+	private static double minLength;
+	private static double maxMapHeight;	// = DataReader.getMaxY()-DataReader.getMinY();
+	private static double maxMapWidth;	// = DataReader.getMaxX()-DataReader.getMinX();
 	private static HashMap<String, String> zipToCityMap;
 	private static ArrayList<CoastPoint[]> coast;
-	static ArrayList<DrawableItem> path = new ArrayList<DrawableItem>();;
+	private static ArrayList<DrawableItem> path = new ArrayList<DrawableItem>();;
 
 	/**
 	 * Calculates the absolute geo X coordinate of a given pixel value X.
@@ -374,6 +374,7 @@ public class WindowHandler {
 		System.out.println("Time for query in quadtree: " + (System.currentTimeMillis()-startTime)/1000.0);
 		DrawableItem.setMapSize(geoXMax+offsetX, geoYMax+offsetY, geoXMin+offsetX, geoYMin+offsetY);
 		startTime = System.currentTimeMillis();
+		RoadSegment.setZoomLevel();
 		getEdgesFromNodes();
 		System.out.println("Time to create list of road segments: " + (System.currentTimeMillis()-startTime)/1000.0);
 		offsetX += geoXMin;
@@ -502,6 +503,10 @@ public class WindowHandler {
 	
 	public static ArrayList<CoastPoint[]> getCoast() {
 		return coast;
+	}
+
+	public static Graph getGraph() {
+		return graph;
 	}
 
 	public static void main(String[] args) throws IOException {
