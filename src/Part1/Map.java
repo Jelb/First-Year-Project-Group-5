@@ -20,7 +20,6 @@ public class Map extends JPanel {
 	private ArrayList<DrawableItem> path;
 	private static ArrayList<CoastPoint[]> coast, lake, island, border; 
 	private static Map instance = null;
-	private static ArrayList<Polygon> poly;
 	private ArrayList<Flag> flags;
 
 	

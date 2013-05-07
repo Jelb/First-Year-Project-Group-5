@@ -51,5 +51,4 @@ public abstract class DrawableItem {
 	public abstract void paintComponent(Graphics g);
 	
 	public abstract void updatePosition();
-
 }

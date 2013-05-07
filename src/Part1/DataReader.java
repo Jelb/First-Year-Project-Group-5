@@ -255,7 +255,6 @@ public class DataReader {
 	
 	public ArrayList<CoastPoint[]> readCoast(String filepath) {
 		ArrayList<CoastPoint[]> area = new ArrayList<>();
-
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(filepath));
 			String line = reader.readLine().trim();
@@ -271,16 +270,14 @@ public class DataReader {
 					}
 					continue;
 				}
-				double lon = Double.parseDouble(line.substring(0, line.indexOf("\t")));
-				double lat = Double.parseDouble(line.substring(line.indexOf("\t")+1));
+				double lon = Double.parseDouble(line.substring(0, line.indexOf("\t")).trim());
+				double lat = Double.parseDouble(line.substring(line.indexOf("\t")+1).trim());
 				current.add(lonLatToUTM.convertToUTM(lat, lon));
 
 				line = reader.readLine();
 				}
 			area.add(current.toArray(new CoastPoint[1]));
-			reader.close();
-			System.out.println("Number of polygons: " +area.size());
-			
+			reader.close();			
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "The file <" + filepath+ "> was not foud. \nThe will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
