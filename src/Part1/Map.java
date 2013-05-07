@@ -44,8 +44,6 @@ public class Map extends JPanel {
 	 * based on its current displacement.
 	 */
 	public void paint(Graphics g) {
-		g.drawImage(dbImage, Window.use().getMousePanX(), Window.use().getMousePanY(), this);
-		RoadSegment.setZoomLevel();
 		g.drawImage(offScreen, Window.use().getMousePanX(), Window.use().getMousePanY(), this);
 	}
 	
