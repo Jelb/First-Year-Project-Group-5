@@ -254,7 +254,7 @@ public class DataReader {
 	}
 	
 	public ArrayList<CoastPoint[]> readCoast(String filepath) {
-		ArrayList<CoastPoint[]> area = new ArrayList<>();
+		ArrayList<CoastPoint[]> area = new ArrayList<CoastPoint[]>();
 
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(filepath));

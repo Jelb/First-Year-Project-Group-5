@@ -75,7 +75,7 @@ public class RoadSegment extends DrawableItem {
 		case 4    : return 2.0f;
 		case 5    : return 1.0f;
 		case 8    : return 0.8f;
-		case 4242 : return 8.0f;
+		case 4242 : return 3.6f;
 		default   : return 0.8f;
 		}
 	}
@@ -88,7 +88,7 @@ public class RoadSegment extends DrawableItem {
 		case 4    : return 2.8f;
 		case 5    : return 1.4f;
 		case 8    : return 0.8f;
-		case 4242 : return 8.0f;
+		case 4242 : return 4.0f;
 		default   : return 0.8f;
 		}
 	}
@@ -101,7 +101,7 @@ public class RoadSegment extends DrawableItem {
 		case 4    : return 2.8f;
 		case 5    : return 1.4f;
 		case 8    : return 1.0f;
-		case 4242 : return 8.0f;
+		case 4242 : return 4.4f;
 		default   : return 0.8f;
 		}
 	}
@@ -114,7 +114,7 @@ public class RoadSegment extends DrawableItem {
 		case 4    : return 3.0f;
 		case 5    : return 1.4f;
 		case 8    : return 1.0f;
-		case 4242 : return 8.0f;
+		case 4242 : return 5.0f;
 		default   : return 0.8f;
 		}
 	}
@@ -127,7 +127,7 @@ public class RoadSegment extends DrawableItem {
 		case 4    : return 3.9f;
 		case 5    : return 1.8f;
 		case 8    : return 1.0f;
-		case 4242 : return 8.0f;
+		case 4242 : return 7.0f;
 		default   : return 0.8f;
 		}
 	}
@@ -166,14 +166,14 @@ public class RoadSegment extends DrawableItem {
 	 */
 	private static Color getRoadSegmentColor(int TYP){
 		switch(TYP) {
-		case 1    : return lightOrange;				// Motor ways 	
-		case 2    : return darkOrange;				// Motor traffic road
+		case 1    : return darkOrange;				// Motor ways 	
+		case 2    : return lightOrange;				// Motor traffic road
 		case 3    : return lightYellow; 			// Primary roads > 6 m 
 		case 4    : return lightYellow;				// Secondary roads > 6 m
 		case 5    : return darkGrey;				// Roads between 3-6 meters
 		case 8    : return Color.green.darker();	// paths
-		case 4242 : return Color.red;				// route
-		default   : return white; 					// everything else
+		case 4242 : return Color.RED;				// route
+		default   : return darkGrey; 					// everything else
 		}
 	}
 	
@@ -215,7 +215,7 @@ public class RoadSegment extends DrawableItem {
 	
 		// setting stroke type
 		g2.setStroke(new BasicStroke(roadWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-
+		
 		// draw the road segment
 		g2.drawLine(xStart, yStart, xEnd, yEnd);
 
