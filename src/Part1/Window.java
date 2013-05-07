@@ -7,7 +7,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
-
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -20,10 +19,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
-
 import Part1.DijkstraSP.CompareType;
 import Part1.DijkstraSP.TransportWay;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -62,31 +59,34 @@ public class Window extends JFrame {
 	private static int maxHeight;
 
 	//Buttons to pan and zoom
-	private JButton resetZoom, zoomOut, zoomIn, korteste, hurtigste;
-	private JButton west, east, north, south, findPath, bike, blueBike, car, blueCar;
+	private JButton resetZoom, zoomOut, zoomIn, shortest, fastestsButton, ship, blueShip, search;
+	private JButton west, east, north, south, findPath, bike, blueBike, car, blueCar, reset;
 	private JTextField from, to;
-	private JComboBox searchResultBox;
+	private JComboBox searchFromResultBox, searchToResultBox;
 	private boolean navigateVisible = false;
 	private String[] result;
 	private String[] zipArray;
 	private static boolean fromBool;
+	private boolean fromMarked = false;
+	private boolean toMarked = false;
 	
 	private boolean byCar = true;
 	private boolean fastest = true;
+	private boolean byShip = true;
+	
+	// The two flags
+	private Flag fromFlag = new Flag(true);
+	private Flag toFlag = new Flag(false);
+	
+	// Currently saved from and to text
+	private String fromText;
+	private String toText;
 	
 	//GUI background
 	private JPanel background;
 
-	private int mousePanX = 0;
-	private int mousePanY = 0;
-	
-	
-
-	
-
-	//Midlertidige felter
-	private JButton toms;
-
+	private int mousePanX;	// The temporary displacement of the buffered image
+	private int mousePanY;
 
 	/**
 	 * Constructor for the window class.
@@ -174,7 +174,7 @@ public class Window extends JFrame {
 		} else {
 			requestFocus();			
 		}
-		Map.use().flipImageBuffer();
+		Map.use().createBufferImage();
 		repaint();
 		System.out.println("Time to update map: " + (System.currentTimeMillis()-startTime)/1000.0);
 	}
@@ -193,25 +193,30 @@ public class Window extends JFrame {
 		south = createButton("South.png", "South", 75, 125);
 		findPath = createButton("FindPath.png", "Find Path", 75, 240);
 		
-		bike = createButton("cycle.png", "By bike or walking", 45, 350);
+		bike = createButton("cycle.png", "By bike or walking", 25, 350);
 		bike.setVisible(false);
-		blueBike = createButton("cycle_blue.png", "By bike or walking", 45, 350);
+		blueBike = createButton("cycle_blue.png", "By bike or walking", 25, 350);
 		blueBike.setVisible(false);
-		car = createButton("motor.png", "By car", 105, 350);
+		car = createButton("motor.png", "By car", 78, 350);
 		car.setVisible(false);
-		blueCar = createButton("motor_blue.png", "By car", 105, 350);
+		blueCar = createButton("motor_blue.png", "By car", 78, 350);
 		blueCar.setVisible(false);
+		ship = createButton("ship.png", "If fastest or shortest, I would like to travel with ferry", 125, 347);
+		ship.setVisible(false);
+		blueShip = createButton("ship_blue.png", "If fastest or shortest, I would like to travel with ferry", 125, 347);
+		blueShip.setVisible(false);
 		
-		korteste = new JButton("Shortest");
-		korteste.setMargin(new Insets(5,5,5,5));
-		korteste.setBounds(20, 395, 70, 20);
-		korteste.setVisible(false);
-		hurtigste = new JButton("Fastest");
-		hurtigste.setMargin(new Insets(5,5,5,5));
-		hurtigste.setBounds(95, 395, 70, 20);
-		hurtigste.setVisible(false);
+		shortest = new JButton("Shortest");
+		shortest.setMargin(new Insets(5,5,5,5));
+		shortest.setBounds(20, 395, 70, 20);
+		shortest.setVisible(false);
+		fastestsButton = new JButton("Fastest");
+		fastestsButton.setMargin(new Insets(5,5,5,5));
+		fastestsButton.setBounds(95, 395, 70, 20);
+		fastestsButton.setVisible(false);
 		
-		searchResultBox = new JComboBox();
+		searchFromResultBox = new JComboBox();
+		searchToResultBox = new JComboBox();
 
 		from = new JTextField("From");
 		from.setBounds(20, 280, 145, 25);
@@ -223,11 +228,17 @@ public class Window extends JFrame {
 		to.setBackground(Color.WHITE);
 		to.setVisible(false);
 		
-		toms = new JButton("Search");
-		toms.setBounds(20, 425,70, 20);
-		toms.setMargin(new Insets(5,5,5,5));
-		toms.setFont(null);
-		toms.setVisible(false);
+		search = new JButton("Search");
+		search.setBounds(20, 425,70, 20);
+		search.setMargin(new Insets(5,5,5,5));
+		search.setFont(null);
+		search.setVisible(false);
+		
+		reset = new JButton("Reset");
+		reset.setBounds(95, 425, 70, 20);
+		reset.setMargin(new Insets(5,5,5,5));
+		reset.setFont(null);
+		reset.setVisible(false);
 		
 		//Internet magic from http://tips4java.wordpress.com/2009/05/31/backgrounds-with-transparency/
 		background = new JPanel()
@@ -246,7 +257,7 @@ public class Window extends JFrame {
 		};
 		background.setOpaque(false);		
 		//background.setBackground(new Color(255,255,255,200)); White
-		background.setBackground(new Color(0,0,0,20));
+		background.setBackground(new Color(0,0,0,50));
 		background.setBounds(10,20,165,275);
 	}
 	
@@ -279,22 +290,6 @@ public class Window extends JFrame {
 			}
 		});
 
-		west.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				PanHandler.directionPan(Direction.WEST);
-			}
-		});
-
-		east.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				PanHandler.directionPan(Direction.EAST);
-			}
-		});
-
 		north.addActionListener(new ActionListener() {
 
 			@Override
@@ -310,20 +305,36 @@ public class Window extends JFrame {
 				PanHandler.directionPan(Direction.SOUTH);
 			}
 		});
+		
+		west.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PanHandler.directionPan(Direction.WEST);
+			}
+		});
+
+		east.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PanHandler.directionPan(Direction.EAST);
+			}
+		});
+		
 		from.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				String fromText = from.getText();
-				addressParse(fromText, 185, 275, true);
+				fromText = from.getText();
+				addressParse(fromText, 185, 280, true);
 			}
 		});
 
 		to.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				String toText = to.getText();
-				addressParse(toText, 185, 310,false);
+				toText = to.getText();
+				addressParse(toText, 185, 315,false);
 			}
 		});
 		
@@ -336,9 +347,11 @@ public class Window extends JFrame {
 				car.setVisible(true);
 				blueBike.setVisible(true);
 				bike.setVisible(false);
-				korteste.setVisible(false);
-				hurtigste.setVisible(false);
-				toms.setBounds(20, 395,70, 20);
+				shortest.setVisible(false);
+				fastestsButton.setVisible(false);
+				search.setBounds(20, 395,70, 20);
+				reset.setBounds(95, 395, 70, 20);
+				fastest = false; //We want the shortest route if by bike
 			}
 		});
 		
@@ -351,44 +364,100 @@ public class Window extends JFrame {
 				car.setVisible(false);
 				blueBike.setVisible(false);
 				bike.setVisible(true);
-				korteste.setVisible(true);
-				hurtigste.setVisible(true);
-				toms.setBounds(20, 425,70, 20);
+				shortest.setVisible(true);
+				shortest.setFont(null);
+				//reset.setVisible(true);
+				reset.setBounds(95, 425, 70, 20);
+				fastestsButton.setVisible(true);
+				fastestsButton.setFont(new Font("Shortest", Font.BOLD, 12));
+				search.setBounds(20, 425,70, 20);
+				fastest = true; //We want the fastest route by default if by car
 			}
 		});
 		
-		hurtigste.addActionListener(new ActionListener(){
+		ship.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent evt) {
+				System.out.println("ship");
+				ship.setVisible(false);
+				blueShip.setVisible(true);
+				byShip = true;
+			}
+		});
+		
+		blueShip.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent evt) {
+				System.out.println("Blue ship");
+				blueShip.setVisible(false);
+				ship.setVisible(true);
+				byShip = false;
+			}
+		});
+		
+		fastestsButton.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
 				System.out.println("Hurtigste rute valgt");
-				hurtigste.setFont(new Font("Fastest", Font.BOLD, 12));
-				korteste.setFont(null);
+				fastestsButton.setFont(new Font("Fastest", Font.BOLD, 12));
+				shortest.setFont(null);
 				fastest = true;
 			}
 		});
 		
-		korteste.addActionListener(new ActionListener(){
+		shortest.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
 				System.out.println("Korteste rute valgt");
-				korteste.setFont(new Font("Shortest", Font.BOLD, 12));
-				hurtigste.setFont(null);
+				shortest.setFont(new Font("Shortest", Font.BOLD, 12));
+				fastestsButton.setFont(null);
 				fastest = false;
 			}
 		});
+		
+		reset.addActionListener(new ActionListener(){
 
-		toms.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt) {
+				System.out.println("reset");
+				from.setText(null);
+				to.setText(null);
+				screen.remove(searchFromResultBox);
+				screen.remove(searchToResultBox);
+				fromMarked = false;
+				toMarked = false;
+				Map.use().resetPath();
+				updateMap();
+			}
+		});
 
-			public void actionPerformed(ActionEvent evt) {	
-				//Checks if the user is going by car or bike, and if they want the shortest or fastest route
-				if(byCar) { 
-					if(fastest) {
-						WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.FASTEST);
+		search.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent evt) {
+				// If the text has been changed the user must choose a new address
+				if (!fromText.equals(from.getText())) fromMarked = false;
+				if (!toText.equals(to.getText())) toMarked = false;
+				
+				if(!fromMarked) {
+					String fromText = from.getText();
+					addressParse(fromText, 185, 280, true);
+				}
+				if (!toMarked) {	
+					String toText = to.getText();
+					addressParse(toText, 185, 315,false);
+				}
+				
+				if(fromMarked && toMarked) {
+					System.out.println("searching for route");
+					//Checks if the user is going by car or bike, and if they want the shortest or fastest route
+					if(byCar) { 
+						if(fastest) {
+							WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.FASTEST, byShip);
+						} else {
+							WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.SHORTEST, byShip);
+						}
 					} else {
-						WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.SHORTEST);
+						WindowHandler.pathFindingTest(TransportWay.BIKE, CompareType.SHORTEST, byShip);
 					}
-				} else {
-					WindowHandler.pathFindingTest(TransportWay.BIKE, CompareType.SHORTEST);
 				}
 			}
 		});
@@ -402,11 +471,13 @@ public class Window extends JFrame {
 					bike.setVisible(true);
 					blueCar.setVisible(true);
 					navigateVisible = true;
-					korteste.setVisible(true);
-					hurtigste.setVisible(true);
-					korteste.setFont(new Font("Shortest", Font.BOLD, 12));
-					hurtigste.setFont(null);
-					toms.setVisible(true);
+					shortest.setVisible(true);
+					fastestsButton.setVisible(true);
+					fastestsButton.setFont(new Font("Shortest", Font.BOLD, 12));
+					shortest.setFont(null);
+					blueShip.setVisible(true);
+					search.setVisible(true);
+					reset.setVisible(true);
 					background.setBounds(10,20,165,440);
 				}
 				else {
@@ -416,14 +487,17 @@ public class Window extends JFrame {
 					blueBike.setVisible(false);
 					car.setVisible(false);
 					blueCar.setVisible(false);
-					searchResultBox.setVisible(false);
+					searchFromResultBox.setVisible(false);
+					searchToResultBox.setVisible(false);
 					navigateVisible = false;
-					korteste.setVisible(false);
-					hurtigste.setVisible(false);
-					toms.setVisible(false);
+					shortest.setVisible(false);
+					fastestsButton.setVisible(false);
+					ship.setVisible(false);
+					blueShip.setVisible(false);
+					search.setVisible(false);
+					reset.setVisible(false);
 					background.setBounds(10,20,165,275);
 				}
-				
 			}
 		});
 	}
@@ -457,7 +531,7 @@ public class Window extends JFrame {
 				}
 				setArray = new String[zipList.size()];
 				for (int i = 0; i < setArray.length; i++) {
-					setArray[i] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " " + zipList.get(i) + " " + result[5];
+					setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + zipList.get(i) + " " + result[5];
 					setArray[i] = setArray[i].replaceAll("\\s+", " ");
 				}
 				zipArray = Arrays.copyOf(zipList.toArray(), zipList.size(), String[].class);
@@ -465,7 +539,7 @@ public class Window extends JFrame {
 			// If there has been typed in a zip code
 			else if(!(result[4].equals(""))){
 				setArray = new String[1]; 
-				setArray[0] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " " + result[4]+ " " + WindowHandler.getZipToCityMap().get(result[4]);
+				setArray[0] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + result[4]+ " " + WindowHandler.getZipToCityMap().get(result[4]);
 				setArray[0] = setArray[0].replaceAll("\\s+", " ");
 				zipArray = new String[]{result[4]};
 				}
@@ -479,7 +553,7 @@ public class Window extends JFrame {
 				}
 				for(int i = 0; i < setArray.length; i++){
 					String city = WindowHandler.getZipToCityMap().get(setArray[i]);
-					setArray[i] = result[0]+" " + result[1]+" " + result[2]+" " + result[3] + " " + setArray[i] + " " + city;
+					setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + setArray[i] + " " + city;
 					setArray[i] = setArray[i].replaceAll("\\s+", " ");				
 				}						
 			}
@@ -497,73 +571,21 @@ public class Window extends JFrame {
 	 * @param y The y-position of the search box
 	 * @param fromBool Set to true if the search text field is the "from field", set to false if the search text field if the "to field"
 	 */
-	private void createSearchBox(String[] array, int x, int y,boolean fromBool){
+	private void createSearchBox(String[] array, int x, int y, boolean fromBool){
 		Window.fromBool = fromBool;
-		screen.remove(searchResultBox);
-		searchResultBox = new JComboBox(array);
-		searchResultBox.setBounds(x,y ,200,25);	
-		searchResultBox.addActionListener(new ActionListener(){ 
-			
-			public void actionPerformed(ActionEvent e) {
-				int i = searchResultBox.getSelectedIndex(); 
-				Edge randomCorrectEdge = null;
-				System.out.println(result[0]);
-				System.out.println(zipArray[i]);
-				Node flagNode = null;
-				String text = (String) searchResultBox.getSelectedItem();
-				for(Edge edge : WindowHandler.getEdges()){
-						if(edge.getVEJNAVN().equals(result[0]) && (edge.getV_POSTNR().equals(zipArray[i]) || edge.getH_POSTNR().equals(zipArray[i]) )){
-							randomCorrectEdge = edge;
-							String houseNumberString = result[1];
-							if (!houseNumberString.equals("")) {
-								int houseNumber = Integer.parseInt(houseNumberString);
-								if (houseNumber % 2 == 0) {
-									if (houseNumber >= edge.getHouseNumberMinEven() && houseNumber <= edge.getHouseNumberMaxEven()) {
-										WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
-										flagNode = edge.getFromNode();
-										randomCorrectEdge = null;
-										break;
-									}
-								}
-								else if (houseNumber >= edge.getHouseNumberMinOdd() && houseNumber <= edge.getHouseNumberMaxOdd()) {
-										WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
-										flagNode = edge.getFromNode();
-										randomCorrectEdge = null;
-										break;
-								}
-							}
-							else {
-								WindowHandler.setNode(edge.getFromNode().getKdvID(), Window.fromBool);
-								flagNode = edge.getFromNode();
-								randomCorrectEdge = null;
-								break;
-							}
-						}
-				}
-				if (randomCorrectEdge != null){
-					WindowHandler.setNode(randomCorrectEdge.getFromNode().getKdvID(), Window.fromBool);
-					flagNode = randomCorrectEdge.getFromNode();
-				}
-				searchResultBox.setVisible(false);
-				if (flagNode != null) {
-					if(Window.fromBool){
-						from.setText(text);
-						double x = flagNode.getXCord();
-						double y = flagNode.getYCord();
-						new Flag(x,y,Window.fromBool);
-					}
-					else{
-						to.setText(text);
-						double x = flagNode.getXCord();
-						double y = flagNode.getYCord();
-						new Flag(x,y,Window.fromBool);
-					}
-				}
-				updateMap();
-			}
-	});
-		
-		screen.add(searchResultBox, JLayeredPane.PALETTE_LAYER);			
+		if(fromBool) {
+			screen.remove(searchFromResultBox);
+			searchFromResultBox = new JComboBox(array);
+			searchFromResultBox.setBounds(x,y ,200,25);	
+			searchFromResultBox.addActionListener(new comboBoxListener(searchFromResultBox, fromBool));
+			screen.add(searchFromResultBox, JLayeredPane.PALETTE_LAYER);
+		} else {
+			screen.remove(searchToResultBox);
+			searchToResultBox = new JComboBox(array);
+			searchToResultBox.setBounds(x,y ,200,25);
+			searchToResultBox.addActionListener(new comboBoxListener(searchToResultBox, fromBool));
+			screen.add(searchToResultBox, JLayeredPane.PALETTE_LAYER);
+		}	
 	}
 	
 	/**
@@ -580,15 +602,18 @@ public class Window extends JFrame {
 		screen.add(south, JLayeredPane.PALETTE_LAYER);
 		screen.add(from, JLayeredPane.PALETTE_LAYER);
 		screen.add(to, JLayeredPane.PALETTE_LAYER);
-		screen.add(toms, JLayeredPane.PALETTE_LAYER);
+		screen.add(search, JLayeredPane.PALETTE_LAYER);
 		screen.add(findPath, JLayeredPane.PALETTE_LAYER);
 		screen.add(background, JLayeredPane.PALETTE_LAYER);
 		screen.add(bike, JLayeredPane.PALETTE_LAYER);
 		screen.add(car, JLayeredPane.PALETTE_LAYER);
 		screen.add(blueBike, JLayeredPane.PALETTE_LAYER);
 		screen.add(blueCar, JLayeredPane.PALETTE_LAYER);
-		screen.add(hurtigste, JLayeredPane.PALETTE_LAYER);
-		screen.add(korteste, JLayeredPane.PALETTE_LAYER);
+		screen.add(fastestsButton, JLayeredPane.PALETTE_LAYER);
+		screen.add(shortest, JLayeredPane.PALETTE_LAYER);
+		screen.add(ship, JLayeredPane.PALETTE_LAYER);
+		screen.add(blueShip, JLayeredPane.PALETTE_LAYER);
+		screen.add(reset, JLayeredPane.PALETTE_LAYER);
 	}
 
 	/**
@@ -612,6 +637,7 @@ public class Window extends JFrame {
 	public int getMapHeight() {
 		return contentPane.getHeight();
 	}
+
 
 	/**
 	 * Method for drawing the rectangle to show where the user is dragging for zoom
@@ -680,6 +706,90 @@ public class Window extends JFrame {
 			}
 		}
 	}
+	
+	private class comboBoxListener implements ActionListener {
+		JComboBox searchResultBox;
+		Boolean fromBool;
+		
+		public comboBoxListener(JComboBox searchResultBox, boolean fromBool) {
+			this.searchResultBox = searchResultBox;
+			this.fromBool = fromBool;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+					
+			if(fromBool) fromMarked = true; //register if the from or to combo box is marked
+			else toMarked = true;
+			// TODO Auto-generated method stub
+			int i = searchResultBox.getSelectedIndex();
+			Edge randomCorrectEdge = null;
+			System.out.println(result[0]);
+			System.out.println(zipArray[i]);
+			Node flagNode = null;
+			String text = (String) searchResultBox.getSelectedItem();
+			for(Edge edge : WindowHandler.getEdges()){
+					if(edge.getVEJNAVN().equals(result[0]) && (edge.getV_POSTNR().equals(zipArray[i]) || edge.getH_POSTNR().equals(zipArray[i]) )){
+						randomCorrectEdge = edge;
+						String houseNumberString = result[1];
+						if (!houseNumberString.equals("")) {
+							int houseNumber = Integer.parseInt(houseNumberString);
+							if (houseNumber % 2 == 0) {
+								if (houseNumber >= edge.getHouseNumberMinEven() && houseNumber <= edge.getHouseNumberMaxEven()) {
+									WindowHandler.setNode(edge.getFromNode().getKdvID(), fromBool);
+									flagNode = edge.getFromNode();
+									randomCorrectEdge = null;
+									break;
+								}
+							}
+							else if (houseNumber >= edge.getHouseNumberMinOdd() && houseNumber <= edge.getHouseNumberMaxOdd()) {
+									WindowHandler.setNode(edge.getFromNode().getKdvID(), fromBool);
+									flagNode = edge.getFromNode();
+									randomCorrectEdge = null;
+									break;
+							}
+						}
+						else {
+							WindowHandler.setNode(edge.getFromNode().getKdvID(), fromBool);
+							flagNode = edge.getFromNode();
+							randomCorrectEdge = null;
+							break;
+						}
+					}
+			}
+			if (randomCorrectEdge != null){
+				WindowHandler.setNode(randomCorrectEdge.getFromNode().getKdvID(), fromBool);
+				flagNode = randomCorrectEdge.getFromNode();
+			}
+			searchResultBox.setVisible(false);
+			if (flagNode != null) {
+				//if(Window.fromBool){
+				if(fromBool){
+//					boolean equals = false; //Test
+//					if(Window.fromBool == fromBool) equals = true;
+//					System.out.println(equals);
+					
+					from.setText(text);
+					fromText = text;
+					System.out.println("Drawing green (start) flag. From bool =" + fromBool);
+					double x = flagNode.getXCord();
+					double y = flagNode.getYCord();
+					fromFlag.setPosition(x, y);
+					Map.use().addFlag(fromFlag);
+				}
+				else {
+					to.setText(text);
+					toText = text;
+					System.out.println("Drawing red (end) flag. From bool =" + fromBool);
+					double x = flagNode.getXCord();
+					double y = flagNode.getYCord();
+					toFlag.setPosition(x, y);
+					Map.use().addFlag(toFlag);
+				}
+			}
+			updateMap();
+		}
+	}
 
 	/**
 	 * Adds a listener to the window instance.
@@ -718,7 +828,7 @@ public class Window extends JFrame {
 				height = Window.use().getHeight();
 				width = Window.use().getWidth();
 				timer = null;
-				Map.use().flipImageBuffer();
+				Map.use().createBufferImage();
 			}
 		}
 	}
@@ -752,20 +862,20 @@ public class Window extends JFrame {
 				screen.add(rect, JLayeredPane.POPUP_LAYER);
 			}
 			else if (SwingUtilities.isLeftMouseButton(e)) {
-				if (dragging) {
-					setMousePanX(e.getX() - prevX);
-					setMousePanY(e.getY() - prevY);
-					repaint();
-				}
+				if (!dragging) {
+					prevX = e.getX();								// Before dragging starts, prevX and prevY is set to 
+					prevY = e.getY();								// the current cursor location.
+					dragging = true;								// Dragging is then set to begin.
+					System.out.println("Set dragging to true");			
+				}										
 				else {
-					prevX = e.getX();
-					prevY = e.getY();
-					dragging = true;
-					System.out.println("Set dragging to true");
-				}
+					setMousePanX(e.getX() - prevX);		// While we are dragging, mousePanX and mousePanY is continually set to 
+					setMousePanY(e.getY() - prevY);		// difference between cursors start location and cursors current location.
+					repaint();							// The Window is then continually repainted using the override 
+				}										// method paint() in Map.
 			}
 		}
-
+		
 		public void mouseReleased(MouseEvent e) {
 			if (SwingUtilities.isRightMouseButton(e)) {
 				System.out.println("Mouse released");
@@ -781,15 +891,15 @@ public class Window extends JFrame {
 			}
 			else if (SwingUtilities.isLeftMouseButton(e)) {
 				if (dragging) {
-					PanHandler.pixelPan((prevX-e.getX()), (e.getY()-prevY));
-					setMousePanX(0);
+					PanHandler.pixelPan((prevX-e.getX()), (e.getY()-prevY));	// When mouse is released, the new map data is calculated.
+					setMousePanX(0);											// mousePanX and mousePanY is reset to zero.
 					setMousePanY(0);
-					dragging = false;
+					dragging = false;											// Dragging ends.
 				}
 			}
-			Map.use().flipImageBuffer();
-		}
-	}
+			Map.use().createBufferImage();										// The new image is drawn to the buffer and flipped in when
+		}																		// it is completed (see Map.flipImageBuffer() for details).
+	}																			
 
 	private class mouseWheelZoom implements MouseWheelListener{
 		public void mouseWheelMoved(MouseWheelEvent e) {
@@ -799,24 +909,24 @@ public class Window extends JFrame {
 			} else {	            
 				WindowHandler.zoomOut();
 			}
-			Map.use().flipImageBuffer();
+			Map.use().createBufferImage();
 		}
 	}
 	
 	public int getMousePanX() {
 		return mousePanX;
 	}
-
-	public void setMousePanX(int mousePanX) {
-		this.mousePanX = mousePanX;
-	}
-
+	
 	public int getMousePanY() {
 		return mousePanY;
 	}
 
-	public void setMousePanY(int mousePanY) {
-		this.mousePanY = mousePanY;
+	public void setMousePanX(int inputMousePanX) {
+		mousePanX = inputMousePanX;
+	}
+
+	public void setMousePanY(int inputMousePanY) {
+		mousePanY = inputMousePanY;
 	}
 	
 }

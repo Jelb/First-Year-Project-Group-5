@@ -14,25 +14,26 @@ import Part1.SplashScreen.Task;
 import QuadTree.QuadTree;
 
 public class WindowHandler {
-	static List<Node> nodes;
-	static List<Edge> edges;
-	static List<Edge> longestRoads;
-	static int startNode;
-	static int endNode;
-	static HashMap<String, HashSet<String>> roadToZipMap;
-	static int longestRoadsFloor;
-	static QuadTree QT;
-	static Graph graph;
-	static Window window;
-	static AddressParser ap;
-	static double geoWidth;		// The  width of the view area in meters
-	static double geoHeight;	// The height of the view area in meters
-	static double offsetX;		// Offset of the current view area relative to the 'outer' map constraints
-	static double offsetY;		// Offset of the current view area relative to the 'outer' map constraints
-	static double ratio;
-	static double minLength;
-	static double maxMapHeight;	// = DataReader.getMaxY()-DataReader.getMinY();
-	static double maxMapWidth;	// = DataReader.getMaxX()-DataReader.getMinX();
+	private static List<Node> nodes;
+	private static List<Edge> edges;
+	private static List<Edge> longestRoads;
+	private static int startNode;
+	private static int endNode;
+	private static HashMap<String, HashSet<String>> roadToZipMap;
+	private static int longestRoadsFloor;
+	private static QuadTree QT;
+	private static Graph graph;
+//	static MultiGraph multiGraph;
+	private static Window window;
+	private static AddressParser ap;
+	private static double geoWidth;		// The  width of the view area in meters
+	private static double geoHeight;	// The height of the view area in meters
+	private static double offsetX;		// Offset of the current view area relative to the 'outer' map constraints
+	private static double offsetY;		// Offset of the current view area relative to the 'outer' map constraints
+	private static double ratio;
+	private static double minLength;
+	private static double maxMapHeight;	// = DataReader.getMaxY()-DataReader.getMinY();
+	private static double maxMapWidth;	// = DataReader.getMaxX()-DataReader.getMinX();
 	private static HashMap<String, String> zipToCityMap;
 	private static ArrayList<CoastPoint[]> coast, lakes, islands, border; 
 
@@ -221,14 +222,13 @@ public class WindowHandler {
 	}
 	
 	/**
-	 * Picks to nodes at random and calculates the shortest path between them.
-	 * For testing purposes only.
+	 * 
 	 */
-	public static void pathFindingTest(TransportWay transport, CompareType compareType) {
+	public static void pathFindingTest(TransportWay transport, CompareType compareType, boolean useFerry) {
 		System.out.println("Start node: " + startNode);
 		
 		System.out.println("Creating SP object... ");
-		DijkstraSP dsp = new DijkstraSP(graph, startNode, transport, compareType);	// use random node at our start node for shortest path calculation
+		DijkstraSP dsp = new DijkstraSP(graph, startNode, transport, compareType, useFerry);
 		
 		Stack<Edge> route = new Stack<Edge>();					// clears any previous route
 		
@@ -368,6 +368,7 @@ public class WindowHandler {
 		System.out.println("Time for query in quadtree: " + (System.currentTimeMillis()-startTime)/1000.0);
 		DrawableItem.setMapSize(geoXMax+offsetX, geoYMax+offsetY, geoXMin+offsetX, geoYMin+offsetY);
 		startTime = System.currentTimeMillis();
+		RoadSegment.setZoomLevel();
 		getEdgesFromNodes();
 		System.out.println("Time to create list of road segments: " + (System.currentTimeMillis()-startTime)/1000.0);
 		offsetX += geoXMin;
@@ -384,6 +385,9 @@ public class WindowHandler {
 			if(lineIntersects(geoXMin, geoXMax, geoYMin, geoYMax, x1, x2,
 				y1, y2)) Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, e.getType(),border));
 		}
+		
+		Map.use().createBufferImage();
+		Window.use().repaint();
 		
 	}
 	
@@ -488,6 +492,23 @@ public class WindowHandler {
 		return edges;
 	}
 
+	public static Graph getGraph() {
+		return graph;
+	}
+	
+
+
+	public static HashMap<String, String> getZipToCityMap() {
+		return zipToCityMap;	
+	}
+	
+	public static ArrayList<CoastPoint[]> getCoast() {
+		return coast;
+	}
+	
+	public static ArrayList<CoastPoint[]> getLakes() {
+		return lakes;
+	}
 
 	public static void main(String[] args) throws IOException {
 		String nodeFile = "kdv_node_unload.txt";
@@ -591,16 +612,4 @@ public class WindowHandler {
 		SplashScreen.use().close();
 	}
 
-
-	public static HashMap<String, String> getZipToCityMap() {
-		return zipToCityMap;	
-	}
-	
-	public static ArrayList<CoastPoint[]> getCoast() {
-		return coast;
-	}
-	
-	public static ArrayList<CoastPoint[]> getLakes() {
-		return lakes;
-	}
 }
