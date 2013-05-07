@@ -67,7 +67,7 @@ public class RoadSegment extends DrawableItem {
 		}
 	}
 	
-	public float zoomLevelOne(int type) {
+	public static float zoomLevelOne(int type) {
 		switch(type) {
 		case 1    : return 3.6f;
 		case 2    : return 3.0f;
@@ -80,7 +80,7 @@ public class RoadSegment extends DrawableItem {
 		}
 	}
 	
-	public float zoomLevelTwo(int type) {
+	public static float zoomLevelTwo(int type) {
 		switch(type) {
 		case 1    : return 4.0f;
 		case 2    : return 3.6f;
@@ -93,7 +93,7 @@ public class RoadSegment extends DrawableItem {
 		}
 	}
 	
-	public float zoomLevelThree(int type) {
+	public static float zoomLevelThree(int type) {
 		switch(type) {
 		case 1    : return 4.4f;
 		case 2    : return 4.0f;
@@ -106,7 +106,7 @@ public class RoadSegment extends DrawableItem {
 		}
 	}
 	
-	public float zoomLevelFour(int type) {
+	public static float zoomLevelFour(int type) {
 		switch(type) {
 		case 1    : return 5.0f;
 		case 2    : return 4.2f;
@@ -119,7 +119,7 @@ public class RoadSegment extends DrawableItem {
 		}
 	}
 	
-	public float zoomLevelFive(int type) {
+	public static float zoomLevelFive(int type) {
 		switch(type) {
 		case 1    : return 7.0f;
 		case 2    : return 5.0f;

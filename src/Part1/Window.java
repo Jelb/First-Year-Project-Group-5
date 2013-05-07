@@ -121,7 +121,8 @@ public class Window extends JFrame {
 		screen.add(Map.use(), JLayeredPane.DEFAULT_LAYER);
 		contentPane.add(screen);
 		createButtons();
-		addButtons();			
+		addButtons();	
+		setBackground(new Color(71, 180, 201));
 		pack();
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

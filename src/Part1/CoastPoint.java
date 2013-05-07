@@ -1,7 +1,7 @@
 package Part1;
 
 
-public class CoastPoint {
+public class CoastPoint{
 	
 	private double geoX; 
 	private double geoY;
@@ -21,5 +21,10 @@ public class CoastPoint {
 	
 	public int hashCode() {
 		return Double.valueOf(geoX).hashCode() + Double.valueOf(geoY).hashCode();
+	}
+	
+	public boolean equals(CoastPoint that) {
+		if(this.getX() == that.geoX && this.getY() == that.getY()) return true;
+		else return false;
 	}
 }

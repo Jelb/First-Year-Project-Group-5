@@ -7,13 +7,11 @@ public class Node {
 	private int kdvID;
 	private static double xOffset;
 	private static double yOffset;
-//	private LinkedList<Edge> edges;
 	
 	public Node(double xCord, double yCord, int kdvID) {
 		this.xCord = xCord;
 		this.yCord = yCord;
 		this.kdvID = kdvID;
-//		edges = new LinkedList<Edge>();
 	}
 	
 	/**
