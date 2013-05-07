@@ -14,7 +14,7 @@ public class DijkstraSP {
 	private IndexMinPQ<Double> pq;
 	private static HashMap<TransportWay, HashSet<Integer>> disallowedTypes;
 	
-	public DijkstraSP(Graph G, int s, TransportWay t, CompareType c) {
+	public DijkstraSP(Graph G, int s, TransportWay t, CompareType c, boolean useFerry) {
 		if (disallowedTypes == null) {
 			createDisallowedTypes();
 		}
@@ -33,6 +33,7 @@ public class DijkstraSP {
 			for (Edge e : G.adj(v)) {
 				// if an edge is not allowed for the chosen transportation then it is skipped
 				if (disallowedTypes.get(t).contains(e.getType())) continue;
+				if (e.getType() == 80 && !useFerry) continue;
 				if (c.equals(CompareType.SHORTEST)) relaxLength(e);
 				else if (c.equals(CompareType.FASTEST)) relaxDriveTime(e);
 			}
@@ -91,15 +92,15 @@ public class DijkstraSP {
 		}
 		for(Edge e = edgeTo[v]; e != null; e = edgeTo[e.getFromNodeID()]) {
 			path.push(e);
-			System.out.println(e.getFromNodeID() + " -> " + e.getToNodeID());			
+			//System.out.println(e.getFromNodeID() + " -> " + e.getToNodeID());			
 		}
 		return path;
 	}
 	
 	private void createDisallowedTypes() {
 		disallowedTypes = new HashMap<TransportWay, HashSet<Integer>>();
-		disallowedTypes.put(TransportWay.CAR, new HashSet<Integer>(Arrays.asList(8, 48, 80, 99)));
-		disallowedTypes.put(TransportWay.BIKE, new HashSet<Integer>(Arrays.asList(1, 2, 31, 32, 41, 42, 80)));
+		disallowedTypes.put(TransportWay.CAR, new HashSet<Integer>(Arrays.asList(8, 48, 99)));
+		disallowedTypes.put(TransportWay.BIKE, new HashSet<Integer>(Arrays.asList(1, 2, 31, 32, 41, 42)));
 	}
 	
 	public enum TransportWay {

@@ -437,12 +437,12 @@ public class Window extends JFrame {
 					//Checks if the user is going by car or bike, and if they want the shortest or fastest route
 					if(byCar) { 
 						if(fastest) {
-							WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.FASTEST);
+							WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.FASTEST, byShip);
 						} else {
-							WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.SHORTEST);
+							WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.SHORTEST, byShip);
 						}
 					} else {
-						WindowHandler.pathFindingTest(TransportWay.BIKE, CompareType.SHORTEST);
+						WindowHandler.pathFindingTest(TransportWay.BIKE, CompareType.SHORTEST, byShip);
 					}
 				}
 			}
@@ -623,6 +623,7 @@ public class Window extends JFrame {
 	public int getMapHeight() {
 		return contentPane.getHeight();
 	}
+
 
 	/**
 	 * Method for drawing the rectangle to show where the user is dragging for zoom
