@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Polygon;
+import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 
@@ -19,8 +20,8 @@ public class Map extends JPanel {
 	private static ArrayList<Polygon> poly;
 
 	
-	private Image dbImage;
-	private Graphics dbg;
+	private Image offScreen = null;
+	private Graphics offgc;
 	
 	private Map() {
 	}
@@ -34,15 +35,30 @@ public class Map extends JPanel {
 		return instance;
 	}
 	
-	public void paint(Graphics g) {
-		g.drawImage(dbImage, Window.use().getMousePanX(), Window.use().getMousePanY(), this);
+	public void scaleBufferedImage(int width, int height) {
+		
 	}
 	
-	public void flipImageBuffer() {
-		dbImage = createImage(getWidth(), getHeight());
-		dbg = dbImage.getGraphics();
-		paintComponent(dbg);
+	/**
+	 * This method flips the buffered image onto the screen
+	 * based on its current displacement.
+	 */
+	public void paint(Graphics g) {
+		g.drawImage(dbImage, Window.use().getMousePanX(), Window.use().getMousePanY(), this);
+		RoadSegment.setZoomLevel();
+		g.drawImage(offScreen, Window.use().getMousePanX(), Window.use().getMousePanY(), this);
 	}
+	
+	
+	/**
+	 * Creates an blank off-screen image, which Graphics object is then used to draw an
+	 * image to be flipped in later.
+	 */
+	public void createBufferImage() {
+		offScreen = createImage(getWidth(), getHeight());		// Creates a new empty Image object and saves it to the buffer.
+		offgc = offScreen.getGraphics();						// The Graphics object of this Image is extracted,
+		paintComponent(offgc);									// and the paintComponent() method is called using this Graphics object,
+	}															// thus 'flipping' the new map into view.
 	
     public void paintComponent(Graphics g) {
     	poly = new ArrayList<Polygon>();

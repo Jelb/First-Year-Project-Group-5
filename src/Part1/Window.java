@@ -77,8 +77,8 @@ public class Window extends JFrame {
 	//GUI background
 	private JPanel background;
 
-	private int mousePanX = 0;
-	private int mousePanY = 0;
+	private int mousePanX;	// The temporary displacement of the buffered image
+	private int mousePanY;
 
 	/**
 	 * Constructor for the window class.
@@ -165,7 +165,7 @@ public class Window extends JFrame {
 		} else {
 			requestFocus();			
 		}
-		Map.use().flipImageBuffer();
+		Map.use().createBufferImage();
 		repaint();
 		System.out.println("Time to update map: " + (System.currentTimeMillis()-startTime)/1000.0);
 	}
@@ -281,22 +281,6 @@ public class Window extends JFrame {
 			}
 		});
 
-		west.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				PanHandler.directionPan(Direction.WEST);
-			}
-		});
-
-		east.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				PanHandler.directionPan(Direction.EAST);
-			}
-		});
-
 		north.addActionListener(new ActionListener() {
 
 			@Override
@@ -312,7 +296,23 @@ public class Window extends JFrame {
 				PanHandler.directionPan(Direction.SOUTH);
 			}
 		});
+		
+		west.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PanHandler.directionPan(Direction.WEST);
+			}
+		});
+
+		east.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PanHandler.directionPan(Direction.EAST);
+			}
+		});
+		
 		from.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
@@ -809,7 +809,7 @@ public class Window extends JFrame {
 				height = Window.use().getHeight();
 				width = Window.use().getWidth();
 				timer = null;
-				Map.use().flipImageBuffer();
+				Map.use().createBufferImage();
 			}
 		}
 	}
@@ -843,20 +843,20 @@ public class Window extends JFrame {
 				screen.add(rect, JLayeredPane.POPUP_LAYER);
 			}
 			else if (SwingUtilities.isLeftMouseButton(e)) {
-				if (dragging) {
-					setMousePanX(e.getX() - prevX);
-					setMousePanY(e.getY() - prevY);
-					repaint();
-				}
+				if (!dragging) {
+					prevX = e.getX();								// Before dragging starts, prevX and prevY is set to 
+					prevY = e.getY();								// the current cursor location.
+					dragging = true;								// Dragging is then set to begin.
+					System.out.println("Set dragging to true");			
+				}										
 				else {
-					prevX = e.getX();
-					prevY = e.getY();
-					dragging = true;
-					System.out.println("Set dragging to true");
-				}
+					setMousePanX(e.getX() - prevX);		// While we are dragging, mousePanX and mousePanY is continually set to 
+					setMousePanY(e.getY() - prevY);		// difference between cursors start location and cursors current location.
+					repaint();							// The Window is then continually repainted using the override 
+				}										// method paint() in Map.
 			}
 		}
-
+		
 		public void mouseReleased(MouseEvent e) {
 			if (SwingUtilities.isRightMouseButton(e)) {
 				System.out.println("Mouse released");
@@ -872,15 +872,15 @@ public class Window extends JFrame {
 			}
 			else if (SwingUtilities.isLeftMouseButton(e)) {
 				if (dragging) {
-					PanHandler.pixelPan((prevX-e.getX()), (e.getY()-prevY));
-					setMousePanX(0);
+					PanHandler.pixelPan((prevX-e.getX()), (e.getY()-prevY));	// When mouse is released, the new map data is calculated.
+					setMousePanX(0);											// mousePanX and mousePanY is reset to zero.
 					setMousePanY(0);
-					dragging = false;
+					dragging = false;											// Dragging ends.
 				}
 			}
-			Map.use().flipImageBuffer();
-		}
-	}
+			Map.use().createBufferImage();										// The new image is drawn to the buffer and flipped in when
+		}																		// it is completed (see Map.flipImageBuffer() for details).
+	}																			
 
 	private class mouseWheelZoom implements MouseWheelListener{
 		public void mouseWheelMoved(MouseWheelEvent e) {
@@ -890,24 +890,24 @@ public class Window extends JFrame {
 			} else {	            
 				WindowHandler.zoomOut();
 			}
-			Map.use().flipImageBuffer();
+			Map.use().createBufferImage();
 		}
 	}
 	
 	public int getMousePanX() {
 		return mousePanX;
 	}
-
-	public void setMousePanX(int mousePanX) {
-		this.mousePanX = mousePanX;
-	}
-
+	
 	public int getMousePanY() {
 		return mousePanY;
 	}
 
-	public void setMousePanY(int mousePanY) {
-		this.mousePanY = mousePanY;
+	public void setMousePanX(int inputMousePanX) {
+		mousePanX = inputMousePanX;
+	}
+
+	public void setMousePanY(int inputMousePanY) {
+		mousePanY = inputMousePanY;
 	}
 	
 }
