@@ -27,6 +27,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
@@ -64,9 +65,6 @@ public class Window extends JFrame {
 	private JTextField from, to;
 	private JComboBox searchFromResultBox, searchToResultBox;
 	private boolean navigateVisible = false;
-	private String[] result;
-	private String[] zipArray;
-	private static boolean fromBool;
 	private boolean fromMarked = false;
 	private boolean toMarked = false;
 	
@@ -218,11 +216,13 @@ public class Window extends JFrame {
 		searchToResultBox = new JComboBox();
 
 		from = new JTextField("From");
+		fromText = "From";
 		from.setBounds(20, 280, 145, 25);
 		from.setBackground(Color.WHITE);
 		from.setVisible(false);
 		
 		to = new JTextField("To");
+		toText = "To";
 		to.setBounds(20, 315, 145, 25);
 		to.setBackground(Color.WHITE);
 		to.setVisible(false);
@@ -328,6 +328,8 @@ public class Window extends JFrame {
 				addressParse(fromText, 185, 280, true);
 			}
 		});
+		
+		from.addMouseListener(new mouseOnText(true));
 
 		to.addActionListener(new ActionListener(){
 
@@ -336,6 +338,8 @@ public class Window extends JFrame {
 				addressParse(toText, 185, 315,false);
 			}
 		});
+		
+		to.addMouseListener(new mouseOnText(false));
 		
 		bike.addActionListener(new ActionListener(){
 
@@ -510,10 +514,12 @@ public class Window extends JFrame {
 	 * @param fromBool Set to true if the search comes from the "from-field". Set to false if the search comes from the "to-field"
 	 */
 	private void addressParse(String text, int x,int y, boolean fromBool){		
-		result = AddressParser.use().parseAddress(text);
-		String[] setArray;
+		String[] result = AddressParser.use().parseAddress(text);
+		String[] setArray = new String[0];
+		String[] zipArray;
+		// Sets input text to red if there is no road name included
 		if(result[0].equals("")){
-			createSearchBox(new String[]{"No Results"},x,y,fromBool);
+			zipArray = new String[0];
 		}
 		else {
 			// If there has been typed in a city name
@@ -556,33 +562,33 @@ public class Window extends JFrame {
 					setArray[i] = setArray[i].replaceAll("\\s+", " ");				
 				}						
 			}
-			//if(setArray.length > 1) {
-				createSearchBox(setArray,x,y,fromBool);
-			//}
 		}
+		if (zipArray.length == 0) setArray = new String[]{"No results"};
+		createSearchBox(setArray,zipArray,result,x,y,fromBool);
 	}
 	
 	/**
 	 * Creates a search box which shows the search results from the address search fields
 	 * 
-	 * @param array Holds the cities that matches the search
+	 * @param addressArray Holds the addresses that matches the search
+	 * @param zipArray Holds the zips matching the addresses in addressArray
+	 * @param textArray Holds the array resulting from parsing the text from the textfield
 	 * @param x The x-position of the search box
 	 * @param y The y-position of the search box
 	 * @param fromBool Set to true if the search text field is the "from field", set to false if the search text field if the "to field"
 	 */
-	private void createSearchBox(String[] array, int x, int y, boolean fromBool){
-		Window.fromBool = fromBool;
+	private void createSearchBox(String[] addressArray, String[] zipArray, String[] textArray, int x, int y, boolean fromBool){
 		if(fromBool) {
 			screen.remove(searchFromResultBox);
-			searchFromResultBox = new JComboBox(array);
+			searchFromResultBox = new JComboBox(addressArray);
 			searchFromResultBox.setBounds(x,y ,200,25);	
-			searchFromResultBox.addActionListener(new comboBoxListener(searchFromResultBox, fromBool));
+			searchFromResultBox.addActionListener(new comboBoxListener(searchFromResultBox, zipArray, textArray, fromBool));
 			screen.add(searchFromResultBox, JLayeredPane.PALETTE_LAYER);
 		} else {
 			screen.remove(searchToResultBox);
-			searchToResultBox = new JComboBox(array);
+			searchToResultBox = new JComboBox(addressArray);
 			searchToResultBox.setBounds(x,y ,200,25);
-			searchToResultBox.addActionListener(new comboBoxListener(searchToResultBox, fromBool));
+			searchToResultBox.addActionListener(new comboBoxListener(searchToResultBox, zipArray, textArray, fromBool));
 			screen.add(searchToResultBox, JLayeredPane.PALETTE_LAYER);
 		}	
 	}
@@ -709,28 +715,32 @@ public class Window extends JFrame {
 	private class comboBoxListener implements ActionListener {
 		JComboBox searchResultBox;
 		Boolean fromBool;
+		String[] zipArray, textArray;
 		
-		public comboBoxListener(JComboBox searchResultBox, boolean fromBool) {
+		public comboBoxListener(JComboBox searchResultBox, String[] zipArray, String[] textArray, boolean fromBool) {
 			this.searchResultBox = searchResultBox;
 			this.fromBool = fromBool;
+			this.zipArray = zipArray;
+			this.textArray = textArray;
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
-					
+		public void actionPerformed(ActionEvent e) {	
+			// if the zip array is empty, the search yielded no results
+			if (zipArray.length == 0) return;
+			
 			if(fromBool) fromMarked = true; //register if the from or to combo box is marked
 			else toMarked = true;
-			// TODO Auto-generated method stub
 			int i = searchResultBox.getSelectedIndex();
 			Edge randomCorrectEdge = null;
-			System.out.println(result[0]);
+			System.out.println(textArray[0]);
 			System.out.println(zipArray[i]);
 			Node flagNode = null;
 			String text = (String) searchResultBox.getSelectedItem();
 			for(Edge edge : WindowHandler.getEdges()){
-					if(edge.getVEJNAVN().equals(result[0]) && (edge.getV_POSTNR().equals(zipArray[i]) || edge.getH_POSTNR().equals(zipArray[i]) )){
+					if(edge.getVEJNAVN().equals(textArray[0]) && (edge.getV_POSTNR().equals(zipArray[i]) || edge.getH_POSTNR().equals(zipArray[i]) )){
 						randomCorrectEdge = edge;
-						String houseNumberString = result[1];
+						String houseNumberString = textArray[1];
 						if (!houseNumberString.equals("")) {
 							int houseNumber = Integer.parseInt(houseNumberString);
 							if (houseNumber % 2 == 0) {
@@ -762,12 +772,8 @@ public class Window extends JFrame {
 			}
 			searchResultBox.setVisible(false);
 			if (flagNode != null) {
-				//if(Window.fromBool){
+				System.out.println("From bool:" + fromBool);
 				if(fromBool){
-//					boolean equals = false; //Test
-//					if(Window.fromBool == fromBool) equals = true;
-//					System.out.println(equals);
-					
 					from.setText(text);
 					fromText = text;
 					System.out.println("Drawing green (start) flag. From bool =" + fromBool);
@@ -909,6 +915,21 @@ public class Window extends JFrame {
 				WindowHandler.zoomOut();
 			}
 			Map.use().createBufferImage();
+		}
+	}
+	
+	private class mouseOnText extends MouseAdapter {
+		private boolean isFrom;
+		
+		mouseOnText(boolean from) {
+			this.isFrom = from;
+		}
+		
+		@Override
+		public void mousePressed(MouseEvent e) {
+			if (isFrom && from.getText().equals("From")) from.setText("");
+			else if (!isFrom && to.getText().equals("To")) to.setText("");
+			
 		}
 	}
 	
