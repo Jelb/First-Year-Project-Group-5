@@ -56,9 +56,8 @@ public class AddressParser {
 	}
 	
 	public void clearResults(){
-		for(int i = 0; i < result.length; i++){
-			result[i] = "";
-		}
+		result = new String[6];
+		for (int i = 0; i < result.length; i++) result[i] = "";
 	}
 	
 	public String[] parseAddress(String input) {
