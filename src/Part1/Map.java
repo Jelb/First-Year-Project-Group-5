@@ -18,6 +18,7 @@ public class Map extends JPanel {
 	private ArrayList<DrawableItem> path;
 	private static Map instance = null;
 	private static ArrayList<Polygon> poly;
+	private ArrayList<Flag> flags;
 
 	
 	private Image offScreen = null;
@@ -31,6 +32,7 @@ public class Map extends JPanel {
 		if(instance == null) {
 			instance = new Map();
 			instance.path = new ArrayList<DrawableItem>();
+			instance.flags = new ArrayList<Flag>();
 		}
 		return instance;
 	}
@@ -81,6 +83,8 @@ public class Map extends JPanel {
             r.paintComponent(g);
         }
         for(DrawableItem r : path) r.paintComponent(g);
+        
+        for(Flag f: flags) f.paintComponent(g);
     }
     
 	public int calcPixelX(double geoCord){
@@ -132,6 +136,7 @@ public class Map extends JPanel {
     		r.updatePosition();
     	}
     	for(DrawableItem r : path) r.updatePosition();
+    	for (Flag f : flags) f.updatePosition();
     }
     
     /**
@@ -139,12 +144,11 @@ public class Map extends JPanel {
      */
     public void updatePath() {
     	for (DrawableItem r : path) r.updatePosition();
+    	for (Flag f : flags) f.updatePosition();
     }
     
     public void setPath(ArrayList<DrawableItem> path) {
-    	for(DrawableItem r : path){
-    		this.path.add(r);
-    	}
+    	this.path = path;
     }
     
     public void addDrawableItemToPath(DrawableItem i){
@@ -153,5 +157,11 @@ public class Map extends JPanel {
     
     public void resetPath() {
     	path = new ArrayList<DrawableItem>();
+    	flags = new ArrayList<Flag>();
+    }
+    
+    public void addFlag(Flag f) {
+    	for (Flag flag : flags) if (flag == f) return;
+    	flags.add(f);
     }
 }

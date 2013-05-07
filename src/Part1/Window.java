@@ -74,6 +74,14 @@ public class Window extends JFrame {
 	private boolean fastest = true;
 	private boolean byShip = true;
 	
+	// The two flags
+	private Flag fromFlag = new Flag(true);
+	private Flag toFlag = new Flag(false);
+	
+	// Currently saved from and to text
+	private String fromText;
+	private String toText;
+	
 	//GUI background
 	private JPanel background;
 
@@ -316,7 +324,7 @@ public class Window extends JFrame {
 		from.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				String fromText = from.getText();
+				fromText = from.getText();
 				addressParse(fromText, 185, 280, true);
 			}
 		});
@@ -324,7 +332,7 @@ public class Window extends JFrame {
 		to.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				String toText = to.getText();
+				toText = to.getText();
 				addressParse(toText, 185, 315,false);
 			}
 		});
@@ -424,10 +432,15 @@ public class Window extends JFrame {
 		search.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				if(!fromMarked || !toMarked) {
+				// If the text has been changed the user must choose a new address
+				if (!fromText.equals(from.getText())) fromMarked = false;
+				if (!toText.equals(to.getText())) toMarked = false;
+				
+				if(!fromMarked) {
 					String fromText = from.getText();
 					addressParse(fromText, 185, 280, true);
-					
+				}
+				if (!toMarked) {	
 					String toText = to.getText();
 					addressParse(toText, 185, 315,false);
 				}
@@ -756,17 +769,21 @@ public class Window extends JFrame {
 //					System.out.println(equals);
 					
 					from.setText(text);
+					fromText = text;
 					System.out.println("Drawing green (start) flag. From bool =" + fromBool);
 					double x = flagNode.getXCord();
 					double y = flagNode.getYCord();
-					new Flag(x,y,fromBool);
+					fromFlag.setPosition(x, y);
+					Map.use().addFlag(fromFlag);
 				}
 				else {
 					to.setText(text);
+					toText = text;
 					System.out.println("Drawing red (end) flag. From bool =" + fromBool);
 					double x = flagNode.getXCord();
 					double y = flagNode.getYCord();
-					new Flag(x,y,fromBool);
+					toFlag.setPosition(x, y);
+					Map.use().addFlag(toFlag);
 				}
 			}
 			updateMap();

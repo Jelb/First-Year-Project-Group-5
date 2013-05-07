@@ -15,12 +15,15 @@ public class Flag extends DrawableItem {
 	private int pixelYCord;
 	private BufferedImage icon;
 	
-	public Flag(double x, double y, boolean fromBool){
-		this.geoXCord = x;
-		this.geoYCord = y;
+	public Flag(boolean fromBool){
 		this.fromBool = fromBool;
-		
 		createFlag();
+	}
+	
+	public void setPosition(double x, double y) {
+		geoXCord = x;
+		geoYCord = y;
+		updatePosition();
 	}
 	
 	private void createFlag(){
@@ -36,9 +39,6 @@ public class Flag extends DrawableItem {
 		catch (IOException e) {
 			System.out.println("Failed to load flag image");
 		}
-		 
-		updatePosition();
-		Map.use().addDrawableItemToPath(this);
 	}
 	
 	public void updatePosition(){
