@@ -7,7 +7,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
-import java.awt.Rectangle;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -36,7 +35,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -125,7 +123,8 @@ public class Window extends JFrame {
 		screen.add(Map.use(), JLayeredPane.DEFAULT_LAYER);
 		contentPane.add(screen);
 		createButtons();
-		addButtons();			
+		addButtons();	
+		setBackground(new Color(71, 180, 201));
 		pack();
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

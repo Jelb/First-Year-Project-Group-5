@@ -23,7 +23,6 @@ public class WindowHandler {
 	static int longestRoadsFloor;
 	static QuadTree QT;
 	static Graph graph;
-//	static MultiGraph multiGraph;
 	static Window window;
 	static AddressParser ap;
 	static double geoWidth;		// The  width of the view area in meters
@@ -35,7 +34,7 @@ public class WindowHandler {
 	static double maxMapHeight;	// = DataReader.getMaxY()-DataReader.getMinY();
 	static double maxMapWidth;	// = DataReader.getMaxX()-DataReader.getMinX();
 	private static HashMap<String, String> zipToCityMap;
-	private static ArrayList<CoastPoint[]> coast; 
+	private static ArrayList<CoastPoint[]> coast, lakes, islands, border; 
 
 	/**
 	 * Calculates the absolute geo X coordinate of a given pixel value X.
@@ -92,7 +91,6 @@ public class WindowHandler {
 		double shortestDist = Double.MAX_VALUE;
 
 		for (Node n : nodes) {
-//			Iterable<Edge> edgesFromNode = multiGraph.adj(n.getKdvID(),1);
 			Iterable<Edge> edgesFromNode = graph.adj(n.getKdvID());
 			for (Edge e : edgesFromNode) {
 				if (e.isDrawable() && includeEdge(e)) {
@@ -207,8 +205,6 @@ public class WindowHandler {
 	
 	public static void randomSPtest() {
 		Random rnd = new Random();
-//		startNode = rnd.nextInt(multiGraph.getV(1)-1)+1;
-//		endNode = rnd.nextInt(multiGraph.getV(1)-1)+1;
 		startNode = rnd.nextInt(graph.getV()-1)+1;
 		endNode = rnd.nextInt(graph.getV()-1)+1;
 		//pathFindingTest();
@@ -342,8 +338,6 @@ public class WindowHandler {
 			geoYMin = centerY - 250/ratio;
 			geoYMax = centerY + 250/ratio;
 		}
-		//System.out.println("Start point: (" + geoXMin + ", " + geoYMin + ")");
-		//System.out.println("End point: (" + geoXMax + ", " + geoYMax + ")");
 		
 		
 		geoWidth = geoXMax - geoXMin;
@@ -422,8 +416,6 @@ public class WindowHandler {
 		Map.use().newArrayList();
 		for (Node n : nodes) {
 			Iterable<Edge> edgesFromNode = graph.adj(n.getKdvID());
-//			for (int type = 1; type < 4; type++) {
-//			Iterable<Edge> edgesFromNode = multiGraph.adj(n.getKdvID(), type);
 			for (Edge e : edgesFromNode) {
 				if (e.isDrawable() && includeEdge(e)) {
 					double x1 = e.getFromNode().getXCord();
@@ -500,6 +492,11 @@ public class WindowHandler {
 	public static void main(String[] args) throws IOException {
 		String nodeFile = "kdv_node_unload.txt";
 		String edgeFile = "kdv_unload.txt";
+		String coastFile = "coastline.txt";
+		String lakeFile = "lake.txt";
+		String islandFile = "island.txt";
+		String borderFile = "border.txt";
+				
 		SplashScreen.initialize(nodeFile, edgeFile);
 		SplashScreen.use();
 		
@@ -508,11 +505,16 @@ public class WindowHandler {
 		
 		//Initializing of data from KrakLoader
 		DataReader dataReader = DataReader.use("kdv_node_unload.txt","kdv_unload.txt");
-//		DataReader dataReader = DataReader.use("testNodes.txt","testEdges.txt");
 		
 		//ArraylList with Nodes
 		dataReader.createNodeList();
-		coast = dataReader.readCoast();
+		coast = dataReader.readCoast(coastFile);
+		lakes = dataReader.readCoast(lakeFile);
+		islands = dataReader.readCoast(islandFile);
+		border = dataReader.readCoast(borderFile);
+		
+		Map.setCoast(coast, lakes, islands);
+		Map.setBorder(border);
 		
 		longestRoadsFloor = 10000;
 		
@@ -586,10 +588,6 @@ public class WindowHandler {
 		System.out.println("Time to update map the first time: " + duration/1000.0 + "s");
 		
 		System.out.printf("Graph has %d edges%n", graph.getE());
-//		System.out.printf("Graph has %d edges%n", multiGraph.getE(1));
-		//MemoryMXBean mxbean = ManagementFactory.getMemoryMXBean();
-		//System.out.printf("Heap memory usage: %d MB%n", mxbean
-		//		.getHeapMemoryUsage().getUsed() / (1000000));
 		SplashScreen.use().close();
 	}
 
@@ -600,5 +598,9 @@ public class WindowHandler {
 	
 	public static ArrayList<CoastPoint[]> getCoast() {
 		return coast;
+	}
+	
+	public static ArrayList<CoastPoint[]> getLakes() {
+		return lakes;
 	}
 }

@@ -16,7 +16,7 @@ public class lonLatToUTM {
 	
 	private static final double MERIDIAN = 9*(Math.PI/180);
 	
-	public static CoastPoint convertToUTM(double argLon, double argLat) {
+	public static CoastPoint convertToUTM(double argLat, double argLon) {
 
 		double lon 	= argLon*(Math.PI/180); 
 		double lat 	= argLat*(Math.PI/180); 
@@ -42,12 +42,5 @@ public class lonLatToUTM {
 		double x 	= 500000+(K4*p+K5*Math.pow(p, 3));
 		double y	= K1+K2*p*p+K3*Math.pow(p, 4);
 		return new CoastPoint(x, y);
-		
-
 	}
-	
-	public static void main(String[] args) {
-		convertToUTM(55.643354, 12.647281);
-	}
-	
 }

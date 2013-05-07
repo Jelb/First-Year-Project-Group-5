@@ -253,11 +253,11 @@ public class DataReader {
 		return QT;
 	}
 	
-	public ArrayList<CoastPoint[]> readCoast() {
+	public ArrayList<CoastPoint[]> readCoast(String filepath) {
 		ArrayList<CoastPoint[]> area = new ArrayList<>();
 
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader("coastLine.txt"));
+			BufferedReader reader = new BufferedReader(new FileReader(filepath));
 			String line = reader.readLine().trim();
 			ArrayList<CoastPoint> current = null;
 			while(!(line == null)) {
@@ -271,8 +271,8 @@ public class DataReader {
 					}
 					continue;
 				}
-				double lat = Double.parseDouble(line.substring(0, line.indexOf("\t")));
-				double lon = Double.parseDouble(line.substring(line.indexOf("\t")+1));
+				double lon = Double.parseDouble(line.substring(0, line.indexOf("\t")));
+				double lat = Double.parseDouble(line.substring(line.indexOf("\t")+1));
 				current.add(lonLatToUTM.convertToUTM(lat, lon));
 
 				line = reader.readLine();
@@ -282,7 +282,7 @@ public class DataReader {
 			System.out.println("Number of polygons: " +area.size());
 			
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "The \"coastline-file\" was not foud. \nThe will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "The file <" + filepath+ "> was not foud. \nThe will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
 		return area;
