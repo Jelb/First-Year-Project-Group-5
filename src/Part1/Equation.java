@@ -84,12 +84,61 @@ public class Equation {
 	//-----------------------VECTOR FUNCTIONS------------------------------------
 	
 	/**
+	 * Determines if a point lies within the 'channel' of a given edge, meaning the points
+	 * normal vector actually touches the edge itself.
+	 * @param point		The point, given as a node
+	 * @param edge		The edge we are testing
+	 * @return			True, if the point is inside the channel
+	 */
+	public static boolean pointWithinChannel(Node point, Edge edge) {
+		double[] vectorA = nodesToVector(edge.getFromNode(), point);
+		double[] vectorB = nodesToVector(edge.getFromNode(), edge.getToNode());
+		double[] vectorC = nodesToVector(edge.getToNode(), point);
+		double[] vectorD = nodesToVector(edge.getToNode(), edge.getFromNode());
+		
+		if (cosVectorAngle(vectorA, vectorB) < 0 && cosVectorAngle(vectorC, vectorD) < 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
+		
+	}
+	
+	public static double[] getNormalVector(Edge edge) {
+		double[] vector = edgeToVector(edge);
+		double x = vector[0];
+		double y = vector[1];
+		double[] normal = new double[] {-y , x} ;
+		return normal;
+	}
+	
+	public static double distanceBetweenPointAndLine(Edge edge, Node point) {
+		// a coordinate set on the line
+		double x1 = edge.getFromNode().getAbsoluteXCoordinate();
+		double y1 = edge.getFromNode().getAbsoluteYCoordinate();
+		
+		// the coordinate set of the point
+		double x2 = point.getAbsoluteXCoordinate();
+		double y2 = point.getAbsoluteYCoordinate();
+		
+		// the values of the lines normal vector
+		double a = getNormalVector(edge)[0];
+		double b = getNormalVector(edge)[1];
+		double c = -a * x1 - b * y1;
+		
+		// calculating the distance between the point and the line
+		double dist = (Math.abs(a * x2 + b * y2 + c)) / Math.sqrt(a * a + b * b);
+		return dist;
+	}
+		
+	/**
 	 * Creates a 2D vector based on a set of nodes.
 	 * @param fnode		The 'from' node
 	 * @param tnode		The 'to' node
 	 * @return			The vector between the two
 	 */
-	public static double[] nodeToVector(Node fnode, Node tnode) {
+	public static double[] nodesToVector(Node fnode, Node tnode) {
 		double[] vector = new double[2];
 		vector[0] = tnode.getAbsoluteXCoordinate() - fnode.getAbsoluteXCoordinate();
 		vector[1] = tnode.getAbsoluteYCoordinate() - fnode.getAbsoluteYCoordinate();
@@ -112,7 +161,7 @@ public class Equation {
 	 * @return			The distance between the two
 	 */
 	public static double distanceBetweenNodes(Node fnode, Node tnode) {
-		return vectorLength(nodeToVector(fnode, tnode));
+		return vectorLength(nodesToVector(fnode, tnode));
 	}
 	
 	/**
@@ -148,6 +197,19 @@ public class Equation {
 	}
 	
 	/**
+	 * Creates a vector from a given edge.
+	 * @param edge		The given edge
+	 * @return			The resulting vector 
+	 */
+	public static double[] edgeToVector(Edge edge) {
+		return pointsToVector(edge.getFromNode().getAbsoluteXCoordinate(),
+							  edge.getFromNode().getAbsoluteYCoordinate(),
+							  edge.getToNode().getAbsoluteXCoordinate(),
+							  edge.getToNode().getAbsoluteYCoordinate()
+							 );
+	}
+	
+	/**
 	 * Creates a 2D vector from two points
 	 * @param x1		X coord, first point
 	 * @param y1		Y coord, first point
@@ -161,5 +223,7 @@ public class Equation {
 		vector[1] = y2 - y1;
 		return vector;
 	}
+	
+	
 	//---------------------------------------------------------------------------
 }

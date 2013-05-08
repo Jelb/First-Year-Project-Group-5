@@ -94,18 +94,28 @@ public class WindowHandler {
 			Iterable<Edge> edgesFromNode = graph.adj(n.getKdvID());
 			for (Edge e : edgesFromNode) {
 				if (e.isDrawable() && includeEdge(e)) {
-					double x1 = e.getFromNode().getAbsoluteXCoordinate();
-					double y1 = e.getFromNode().getAbsoluteYCoordinate();
-					double x2 = e.getToNode().getAbsoluteXCoordinate();
-					double y2 = e.getToNode().getAbsoluteYCoordinate();
-					
-					double tempDist = Equation.distanceBetweenPoints(x1, y1, x, y);
-					if(tempDist < shortestDist) {
-						shortestDist = tempDist;
-						closestEdge = e;
-						tempDist = Equation.distanceBetweenPoints(x2, y2, x, y);
-						if(tempDist < shortestDist) {
+//					double x1 = e.getFromNode().getAbsoluteXCoordinate();
+//					double y1 = e.getFromNode().getAbsoluteYCoordinate();
+//					double x2 = e.getToNode().getAbsoluteXCoordinate();
+//					double y2 = e.getToNode().getAbsoluteYCoordinate();
+					if (Equation.pointWithinChannel(n,e)) {
+						double tempDist = Equation.distanceBetweenPointAndLine(e, n);
+						if (tempDist < shortestDist) {
 							shortestDist = tempDist;
+							closestEdge = e;
+						}
+					} else {
+
+						double tempDist1 = Equation.vectorLength(Equation.nodesToVector(e.getFromNode(), e.getToNode()));
+						double tempDist2 = Equation.vectorLength(Equation.nodesToVector(e.getToNode(), e.getFromNode()));
+
+						if (tempDist1 < shortestDist) {
+							shortestDist = tempDist1;
+							closestEdge = e;
+						}
+
+						if (tempDist2 < shortestDist) {
+							shortestDist = tempDist2;
 							closestEdge = e;
 						}
 					}
