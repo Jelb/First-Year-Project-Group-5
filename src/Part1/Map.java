@@ -42,10 +42,6 @@ public class Map extends JPanel {
 		return instance;
 	}
 
-	public void scaleBufferedImage(int width, int height) {
-
-	}
-
 	/**
 	 * This method flips the buffered image onto the screen
 	 * based on its current displacement.
