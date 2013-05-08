@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Stack;
 
 import Part1.DijkstraSP.CompareType;
@@ -483,10 +482,8 @@ public class WindowHandler {
 		//Makes and returns a quadTree
 		QT = dataReader.createQuadTree();
 		longestRoads = dataReader.getLongestRoads();
-		
 		roadToZipMap = dataReader.getRoadToZipMap();
-		
-		zipToCityMap = dataReader.getZipToCityMap("names.dat");
+		zipToCityMap = dataReader.getZipToCityMap("post.dat");
 		
 		//set arraylist of all egdes
 		edges = dataReader.getEdges();

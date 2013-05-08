@@ -1,10 +1,8 @@
 package Part1;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -321,6 +319,7 @@ public class DataReader {
 			String cityName = strLine.split(" ", 2)[1];
 
 			zipToCityMap.put(zipCode, cityName);
+			strLine = br.readLine();
 		}
 		br.close();
 		} catch (Exception e) {
