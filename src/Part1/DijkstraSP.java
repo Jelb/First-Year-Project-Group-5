@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Stack;
 
+import javax.swing.JOptionPane;
+
 /**
  * Dijkstra's Shortest Path algorithm, as per Sedgewick p. 655
  */
@@ -88,6 +90,7 @@ public class DijkstraSP {
 		Stack<Edge> path = new Stack<Edge>();
 		if(!hasPathTo(v)) {
 			System.out.println("No path to node " + v);
+			JOptionPane.showMessageDialog(Window.use(),"No route found. Try enabling ferry routes.");
 			return path;
 		}
 		for(Edge e = edgeTo[v]; e != null; e = edgeTo[e.getFromNodeID()]) {
