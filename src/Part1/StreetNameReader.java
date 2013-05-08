@@ -70,7 +70,7 @@ private BufferedReader brStreet, brZip;
 		String inputName = "";
 		while((strLine = brZip.readLine()) != null) {
 			String name = strLine.split(" ", 2)[1];
-			if(input.contains(name.toLowerCase()))
+			if(input.equals(name.toLowerCase()))
 				inputName = name;
 		}
 		return inputName;

@@ -651,11 +651,29 @@ public class Window extends JFrame {
 		String[] result = AddressParser.use().parseAddress(text);
 		String[] setArray = new String[0];
 		String[] zipArray;
-		// Sets input text to red if there is no road name included
+		
 		if(result[0].equals("")){
-			zipArray = new String[0];
+			// if no road name has been entered, we try to find any road name in the chosen city (if there is a city)
+			if (!result[5].equals("")) {
+				HashMap<String, String> zipToCityMap = WindowHandler.getZipToCityMap();
+				Set<String> zips = zipToCityMap.keySet();
+				ArrayList<String> zipList = new ArrayList<String>();
+				for (String zip : zips) {
+					if (result[5].toLowerCase().equals(zipToCityMap.get(zip).toLowerCase())) {
+						HashMap<String, HashSet<String>> roadToZipMap = WindowHandler.getRoadToZipMap();
+						Set<String> roads = roadToZipMap.keySet();
+						for (String road : roads) {
+							if (roadToZipMap.get(road).contains(zip)) { 
+								result[0] = road;
+								break;
+							}
+						}
+					}
+				}
+			}
 		}
-		else {
+//		else 
+		{
 			// If there has been typed in a city name
 			if (!result[5].equals("")) {
 				HashMap<String, String> zipToCityMap = WindowHandler.getZipToCityMap();
