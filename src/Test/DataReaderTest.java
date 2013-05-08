@@ -97,23 +97,25 @@ public class DataReaderTest {
 
 	@Test (expected = Exception.class)
 	public void wrongNodeFile() {
-		DR.setInstance();
+		DataReader.resetInstance();
 		DR2 = DataReader.use("wrongFile.txt", "10edgestest.txt");
 		DR2.createNodeList();
 	}
 	
 	@Test (expected = Exception.class)
 	public void wrongEdgeFile() {
-		DR2.setInstance();
+		DataReader.resetInstance();
 		DataReader DR3 = DataReader.use("10nodestest.txt", "wrongFile.txt");
-		DR2.createGraphAndLongestRoadsList(10000);
-		//The program will cloose down and do nothing
+		DR3.createNodeList();
+		DR3.createGraphAndLongestRoadsList(10000);
+		//The program will close down and do nothing
 	}
 	
 	@After
 	public void breakDown() {
 		DR = null;
 		DR2 = null;
+		DataReader.resetInstance();
 		graph = null;
 	}
 }
