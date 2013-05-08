@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Stack;
 
 import Part1.DijkstraSP.CompareType;
@@ -94,26 +93,31 @@ public class WindowHandler {
 			Iterable<Edge> edgesFromNode = graph.adj(n.getKdvID());
 			for (Edge e : edgesFromNode) {
 				if (e.isDrawable() && includeEdge(e)) {
-//					double x1 = e.getFromNode().getAbsoluteXCoordinate();
-//					double y1 = e.getFromNode().getAbsoluteYCoordinate();
-//					double x2 = e.getToNode().getAbsoluteXCoordinate();
-//					double y2 = e.getToNode().getAbsoluteYCoordinate();
-					if (Equation.pointWithinChannel(n,e)) {
-						double tempDist = Equation.distanceBetweenPointAndLine(e, n);
+					if (Equation.pointWithinChannel(x,y,e)) {
+						double tempDist = Equation.distanceBetweenPointAndLine(e,x,y);
 						if (tempDist < shortestDist) {
 							shortestDist = tempDist;
 							closestEdge = e;
 						}
 					} else {
 
-						double tempDist1 = Equation.vectorLength(Equation.nodesToVector(e.getFromNode(), e.getToNode()));
-						double tempDist2 = Equation.vectorLength(Equation.nodesToVector(e.getToNode(), e.getFromNode()));
+						double tempDist1 = Equation.vectorLength(Equation.pointsToVector(
+								e.getFromNode().getAbsoluteXCoordinate(),
+								e.getFromNode().getAbsoluteYCoordinate(),
+								x, y));
+								
+						double tempDist2 = Equation.vectorLength(Equation.pointsToVector(
+								e.getToNode().getAbsoluteXCoordinate(),
+								e.getToNode().getAbsoluteYCoordinate(),
+								x, y));
 
+						// check distance to the FromNode
 						if (tempDist1 < shortestDist) {
 							shortestDist = tempDist1;
 							closestEdge = e;
 						}
 
+						// check distance to the ToNode
 						if (tempDist2 < shortestDist) {
 							shortestDist = tempDist2;
 							closestEdge = e;
@@ -131,18 +135,7 @@ public class WindowHandler {
 
 		}
 	}
-	
 
-	
-
-	
-	public static void randomSPtest() {
-		Random rnd = new Random();
-		startNode = rnd.nextInt(graph.getV()-1)+1;
-		endNode = rnd.nextInt(graph.getV()-1)+1;
-		//pathFindingTest();
-	}
-	
 	public static void setNode(int node, TextType t){
 		if(t == TextType.FROM){
 			WindowHandler.startNode = node;
@@ -156,16 +149,10 @@ public class WindowHandler {
 	/**
 	 * 
 	 */
-	public static void pathFindingTest(TransportWay transport, CompareType compareType, boolean useFerry) {
-		System.out.println("Start node: " + startNode);
-		
-		System.out.println("Creating SP object... ");
+	public static void pathFinding(TransportWay transport, CompareType compareType, boolean useFerry) {
 		DijkstraSP dsp = new DijkstraSP(graph, startNode, transport, compareType, useFerry);
 		
 		Stack<Edge> route = new Stack<Edge>();					// clears any previous route
-		
-		System.out.println("Start node: " + startNode);
-		System.out.println("  End node: " + endNode);
 		
 		route = (Stack<Edge>) dsp.pathTo(endNode);	// find route from start to destination node
 		addRouteToMap(route);									// adding the route to the Map()
@@ -472,17 +459,14 @@ public class WindowHandler {
 		String islandFile = "island.dat";
 		String borderFile = "border.dat";
 				
-		SplashScreen.initialize(nodeFile, edgeFile);
+		SplashScreen.initialize(nodeFile, edgeFile, coastFile, lakeFile, islandFile);
 		SplashScreen.use();
-		
-		// Timer for testing purposes
-		Long startTime = System.currentTimeMillis();
 		
 		//Initializing of data from KrakLoader
 		DataReader dataReader = DataReader.use("kdv_node_unload.txt","kdv_unload.txt");
 		
-		//ArraylList with Nodes
-		dataReader.createNodeList();
+		
+		SplashScreen.use().setTaskName(Task.COAST);
 		coast = dataReader.readCoast(coastFile);
 		lakes = dataReader.readCoast(lakeFile);
 		islands = dataReader.readCoast(islandFile);
@@ -490,6 +474,9 @@ public class WindowHandler {
 		
 		Map.setCoast(coast, lakes, islands);
 		Map.setBorder(border);
+		
+		//ArraylList with Nodes
+		dataReader.createNodeList();
 		
 		longestRoadsFloor = 10000;
 		
@@ -500,13 +487,8 @@ public class WindowHandler {
 		//Makes and returns a quadTree
 		QT = dataReader.createQuadTree();
 		longestRoads = dataReader.getLongestRoads();
-		
 		roadToZipMap = dataReader.getRoadToZipMap();
-		
-		// Create zip to city map
-		StreetNameReader snr = new StreetNameReader();
-		zipToCityMap = snr.zipToCityMap();
-		snr = null;
+		zipToCityMap = dataReader.getZipToCityMap("post.dat");
 		
 		//set arraylist of all egdes
 		edges = dataReader.getEdges();
@@ -514,21 +496,13 @@ public class WindowHandler {
 		//Avoid loitering
 		dataReader = null;
 		
-		// Counts and prints the time spent initializing
-		Long endTime = System.currentTimeMillis();
-		Long duration = endTime - startTime;
-		System.out.println("Time to create Nodelist, Graph and QuadTree: " + duration/1000.0 + " s");
-		
 		// Sets the delta width and height of the entire map
 		setGeoHeight(DataReader.getMaxY()-DataReader.getMinY());
 		setGeoWidth(DataReader.getMaxX()-DataReader.getMinX());
 		
 		ratio = geoWidth/geoHeight;
 		SplashScreen.use().setTaskName(Task.MAP);
-		
-		// Starts a new test timer
-		startTime = System.currentTimeMillis();
-		
+				
 		// Finds all the nodes in the view area
 		nodes = QT.query(0, 0, geoWidth, geoHeight);
 		DrawableItem.setMapSize(geoWidth, geoHeight, 0.0, 0.0);
@@ -538,14 +512,7 @@ public class WindowHandler {
 		
 		// Finds all the edges for these nodes
 		getEdgesFromNodes();
-		
-		// Ends timer, prints result
-		endTime = System.currentTimeMillis();
-		duration = endTime - startTime;
-		System.out.println("Time to query all nodes and find their neighbours: " 
-														+ duration/1000.0 + " s");
-		
-		System.out.println("Length of the result from full query: " + nodes.size());
+
 
 		maxMapHeight = DataReader.getMaxY()-DataReader.getMinY();
 		maxMapWidth = DataReader.getMaxX()-DataReader.getMinX();
@@ -553,14 +520,9 @@ public class WindowHandler {
 		
 		// Throws out the old contentPane, then adds a new and calls repaint/validate,
 		// thus calling the internal method paintComponents found in the roadSegments objects
-		
-		startTime = System.currentTimeMillis();
+
 		Window.use().updateMap();
-		endTime = System.currentTimeMillis();
-		duration = endTime - startTime;
-		System.out.println("Time to update map the first time: " + duration/1000.0 + "s");
-		
-		System.out.printf("Graph has %d edges%n", graph.getE());
+
 		SplashScreen.use().close();
 	}
 
