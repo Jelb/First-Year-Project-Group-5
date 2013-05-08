@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -168,12 +169,27 @@ public class DataReader {
 			
 			edges = new ArrayList<Edge>();
 			
+			HashSet<Integer> projectedRoads = new HashSet<Integer>(Arrays.asList(21,22,23,24,25,26,28));
+			HashSet<Integer> tunnels = new HashSet<Integer>(Arrays.asList(41,42,43,44,45,46,48));
+			HashSet<Integer> exits = new HashSet<Integer>(Arrays.asList(32,33,34,35,36,38));
+			
 			while (line != null) {
 				String[] lineArray = line.split(",(?! |[a-zA-ZæÆøØåÅ])"); // Regex matches ',' not followed by spaces of letters.
 				Node fromNode = nodes.get(Integer.parseInt(lineArray[0]));
 				Node toNode = nodes.get(Integer.parseInt(lineArray[1]));
 				double length = Double.parseDouble(lineArray[2]);
 				int type = Integer.parseInt(lineArray[5]);
+				if (projectedRoads.contains(type)) {
+					line = br.readLine();
+					SplashScreen.use().updateProgress();
+					continue;
+				}
+				// tunnels are set to same type as the the roads. e.g. motorwaytunnel (41) is set to motorway (1)
+				if (tunnels.contains(type)) type -= 40;
+				// exits are set to the same type as the roads
+				if (exits.contains(type)) type -= 30;
+				// Motorway exits are set to the same type as motortrafficway
+				if (type == 31) type = 2;
 				int houseNumberFromLeft = 0;
 				int houseNumberToLeft = 0;
 				int houseNumberFromRight = 0;
