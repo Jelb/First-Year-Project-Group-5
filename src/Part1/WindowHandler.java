@@ -457,10 +457,10 @@ public class WindowHandler {
 	public static void main(String[] args) throws IOException {
 		String nodeFile = "kdv_node_unload.txt";
 		String edgeFile = "kdv_unload.txt";
-		String coastFile = "coastline.txt";
-		String lakeFile = "lake.txt";
-		String islandFile = "island.txt";
-		String borderFile = "border.txt";
+		String coastFile = "coastline.dat";
+		String lakeFile = "lake.dat";
+		String islandFile = "island.dat";
+		String borderFile = "border.dat";
 				
 		SplashScreen.initialize(nodeFile, edgeFile);
 		SplashScreen.use();
