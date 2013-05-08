@@ -54,7 +54,7 @@ public class DataReader {
 		this.edgeFile = edgeFile;
 	}
 	
-	public void setInstance() {
+	public static void resetInstance() {
 		instance = null;
 	}
 	
