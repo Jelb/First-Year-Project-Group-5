@@ -84,6 +84,11 @@ public class Window extends JFrame {
 	//Currently saved node to search for
 	private Node findNode;
 	
+	// The default text in the textfields
+	private final String fromDefault = "Enter startpoint";
+	private final String toDefault = "Enter destination";
+	private final String findDefault = "Enter address";
+	
 	//GUI background
 	private JPanel background;
 
@@ -232,20 +237,20 @@ public class Window extends JFrame {
 		searchToResultBox = new JComboBox();
 		searchFindResultBox = new JComboBox();
 
-		from = new JTextField("From");
-		fromText = "From";
+		from = new JTextField(fromDefault);
+		fromText = fromDefault;
 		from.setBounds(20, 260, 145, 25);
 		from.setBackground(Color.WHITE);
 		from.setVisible(false);
 		
-		to = new JTextField("To");
-		toText = "To";
+		to = new JTextField(toDefault);
+		toText = toDefault;
 		to.setBounds(20, 295, 145, 25);
 		to.setBackground(Color.WHITE);
 		to.setVisible(false);
 		
-		find = new JTextField("Enter address");
-		findText = "Enter address";
+		find = new JTextField(findDefault);
+		findText = findDefault;
 		find.setBounds(20, 260, 145, 25);
 		find.setBackground(Color.WHITE);
 		find.setVisible(true);
@@ -461,8 +466,12 @@ public class Window extends JFrame {
 
 			public void actionPerformed(ActionEvent evt) {
 				System.out.println("reset");
-				from.setText(null);
-				to.setText(null);
+				from.setText(fromDefault);
+				fromText = fromDefault;
+				to.setText(toDefault);
+				toText = toDefault;
+				find.setText(findDefault);
+				findText = findDefault;
 				screen.remove(searchFromResultBox);
 				screen.remove(searchToResultBox);
 				fromMarked = false;
@@ -1066,9 +1075,9 @@ public class Window extends JFrame {
 		
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if (TextType.FROM == t && from.getText().equals("From")) from.setText("");
-			else if (t == TextType.TO && to.getText().equals("To")) to.setText("");
-			else if (t == TextType.FIND && find.getText().equals("Enter address")) find.setText("");
+			if (TextType.FROM == t && from.getText().equals(fromDefault)) from.setText("");
+			else if (t == TextType.TO && to.getText().equals(toDefault)) to.setText("");
+			else if (t == TextType.FIND && find.getText().equals(findDefault)) find.setText("");
 			
 		}
 	}
