@@ -915,7 +915,7 @@ public class Window extends JFrame {
 			}
 		}
 	}
-
+	
 	private class MouseListener extends MouseInputAdapter {
 		int prevX;
 		int prevY;
@@ -955,6 +955,10 @@ public class Window extends JFrame {
 					repaint();							// The Window is then continually repainted using the override 
 				}										// method paint() in Map.
 			}
+		}
+		
+		public void mouseMoved(MouseEvent e){
+			Map.use().setToolTipText(WindowHandler.closestEdge(e.getX(), e.getY()));
 		}
 		
 		public void mouseReleased(MouseEvent e) {

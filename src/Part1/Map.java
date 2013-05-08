@@ -7,8 +7,10 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.JPanel;
+import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 
 
@@ -21,12 +23,9 @@ public class Map extends JPanel {
 	private static ArrayList<CoastPoint[]> coast, lake, island, border; 
 	private static Map instance = null;
 	private ArrayList<Flag> flags;
-
-
 	private Image offScreen = null;
 	private Graphics offgc;
-
-
+	
 	private Map() {
 	}
 
@@ -36,6 +35,9 @@ public class Map extends JPanel {
 			instance = new Map();
 			instance.path = new ArrayList<DrawableItem>();
 			instance.flags = new ArrayList<Flag>();
+			ToolTipManager.sharedInstance().setInitialDelay(0);
+			ToolTipManager.sharedInstance().setDismissDelay(800);
+			ToolTipManager.sharedInstance().setReshowDelay(0);
 		}
 		return instance;
 	}

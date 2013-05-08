@@ -17,3 +17,6 @@ doc/*
 
 # Text files #
 *.txt
+
+# DS-file #
+.DS_Store
