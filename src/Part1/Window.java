@@ -191,9 +191,9 @@ public class Window extends JFrame {
 	private void createButtons() {
 		//Icons from http://www.iconfinder.com/search/?q=iconset%3Abrightmix
 		resetZoom = createButton("ResetZoom.png", "Reset zoom", 75, 75);
-		zoomOut = createButton("minus_black.png", "Zoom out", 100, 175);
+		zoomOut = createButton("minus_black.png", "Zoom out", 105, 175);
 		//zoomIn = createButton("ZoomIn.png", "Zoom in", 50, 175);
-		zoomIn = createButton("plus_black.png", "Zoom in", 50, 175);
+		zoomIn = createButton("plus_black.png", "Zoom in", 55, 175);
 		west = createButton("West.png", "West", 25, 75);
 		east = createButton("East.png", "East", 125, 75);
 		north = createButton("North.png", "North",75, 25);
@@ -287,7 +287,7 @@ public class Window extends JFrame {
 		background.setOpaque(false);		
 		//background.setBackground(new Color(255,255,255,200)); White
 		background.setBackground(new Color(0,0,0,50));
-		background.setBounds(10,15,165,325);
+		background.setBounds(10,15,165,315);
 	}
 	
 	/**
@@ -529,12 +529,6 @@ public class Window extends JFrame {
 				findPlaceBlue.setVisible(true);
 				findPathBlue.setVisible(false);
 				findPath.setVisible(true);
-//				to.setVisible(false);
-//				from.setVisible(false);
-//				find.setVisible(true);
-//				//reset.setBounds(x, y, width, height);
-//				reset.setBounds(95, 315, 70, 20);
-//				findButton.setVisible(true);
 				
 				find.setVisible(true);
 				//reset.setVisible(true);
@@ -601,30 +595,6 @@ public class Window extends JFrame {
 					findPlaceBlue.setVisible(false);
 					searchFindResultBox.setVisible(false);
 					background.setBounds(10,15,165,420);
-				}
-				else {
-					find.setVisible(true);
-					//reset.setVisible(true);
-					reset.setBounds(95, 295, 70, 20);
-					findPath.setVisible(true);
-					findPathBlue.setVisible(false);
-					to.setVisible(false);
-					from.setVisible(false);
-					bikeUnselected.setVisible(false);
-					bikeSelected.setVisible(false);
-					carUnselected.setVisible(false);
-					carSelected.setVisible(false);
-					searchFromResultBox.setVisible(false);
-					searchToResultBox.setVisible(false);
-					navigateVisible = false;
-					shortest.setVisible(false);
-					fastestsButton.setVisible(false);
-					shipUnselected.setVisible(false);
-					shipSelected.setVisible(false);
-					search.setVisible(false);
-					findButton.setVisible(true);
-					//reset.setVisible(false);
-					background.setBounds(10,15,165,315);
 				}
 			}
 		});
