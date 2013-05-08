@@ -90,13 +90,23 @@ public class Equation {
 	 * @param edge		The edge we are testing
 	 * @return			True, if the point is inside the channel
 	 */
-	public static boolean pointWithinChannel(Node point, Edge edge) {
-		double[] vectorA = nodesToVector(edge.getFromNode(), point);
-		double[] vectorB = nodesToVector(edge.getFromNode(), edge.getToNode());
-		double[] vectorC = nodesToVector(edge.getToNode(), point);
-		double[] vectorD = nodesToVector(edge.getToNode(), edge.getFromNode());
+	public static boolean pointWithinChannel(double x, double y, Edge edge) {
+		double[] vectorA = pointsToVector(edge.getFromNode().getAbsoluteXCoordinate(),
+										  edge.getFromNode().getAbsoluteYCoordinate(),
+										  x, y);
+		double[] vectorB = pointsToVector(edge.getFromNode().getAbsoluteXCoordinate(),
+				  						  edge.getFromNode().getAbsoluteYCoordinate(),
+				  						  edge.getToNode().getAbsoluteXCoordinate(),
+				  						  edge.getToNode().getAbsoluteYCoordinate());
+		double[] vectorC = pointsToVector(edge.getToNode().getAbsoluteXCoordinate(),
+										  edge.getToNode().getAbsoluteYCoordinate(),
+										  x, y);
+		double[] vectorD = pointsToVector(edge.getToNode().getAbsoluteXCoordinate(),
+				  						  edge.getToNode().getAbsoluteYCoordinate(),
+				  						  edge.getFromNode().getAbsoluteXCoordinate(),
+				  						  edge.getFromNode().getAbsoluteYCoordinate());
 		
-		if (cosVectorAngle(vectorA, vectorB) < 0 && cosVectorAngle(vectorC, vectorD) < 0) {
+		if (cosVectorAngle(vectorA, vectorB) > 0 && cosVectorAngle(vectorC, vectorD) > 0) {
 			return true;
 		}
 		else {
@@ -113,22 +123,22 @@ public class Equation {
 		return normal;
 	}
 	
-	public static double distanceBetweenPointAndLine(Edge edge, Node point) {
+	public static double distanceBetweenPointAndLine(Edge edge, double x, double y) {
 		// a coordinate set on the line
 		double x1 = edge.getFromNode().getAbsoluteXCoordinate();
 		double y1 = edge.getFromNode().getAbsoluteYCoordinate();
 		
 		// the coordinate set of the point
-		double x2 = point.getAbsoluteXCoordinate();
-		double y2 = point.getAbsoluteYCoordinate();
+		double x2 = x;
+		double y2 = y;
 		
 		// the values of the lines normal vector
 		double a = getNormalVector(edge)[0];
 		double b = getNormalVector(edge)[1];
-		double c = -a * x1 - b * y1;
+		double c = (-a * x1) - (b * y1);
 		
 		// calculating the distance between the point and the line
-		double dist = (Math.abs(a * x2 + b * y2 + c)) / Math.sqrt(a * a + b * b);
+		double dist = (Math.abs(a * x2 + b * y2 + c)) / (Math.sqrt(a * a + b * b));
 		return dist;
 	}
 		
