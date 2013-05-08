@@ -93,7 +93,7 @@ public class Map extends JPanel {
 		//Checks whether antialiasing should be used or not.
 		if (RoadSegment.getZoomLevel() > 3) {
 			D2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-			D2.setStroke(new BasicStroke(2));
+			D2.setStroke(new BasicStroke(1.5f));
 		}
 		for(Polygon op : poly) {
 			D2.drawPolygon(op);
@@ -102,17 +102,17 @@ public class Map extends JPanel {
 
 	private void drawBorder(ArrayList<CoastPoint[]> arrBorder, Color c, Graphics g) {
 
-		Graphics2D g2 = (Graphics2D) g;
+		Graphics2D D2 = (Graphics2D) g;
 		// enable anti-aliasing
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+		D2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 		// set road color
-		g2.setColor(c);
+		D2.setColor(c);
 		// setting stroke type
-		g2.setStroke(new BasicStroke(borderWidth(RoadSegment.getZoomLevel()), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		D2.setStroke(new BasicStroke(borderWidth(RoadSegment.getZoomLevel()), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
 		for (int i = 0; i < arrBorder.size(); i++) {
 			for (int j = 1; j < arrBorder.get(i).length; j++) {
-				g2.drawLine(
+				D2.drawLine(
 						Equation.calcPixelX(arrBorder.get(i)[j-1].getX()-DataReader.getMinX()),
 						Equation.calcPixelY(arrBorder.get(i)[j-1].getY()-DataReader.getMinY()),
 						Equation.calcPixelX(arrBorder.get(i)[j].getX()-DataReader.getMinX()),
