@@ -120,12 +120,8 @@ public class DataReader {
 		maxY += increase;
 		
 		// The coordinates of every node is corrected for the offset
-		System.out.println("Offset x: " + minX);
-		System.out.println("Offset y: " + minY);
 		Node.setXOffset(minX);
 		Node.setYOffset(minY);
-		System.out.println("Width of map: " + (maxX-minX));
-		System.out.println("Height of map: " + (maxY-minY));
 		br.close();
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "The \"nodeFile\" was not found. \nThe program will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -147,7 +143,6 @@ public class DataReader {
 	public Graph createGraphAndLongestRoadsList(int longestRoadsFloor) {
 
 		SplashScreen.use().setTaskName(Task.EDGES);
-		System.out.println("Adding " + (nodes.size()-1) + " nodes to graph");
 		longestRoads = new ArrayList<Edge>();
 		try {
 			// Create hash map where road name gets mapped to a list of zip codes			
@@ -155,7 +150,6 @@ public class DataReader {
 			
 			// Create a graph on the nodes
 			Graph graph = new Graph(nodes.size());
-//			MultiGraph multiGraph = new MultiGraph();
 			
 			// Reads the "kdv_unload.txt" file into the buffer.
 			BufferedReader br = new BufferedReader(new FileReader(edgeFile));
@@ -218,7 +212,6 @@ public class DataReader {
 							houseNumberFromLeft, houseNumberToLeft, houseNumberFromRight, houseNumberToRight, true);
 					if (length > longestRoadsFloor) longestRoads.add(edge);
 					edges.add(edge);
-//					WindowHandler.graph.addEdge(edge);
 					graph.addEdge(edge);
 				}
 				else if (oneway.equals("tf")) {
@@ -227,7 +220,6 @@ public class DataReader {
 					if (length > longestRoadsFloor) longestRoads.add(edge);
 					edges.add(edge);
 					graph.addEdge(edge);
-//					multiGraph.addEdge(edge);
 				}
 				// if the road is two way, only one of the ways is drawn
 				else {
@@ -240,8 +232,6 @@ public class DataReader {
 					edges.add(tEdge);
 					graph.addEdge(fEdge);
 					graph.addEdge(tEdge);
-//					multiGraph.addEdge(fEdge);
-//					multiGraph.addEdge(tEdge);
 				}
 				
 				line = br.readLine();
@@ -304,7 +294,6 @@ public class DataReader {
 			JOptionPane.showMessageDialog(null, "The file <" + filepath+ "> was not foud. \nThe will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
 			throw new RuntimeException();
 		}
-		System.out.println(filepath + " contains " + area.size() + " polygons.");
 		return area;
 	}
 	
