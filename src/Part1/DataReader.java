@@ -289,6 +289,7 @@ public class DataReader {
 			JOptionPane.showMessageDialog(null, "The file <" + filepath+ "> was not foud. \nThe will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
+		System.out.println(filepath + " contains " + area.size() + " polygons.");
 		return area;
 	}
 	

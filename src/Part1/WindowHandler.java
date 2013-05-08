@@ -99,11 +99,11 @@ public class WindowHandler {
 					double x2 = e.getToNode().getAbsoluteXCoordinate();
 					double y2 = e.getToNode().getAbsoluteYCoordinate();
 					
-					double tempDist = distanceBetweenPoints(x1, y1, x, y);
+					double tempDist = Equation.distanceBetweenPoints(x1, y1, x, y);
 					if(tempDist < shortestDist) {
 						shortestDist = tempDist;
 						closestEdge = e;
-						tempDist = distanceBetweenPoints(x2, y2, x, y);
+						tempDist = Equation.distanceBetweenPoints(x2, y2, x, y);
 						if(tempDist < shortestDist) {
 							shortestDist = tempDist;
 							closestEdge = e;
@@ -121,84 +121,9 @@ public class WindowHandler {
 		}
 	}
 	
-	/**
-	 * Creates a 2D vector based on a set of nodes.
-	 * @param fnode		The 'from' node
-	 * @param tnode		The 'to' node
-	 * @return			The vector between the two
-	 */
-	public static double[] nodeToVector(Node fnode, Node tnode) {
-		double[] vector = new double[2];
-		vector[0] = tnode.getAbsoluteXCoordinate() - fnode.getAbsoluteXCoordinate();
-		vector[1] = tnode.getAbsoluteYCoordinate() - fnode.getAbsoluteYCoordinate();
-		return vector;
-	}
+
 	
-	/**
-	 * Calculates the distance between two nodes.
-	 * @param fnode		The 'from' node
-	 * @param tnode		The 'to' node
-	 * @return			The distance between the two
-	 */
-	public static double distanceBetweenNodes(Node fnode, Node tnode) {
-		return vectorLength(nodeToVector(fnode, tnode));
-	}
-	
-	/**
-	 * Calculates the distance between two points.
-	 * @param x1		X coord, first point
-	 * @param y1		Y coord, first point
-	 * @param x2		X coord, second point
-	 * @param y2		Y coord, second point
-	 * @return			The distance between the two points
-	 */
-	public static double distanceBetweenPoints(double x1, double y1, double x2, double y2) {
-		return vectorLength(pointsToVector(x1, y1, x2, y2));
-	}
-	
-	/**
-	 * Calculates the length of a 2D vector.
-	 * @param vector	A double array of 2 values, describing the vector
-	 * @return			The length of the vector
-	 */
-	public static double vectorLength(double[] vector) {
-		return Math.sqrt(Math.pow(vector[0], 2) + Math.pow(vector[1], 2));
-	}
-	
-	/** 
-	 * Calculates the scalar product of the 2D vectors.
-	 * @param vectorA	A double array of 2 values, describing the first vector
-	 * @param vectorB	A double array of 2 values, describing the second vector
-	 * @return			The scalar product
-	 */
-	public static double scalarProduct(double[] vectorA, double[] vectorB) {
-		return (vectorA[0] * vectorB[0]) + (vectorA[1] * vectorB[1]);
-	}
-	
-	/**
-	 * Calculates the cosine value of the angle between 2 vectors.
-	 * @param vectorA	A double array of 2 values, describing the first vector
-	 * @param vectorB	A double array of 2 values, describing the second vector
-	 * @return			The cosine angle
-	 */
-	public static double cosVectorAngle(double[] vectorA, double[] vectorB) {
-		return (scalarProduct(vectorA, vectorB) / (vectorLength(vectorA) * vectorLength(vectorB)));
-	}
-	
-	/**
-	 * Creates a 2D vector from two points
-	 * @param x1		X coord, first point
-	 * @param y1		Y coord, first point
-	 * @param x2		X coord, second point
-	 * @param y2		Y coord, second point
-	 * @return			The resulting vector between the two
-	 */
-	public static double[] pointsToVector(double x1, double y1, double x2, double y2) {
-		double[] vector = new double[2];
-		vector[0] = x2 - x1;
-		vector[1] = y2 - y1;
-		return vector;
-	}
+
 	
 	public static void randomSPtest() {
 		Random rnd = new Random();
