@@ -279,7 +279,7 @@ public class DataReader {
 				}
 				double lon = Double.parseDouble(line.substring(0, line.indexOf("\t")).trim());
 				double lat = Double.parseDouble(line.substring(line.indexOf("\t")+1).trim());
-				current.add(lonLatToUTM.convertToUTM(lat, lon));
+				current.add(Equation.convertLonLatToUTM(lat, lon));
 
 				line = reader.readLine();
 				}

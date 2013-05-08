@@ -75,7 +75,7 @@ public class Map extends JPanel {
 		for(CoastPoint[] cp : arg) {
 			current = new Polygon();
 			for(int i = 0; i < cp.length; i++) {
-				current.addPoint(calcPixelX(cp[i].getX()-DataReader.getMinX()), calcPixelY(cp[i].getY()-DataReader.getMinY()));
+				current.addPoint(Equation.calcPixelX(cp[i].getX()-DataReader.getMinX()), Equation.calcPixelY(cp[i].getY()-DataReader.getMinY()));
 			}
 			poly.add(current);
 		}
@@ -101,10 +101,10 @@ public class Map extends JPanel {
 		for (int i = 0; i < arrBorder.size(); i++) {
 			for (int j = 1; j < arrBorder.get(i).length; j++) {
 				g2.drawLine(
-						calcPixelX(arrBorder.get(i)[j-1].getX()-DataReader.getMinX()),
-						calcPixelY(arrBorder.get(i)[j-1].getY()-DataReader.getMinY()),
-						calcPixelX(arrBorder.get(i)[j].getX()-DataReader.getMinX()),
-						calcPixelY(arrBorder.get(i)[j].getY()-DataReader.getMinY()));
+						Equation.calcPixelX(arrBorder.get(i)[j-1].getX()-DataReader.getMinX()),
+						Equation.calcPixelY(arrBorder.get(i)[j-1].getY()-DataReader.getMinY()),
+						Equation.calcPixelX(arrBorder.get(i)[j].getX()-DataReader.getMinX()),
+						Equation.calcPixelY(arrBorder.get(i)[j].getY()-DataReader.getMinY()));
 				
 			}
 		}
@@ -132,20 +132,6 @@ public class Map extends JPanel {
 		offgc = offScreen.getGraphics();						// The Graphics object of this Image is extracted,
 		paintComponent(offgc);									// and the paintComponent() method is called using this Graphics object,
 	}															// thus 'flipping' the new map into view.
-    
-	public int calcPixelX(double geoCord){
-		double diffX = (DrawableItem.geoMaxX - DrawableItem.geoMinX);
-		int width = Window.use().getMapWidth();		
-		int x =(int)(((geoCord-DrawableItem.geoMinX)/diffX)*width);
-		return x;
-	}
-
-	public int calcPixelY(double geoCord){
-		double diffY = (DrawableItem.geoMaxY - DrawableItem.geoMinY);
-		int height = Window.use().getMapHeight();		
-		int y =(int)(height-(((geoCord-DrawableItem.geoMinY)/diffY)*height));
-		return y;
-	}
     
     /**
      * Getter method for the segments field.

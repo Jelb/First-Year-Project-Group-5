@@ -24,8 +24,6 @@ public class WindowHandler {
 	private static int longestRoadsFloor;
 	private static QuadTree QT;
 	private static Graph graph;
-//	static MultiGraph multiGraph;
-	private static Window window;
 	private static AddressParser ap;
 	private static double geoWidth;		// The  width of the view area in meters
 	private static double geoHeight;	// The height of the view area in meters
@@ -119,9 +117,6 @@ public class WindowHandler {
 		if(closestEdge.getVEJNAVN().length() > 0)
 			System.out.println(closestEdge.getVEJNAVN());
 		else {
-//			String streetname;
-//			streetname = closestEdge.lookForStreetname(closestEdge);
-//			System.out.println(streetname);
 			System.out.println("No name found");
 		}
 	}
@@ -434,7 +429,7 @@ public class WindowHandler {
 		if (t == 1 || t == 2 || t == 3 || t == 80) return true;
 		else if (geoWidth < 250000 && (t == 4)) return true;
 		else if (geoWidth < 60000 && (t == 5)) return true;
-		//else if (geoWidth < 100000 && (t == 5)) return true;
+//		else if (geoWidth < 100000 && (t == 5)) return true;
 		else if (geoWidth < 13000) return true;
 		else return false;
 	}
@@ -455,7 +450,6 @@ public class WindowHandler {
 							new RoadSegment(x1, y1, x2, y2, e.getType(),border));
 				}
 			}
-//			}
 		}
 	}
 	
@@ -566,7 +560,6 @@ public class WindowHandler {
 		//All roads with length larger than the longest road floor are added to the longest roads list
 		//Makes graph object and list of roads longer than the longest roads floor
 		graph = dataReader.createGraphAndLongestRoadsList(longestRoadsFloor);
-//		multiGraph = dataReader.createGraphAndLongestRoadsList(longestRoadsFloor);
 		
 		//Makes and returns a quadTree
 		QT = dataReader.createQuadTree();
@@ -621,7 +614,6 @@ public class WindowHandler {
 		maxMapHeight = DataReader.getMaxY()-DataReader.getMinY();
 		maxMapWidth = DataReader.getMaxX()-DataReader.getMinX();
 		// Creates and adds roadSegments to an the arraylist 'edges'
-		//calculatePixels();
 		
 		// Throws out the old contentPane, then adds a new and calls repaint/validate,
 		// thus calling the internal method paintComponents found in the roadSegments objects
