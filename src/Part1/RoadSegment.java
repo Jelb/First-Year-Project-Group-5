@@ -20,7 +20,7 @@ public class RoadSegment extends DrawableItem {
 	private Color color;
 	private float roadWidth;
 	private static int roadType4242;
-	public static int zoomLevel;
+	private static int zoomLevel;
 	
 	private static Color lightYellow, lightOrange, darkOrange, white, lightGrey, darkGrey;
 	
@@ -219,6 +219,15 @@ public class RoadSegment extends DrawableItem {
 		// draw the road segment
 		g2.drawLine(xStart, yStart, xEnd, yEnd);
 
+	}
+
+	/**
+	 * Getter method for the zoomLevel field.
+	 * 
+	 * @return the zoomLevel
+	 */
+	public static int getZoomLevel() {
+		return zoomLevel;
 	}
 	
 	

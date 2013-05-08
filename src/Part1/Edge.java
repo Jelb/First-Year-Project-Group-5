@@ -143,6 +143,28 @@ public class Edge {
     public int to(){
      	return TNODE.getKdvID();
     }
+    
+    public boolean equals(Object other) {
+		if (other instanceof Edge) {
+			Edge otherEdge = (Edge) other;
+			if (FNODE.equals(otherEdge.getFromNode())
+					&& TNODE.equals(otherEdge.getToNode()))
+				return true;
+			else
+				return false;
+		} else
+			return false;
+    	
+    	
+//		this.length = LENGTH;
+//		this.VEJNAVN = VEJNAVN;
+//		this.TYP = TYP;
+//		this.V_POSTNR = V_POSTNR;
+//		this.H_POSTNR = H_POSTNR;
+//		this.drawable = drawable;
+//		this.driveTime = driveTime;
+    }
+    
     public int compareTo(Edge that){
     	if      (this.length() < that.length()) return -1;
         else if (this.length() > that.length()) return +1;

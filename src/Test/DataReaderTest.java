@@ -4,10 +4,12 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
+import org.junit.After;
 import org.junit.Test;
 import Part1.DataReader;
 import Part1.Edge;
 import Part1.Graph;
+import Part1.Node;
 
 import org.junit.Before;
 
@@ -50,8 +52,8 @@ public class DataReaderTest {
 		//Graph graph = DR.createGraphAndLongestRoadsList(10000);
 		//System.out.println("Graph adj(1): " + graph.adj(1));
 		ArrayList<Edge> arrTest = new ArrayList<Edge>();
-		Edge edge1 = new Edge(DR.nodes.get(1), DR.nodes.get(2), 58.63325, "", 8, "0", "0", 0.135, true);
-		Edge edge2 = new Edge(DR.nodes.get(1), DR.nodes.get(3), 136.81998, "", 8, "0", "0", 0.315, true);
+		Edge edge1 = new Edge(DR.nodes.get(1), DR.nodes.get(2), 58.63325, "", 8, "0", "0", 0.135, 0, 0, 0, 0, true);
+		Edge edge2 = new Edge(DR.nodes.get(1), DR.nodes.get(3), 136.81998, "", 8, "0", "0", 0.315, 0, 0, 0, 0, true);
 		arrTest.add(edge1);
 		arrTest.add(edge2);
 		//Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, true);
@@ -63,9 +65,16 @@ public class DataReaderTest {
 		//Graph graph = DR.createGraphAndLongestRoadsList(10000);
 		//System.out.println("Graph adj(3): " + graph.adj(3));
 		ArrayList<Edge> arrTest = new ArrayList<Edge>();
-		Edge edge = new Edge(DR.nodes.get(3), DR.nodes.get(4), 20.01746, "", 8, "0", "0", 0.046, true);
+		Edge edge = new Edge(DR.nodes.get(3), DR.nodes.get(4), 20.01746, "", 8, "0", "0", 0.046, 0, 0, 0, 0, true);
 		arrTest.add(edge);
-		assertEquals(arrTest.iterator(), graph.adjArr(3));
+		ArrayList<Edge> adjArr = graph.adjArr(3);
+		for (int i = 0; i < arrTest.size(); i++) {
+			Edge testEdge = arrTest.get(i);
+			Edge realEdge = adjArr.get(i);
+			System.out.println("Test edge: " + testEdge);
+			System.out.println("Real edge: " + realEdge);
+			assertEquals(arrTest.get(i), adjArr.get(i));
+		}
 	}
 	
 	@Test
@@ -78,25 +87,33 @@ public class DataReaderTest {
 	
 	@Test
 	public void maxAndMinValues() {
-		assertEquals(595308.61090, DR.minX, 0.1);
-		assertEquals(596860.47877, DR.maxX, 0.1);
-		assertEquals(6401221.77721, DR.minY, 0.1);
-		assertEquals(6402050.98297, DR.maxY, 0.1);
+		System.out.println("Dr  minX :" + DataReader.getMinX());
+		assertEquals(595308.61090-DR.getIncrease(), DataReader.getMinX(), 0.1);
+		assertEquals(596860.47877+DR.getIncrease(), DataReader.getMaxX(), 0.1);
+		assertEquals(6401221.77721-DR.getIncrease(), DataReader.getMinY(), 0.1);
+		assertEquals(6402050.98297+DR.getIncrease(), DataReader.getMaxY(), 0.1);
 	}
 	
-	//TODO: Evt. tjek hvis forkert fil
-	@Test 
+
+	@Test (expected = Exception.class)
 	public void wrongNodeFile() {
 		DR.setInstance();
 		DR2 = DataReader.use("wrongFile.txt", "10edgestest.txt");
 		DR2.createNodeList();
 	}
 	
-	@Test 
+	@Test (expected = Exception.class)
 	public void wrongEdgeFile() {
 		DR2.setInstance();
 		DataReader DR3 = DataReader.use("10nodestest.txt", "wrongFile.txt");
 		DR2.createGraphAndLongestRoadsList(10000);
 		//The program will cloose down and do nothing
+	}
+	
+	@After
+	public void breakDown() {
+		DR = null;
+		DR2 = null;
+		graph = null;
 	}
 }

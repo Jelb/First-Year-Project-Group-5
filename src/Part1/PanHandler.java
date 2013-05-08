@@ -108,6 +108,8 @@ public class PanHandler {
 	public static void directionPan(Direction d) {
 		switch (d) {
 		case NORTH: {
+//			Window.use().setMousePanY((int) (Window.use().getMousePanY() + Window.use().getHeight() * 0.1));
+//			Window.use().repaint();
 			pan(0, WindowHandler.getGeoHeight() * 0.1);
 			break;
 		}
