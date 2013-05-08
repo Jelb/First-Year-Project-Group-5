@@ -493,12 +493,12 @@ public class Window extends JFrame {
 					//Checks if the user is going by car or bike, and if they want the shortest or fastest route
 					if(byCar) { 
 						if(fastest) {
-							WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.FASTEST, byShip);
+							WindowHandler.pathFinding(TransportWay.CAR, CompareType.FASTEST, byShip);
 						} else {
-							WindowHandler.pathFindingTest(TransportWay.CAR, CompareType.SHORTEST, byShip);
+							WindowHandler.pathFinding(TransportWay.CAR, CompareType.SHORTEST, byShip);
 						}
 					} else {
-						WindowHandler.pathFindingTest(TransportWay.BIKE, CompareType.SHORTEST, byShip);
+						WindowHandler.pathFinding(TransportWay.BIKE, CompareType.SHORTEST, byShip);
 					}
 				}
 			}

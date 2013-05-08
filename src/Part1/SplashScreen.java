@@ -27,11 +27,11 @@ public class SplashScreen extends JFrame{
 	 * Enums used to describe the allowed tasks for the Loader class
 	 */
 	public static enum Task{
-		NODES, EDGES, GRAPH, MAP	
+		COAST, NODES, EDGES, GRAPH, MAP	
 	}	
 	
 	private static SplashScreen instance;
-	private static int noOfNodes, noOfEdges;
+	private static int noOfNodes, noOfEdges, noOfCoastPoints;
 	private JProgressBar mainBar, overview;
 	
 	private SplashScreen() {
@@ -53,14 +53,13 @@ public class SplashScreen extends JFrame{
 	}
 	
 	private void setUp() {
-		
 		JPanel contentPane = new JPanel(new GridBagLayout());
 		JLabel background = new JLabel(new ImageIcon("logo.jpg"));
 		background.setLayout(new GridBagLayout());
 		contentPane.add(background);
 		
 		mainBar = new JProgressBar(0, noOfNodes);
-		overview = new JProgressBar(0, noOfNodes+noOfEdges);
+		overview = new JProgressBar(0, noOfNodes+noOfEdges+noOfCoastPoints);
 		mainBar.setValue(0);
 		mainBar.setOpaque(false);
 		mainBar.setStringPainted(true);
@@ -85,6 +84,12 @@ public class SplashScreen extends JFrame{
 	
 	public void setTaskName(Task task) {
 		switch(task) {
+		case COAST: 
+			overview.setString("Finding land...");
+			mainBar.setValue(0);
+			mainBar.setName("coastpoints");
+			mainBar.setMaximum(noOfCoastPoints);
+			break;
 		case NODES: 
 			overview.setString("Marking intersections...");
 			mainBar.setValue(0);
@@ -113,10 +118,19 @@ public class SplashScreen extends JFrame{
 		instance = null;
 	}
 	
-	public static void initialize(String nodes, String edges) {
-		    InputStream is;
+	public static void initialize(String nodes, String edges, String coast, String lake, String island) {
+		   noOfNodes = countLines(nodes);
+		   noOfEdges = countLines(edges);
+		   noOfCoastPoints = countLines(coast);
+		   noOfCoastPoints += countLines(lake);
+		   noOfCoastPoints += countLines(island);
+	}
+	
+	private static int countLines(String filepath) {
+		InputStream is;
+		int count = 0;
 		    try {
-				is = new BufferedInputStream(new FileInputStream(nodes));
+				is = new BufferedInputStream(new FileInputStream(filepath));
 				//1024 bytes equals 1 kilobyte.
 		        byte[] c = new byte[1024];
 		        int readChars = 0;
@@ -125,19 +139,7 @@ public class SplashScreen extends JFrame{
 		        while ((readChars = is.read(c)) != -1) {
 		            for (int i = 0; i < readChars; ++i) {
 		                if (c[i] == '\n') {
-		                    ++noOfNodes;
-		                }
-		            }
-		        }
-		        is.close();
-		        
-		        is = new BufferedInputStream(new FileInputStream(edges));
-		        c = new byte[1024];
-		        readChars = 0;
-		        while ((readChars = is.read(c)) != -1) {
-		            for (int i = 0; i < readChars; ++i) {
-		                if (c[i] == '\n') {
-		                    ++noOfEdges;
+		                    count++;
 		                }
 		            }
 		        }
@@ -147,6 +149,7 @@ public class SplashScreen extends JFrame{
 			} catch (IOException e) {
 
 		}
+		return count;
 	}
 }
 	
