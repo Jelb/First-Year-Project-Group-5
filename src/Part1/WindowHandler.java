@@ -82,11 +82,11 @@ public class WindowHandler {
 	 * @param y		Y value of pixel coordinate
 	 * @return		The edge nearest the coordinate
 	 */
-	public static void closestEdge(int pixelX, int pixelY) {
+	public static String closestEdge(int pixelX, int pixelY) {
 		double x = pixelToAbsoluteGeoX(pixelX);
 		double y = pixelToAbsoluteGeoY(pixelY);
 
-		Map.use().newArrayList();
+		//Map.use().newArrayList();
 		Edge closestEdge = null;
 		double shortestDist = Double.MAX_VALUE;
 
@@ -122,12 +122,13 @@ public class WindowHandler {
 				}
 			}
 		}
-		testDrawClosestEdge(closestEdge);
-		System.out.print("Closest edge: ");
+		//testDrawClosestEdge(closestEdge);
+		//System.out.print("Closest edge: ");
 		if(closestEdge.getVEJNAVN().length() > 0)
-			System.out.println(closestEdge.getVEJNAVN());
+			return closestEdge.getVEJNAVN();
 		else {
-			System.out.println("No name found");
+			return "No name found";
+
 		}
 	}
 	
@@ -171,20 +172,20 @@ public class WindowHandler {
 		Window.use().updateMap();
 	}
 	
-	/**
-	 * Test method, draws the closest edge as a shortest path.
-	 * @param edge	The 'closest' edge
-	 */
-	public static void testDrawClosestEdge(Edge edge) {
-		ArrayList<DrawableItem> path = new ArrayList<DrawableItem>();
-		double x1 = edge.getFromNode().getXCord();
-		double y1 = edge.getFromNode().getYCord();
-		double x2 = edge.getToNode().getXCord();
-		double y2 = edge.getToNode().getYCord();
-		boolean border = false;											// for now, no borders will be drawn
-		path.add(new RoadSegment(x1, y1, x2, y2, 4242, border));
-		Map.use().setPath(path);
-	}
+//	/**
+//	 * Test method, draws the closest edge as a shortest path.
+//	 * @param edge	The 'closest' edge
+//	 */
+//	public static void testDrawClosestEdge(Edge edge) {
+//		ArrayList<DrawableItem> path = new ArrayList<DrawableItem>();
+//		double x1 = edge.getFromNode().getXCord();
+//		double y1 = edge.getFromNode().getYCord();
+//		double x2 = edge.getToNode().getXCord();
+//		double y2 = edge.getToNode().getYCord();
+//		boolean border = false;											// for now, no borders will be drawn
+//		path.add(new RoadSegment(x1, y1, x2, y2, 4242, border));
+//		Map.use().setPath(path);
+//	}
 	
 	/**
 	 * Adds the shortest path (static field 'route') to the roadSegments on the map.
@@ -466,10 +467,10 @@ public class WindowHandler {
 	public static void main(String[] args) throws IOException {
 		String nodeFile = "kdv_node_unload.txt";
 		String edgeFile = "kdv_unload.txt";
-		String coastFile = "coastline.txt";
-		String lakeFile = "lake.txt";
-		String islandFile = "island.txt";
-		String borderFile = "border.txt";
+		String coastFile = "coastline.dat";
+		String lakeFile = "lake.dat";
+		String islandFile = "island.dat";
+		String borderFile = "border.dat";
 				
 		SplashScreen.initialize(nodeFile, edgeFile);
 		SplashScreen.use();
