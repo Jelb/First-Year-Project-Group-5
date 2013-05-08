@@ -486,7 +486,7 @@ public class WindowHandler {
 		
 		roadToZipMap = dataReader.getRoadToZipMap();
 		
-		zipToCityMap = dataReader.getZipToCityMap("names.txt");
+		zipToCityMap = dataReader.getZipToCityMap("names.dat");
 		
 		//set arraylist of all egdes
 		edges = dataReader.getEdges();
