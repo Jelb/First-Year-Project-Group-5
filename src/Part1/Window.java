@@ -471,6 +471,7 @@ public class Window extends JFrame {
 				findText = findDefault;
 				screen.remove(searchFromResultBox);
 				screen.remove(searchToResultBox);
+				screen.remove(searchFindResultBox);
 				fromMarked = false;
 				toMarked = false;
 				Map.use().resetPath();
@@ -619,68 +620,48 @@ public class Window extends JFrame {
 		String[] setArray = new String[0];
 		String[] zipArray;
 		
-		if(result[0].equals("")){
-			// if no road name has been entered, we try to find any road name in the chosen city (if there is a city)
-			if (!result[5].equals("")) {
-				HashMap<String, String> zipToCityMap = WindowHandler.getZipToCityMap();
-				Set<String> zips = zipToCityMap.keySet();
-				ArrayList<String> zipList = new ArrayList<String>();
-				for (String zip : zips) {
-					if (result[5].toLowerCase().equals(zipToCityMap.get(zip).toLowerCase())) {
-						HashMap<String, HashSet<String>> roadToZipMap = WindowHandler.getRoadToZipMap();
-						Set<String> roads = roadToZipMap.keySet();
-						for (String road : roads) {
-							if (roadToZipMap.get(road).contains(zip)) { 
-								result[0] = road;
-								break;
-							}
-						}
+		// If there has been typed in a city name
+		if (!result[5].equals("")) {
+			HashMap<String, String> zipToCityMap = WindowHandler.getZipToCityMap();
+			Set<String> zips = zipToCityMap.keySet();
+			ArrayList<String> zipList = new ArrayList<String>();
+			for (String zip : zips) {
+				if (result[5].toLowerCase().equals(zipToCityMap.get(zip).toLowerCase())) {
+					if (result[0].equals("")) {
+						zipList.add(zip);
+					}
+					else if (WindowHandler.getRoadToZipMap().get(result[0]).contains(zip)) {
+						zipList.add(zip);
 					}
 				}
 			}
+			setArray = new String[zipList.size()];
+			for (int i = 0; i < setArray.length; i++) {
+				setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + zipList.get(i) + " " + result[5];
+				setArray[i] = setArray[i].replaceAll("\\s+", " ").trim();
+			}
+			zipArray = Arrays.copyOf(zipList.toArray(), zipList.size(), String[].class);
 		}
-//		else 
-		{
-			// If there has been typed in a city name
-			if (!result[5].equals("")) {
-				HashMap<String, String> zipToCityMap = WindowHandler.getZipToCityMap();
-				Set<String> zips = zipToCityMap.keySet();
-				ArrayList<String> zipList = new ArrayList<String>();
-				for (String zip : zips) {
-					if (result[5].toLowerCase().equals(zipToCityMap.get(zip).toLowerCase())) {
-						if (WindowHandler.getRoadToZipMap().get(result[0]).contains(zip)) {
-							zipList.add(zip);
-						}
-					}
-				}
-				setArray = new String[zipList.size()];
-				for (int i = 0; i < setArray.length; i++) {
-					setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + zipList.get(i) + " " + result[5];
-					setArray[i] = setArray[i].replaceAll("\\s+", " ");
-				}
-				zipArray = Arrays.copyOf(zipList.toArray(), zipList.size(), String[].class);
+		// If there has been typed in a zip code
+		else if(!(result[4].equals(""))){
+			setArray = new String[1]; 
+			setArray[0] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + result[4]+ " " + WindowHandler.getZipToCityMap().get(result[4]);
+			setArray[0] = setArray[0].replaceAll("\\s+", " ").trim();
+			zipArray = new String[]{result[4]};
 			}
-			// If there has been typed in a zip code
-			else if(!(result[4].equals(""))){
-				setArray = new String[1]; 
-				setArray[0] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + result[4]+ " " + WindowHandler.getZipToCityMap().get(result[4]);
-				setArray[0] = setArray[0].replaceAll("\\s+", " ");
-				zipArray = new String[]{result[4]};
-				}
-			// If there has been typed in no city name or zip code
-			else{
-				HashSet<String> set = WindowHandler.getRoadToZipMap().get(result[0]);
-				setArray = set.toArray(new String[0]);
-				zipArray = new String[setArray.length];
-				for (int i = 0; i < setArray.length; i++) {
-					zipArray[i] = setArray[i];
-				}
-				for(int i = 0; i < setArray.length; i++){
-					String city = WindowHandler.getZipToCityMap().get(setArray[i]);
-					setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + setArray[i] + " " + city;
-					setArray[i] = setArray[i].replaceAll("\\s+", " ");				
-				}						
+		// If there has been typed in no city name or zip code
+		else{
+			HashSet<String> set = WindowHandler.getRoadToZipMap().get(result[0]);
+			setArray = set.toArray(new String[0]);
+			zipArray = new String[setArray.length];
+			for (int i = 0; i < setArray.length; i++) {
+				zipArray[i] = setArray[i];
 			}
+			for(int i = 0; i < setArray.length; i++){
+				String city = WindowHandler.getZipToCityMap().get(setArray[i]);
+				setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + setArray[i] + " " + city;
+				setArray[i] = setArray[i].replaceAll("\\s+", " ").trim();				
+			}						
 		}
 		if (zipArray.length == 0) setArray = new String[]{"No results"};
 		createSearchBox(setArray,zipArray,result,x,y,t);
@@ -867,7 +848,18 @@ public class Window extends JFrame {
 			System.out.println(zipArray[i]);
 			Node flagNode = null;
 			String text = (String) searchResultBox.getSelectedItem();
-			for(Edge edge : WindowHandler.getEdges()){
+			// if there is no road name we look for a random road in the zip code area
+			if (textArray[0].equals("")) {
+				ArrayList<Edge> allEdgesForZip = new ArrayList<Edge>();
+				for(Edge edge : WindowHandler.getEdges()){
+					if (edge.getV_POSTNR().equals(zipArray[i]) && edge.getH_POSTNR().equals(zipArray[i])) {
+						allEdgesForZip.add(edge);
+					}
+				}
+				randomCorrectEdge = allEdgesForZip.get(allEdgesForZip.size()/2);
+			}
+			else {
+				for(Edge edge : WindowHandler.getEdges()){
 					if(edge.getVEJNAVN().equals(textArray[0]) && (edge.getV_POSTNR().equals(zipArray[i]) || edge.getH_POSTNR().equals(zipArray[i]) )){
 						randomCorrectEdge = edge;
 						String houseNumberString = textArray[1];
@@ -895,6 +887,7 @@ public class Window extends JFrame {
 							break;
 						}
 					}
+				}
 			}
 			if (randomCorrectEdge != null){
 				WindowHandler.setNode(randomCorrectEdge.getFromNode().getKdvID(), t);
