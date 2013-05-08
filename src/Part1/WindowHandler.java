@@ -128,12 +128,14 @@ public class WindowHandler {
 		}
 		//testDrawClosestEdge(closestEdge);
 		//System.out.print("Closest edge: ");
-		if(closestEdge.getVEJNAVN().length() > 0)
-			return closestEdge.getVEJNAVN();
-		else {
-			return "No name found";
-
+		if(Equation.onscreenPixelDistance(shortestDist) < 10.0) {
+			if(closestEdge.getVEJNAVN().length() > 0) {
+				return closestEdge.getVEJNAVN();
+			} else {
+				return "No name found";
+			}
 		}
+		return null;
 	}
 
 	public static void setNode(int node, TextType t){

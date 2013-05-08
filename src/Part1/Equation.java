@@ -81,6 +81,19 @@ public class Equation {
 		return y;
 	}
 	
+	/**
+	 * Returns an on-screen geo-distance measured in pixels.
+	 * @param dist		The coordinate based geo distance
+	 * @return			The distance in number if pixels
+	 */
+	public static double onscreenPixelDistance(double dist) {
+		double diffX = (DrawableItem.getGeoMaxX() - DrawableItem.getGeoMinX());
+		int width = Window.use().getMapWidth();
+		double pixelSize = diffX / width;
+		double pixelDistance = dist / pixelSize;
+		return pixelDistance;
+	}
+	
 	//-----------------------VECTOR FUNCTIONS------------------------------------
 	
 	/**
@@ -235,5 +248,17 @@ public class Equation {
 	}
 	
 	
-	//---------------------------------------------------------------------------
+	//------------------------------------------------------------------------------
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
