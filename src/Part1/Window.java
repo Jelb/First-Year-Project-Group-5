@@ -571,6 +571,7 @@ public class Window extends JFrame {
 					if (byCar) {
 						bikeUnselected.setVisible(true);
 						carSelected.setVisible(true);
+						reset.setBounds(95, 405, 70, 20);
 						if (fastest) {
 							shortest.setVisible(true);
 							fastestsButton.setVisible(true);
@@ -587,6 +588,7 @@ public class Window extends JFrame {
 					else {
 						bikeSelected.setVisible(true);
 						carUnselected.setVisible(true);
+						reset.setBounds(95, 375, 70, 20);
 					}
 					navigateVisible = true;
 					if (byShip) shipSelected.setVisible(true);
@@ -597,8 +599,6 @@ public class Window extends JFrame {
 					findPathBlue.setVisible(true);
 					findPlace.setVisible(true);
 					findPlaceBlue.setVisible(false);
-					//reset.setVisible(true);
-					reset.setBounds(95, 405, 70, 20);
 					searchFindResultBox.setVisible(false);
 					background.setBounds(10,15,165,420);
 				}
