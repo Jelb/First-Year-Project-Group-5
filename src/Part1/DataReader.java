@@ -281,7 +281,7 @@ public class DataReader {
 				}
 				double lon = Double.parseDouble(line.substring(0, line.indexOf("\t")).trim());
 				double lat = Double.parseDouble(line.substring(line.indexOf("\t")+1).trim());
-				current.add(lonLatToUTM.convertToUTM(lat, lon));
+				current.add(Equation.convertLonLatToUTM(lat, lon));
 
 				line = reader.readLine();
 				}
@@ -291,6 +291,7 @@ public class DataReader {
 			JOptionPane.showMessageDialog(null, "The file <" + filepath+ "> was not foud. \nThe will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
 			throw new RuntimeException();
 		}
+		System.out.println(filepath + " contains " + area.size() + " polygons.");
 		return area;
 	}
 	
