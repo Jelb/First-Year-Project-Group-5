@@ -36,8 +36,9 @@ public class DataReader {
 	private ArrayList<Edge> edges;
 	private ArrayList<Edge> longestRoads;
 	private final String nodeFile, edgeFile;
-	public static double maxX = 0, maxY = 0, minX = -1, minY = -1;
+	private static double maxX = 0, maxY = 0, minX = -1, minY = -1;
 	private HashMap<String, HashSet<String>> roadToZipMap;
+	private final int increase = 75000;
 
 	/**
 	 * Constructor for the DataReader class. 
@@ -89,7 +90,10 @@ public class DataReader {
 		br.readLine(); // discard names of columns which is the first line
 
 		String line = br.readLine();
-
+		maxX = 0;
+		maxY = 0;
+		minX = -1;
+		minY = -1;
 		// An array list containing the nodes we find in the file
 		nodes = new ArrayList<Node>();
 		nodes.add(null);
@@ -113,7 +117,6 @@ public class DataReader {
 			line = br.readLine();
 		}
 		// Increases the area of the map
-		int increase = 75000;
 		minX -= increase;
 		maxX += increase;
 		minY -= increase;
@@ -129,7 +132,7 @@ public class DataReader {
 		br.close();
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "The \"nodeFile\" was not found. \nThe program will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
+			throw new RuntimeException();
 		}
 	}
 
@@ -237,9 +240,8 @@ public class DataReader {
 		} 
 		catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "The \"edgeFile\" was not foud. \nThe will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
+			throw new RuntimeException();
 		}
-		return null;
 	}
 
 	/**
@@ -287,7 +289,7 @@ public class DataReader {
 			reader.close();			
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "The file <" + filepath+ "> was not foud. \nThe will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
+			throw new RuntimeException();
 		}
 		return area;
 	}
@@ -328,6 +330,10 @@ public class DataReader {
 		return minY;
 	}
 	
+	public int getIncrease() {
+		return increase;
+	}
+
 	/**
 	 * Getter method for the <i>longestRoads</i> field.
 	 * 
