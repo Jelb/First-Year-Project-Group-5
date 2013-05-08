@@ -88,6 +88,10 @@ public class Window extends JFrame {
 
 	private int mousePanX;	// The temporary displacement of the buffered image
 	private int mousePanY;
+	
+	public enum TextType {
+		FIND, TO, FROM;
+	}
 
 	/**
 	 * Constructor for the window class.
@@ -747,8 +751,6 @@ public class Window extends JFrame {
 					System.out.println("Box width: " + (pressedX - getMousePosition().x) + " and height: " + (getMousePosition().y - pressedY));
 				}
 			}
-			//StdOut.println("drawing");
-			//System.out.println(getMousePosition());
 		}
 	}
 
@@ -930,8 +932,6 @@ public class Window extends JFrame {
 			} else if (SwingUtilities.isLeftMouseButton(e)) {
 				pressedX = e.getX();
 				pressedY = e.getY();
-				
-				WindowHandler.closestEdge(pressedX, pressedY);
 			}
 		}
 
@@ -969,7 +969,6 @@ public class Window extends JFrame {
 				System.out.println("Released X : "+ releasedX);
 				System.out.println("Released Y : "+ releasedY);
 				WindowHandler.pixelSearch(pressedX, releasedX, pressedY, releasedY);
-				//if(rect != null)
 				rect.setVisible(false); //Removes the rectangle when zoom box is chosen
 				noMoreBoxes = true;
 				updateMap();
@@ -1030,8 +1029,5 @@ public class Window extends JFrame {
 		mousePanY = inputMousePanY;
 	}
 	
-	public enum TextType {
-		FIND, TO, FROM;
-	}
-	
+
 }

@@ -23,10 +23,8 @@ public class Map extends JPanel {
 	private static ArrayList<CoastPoint[]> coast, lake, island, border; 
 	private static Map instance = null;
 	private ArrayList<Flag> flags;
-	
 	private Image offScreen = null;
 	private Graphics offgc;
-	private String toolTip;
 	
 	private Map() {
 	}
@@ -43,11 +41,11 @@ public class Map extends JPanel {
 		}
 		return instance;
 	}
-	
+
 	public void scaleBufferedImage(int width, int height) {
-		
+
 	}
-	
+
 	/**
 	 * This method flips the buffered image onto the screen
 	 * based on its current displacement.
@@ -62,7 +60,6 @@ public class Map extends JPanel {
 		drawShore(lake, Window.use().getBackground(), g);
 		drawShore(island, UIManager.getColor("Panel.background"), g);
 		drawBorder(border, Color.RED, g);
-		
 		//Draw roads
 		for(RoadSegment r : segments) {
 			if(r == null) continue;
@@ -73,61 +70,72 @@ public class Map extends JPanel {
 		for(Flag f: flags) f.paintComponent(g);
 	}
 
-	private void drawShore(ArrayList<CoastPoint[]> arg, Color c, Graphics g) {
-		g.setColor(c);
+	private void drawShore(ArrayList<CoastPoint[]> arg, Color c, Graphics g) {		
 		ArrayList<Polygon> poly = new ArrayList<Polygon>();
 		Polygon current = new Polygon();
 		for(CoastPoint[] cp : arg) {
 			current = new Polygon();
 			for(int i = 0; i < cp.length; i++) {
-				current.addPoint(calcPixelX(cp[i].getX()-DataReader.getMinX()), calcPixelY(cp[i].getY()-DataReader.getMinY()));
+				current.addPoint(Equation.calcPixelX(cp[i].getX()-DataReader.getMinX()), Equation.calcPixelY(cp[i].getY()-DataReader.getMinY()));
 			}
-			poly.add(current);
+			//Only add polygons if they fulfill any of three things.
+			// - The polygon intersects with the bounds of the view area.
+			// - The polygon is inside the bounds of the view area. 
+			// - The view area is inside the bounds of the polygon.
+			if (Map.use().getBounds().contains(current.getBounds()) || current.getBounds().contains(Map.use().getBounds()) || current.intersects(Map.use().getBounds())) {
+				poly.add(current);
+			}
 		}
+		g.setColor(c);
 		for(Polygon fp : poly) {
 			g.fillPolygon(fp);
 		}
-		g.setColor(Color.GRAY);
+		Graphics2D D2 = (Graphics2D) g;
+		D2.setColor(Color.GRAY);
+		//Checks whether antialiasing should be used or not.
+		if (RoadSegment.getZoomLevel() > 3) {
+			D2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+			D2.setStroke(new BasicStroke(2));
+		}
 		for(Polygon op : poly) {
-			g.drawPolygon(op);
+			D2.drawPolygon(op);
 		}
 	}
-	
+
 	private void drawBorder(ArrayList<CoastPoint[]> arrBorder, Color c, Graphics g) {
-		
+
 		Graphics2D g2 = (Graphics2D) g;
 		// enable anti-aliasing
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 		// set road color
 		g2.setColor(c);
 		// setting stroke type
-		g2.setStroke(new BasicStroke(borderWidth(RoadSegment.zoomLevel), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		g2.setStroke(new BasicStroke(borderWidth(RoadSegment.getZoomLevel()), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
 		for (int i = 0; i < arrBorder.size(); i++) {
 			for (int j = 1; j < arrBorder.get(i).length; j++) {
 				g2.drawLine(
-						calcPixelX(arrBorder.get(i)[j-1].getX()-DataReader.getMinX()),
-						calcPixelY(arrBorder.get(i)[j-1].getY()-DataReader.getMinY()),
-						calcPixelX(arrBorder.get(i)[j].getX()-DataReader.getMinX()),
-						calcPixelY(arrBorder.get(i)[j].getY()-DataReader.getMinY()));
-				
+						Equation.calcPixelX(arrBorder.get(i)[j-1].getX()-DataReader.getMinX()),
+						Equation.calcPixelY(arrBorder.get(i)[j-1].getY()-DataReader.getMinY()),
+						Equation.calcPixelX(arrBorder.get(i)[j].getX()-DataReader.getMinX()),
+						Equation.calcPixelY(arrBorder.get(i)[j].getY()-DataReader.getMinY()));
 			}
 		}
 	}
-	
+
 	private float borderWidth(int zoomLevel) {
 		switch(zoomLevel) {
-			case 1 : return 2.5f;
-			case 2 : return 3.0f;
-			case 3 : return 3.2f;
-			case 4 : return 3.6f;
-			case 5 : return 4.4f;
-			default: return 2.5f;
+		case 1 : return 2.5f;
+		case 2 : return 3.0f;
+		case 3 : return 3.2f;
+		case 4 : return 3.6f;
+		case 5 : return 5.0f;
+		default: return 2.5f;
 		}
 	}
 
 
-	
+
 	/**
 	 * Creates an blank off-screen image, which Graphics object is then used to draw an
 	 * image to be flipped in later.
@@ -137,93 +145,78 @@ public class Map extends JPanel {
 		offgc = offScreen.getGraphics();						// The Graphics object of this Image is extracted,
 		paintComponent(offgc);									// and the paintComponent() method is called using this Graphics object,
 	}															// thus 'flipping' the new map into view.
-    
-	public int calcPixelX(double geoCord){
-		double diffX = (DrawableItem.geoMaxX - DrawableItem.geoMinX);
-		int width = Window.use().getMapWidth();		
-		int x =(int)(((geoCord-DrawableItem.geoMinX)/diffX)*width);
-		return x;
+
+	/**
+	 * Getter method for the segments field.
+	 * 
+	 * @return Returns the current value of the segment field. (ArrayList\<RoadSegment\>)
+	 */
+	public ArrayList<RoadSegment> getRoadSegments() {
+		return segments;
 	}
 
-	public int calcPixelY(double geoCord){
-		double diffY = (DrawableItem.geoMaxY - DrawableItem.geoMinY);
-		int height = Window.use().getMapHeight();		
-		int y =(int)(height-(((geoCord-DrawableItem.geoMinY)/diffY)*height));
-		return y;
+	/**
+	 * Changes the <br>segments<br>-filed ArrayList to a new empty one. 
+	 */
+	public void newArrayList() {
+		segments = new ArrayList<RoadSegment>();
 	}
-    
-    /**
-     * Getter method for the segments field.
-     * 
-     * @return Returns the current value of the segment field. (ArrayList\<RoadSegment\>)
-     */
-    public ArrayList<RoadSegment> getRoadSegments() {
-    	return segments;
-    }
-    
-    /**
-     * Changes the <br>segments<br> ArrayList to a new empty one. 
-     */
-    public void newArrayList() {
-    	segments = new ArrayList<RoadSegment>();
-    }
-    
-    /**
-     * Adds a single roadSegment to the map.
-     * 
-     * @param roadSegment The roadSegment which are to be added to the map.
-     */
-    public void addRoadSegment(RoadSegment roadSegment) {
-    	segments.add(roadSegment);
-    }
-    
-    /**
-     * Recalculate the position of each roadSegment
-     * within the map.
-     */
-    public void updatePix(){
-    	for(RoadSegment r: segments){
-    		if(r == null) continue;
-    		r.updatePosition();
-    	}
-    	for(DrawableItem r : path) r.updatePosition();
-    	for (Flag f : flags) f.updatePosition();
-    }
-    
-    /**
-     * Recalculate position of path
-     */
-    public void updatePath() {
-    	for (DrawableItem r : path) r.updatePosition();
-    	for (Flag f : flags) f.updatePosition();
-    }
-    
-    public void setPath(ArrayList<DrawableItem> path) {
-    	this.path = path;
-    }
-    
-    public void addDrawableItemToPath(DrawableItem i){
-    	path.add(i);
-    }
-    
-    public void resetPath() {
-    	path = new ArrayList<DrawableItem>();
-    	flags = new ArrayList<Flag>();
-    }
-    
-    public void addFlag(Flag f) {
-    	for (Flag flag : flags) if (flag == f) return;
-    	flags.add(f);
-    }
-    
-    public static void setCoast(ArrayList<CoastPoint[]> argCoast, ArrayList<CoastPoint[]> argLake, ArrayList<CoastPoint[]> argIsland) {
-    	coast = argCoast;
-    	lake = argLake;
-    	island = argIsland;
-    }
-    
-    public static void setBorder(ArrayList<CoastPoint[]> argBorder) {
-    	border = argBorder;  	
-    }   
-    
+
+	/**
+	 * Adds a single roadSegment to the map.
+	 * 
+	 * @param roadSegment The roadSegment which are to be added to the map.
+	 */
+	public void addRoadSegment(RoadSegment roadSegment) {
+		segments.add(roadSegment);
+	}
+
+	/**
+	 * Recalculate the position of each roadSegment
+	 * within the map.
+	 */
+	public void updatePix(){
+		for(RoadSegment r: segments){
+			if(r == null) continue;
+			r.updatePosition();
+		}
+		for(DrawableItem r : path) r.updatePosition();
+		for (Flag f : flags) f.updatePosition();
+	}
+
+	/**
+	 * Recalculate position of path
+	 */
+	public void updatePath() {
+		for (DrawableItem r : path) r.updatePosition();
+		for (Flag f : flags) f.updatePosition();
+	}
+
+	public void setPath(ArrayList<DrawableItem> path) {
+		this.path = path;
+	}
+
+	public void addDrawableItemToPath(DrawableItem i){
+		path.add(i);
+	}
+
+	public void resetPath() {
+		path = new ArrayList<DrawableItem>();
+		flags = new ArrayList<Flag>();
+	}
+
+	public void addFlag(Flag f) {
+		for (Flag flag : flags) if (flag == f) return;
+		flags.add(f);
+	}
+
+	public static void setCoast(ArrayList<CoastPoint[]> argCoast, ArrayList<CoastPoint[]> argLake, ArrayList<CoastPoint[]> argIsland) {
+		coast = argCoast;
+		lake = argLake;
+		island = argIsland;
+	}
+
+	public static void setBorder(ArrayList<CoastPoint[]> argBorder) {
+		border = argBorder;
+	}
 }

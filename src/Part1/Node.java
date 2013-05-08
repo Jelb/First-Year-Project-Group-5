@@ -79,7 +79,7 @@ public class Node {
 	}
 	
 	public boolean equals(Node n) {
-		return (xCord == n.getXCord() && yCord == n.getYCord());
+		return (xCord == n.getAbsoluteXCoordinate() && yCord == n.getAbsoluteYCoordinate());
 	}
 	
 //	public void addEdge(Edge edge) {

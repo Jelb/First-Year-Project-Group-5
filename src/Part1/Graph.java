@@ -47,7 +47,7 @@ public class Graph {
 	}
 
 	// returns adjacency list for the given node, as an ArrayList of edges
-	public Iterable<Edge> adjArr(int v) { 
+	public ArrayList<Edge> adjArr(int v) { 
 		ArrayList<Edge> arr = new ArrayList<Edge>();
 		arr.addAll(adj[v]);
 		return arr;
