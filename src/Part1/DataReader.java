@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -54,7 +55,7 @@ public class DataReader {
 		this.edgeFile = edgeFile;
 	}
 	
-	public void setInstance() {
+	public static void resetInstance() {
 		instance = null;
 	}
 	
@@ -92,8 +93,8 @@ public class DataReader {
 		String line = br.readLine();
 		maxX = 0;
 		maxY = 0;
-		minX = -1;
-		minY = -1;
+		minX = Integer.MAX_VALUE;
+		minY = Integer.MAX_VALUE;
 		// An array list containing the nodes we find in the file
 		nodes = new ArrayList<Node>();
 		nodes.add(null);
@@ -101,16 +102,12 @@ public class DataReader {
 			// Splits "line" by ',' and parses the id, x and y values to
 			String[] lineArray = line.split(",");
 			double x = Double.parseDouble(lineArray[3]);
-			if (maxX < x)
-				maxX = x;
+			if (maxX < x) maxX = x; 
 			double y = Double.parseDouble(lineArray[4]);
-			if (maxY < y)
-				maxY = y;
+			if (maxY < y) maxY = y;
 			int id = Integer.parseInt(lineArray[1]);
-			if (minX > x || minX < 0) // Is allowed because all our coordinates are positive.
-				minX = x;
-			if (minY > y || minY < 0) // Is allowed because all our coordinates are positive.
-				minY = y;
+			if (minX > x) minX = x; 
+			if (minY > y) minY = y;  
 
 			nodes.add(new Node(x, y, id));
 			SplashScreen.use().updateProgress();
@@ -148,7 +145,7 @@ public class DataReader {
 	 * @return Returns a <b>Graph</b> object based on the content <i>edgeFile</i>.
 	 */
 	public Graph createGraphAndLongestRoadsList(int longestRoadsFloor) {
-//	public MultiGraph createGraphAndLongestRoadsList(int longestRoadsFloor) {
+
 		SplashScreen.use().setTaskName(Task.EDGES);
 		System.out.println("Adding " + (nodes.size()-1) + " nodes to graph");
 		longestRoads = new ArrayList<Edge>();
@@ -168,12 +165,27 @@ public class DataReader {
 			
 			edges = new ArrayList<Edge>();
 			
+			HashSet<Integer> projectedRoads = new HashSet<Integer>(Arrays.asList(21,22,23,24,25,26,28));
+			HashSet<Integer> tunnels = new HashSet<Integer>(Arrays.asList(41,42,43,44,45,46,48));
+			HashSet<Integer> exits = new HashSet<Integer>(Arrays.asList(32,33,34,35,36,38));
+			
 			while (line != null) {
 				String[] lineArray = line.split(",(?! |[a-zA-ZæÆøØåÅ])"); // Regex matches ',' not followed by spaces of letters.
 				Node fromNode = nodes.get(Integer.parseInt(lineArray[0]));
 				Node toNode = nodes.get(Integer.parseInt(lineArray[1]));
 				double length = Double.parseDouble(lineArray[2]);
 				int type = Integer.parseInt(lineArray[5]);
+				if (projectedRoads.contains(type)) {
+					line = br.readLine();
+					SplashScreen.use().updateProgress();
+					continue;
+				}
+				// tunnels are set to same type as the the roads. e.g. motorwaytunnel (41) is set to motorway (1)
+				if (tunnels.contains(type)) type -= 40;
+				// exits are set to the same type as the roads
+				if (exits.contains(type)) type -= 30;
+				// Motorway exits are set to the same type as motortrafficway
+				if (type == 31) type = 2;
 				int houseNumberFromLeft = 0;
 				int houseNumberToLeft = 0;
 				int houseNumberFromRight = 0;
@@ -269,6 +281,7 @@ public class DataReader {
 			String line = reader.readLine().trim();
 			ArrayList<CoastPoint> current = null;
 			while(!(line == null)) {
+				SplashScreen.use().updateProgress();
 				if(line.contains(">")) {
 					line = reader.readLine().trim();
 					if(current == null) {
@@ -293,6 +306,27 @@ public class DataReader {
 		}
 		System.out.println(filepath + " contains " + area.size() + " polygons.");
 		return area;
+	}
+	
+	public HashMap<String, String> getZipToCityMap(String zipFile) {
+		BufferedReader br;
+		HashMap<String, String> zipToCityMap = new HashMap<String, String>();
+		try {
+			br = new BufferedReader(new FileReader(zipFile));
+		String strLine = br.readLine();
+		while(strLine != null) {
+			String zipCode = strLine.split(" ", 2)[0];
+			String cityName = strLine.split(" ", 2)[1];
+
+			zipToCityMap.put(zipCode, cityName);
+			strLine = br.readLine();
+		}
+		br.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return zipToCityMap;
 	}
 	
 	/**
