@@ -60,7 +60,7 @@ public class Window extends JFrame {
 	private static int maxHeight;
 
 	//Buttons to pan and zoom
-	private JButton resetZoom, zoomOut, zoomIn, shortest, fastestsButton, shipUnselected, shipSelected, search, findButton;
+	private JButton resetZoom, zoomOut, zoomIn, shortest, fastestButton, shipUnselected, shipSelected, search, findButton;
 	private JButton west, east, north, south, findPath, bikeUnselected, bikeSelected, carUnselected, carSelected, reset, findPathBlue;
 	private JButton findPlace, findPlaceBlue;
 	private JTextField from, to, find;
@@ -83,6 +83,11 @@ public class Window extends JFrame {
 	
 	//Currently saved node to search for
 	private Node findNode;
+	
+	// The default text in the textfields
+	private final String fromDefault = "Enter startpoint";
+	private final String toDefault = "Enter destination";
+	private final String findDefault = "Enter address";
 	
 	//GUI background
 	private JPanel background;
@@ -223,31 +228,29 @@ public class Window extends JFrame {
 		shortest.setMargin(new Insets(5,5,5,5));
 		shortest.setBounds(20, 375, 70, 20);
 		shortest.setVisible(false);
-		fastestsButton = new JButton("Fastest");
-		fastestsButton.setMargin(new Insets(5,5,5,5));
-		fastestsButton.setBounds(95, 375, 70, 20);
-		fastestsButton.setVisible(false);
+		
+		fastestButton = new JButton("Fastest");
+		fastestButton.setMargin(new Insets(5,5,5,5));
+		fastestButton.setBounds(95, 375, 70, 20);
+		fastestButton.setVisible(false);
 		
 		searchFromResultBox = new JComboBox();
 		searchToResultBox = new JComboBox();
 		searchFindResultBox = new JComboBox();
 
-		from = new JTextField("From");
-		fromText = "From";
+		from = new JTextField(fromDefault);
+		fromText = fromDefault;
 		from.setBounds(20, 260, 145, 25);
-		from.setBackground(Color.WHITE);
 		from.setVisible(false);
 		
-		to = new JTextField("To");
-		toText = "To";
+		to = new JTextField(toDefault);
+		toText = toDefault;
 		to.setBounds(20, 295, 145, 25);
-		to.setBackground(Color.WHITE);
 		to.setVisible(false);
 		
-		find = new JTextField("Enter address");
-		findText = "Enter address";
+		find = new JTextField(findDefault);
+		findText = findDefault;
 		find.setBounds(20, 260, 145, 25);
-		find.setBackground(Color.WHITE);
 		find.setVisible(true);
 		
 		search = new JButton("Search");
@@ -263,15 +266,14 @@ public class Window extends JFrame {
 		findButton.setVisible(true);
 		
 		reset = new JButton("Reset");
-		//reset.setBounds(95, 425, 70, 20);
 		reset.setBounds(95, 295, 70, 20);
 		reset.setMargin(new Insets(5,5,5,5));
 		reset.setFont(null);
 		reset.setVisible(true);
 		
 		//Internet magic from http://tips4java.wordpress.com/2009/05/31/backgrounds-with-transparency/
-		background = new JPanel()
-		{
+		background = new JPanel(){
+		
 		    /**
 			 * 
 			 */
@@ -390,7 +392,7 @@ public class Window extends JFrame {
 				bikeSelected.setVisible(true);
 				bikeUnselected.setVisible(false);
 				shortest.setVisible(false);
-				fastestsButton.setVisible(false);
+				fastestButton.setVisible(false);
 				search.setBounds(20, 375,70, 20);
 				reset.setBounds(95, 375, 70, 20);
 				fastest = false; //We want the shortest route if by bike
@@ -410,8 +412,8 @@ public class Window extends JFrame {
 				shortest.setFont(null);
 				//reset.setVisible(true);
 				reset.setBounds(95, 405, 70, 20);
-				fastestsButton.setVisible(true);
-				fastestsButton.setFont(new Font("Shortest", Font.BOLD, 12));
+				fastestButton.setVisible(true);
+				fastestButton.setFont(new Font("Shortest", Font.BOLD, 12));
 				search.setBounds(20, 405,70, 20);
 				fastest = true; //We want the fastest route by default if by car
 			}
@@ -437,11 +439,11 @@ public class Window extends JFrame {
 			}
 		});
 		
-		fastestsButton.addActionListener(new ActionListener(){
+		fastestButton.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
 				System.out.println("Hurtigste rute valgt");
-				fastestsButton.setFont(new Font("Fastest", Font.BOLD, 12));
+				fastestButton.setFont(new Font("Fastest", Font.BOLD, 12));
 				shortest.setFont(null);
 				fastest = true;
 			}
@@ -452,7 +454,7 @@ public class Window extends JFrame {
 			public void actionPerformed(ActionEvent evt) {
 				System.out.println("Korteste rute valgt");
 				shortest.setFont(new Font("Shortest", Font.BOLD, 12));
-				fastestsButton.setFont(null);
+				fastestButton.setFont(null);
 				fastest = false;
 			}
 		});
@@ -461,8 +463,12 @@ public class Window extends JFrame {
 
 			public void actionPerformed(ActionEvent evt) {
 				System.out.println("reset");
-				from.setText(null);
-				to.setText(null);
+				from.setText(fromDefault);
+				fromText = fromDefault;
+				to.setText(toDefault);
+				toText = toDefault;
+				find.setText(findDefault);
+				findText = findDefault;
 				screen.remove(searchFromResultBox);
 				screen.remove(searchToResultBox);
 				fromMarked = false;
@@ -545,7 +551,7 @@ public class Window extends JFrame {
 				searchToResultBox.setVisible(false);
 				navigateVisible = false;
 				shortest.setVisible(false);
-				fastestsButton.setVisible(false);
+				fastestButton.setVisible(false);
 				shipUnselected.setVisible(false);
 				shipSelected.setVisible(false);
 				search.setVisible(false);
@@ -568,15 +574,15 @@ public class Window extends JFrame {
 						reset.setBounds(95, 405, 70, 20);
 						if (fastest) {
 							shortest.setVisible(true);
-							fastestsButton.setVisible(true);
-							fastestsButton.setFont(new Font("Fastest", Font.BOLD, 12));
+							fastestButton.setVisible(true);
+							fastestButton.setFont(new Font("Fastest", Font.BOLD, 12));
 							shortest.setFont(null);
 						}
 						else {
 							shortest.setVisible(true);
-							fastestsButton.setVisible(true);
+							fastestButton.setVisible(true);
 							shortest.setFont(new Font("Shortest", Font.BOLD, 12));
-							fastestsButton.setFont(null);
+							fastestButton.setFont(null);
 						}
 					}
 					else {
@@ -714,18 +720,18 @@ public class Window extends JFrame {
 		screen.add(findButton, JLayeredPane.PALETTE_LAYER);
 		screen.add(findPath, JLayeredPane.PALETTE_LAYER);
 		screen.add(findPathBlue, JLayeredPane.PALETTE_LAYER);
-		screen.add(background, JLayeredPane.PALETTE_LAYER);
 		screen.add(bikeUnselected, JLayeredPane.PALETTE_LAYER);
 		screen.add(carUnselected, JLayeredPane.PALETTE_LAYER);
 		screen.add(bikeSelected, JLayeredPane.PALETTE_LAYER);
 		screen.add(carSelected, JLayeredPane.PALETTE_LAYER);
-		screen.add(fastestsButton, JLayeredPane.PALETTE_LAYER);
+		screen.add(fastestButton, JLayeredPane.PALETTE_LAYER);
 		screen.add(shortest, JLayeredPane.PALETTE_LAYER);
 		screen.add(shipUnselected, JLayeredPane.PALETTE_LAYER);
 		screen.add(shipSelected, JLayeredPane.PALETTE_LAYER);
 		screen.add(reset, JLayeredPane.PALETTE_LAYER);
 		screen.add(findPlace, JLayeredPane.PALETTE_LAYER);
 		screen.add(findPlaceBlue, JLayeredPane.PALETTE_LAYER);
+		screen.add(background, JLayeredPane.PALETTE_LAYER);
 	}
 
 	/**
@@ -1036,9 +1042,9 @@ public class Window extends JFrame {
 		
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if (TextType.FROM == t && from.getText().equals("From")) from.setText("");
-			else if (t == TextType.TO && to.getText().equals("To")) to.setText("");
-			else if (t == TextType.FIND && find.getText().equals("Enter address")) find.setText("");
+			if (TextType.FROM == t && from.getText().equals(fromDefault)) from.setText("");
+			else if (t == TextType.TO && to.getText().equals(toDefault)) to.setText("");
+			else if (t == TextType.FIND && find.getText().equals(findDefault)) find.setText("");
 			
 		}
 	}
