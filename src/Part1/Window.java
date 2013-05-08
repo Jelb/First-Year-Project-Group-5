@@ -286,9 +286,10 @@ public class Window extends JFrame {
 		        super.paintComponent(g);
 		    }
 		};
-		background.setOpaque(false);		
-		//background.setBackground(new Color(255,255,255,200)); White
-		background.setBackground(new Color(0,0,0,50));
+		background.setOpaque(false);
+		background.setBackground(new Color(65,105,225,50)); //royalblue
+		//background.setBackground(new Color(255,255,255,100)); //White
+		//background.setBackground(new Color(0,0,0,50)); //Black
 		background.setBounds(10,15,165,315);
 	}
 	
