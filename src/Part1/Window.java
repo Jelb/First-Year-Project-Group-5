@@ -5,7 +5,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
@@ -142,7 +141,6 @@ public class Window extends JFrame {
 	 * is displayed while the program is loading.
 	 */
 	private void makeContent(){
-		getEffectiveScreenSize();
 		contentPane = getContentPane();
 		setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
 		contentPane.setPreferredSize(new Dimension((int)(640*WindowHandler.getRatio()),640)); //Sets the dimension on the content pane.
@@ -172,15 +170,7 @@ public class Window extends JFrame {
 		addButtonListeners();
 	}
 
-	/**
-	 * Used to get the effective size of the screen. 
-	 * The effective size of the screen is equals to the size of the screen 
-	 * excluding the size reserved for other objects such as docks and tool bars.
-	 */
-	private static void getEffectiveScreenSize() {
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		maxHeight  = ge.getMaximumWindowBounds().height;
-	}
+	
 
 	/**
 	 * Redraws the map when its content has changed or 
@@ -188,13 +178,11 @@ public class Window extends JFrame {
 	 */
 	public void updateMap() {
 		Map.use().updatePath();
-		validate();
 				
 		if(!isVisible()){
 			SplashScreen.use().setAlwaysOnTop(true);
 			Map.use().setBounds(0, 0, contentPane.getPreferredSize().width, contentPane.getPreferredSize().height);		
 			addListeners();
-			setVisible(true);
 			SplashScreen.use().setAlwaysOnTop(false);
 		} else {
 			requestFocus();			
@@ -287,7 +275,6 @@ public class Window extends JFrame {
 		cityAndZipLabel.setBounds(20, 640-40, 200, 20);
 		cityAndZipLabel.setVisible(true);
 		
-		//Internet magic from http://tips4java.wordpress.com/2009/05/31/backgrounds-with-transparency/
 		background = new TransparetPane();
 		background.setBounds(10,15,165,315);
 		routeInfo = new TransparetPane();
@@ -1196,6 +1183,10 @@ public class Window extends JFrame {
 
 	public void setMousePanY(int inputMousePanY) {
 		mousePanY = inputMousePanY;
+	}
+	
+	public static void setMaxHeight(int maxH) {
+		maxHeight = maxH;
 	}
 }
 

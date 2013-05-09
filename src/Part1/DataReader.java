@@ -114,10 +114,19 @@ public class DataReader {
 			line = br.readLine();
 		}
 		// Increases the area of the map
-		minX -= increase;
-		maxX += increase;
+		
 		minY -= increase;
 		maxY += increase;
+		double add = ((maxY-minY)*WindowHandler.getRatio() - (maxX-minX))/2;
+		if(add < increase) {
+			minX -= increase;
+			maxX += increase;
+			double newRatio = (maxX-minX)/(maxY-minY);
+			WindowHandler.setRatio(newRatio);
+		} else {
+			minX -= add;
+			maxX += add;
+		}
 		
 		// The coordinates of every node is corrected for the offset
 		Node.setXOffset(minX);

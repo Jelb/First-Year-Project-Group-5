@@ -209,7 +209,7 @@ public class RoadSegment extends DrawableItem {
 	 * @param g A Graphics object used for drawing
 	 */
 	public void paintComponent(Graphics g) {
-		
+
 		Graphics2D g2 = (Graphics2D) g;
 		
 		// enable anti-aliasing
@@ -223,7 +223,6 @@ public class RoadSegment extends DrawableItem {
 		
 		// draw the road segment
 		g2.drawLine(xStart, yStart, xEnd, yEnd);
-
 	}
 
 	/**
