@@ -81,7 +81,7 @@ public class WindowHandler {
 	 * @param y		Y value of pixel coordinate
 	 * @return		The edge nearest the coordinate
 	 */
-	public static String closestEdge(int pixelX, int pixelY) {
+	public static Edge closestEdge(int pixelX, int pixelY) {
 		double x = pixelToAbsoluteGeoX(pixelX);
 		double y = pixelToAbsoluteGeoY(pixelY);
 
@@ -129,11 +129,7 @@ public class WindowHandler {
 		//testDrawClosestEdge(closestEdge);
 		//System.out.print("Closest edge: ");
 		if(Equation.onscreenPixelDistance(shortestDist) < 10.0) {
-			if(closestEdge.getVEJNAVN().length() > 0) {
-				return closestEdge.getVEJNAVN();
-			} else {
-				return "No name found";
-			}
+			return closestEdge;
 		}
 		return null;
 	}

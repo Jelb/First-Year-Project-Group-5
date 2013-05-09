@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -83,6 +84,9 @@ public class Window extends JFrame {
 	
 	//Currently saved node to search for
 	private Node findNode;
+	
+	// The label holding the current city and zip
+	private JLabel cityAndZipLabel;
 	
 	// The default text in the textfields
 	private final String fromDefault = "Enter startpoint";
@@ -269,6 +273,10 @@ public class Window extends JFrame {
 		reset.setMargin(new Insets(5,5,5,5));
 		reset.setFont(null);
 		reset.setVisible(true);
+		
+		cityAndZipLabel = new JLabel("");
+		cityAndZipLabel.setBounds(20, 640-40, 200, 20);
+		cityAndZipLabel.setVisible(true);
 		
 		//Internet magic from http://tips4java.wordpress.com/2009/05/31/backgrounds-with-transparency/
 		background = new JPanel(){
@@ -720,6 +728,7 @@ public class Window extends JFrame {
 		screen.add(findPlace, JLayeredPane.PALETTE_LAYER);
 		screen.add(findPlaceBlue, JLayeredPane.PALETTE_LAYER);
 		screen.add(background, JLayeredPane.PALETTE_LAYER);
+		screen.add(cityAndZipLabel, JLayeredPane.PALETTE_LAYER);
 	}
 
 	/**
@@ -908,6 +917,7 @@ public class Window extends JFrame {
 	private class resizeListener extends ComponentAdapter {
 		int height;
 		int width;
+		final int MIN_HEIGHT = 505;
 
 		public void componentResized(ComponentEvent evt) {
 			if(timer == null){
@@ -923,13 +933,20 @@ public class Window extends JFrame {
 				timer.stop();
 				if(Window.use().getHeight() < maxHeight && Window.use().getWidth()/WindowHandler.getRatio() < maxHeight) {
 					if(Math.abs(height - Window.use().getHeight())>0 && Window.use().getHeight() < maxHeight){
-						Window.use().setPreferredSize(new Dimension((int)(Window.use().getHeight()*WindowHandler.getRatio()), Window.use().getHeight()));
+						if (Window.use().getHeight() < MIN_HEIGHT)
+							Window.use().setPreferredSize(new Dimension((int)(MIN_HEIGHT*WindowHandler.getRatio()), MIN_HEIGHT));
+						else
+							Window.use().setPreferredSize(new Dimension((int)(Window.use().getHeight()*WindowHandler.getRatio()), Window.use().getHeight()));
 					} else if(Math.abs(width - Window.use().getWidth())>0 && Window.use().getHeight() < maxHeight){
-						Window.use().setPreferredSize(new Dimension(Window.use().getWidth(), (int)(Window.use().getWidth()/WindowHandler.getRatio())));
+						if (Window.use().getWidth()/WindowHandler.getRatio() < MIN_HEIGHT)
+							Window.use().setPreferredSize(new Dimension((int)(MIN_HEIGHT*WindowHandler.getRatio()), MIN_HEIGHT));
+						else
+							Window.use().setPreferredSize(new Dimension(Window.use().getWidth(), (int)(Window.use().getWidth()/WindowHandler.getRatio())));
 					}
 				} else {
 					Window.use().setPreferredSize(new Dimension((int)(maxHeight*WindowHandler.getRatio()), maxHeight));
 				}
+				cityAndZipLabel.setBounds(20, contentPane.getHeight()-40, 200, 20);
 				pack();
 				Map.use().setSize(Window.use().getSize());
 				if(Map.use().getRoadSegments() != null)
@@ -977,8 +994,26 @@ public class Window extends JFrame {
 			}
 		}
 		
+		/**
+		 *  Sets the tooltip with the road name and the label at the bottom of the screen with the city name and zip
+		 */
 		public void mouseMoved(MouseEvent e){
-			Map.use().setToolTipText(WindowHandler.closestEdge(e.getX(), e.getY()));
+			Edge closestEdge = WindowHandler.closestEdge(e.getX(), e.getY());
+			if (!(closestEdge == null)) {
+				String roadName;
+				if(closestEdge.getVEJNAVN().length() > 0) {
+					roadName = closestEdge.getVEJNAVN();
+				} else {
+					roadName =  "No name found";
+				}
+				Map.use().setToolTipText(roadName);
+				String zip = closestEdge.getH_POSTNR();
+				String cityName = WindowHandler.getZipToCityMap().get(zip);
+				if (cityName != null) {
+					cityAndZipLabel.setText(zip + " " + cityName);
+				}
+			}
+			
 		}
 		
 		public void mouseReleased(MouseEvent e) {
