@@ -153,7 +153,8 @@ public class WindowHandler {
 		Stack<Edge> route = new Stack<Edge>();					// clears any previous route
 		
 		route = (Stack<Edge>) dsp.pathTo(endNode);	// find route from start to destination node
-		addRouteToMap(route);									// adding the route to the Map()
+		addRouteToMap(route);// adding the route to the Map()
+		if (route != null && !route.isEmpty()) Window.use().addPathInfo(transport);
 		Window.use().updateMap();
 	}
 	
@@ -178,7 +179,7 @@ public class WindowHandler {
 	 */
 	public static void addRouteToMap(Stack<Edge> route) {
 		ArrayList<DrawableItem> path = new ArrayList<DrawableItem>();
-		double minX = Double.MAX_VALUE, maxX = 0,  minY = Double.MAX_VALUE, maxY = 0;
+		double minX = Double.MAX_VALUE, maxX = 0,  minY = Double.MAX_VALUE, maxY = 0, length = 0, driveTime = 0;
 		while(!route.empty()) {
 			Edge edge = route.pop();
 			double x1 = edge.getFromNode().getXCord();
@@ -195,8 +196,11 @@ public class WindowHandler {
 			if (y2 > maxY) maxY = y2;
 			boolean border = false;											// for now, no borders will be drawn
 			path.add(new RoadSegment(x1, y1, x2, y2, 4242, border));
+			length += edge.length();
+			driveTime += edge.getDriveTime();
 		}
-		Map.use().setPath(path);
+
+		Map.use().setPath(path, length, driveTime);
 		if (!path.isEmpty()) {
 			double deltaX = (maxX-minX)*0.1;
 			double deltaY = (maxY-minY)*0.1; 
@@ -365,10 +369,11 @@ public class WindowHandler {
 					double x1 = e.getFromNode().getXCord();
 					double y1 = e.getFromNode().getYCord();
 					double x2 = e.getToNode().getXCord();
-					double y2 = e.getToNode().getYCord();
-					boolean border = false;											// for now, no borders will be drawn
+					double y2 = e.getToNode().getYCord();						// for now, no borders will be drawn
 					Map.use().addRoadSegment(
-							new RoadSegment(x1, y1, x2, y2, e.getType(),border));
+							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+					Map.use().addBorderSegment(
+							new RoadSegment(x1, y1, x2, y2, e.getType(),true));
 				}
 			}
 		}
