@@ -105,7 +105,8 @@ public class Window extends JFrame {
 	//GUI background
 	private JPanel background, routeInfo;
 
-	private int mousePanX;	// The temporary displacement of the buffered image
+	// The temporary displacement of the buffered image
+	private int mousePanX;	
 	private int mousePanY;
 	
 	private int infoSize;
@@ -162,7 +163,7 @@ public class Window extends JFrame {
 	public void addListeners() {
 		addKeyListener(new MKeyListener());
 		addComponentListener(new resizeListener());
-		Map.use().addMouseWheelListener(new mouseWheelZoom());
+		Map.use().addMouseWheelListener(new mouseWheel());
 		//Listeners for when mouse is pressed, dragged or released
 		MouseListener mouseListener = new MouseListener();
 		Map.use().addMouseListener(mouseListener);
@@ -186,11 +187,9 @@ public class Window extends JFrame {
 	 * the window has been resized. 
 	 */
 	public void updateMap() {
-		long startTime = System.currentTimeMillis();
 		Map.use().updatePath();
 		validate();
-		
-		
+				
 		if(!isVisible()){
 			SplashScreen.use().setAlwaysOnTop(true);
 			Map.use().setBounds(0, 0, contentPane.getPreferredSize().width, contentPane.getPreferredSize().height);		
@@ -202,7 +201,6 @@ public class Window extends JFrame {
 		}
 		Map.use().createBufferImage();
 		repaint();
-		//System.out.println("Time to update map: " + (System.currentTimeMillis()-startTime)/1000.0);
 	}
 
 	/**
@@ -306,8 +304,6 @@ public class Window extends JFrame {
 		};
 		background.setOpaque(false);
 		background.setBackground(new Color(65,105,225,50)); //royalblue
-		//background.setBackground(new Color(255,255,255,100)); //White
-		//background.setBackground(new Color(0,0,0,50)); //Black
 		background.setBounds(10,15,165,315);
 		routeInfo = new JPanel(){
 			
@@ -1145,19 +1141,44 @@ public class Window extends JFrame {
 			}
 			Map.use().createBufferImage();										// The new image is drawn to the buffer and flipped in when
 		}																		// it is completed (see Map.flipImageBuffer() for details).
-	}																			
-
-	private class mouseWheelZoom implements MouseWheelListener{
-		public void mouseWheelMoved(MouseWheelEvent e) {
-			int notches = e.getWheelRotation();
-			if (notches < 0) {
-				WindowHandler.zoomIn();
-			} else {	            
-				WindowHandler.zoomOut();
-			}
-			Map.use().createBufferImage();
-		}
 	}
+	
+	private class mouseWheel implements MouseWheelListener{
+		int notches;
+		
+		public void mouseWheelMoved(MouseWheelEvent e) {
+			notches += e.getWheelRotation();
+			if(timer == null){
+				timer = new Timer(5, new mouseWheelMovedZoom());
+				timer.start();
+			}
+			timer.restart();
+		
+		}
+		private class mouseWheelMovedZoom implements ActionListener {
+			public void actionPerformed(ActionEvent e) {
+				timer.stop();
+				if (notches < 0) {
+					WindowHandler.zoomIn();
+				} else {	            
+					WindowHandler.zoomOut();
+				}
+				Map.use().createBufferImage();
+				}
+			}	
+	}
+
+//	private class mouseWheelZoom implements MouseWheelListener{
+//		public void mouseWheelMoved(MouseWheelEvent e) {
+//			int notches = e.getWheelRotation();
+//			if (notches < 0) {
+//				WindowHandler.zoomIn();
+//			} else {	            
+//				WindowHandler.zoomOut();
+//			}
+//			Map.use().createBufferImage();
+//		}
+//	}
 	
 	private class mouseOnText extends MouseAdapter {
 		private TextType t;
@@ -1174,6 +1195,14 @@ public class Window extends JFrame {
 		}
 	}
 	
+	public int getMapWidth() {
+		return contentPane.getWidth();
+	}
+
+	public int getMapHeight() {
+		return contentPane.getHeight();
+	}
+
 	public int getMousePanX() {
 		return mousePanX;
 	}
