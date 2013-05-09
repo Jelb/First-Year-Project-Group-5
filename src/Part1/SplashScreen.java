@@ -43,6 +43,7 @@ public class SplashScreen extends JFrame{
 		setLocationRelativeTo(null);
 		toFront();
 		setVisible(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 	public static SplashScreen use() {

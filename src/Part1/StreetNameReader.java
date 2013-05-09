@@ -29,9 +29,11 @@ private BufferedReader brStreet, brZip;
 	public String streetScan(String input) throws IOException {
 		String strLine;
 		String street = ""; 
-		while((strLine = brStreet.readLine()) != null)
-			if(input.contains(strLine.toLowerCase()) && strLine.length() > street.length())
+		while((strLine = brStreet.readLine()) != null) {
+			String regex = ".*?\\b" + strLine.toLowerCase() + "\\b.*?";
+			if(input.matches(regex) && strLine.length() > street.length())
 				street = strLine;
+		}
 		return street;
 	}
 	

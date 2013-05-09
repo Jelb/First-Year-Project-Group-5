@@ -9,14 +9,20 @@ import javax.imageio.ImageIO;
 
 public class Flag extends DrawableItem {
 	private boolean fromBool;
+	private int type; //can be fromFlag (1), toFlag (2) or findFlag (3)
 	private double geoXCord;
 	private double geoYCord;
 	private int pixelXCord;
 	private int pixelYCord;
 	private BufferedImage icon;
 	
-	public Flag(boolean fromBool){
-		this.fromBool = fromBool;
+//	public Flag(boolean fromBool){
+//		this.fromBool = fromBool;
+//		createFlag();
+//	}
+	
+	public Flag(int type){
+		this.type = type;
 		createFlag();
 	}
 	
@@ -26,13 +32,31 @@ public class Flag extends DrawableItem {
 		updatePosition();
 	}
 	
+//	private void createFlag(){
+//		try {
+//			if(fromBool){
+//				icon = ImageIO.read(new File("GreenFlag.PNG"));
+//			}
+//			else{
+//				icon = ImageIO.read(new File("RedFlag.PNG"));
+//			}
+//		} 
+//		
+//		catch (IOException e) {
+//			System.out.println("Failed to load flag image");
+//		}
+//	}
+	
 	private void createFlag(){
 		try {
-			if(fromBool){
-				icon = ImageIO.read(new File("GreenFlag.PNG"));
+			if(type == 1){ //If we want a from flag (green)
+				icon = ImageIO.read(new File("green_flag2.PNG"));
 			}
-			else{
-				icon = ImageIO.read(new File("RedFlag.PNG"));
+			else if(type == 2){ //To flag (checkered)
+				icon = ImageIO.read(new File("checkered_flag2.PNG"));
+			}
+			else if(type == 3) { //A find flag for single address find (blue)
+				icon = ImageIO.read(new File("blue_pin.PNG"));
 			}
 		} 
 		
