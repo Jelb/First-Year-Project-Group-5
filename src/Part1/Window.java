@@ -73,9 +73,12 @@ public class Window extends JFrame {
 	private boolean fastest = true;
 	private boolean byShip = true;
 	
-	// The two flags
-	private Flag fromFlag = new Flag(true);
-	private Flag toFlag = new Flag(false);
+	// The tree flags
+	//private Flag fromFlag = new Flag(true);
+	//private Flag toFlag = new Flag(false);
+	private Flag fromFlag = new Flag(1);
+	private Flag toFlag = new Flag(2);
+	private Flag findFlag = new Flag(3);
 	
 	// Currently saved from and to text
 	private String fromText;
@@ -617,6 +620,7 @@ public class Window extends JFrame {
 		String[] result = AddressParser.use().parseAddress(text);
 		String[] setArray = new String[0];
 		String[] zipArray;
+		String[] cityNameArray; // used to sort the results
 		
 		// If there has been typed in a city name
 		if (!result[5].equals("")) {
@@ -633,16 +637,19 @@ public class Window extends JFrame {
 					}
 				}
 			}
+			cityNameArray = new String[zipList.size()];
 			setArray = new String[zipList.size()];
 			for (int i = 0; i < setArray.length; i++) {
 				setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + zipList.get(i) + " " + result[5];
 				setArray[i] = setArray[i].replaceAll("\\s+", " ").trim();
+				cityNameArray[i] = result[5];
 			}
 			zipArray = Arrays.copyOf(zipList.toArray(), zipList.size(), String[].class);
 		}
 		// If there has been typed in a zip code
 		else if(!(result[4].equals(""))){
-			setArray = new String[1]; 
+			setArray = new String[1];
+			cityNameArray = new String[]{WindowHandler.getZipToCityMap().get(result[4])};
 			setArray[0] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + result[4]+ " " + WindowHandler.getZipToCityMap().get(result[4]);
 			setArray[0] = setArray[0].replaceAll("\\s+", " ").trim();
 			zipArray = new String[]{result[4]};
@@ -651,17 +658,30 @@ public class Window extends JFrame {
 		else{
 			HashSet<String> set = WindowHandler.getRoadToZipMap().get(result[0]);
 			setArray = set.toArray(new String[0]);
+			cityNameArray = new String[setArray.length];
 			zipArray = new String[setArray.length];
 			for (int i = 0; i < setArray.length; i++) {
 				zipArray[i] = setArray[i];
 			}
 			for(int i = 0; i < setArray.length; i++){
 				String city = WindowHandler.getZipToCityMap().get(setArray[i]);
+				cityNameArray[i] = city;
 				setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + setArray[i] + " " + city;
 				setArray[i] = setArray[i].replaceAll("\\s+", " ").trim();				
 			}						
 		}
 		if (zipArray.length == 0) setArray = new String[]{"No results"};
+		// sort the result according to the city name
+		Arrays.sort(cityNameArray);
+		for (int i = 0; i < cityNameArray.length; i++) {
+			for (int j = 0; j < setArray.length; j++) {
+				if (setArray[j].contains(cityNameArray[i])) {
+					String temp = setArray[i]; setArray[i] = setArray[j]; setArray[j] = temp;
+					temp = zipArray[i]; zipArray[i] = zipArray[j]; zipArray[j] = temp;
+					continue;
+				}
+			}
+		}
 		createSearchBox(setArray,zipArray,result,x,y,t);
 	}
 	
@@ -814,7 +834,7 @@ public class Window extends JFrame {
 	
 	private class comboBoxListener implements ActionListener {
 		JComboBox searchResultBox;
-		TextType t;
+		TextType t; //From to or find comboBox
 		String[] zipArray, textArray;
 		
 		public comboBoxListener(JComboBox searchResultBox, String[] zipArray, String[] textArray, TextType t) {
@@ -902,6 +922,10 @@ public class Window extends JFrame {
 				else if (t == TextType.FIND) {
 					find.setText(text);
 					findText = text;
+					double x = flagNode.getXCord();
+					double y = flagNode.getYCord();
+					findFlag.setPosition(x, y);
+					Map.use().addFlag(findFlag);
 					findNode = flagNode;
 				}
 			}
