@@ -425,6 +425,8 @@ public class Window extends JFrame {
 				search.setBounds(20, 375,70, 20);
 				reset.setBounds(95, 375, 70, 20);
 				fastest = false; //We want the shortest route if by bike
+				background.setBounds(10,15,165,390);
+				repositionInfo();
 			}
 		});
 		
@@ -443,6 +445,8 @@ public class Window extends JFrame {
 				fastestButton.setFont(new Font("Shortest", Font.BOLD, 12));
 				search.setBounds(20, 405,70, 20);
 				fastest = true; //We want the fastest route by default if by car
+				background.setBounds(10,15,165,420);
+				repositionInfo();
 			}
 		});
 		
@@ -595,6 +599,7 @@ public class Window extends JFrame {
 						bikeUnselected.setVisible(true);
 						carSelected.setVisible(true);
 						reset.setBounds(95, 405, 70, 20);
+						background.setBounds(10,15,165,420);
 						if (fastest) {
 							shortest.setVisible(true);
 							fastestButton.setVisible(true);
@@ -612,6 +617,7 @@ public class Window extends JFrame {
 						bikeSelected.setVisible(true);
 						carUnselected.setVisible(true);
 						reset.setBounds(95, 375, 70, 20);
+						background.setBounds(10,15,165,390);
 					}
 					navigateVisible = true;
 					if (byShip) shipSelected.setVisible(true);
@@ -623,7 +629,6 @@ public class Window extends JFrame {
 					findPlace.setVisible(true);
 					findPlaceBlue.setVisible(false);
 					searchFindResultBox.setVisible(false);
-					background.setBounds(10,15,165,420);
 					repositionInfo();
 				}
 			}
@@ -801,7 +806,6 @@ public class Window extends JFrame {
 		        super.paintComponent(g);
 		    }
 		};
-		routeInfo.setLayout(new GridLayout(2, 1));
 		routeInfo.setOpaque(false);
 		routeInfo.setBackground(new Color(0,0,0,50));
 		String distStr;
@@ -823,10 +827,15 @@ public class Window extends JFrame {
 
 			timeStr = ("Time: " + min + " min");
 		} else {
-			timeStr = ("Time: " + hour + ":" + min);
+			if(min < 10) {
+				timeStr = ("Time: " + hour + ":0" + min + "h");
+			} else {
+				timeStr = ("Time: " + hour + ":" + min + "h");
+			}
 		}
 		if (transport == TransportWay.CAR) { 
 			infoSize = 50;
+			routeInfo.setLayout(new GridLayout(2, 1));
 			routeInfo.add(new JLabel(distStr, SwingConstants.HORIZONTAL));
 			routeInfo.add(new JLabel(timeStr, SwingConstants.HORIZONTAL));
 		}
@@ -836,15 +845,24 @@ public class Window extends JFrame {
 		}
 			
 		repositionInfo();
-		if(dist > 0) routeInfo.setVisible(true);
-		else 	      routeInfo.setVisible(false);
+		if(dist != -1)  {
+			routeInfo.setVisible(true);
+		} else {
+			routeInfo.setVisible(false);
+		}
 		screen.add(routeInfo, JLayeredPane.PALETTE_LAYER);
-		System.out.println("route Added");
 	}
 	
 	private void repositionInfo() {
 		Rectangle r = background.getBounds();
 		routeInfo.setBounds(10, (r.height + r.y +5), r.width, infoSize);
+		if(Map.use().getPathLengt() != -1)  {
+			System.out.println("Der tegnes");
+			routeInfo.setVisible(true);
+		} else {
+			System.out.println("der tegnes ikke");
+			routeInfo.setVisible(false);
+		}
 	}
 
 
@@ -1049,6 +1067,7 @@ public class Window extends JFrame {
 				Map.use().setSize(Window.use().getSize());
 				if(Map.use().getRoadSegments() != null)
 					Map.use().updatePix();
+				System.out.println(Window.use().getHeight());
 				height = Window.use().getHeight();
 				width = Window.use().getWidth();
 				timer = null;

@@ -154,7 +154,7 @@ public class WindowHandler {
 		
 		route = (Stack<Edge>) dsp.pathTo(endNode);	// find route from start to destination node
 		addRouteToMap(route);// adding the route to the Map()
-		if (route != null && !route.isEmpty()) Window.use().addPathInfo(transport);
+		if (route != null) Window.use().addPathInfo(transport);
 		Window.use().updateMap();
 	}
 	
