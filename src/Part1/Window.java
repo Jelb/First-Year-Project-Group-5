@@ -72,9 +72,12 @@ public class Window extends JFrame {
 	private boolean fastest = true;
 	private boolean byShip = true;
 	
-	// The two flags
-	private Flag fromFlag = new Flag(true);
-	private Flag toFlag = new Flag(false);
+	// The tree flags
+	//private Flag fromFlag = new Flag(true);
+	//private Flag toFlag = new Flag(false);
+	private Flag fromFlag = new Flag(1);
+	private Flag toFlag = new Flag(2);
+	private Flag findFlag = new Flag(3);
 	
 	// Currently saved from and to text
 	private String fromText;
@@ -805,7 +808,7 @@ public class Window extends JFrame {
 	
 	private class comboBoxListener implements ActionListener {
 		JComboBox searchResultBox;
-		TextType t;
+		TextType t; //From to or find comboBox
 		String[] zipArray, textArray;
 		
 		public comboBoxListener(JComboBox searchResultBox, String[] zipArray, String[] textArray, TextType t) {
@@ -893,6 +896,10 @@ public class Window extends JFrame {
 				else if (t == TextType.FIND) {
 					find.setText(text);
 					findText = text;
+					double x = flagNode.getXCord();
+					double y = flagNode.getYCord();
+					findFlag.setPosition(x, y);
+					Map.use().addFlag(findFlag);
 					findNode = flagNode;
 				}
 			}
