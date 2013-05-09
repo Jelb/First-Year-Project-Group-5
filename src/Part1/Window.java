@@ -163,7 +163,7 @@ public class Window extends JFrame {
 	public void addListeners() {
 		addKeyListener(new MKeyListener());
 		addComponentListener(new resizeListener());
-		Map.use().addMouseWheelListener(new mouseWheel());
+		Map.use().addMouseWheelListener(new mouseWheelZoom());
 		//Listeners for when mouse is pressed, dragged or released
 		MouseListener mouseListener = new MouseListener();
 		Map.use().addMouseListener(mouseListener);
@@ -1117,42 +1117,47 @@ public class Window extends JFrame {
 		}																		// it is completed (see Map.flipImageBuffer() for details).
 	}
 	
-	private class mouseWheel implements MouseWheelListener{
-		int notches;
-		
-		public void mouseWheelMoved(MouseWheelEvent e) {
-			notches += e.getWheelRotation();
-			if(timer == null){
-				timer = new Timer(5, new mouseWheelMovedZoom());
-				timer.start();
-			}
-			timer.restart();
-		
-		}
-		private class mouseWheelMovedZoom implements ActionListener {
-			public void actionPerformed(ActionEvent e) {
-				timer.stop();
-				if (notches < 0) {
-					WindowHandler.zoomIn();
-				} else {	            
-					WindowHandler.zoomOut();
-				}
-				Map.use().createBufferImage();
-				}
-			}	
-	}
-
-//	private class mouseWheelZoom implements MouseWheelListener{
+//	private class mouseWheel implements MouseWheelListener{
+//		int notches;
+//		int zoomCount = 0;
+//		
 //		public void mouseWheelMoved(MouseWheelEvent e) {
-//			int notches = e.getWheelRotation();
-//			if (notches < 0) {
-//				WindowHandler.zoomIn();
-//			} else {	            
-//				WindowHandler.zoomOut();
+//			notches += e.getWheelRotation();
+//			zoomCount += zoomCount;
+//			if(timer == null){
+//				timer = new Timer(500, new mouseWheelMovedZoom());
+//				timer.start();
 //			}
-//			Map.use().createBufferImage();
+//			timer.restart();
+//		
 //		}
+//		private class mouseWheelMovedZoom implements ActionListener {
+//			public void actionPerformed(ActionEvent e) {
+//				timer.stop();
+//				
+//				if (notches < 0) {
+//					WindowHandler.zoomIn(zoomCount);
+//				} else {	            
+//					WindowHandler.zoomOut(zoomCount);
+//				}
+//				Map.use().createBufferImage();
+//				zoomCount = 0;
+//				notches = 0;
+//				}
+//			}	
 //	}
+
+	private class mouseWheelZoom implements MouseWheelListener{
+		public void mouseWheelMoved(MouseWheelEvent e) {
+			int notches = e.getWheelRotation();
+			if (notches < 0) {
+				WindowHandler.zoomIn();
+			} else {	            
+				WindowHandler.zoomOut();
+			}
+			Map.use().createBufferImage();
+		}
+	}
 	
 	private class mouseOnText extends MouseAdapter {
 		private TextType t;
