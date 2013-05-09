@@ -1,5 +1,7 @@
 package QuadTree;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import Part1.Node;
@@ -82,6 +84,41 @@ public class QuadNode extends BoundingBox implements Element, Parent {
 		SW.show();
 		System.out.println("SE");
 		SE.show();
+	}
+	
+	public ArrayList<Element> structure(ArrayList<Element> tree) {
+		tree.add(this);
+		NW.structure(tree);
+		NE.structure(tree);
+		SW.structure(tree);
+		SE.structure(tree);
+		return tree;
+	}
+	
+	public Element getNW() {
+		return NW;
+	}
+	
+	public Element getNE() {
+		return NE;
+	}
+	
+	public Element getSW() {
+		return SW;
+	}
+	
+	public Element getSE() {
+		return SE;
+	}
+	
+	public boolean equals(Object o) {
+		if (!(o instanceof QuadNode)) return false;
+		QuadNode q = (QuadNode) o;
+		if (!NW.equals(q.getNW())) return false;
+		if (!NE.equals(q.getNE())) return false;
+		if (!SW.equals(q.getSW())) return false;
+		if (!SE.equals(q.getSE())) return false;
+		return true;
 	}
 	
 	
