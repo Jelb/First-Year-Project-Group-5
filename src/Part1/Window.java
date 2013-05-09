@@ -657,7 +657,8 @@ public class Window extends JFrame {
 		// If there has been typed in no city name or zip code
 		else{
 			HashSet<String> set = WindowHandler.getRoadToZipMap().get(result[0]);
-			setArray = set.toArray(new String[0]);
+			if (set == null) setArray = new String[0];
+			else setArray = set.toArray(new String[0]);
 			cityNameArray = new String[setArray.length];
 			zipArray = new String[setArray.length];
 			for (int i = 0; i < setArray.length; i++) {
