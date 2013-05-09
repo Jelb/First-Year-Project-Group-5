@@ -788,14 +788,6 @@ public class Window extends JFrame {
 		return button;
 	}
 
-	public int getMapWidth() {
-		return contentPane.getWidth();
-	}
-
-	public int getMapHeight() {
-		return contentPane.getHeight();
-	}
-	
 	public void addPathInfo(TransportWay transport) {
 		double dist = (Map.use().getPathLengt()/1000);
 		int hour = (int)Map.use().getDriveTime()/60, min = (int)Map.use().getDriveTime()%60;
