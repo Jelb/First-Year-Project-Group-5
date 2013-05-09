@@ -25,6 +25,8 @@ public class Map extends JPanel {
 	private Image offScreen = null;
 	private Graphics offgc;
 	
+	private double pathLength, driveTime;
+	
 	private Map() {
 	}
 
@@ -191,8 +193,10 @@ public class Map extends JPanel {
 		for (Flag f : flags) f.updatePosition();
 	}
 
-	public void setPath(ArrayList<DrawableItem> path) {
+	public void setPath(ArrayList<DrawableItem> path, double pathLength, double driveTime) {
 		this.path = path;
+		this.pathLength = pathLength;
+		this.driveTime = driveTime;
 	}
 
 	public void addDrawableItemToPath(DrawableItem i){
@@ -202,6 +206,8 @@ public class Map extends JPanel {
 	public void resetPath() {
 		path = new ArrayList<DrawableItem>();
 		flags = new ArrayList<Flag>();
+		driveTime = -1;
+		pathLength = -1;
 	}
 
 	public void addFlag(Flag f) {
@@ -217,5 +223,16 @@ public class Map extends JPanel {
 
 	public static void setBorder(ArrayList<CoastPoint[]> argBorder) {
 		border = argBorder;
+	}
+	
+	public double getPathLengt() {
+		return pathLength;
+	}
+
+	/**
+	 * @return the driveTime
+	 */
+	public double getDriveTime() {
+		return driveTime;
 	}
 }

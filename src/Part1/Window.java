@@ -6,16 +6,21 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.Rectangle;
+
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
@@ -31,6 +36,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -90,10 +97,12 @@ public class Window extends JFrame {
 	private final String findDefault = "Enter address";
 	
 	//GUI background
-	private JPanel background;
+	private JPanel background, routeInfo;
 
 	private int mousePanX;	// The temporary displacement of the buffered image
 	private int mousePanY;
+	
+	private int infoSize;
 	
 	public enum TextType {
 		FIND, TO, FROM;
@@ -290,6 +299,20 @@ public class Window extends JFrame {
 		//background.setBackground(new Color(255,255,255,200)); White
 		background.setBackground(new Color(0,0,0,50));
 		background.setBounds(10,15,165,315);
+		routeInfo = new JPanel(){
+			
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			protected void paintComponent(Graphics g)
+		    {
+		        g.setColor( getBackground() );
+		        g.fillRect(0, 0, getWidth(), getHeight());
+		        super.paintComponent(g);
+		    }
+		};
 	}
 	
 	/**
@@ -360,6 +383,7 @@ public class Window extends JFrame {
 				addressParse(fromText, 185, 260, TextType.FROM);
 			}
 		});
+		
 		
 		from.addMouseListener(new mouseOnText(TextType.FROM));
 
@@ -471,6 +495,7 @@ public class Window extends JFrame {
 				findText = findDefault;
 				screen.remove(searchFromResultBox);
 				screen.remove(searchToResultBox);
+				screen.remove(routeInfo);
 				fromMarked = false;
 				toMarked = false;
 				Map.use().resetPath();
@@ -558,6 +583,7 @@ public class Window extends JFrame {
 				findButton.setVisible(true);
 				//reset.setVisible(false);
 				background.setBounds(10,15,165,315);
+				repositionInfo();
 			}
 		});
 		
@@ -601,6 +627,7 @@ public class Window extends JFrame {
 					findPlaceBlue.setVisible(false);
 					searchFindResultBox.setVisible(false);
 					background.setBounds(10,15,165,420);
+					repositionInfo();
 				}
 			}
 		});
@@ -750,6 +777,7 @@ public class Window extends JFrame {
 		screen.add(findPlace, JLayeredPane.PALETTE_LAYER);
 		screen.add(findPlaceBlue, JLayeredPane.PALETTE_LAYER);
 		screen.add(background, JLayeredPane.PALETTE_LAYER);
+		//screen.add(routeInfo, JLayeredPane.PALETTE_LAYER);
 	}
 
 	/**
@@ -772,6 +800,65 @@ public class Window extends JFrame {
 
 	public int getMapHeight() {
 		return contentPane.getHeight();
+	}
+	
+	public void addPathInfo(TransportWay transport) {
+		double dist = (Map.use().getPathLengt()/1000);
+		int hour = (int)Map.use().getDriveTime()/60, min = (int)Map.use().getDriveTime()%60;
+		DecimalFormat df = new DecimalFormat();
+		if(routeInfo != null) screen.remove(routeInfo);
+		routeInfo = new JPanel() {
+			protected void paintComponent(Graphics g)
+		    {
+		        g.setColor( getBackground() );
+		        g.fillRect(0, 0, getWidth(), getHeight());
+		        super.paintComponent(g);
+		    }
+		};
+		routeInfo.setLayout(new GridLayout(2, 1));
+		routeInfo.setOpaque(false);
+		routeInfo.setBackground(new Color(0,0,0,50));
+		String distStr;
+		if(dist < 1) {
+			df.applyPattern(".###");
+			df.setRoundingMode(RoundingMode.HALF_UP);
+			distStr = ("Distance: " + df.format(dist).replaceAll("\\.|,", "") + " m");
+		} else if (dist < 100) {
+			df.applyPattern("###.#");
+			df.setRoundingMode(RoundingMode.HALF_UP);
+			distStr = "Distance: " + df.format(dist) + " km";
+		} else {
+			df.applyPattern("####");
+			df.setRoundingMode(RoundingMode.HALF_UP);
+			distStr = "Distance: " + df.format(dist) + " km";
+		}
+		String timeStr;
+		if(hour < 1) {
+
+			timeStr = ("Time: " + min + " min");
+		} else {
+			timeStr = ("Time: " + hour + ":" + min);
+		}
+		if (transport == TransportWay.CAR) { 
+			infoSize = 50;
+			routeInfo.add(new JLabel(distStr, SwingConstants.HORIZONTAL));
+			routeInfo.add(new JLabel(timeStr, SwingConstants.HORIZONTAL));
+		}
+		else {
+			infoSize = 25;
+			routeInfo.add(new JLabel(distStr, SwingConstants.HORIZONTAL));
+		}
+			
+		repositionInfo();
+		if(dist > 0) routeInfo.setVisible(true);
+		else 	      routeInfo.setVisible(false);
+		screen.add(routeInfo, JLayeredPane.PALETTE_LAYER);
+		System.out.println("route Added");
+	}
+	
+	private void repositionInfo() {
+		Rectangle r = background.getBounds();
+		routeInfo.setBounds(10, (r.height + r.y +5), r.width, infoSize);
 	}
 
 
@@ -1062,8 +1149,7 @@ public class Window extends JFrame {
 		public void mousePressed(MouseEvent e) {
 			if (TextType.FROM == t && from.getText().equals(fromDefault)) from.setText("");
 			else if (t == TextType.TO && to.getText().equals(toDefault)) to.setText("");
-			else if (t == TextType.FIND && find.getText().equals(findDefault)) find.setText("");
-			
+			else if (t == TextType.FIND && find.getText().equals(findDefault)) find.setText("");			
 		}
 	}
 	
@@ -1082,6 +1168,4 @@ public class Window extends JFrame {
 	public void setMousePanY(int inputMousePanY) {
 		mousePanY = inputMousePanY;
 	}
-	
-
 }
