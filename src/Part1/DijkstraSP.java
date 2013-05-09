@@ -102,8 +102,8 @@ public class DijkstraSP {
 	
 	private void createDisallowedTypes() {
 		disallowedTypes = new HashMap<TransportWay, HashSet<Integer>>();
-		disallowedTypes.put(TransportWay.CAR, new HashSet<Integer>(Arrays.asList(8, 48, 99)));
-		disallowedTypes.put(TransportWay.BIKE, new HashSet<Integer>(Arrays.asList(1, 2, 31, 32, 41, 42)));
+		disallowedTypes.put(TransportWay.CAR, new HashSet<Integer>(Arrays.asList(8, 48, 99))); //Roads cars can't drive at
+		disallowedTypes.put(TransportWay.BIKE, new HashSet<Integer>(Arrays.asList(1, 2, 31, 32, 41, 42))); //Roads bikes can't drive at
 	}
 	
 	public enum TransportWay {
