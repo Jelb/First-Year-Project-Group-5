@@ -56,7 +56,7 @@ public class Flag extends DrawableItem {
 				icon = ImageIO.read(new File("checkered_flag2.PNG"));
 			}
 			else if(type == 3) { //A find flag for single address find (blue)
-				icon = ImageIO.read(new File("blue_flag2.PNG"));
+				icon = ImageIO.read(new File("blue_pin.PNG"));
 			}
 		} 
 		
