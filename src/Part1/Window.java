@@ -288,37 +288,9 @@ public class Window extends JFrame {
 		cityAndZipLabel.setVisible(true);
 		
 		//Internet magic from http://tips4java.wordpress.com/2009/05/31/backgrounds-with-transparency/
-		background = new JPanel(){
-		
-		    /**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			protected void paintComponent(Graphics g)
-		    {
-		        g.setColor( getBackground() );
-		        g.fillRect(0, 0, getWidth(), getHeight());
-		        super.paintComponent(g);
-		    }
-		};
-		background.setOpaque(false);
-		background.setBackground(new Color(65,105,225,50)); //royalblue
+		background = new TransparetPane();
 		background.setBounds(10,15,165,315);
-		routeInfo = new JPanel(){
-			
-		    /**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			protected void paintComponent(Graphics g)
-		    {
-		        g.setColor( getBackground() );
-		        g.fillRect(0, 0, getWidth(), getHeight());
-		        super.paintComponent(g);
-		    }
-		};
+		routeInfo = new TransparetPane();
 	}
 	
 	/**
@@ -798,16 +770,7 @@ public class Window extends JFrame {
 		int hour = (int)Map.use().getDriveTime()/60, min = (int)Map.use().getDriveTime()%60;
 		DecimalFormat df = new DecimalFormat();
 		if(routeInfo != null) screen.remove(routeInfo);
-		routeInfo = new JPanel() {
-			protected void paintComponent(Graphics g)
-		    {
-		        g.setColor( getBackground() );
-		        g.fillRect(0, 0, getWidth(), getHeight());
-		        super.paintComponent(g);
-		    }
-		};
-		routeInfo.setOpaque(false);
-		routeInfo.setBackground(new Color(0,0,0,50));
+		routeInfo = new TransparetPane();
 		String distStr;
 		if(dist < 1) {
 			df.applyPattern(".###");
@@ -1229,4 +1192,19 @@ public class Window extends JFrame {
 	public void setMousePanY(int inputMousePanY) {
 		mousePanY = inputMousePanY;
 	}
+}
+
+class TransparetPane extends JPanel{
+	
+	public TransparetPane() {
+		super();
+		setBackground(new Color(65,105,225,50)); //royalblue
+		setOpaque(false);
+	}
+	
+	protected void paintComponent(Graphics g) {
+        g.setColor( getBackground() );
+        g.fillRect(0, 0, getWidth(), getHeight());
+        super.paintComponent(g);
+    }
 }
