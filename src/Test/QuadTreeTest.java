@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import Part1.Node;
+import QuadTree.Element;
+import QuadTree.Leaf;
 import QuadTree.QuadTree;
 
 public class QuadTreeTest {
@@ -19,7 +21,6 @@ public class QuadTreeTest {
 	@Before
 	public void setUp() {
 		QT = new QuadTree(3, 10, 10);
-		System.out.println("~~~~~~~~~~~");
 	}
 	
 	@Test
@@ -27,13 +28,21 @@ public class QuadTreeTest {
 		QT.insert(1, 2, 0);
 		QT.insert(7, 4, 1);
 		QT.insert(9, 3, 2);
-		QT.showTree();
+		Element actualRoot = QT.getRoot();
+		Element expRoot = new Leaf(3, QT, 0, 0, 10, 10);
+		expRoot.insert(new Node(1, 2, 0));
+		expRoot.insert(new Node(7, 4, 1));
+		expRoot.insert(new Node(9, 3, 2));
+		assertEquals(expRoot, actualRoot);
 	}
 	
 	@Test
 	public void edgeCoordinate() {
 		QT.insert(0, 10, 0);
-		QT.showTree();
+		Element actualRoot = QT.getRoot();
+		Element expRoot = new Leaf(3, QT, 0, 0, 10, 10);
+		expRoot.insert(new Node(0, 10, 0));
+		assertEquals(expRoot, actualRoot);
 	}
 	
 	@Test
@@ -138,11 +147,6 @@ public class QuadTreeTest {
 		List<Node> list = QT.query(3, 6, 7, 9);
 		System.out.println("Length of list: " + list.size());
 		assertEquals(0, list.size());
-	}
-	
-	@After
-	public void breakDown() {
-		System.out.println("~~~~~~~~~~~");
 	}
 
 }

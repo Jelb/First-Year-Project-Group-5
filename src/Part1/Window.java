@@ -6,7 +6,10 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.Rectangle;
+
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -17,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
@@ -32,6 +36,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -97,11 +103,13 @@ public class Window extends JFrame {
 	private final String findDefault = "Enter address";
 	
 	//GUI background
-	private JPanel background;
+	private JPanel background, routeInfo;
 
 	// The temporary displacement of the buffered image
 	private int mousePanX;	
 	private int mousePanY;
+	
+	private int infoSize;
 	
 	public enum TextType {
 		FIND, TO, FROM;
@@ -297,6 +305,20 @@ public class Window extends JFrame {
 		background.setOpaque(false);
 		background.setBackground(new Color(65,105,225,50)); //royalblue
 		background.setBounds(10,15,165,315);
+		routeInfo = new JPanel(){
+			
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			protected void paintComponent(Graphics g)
+		    {
+		        g.setColor( getBackground() );
+		        g.fillRect(0, 0, getWidth(), getHeight());
+		        super.paintComponent(g);
+		    }
+		};
 	}
 	
 	/**
@@ -368,6 +390,7 @@ public class Window extends JFrame {
 			}
 		});
 		
+		
 		from.addMouseListener(new mouseOnText(TextType.FROM));
 
 		to.addActionListener(new ActionListener(){
@@ -402,6 +425,8 @@ public class Window extends JFrame {
 				search.setBounds(20, 375,70, 20);
 				reset.setBounds(95, 375, 70, 20);
 				fastest = false; //We want the shortest route if by bike
+				background.setBounds(10,15,165,390);
+				repositionInfo();
 			}
 		});
 		
@@ -420,6 +445,8 @@ public class Window extends JFrame {
 				fastestButton.setFont(new Font("Shortest", Font.BOLD, 12));
 				search.setBounds(20, 405,70, 20);
 				fastest = true; //We want the fastest route by default if by car
+				background.setBounds(10,15,165,420);
+				repositionInfo();
 			}
 		});
 		
@@ -470,6 +497,7 @@ public class Window extends JFrame {
 				findText = findDefault;
 				screen.remove(searchFromResultBox);
 				screen.remove(searchToResultBox);
+				screen.remove(routeInfo);
 				screen.remove(searchFindResultBox);
 				fromMarked = false;
 				toMarked = false;
@@ -556,6 +584,7 @@ public class Window extends JFrame {
 				search.setVisible(false);
 				findButton.setVisible(true);
 				background.setBounds(10,15,165,315);
+				repositionInfo();
 			}
 		});
 		
@@ -570,6 +599,7 @@ public class Window extends JFrame {
 						bikeUnselected.setVisible(true);
 						carSelected.setVisible(true);
 						reset.setBounds(95, 405, 70, 20);
+						background.setBounds(10,15,165,420);
 						if (fastest) {
 							shortest.setVisible(true);
 							fastestButton.setVisible(true);
@@ -587,6 +617,7 @@ public class Window extends JFrame {
 						bikeSelected.setVisible(true);
 						carUnselected.setVisible(true);
 						reset.setBounds(95, 375, 70, 20);
+						background.setBounds(10,15,165,390);
 					}
 					navigateVisible = true;
 					if (byShip) shipSelected.setVisible(true);
@@ -598,7 +629,7 @@ public class Window extends JFrame {
 					findPlace.setVisible(true);
 					findPlaceBlue.setVisible(false);
 					searchFindResultBox.setVisible(false);
-					background.setBounds(10,15,165,420);
+					repositionInfo();
 				}
 			}
 		});
@@ -761,6 +792,79 @@ public class Window extends JFrame {
 		button.setToolTipText(hoverText);
 		return button;
 	}
+
+	public void addPathInfo(TransportWay transport) {
+		double dist = (Map.use().getPathLengt()/1000);
+		int hour = (int)Map.use().getDriveTime()/60, min = (int)Map.use().getDriveTime()%60;
+		DecimalFormat df = new DecimalFormat();
+		if(routeInfo != null) screen.remove(routeInfo);
+		routeInfo = new JPanel() {
+			protected void paintComponent(Graphics g)
+		    {
+		        g.setColor( getBackground() );
+		        g.fillRect(0, 0, getWidth(), getHeight());
+		        super.paintComponent(g);
+		    }
+		};
+		routeInfo.setOpaque(false);
+		routeInfo.setBackground(new Color(0,0,0,50));
+		String distStr;
+		if(dist < 1) {
+			df.applyPattern(".###");
+			df.setRoundingMode(RoundingMode.HALF_UP);
+			distStr = ("Distance: " + df.format(dist).replaceAll("\\.|,", "") + " m");
+		} else if (dist < 100) {
+			df.applyPattern("###.#");
+			df.setRoundingMode(RoundingMode.HALF_UP);
+			distStr = "Distance: " + df.format(dist) + " km";
+		} else {
+			df.applyPattern("####");
+			df.setRoundingMode(RoundingMode.HALF_UP);
+			distStr = "Distance: " + df.format(dist) + " km";
+		}
+		String timeStr;
+		if(hour < 1) {
+
+			timeStr = ("Time: " + min + " min");
+		} else {
+			if(min < 10) {
+				timeStr = ("Time: " + hour + ":0" + min + "h");
+			} else {
+				timeStr = ("Time: " + hour + ":" + min + "h");
+			}
+		}
+		if (transport == TransportWay.CAR) { 
+			infoSize = 50;
+			routeInfo.setLayout(new GridLayout(2, 1));
+			routeInfo.add(new JLabel(distStr, SwingConstants.HORIZONTAL));
+			routeInfo.add(new JLabel(timeStr, SwingConstants.HORIZONTAL));
+		}
+		else {
+			infoSize = 25;
+			routeInfo.add(new JLabel(distStr, SwingConstants.HORIZONTAL));
+		}
+			
+		repositionInfo();
+		if(dist != -1)  {
+			routeInfo.setVisible(true);
+		} else {
+			routeInfo.setVisible(false);
+		}
+		screen.add(routeInfo, JLayeredPane.PALETTE_LAYER);
+	}
+	
+	private void repositionInfo() {
+		Rectangle r = background.getBounds();
+		routeInfo.setBounds(10, (r.height + r.y +5), r.width, infoSize);
+		if(Map.use().getPathLengt() != -1)  {
+			System.out.println("Der tegnes");
+			routeInfo.setVisible(true);
+		} else {
+			System.out.println("der tegnes ikke");
+			routeInfo.setVisible(false);
+		}
+	}
+
 
 	/**
 	 * Method for drawing the rectangle to show where the user is dragging for zoom
@@ -963,6 +1067,7 @@ public class Window extends JFrame {
 				Map.use().setSize(Window.use().getSize());
 				if(Map.use().getRoadSegments() != null)
 					Map.use().updatePix();
+				System.out.println(Window.use().getHeight());
 				height = Window.use().getHeight();
 				width = Window.use().getWidth();
 				timer = null;
@@ -1102,8 +1207,7 @@ public class Window extends JFrame {
 		public void mousePressed(MouseEvent e) {
 			if (TextType.FROM == t && from.getText().equals(fromDefault)) from.setText("");
 			else if (t == TextType.TO && to.getText().equals(toDefault)) to.setText("");
-			else if (t == TextType.FIND && find.getText().equals(findDefault)) find.setText("");
-			
+			else if (t == TextType.FIND && find.getText().equals(findDefault)) find.setText("");			
 		}
 	}
 	

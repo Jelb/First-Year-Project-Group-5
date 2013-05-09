@@ -78,8 +78,12 @@ public class Node {
 		Node.yOffset = yOffset;
 	}
 	
-	public boolean equals(Node n) {
-		return (xCord == n.getAbsoluteXCoordinate() && yCord == n.getAbsoluteYCoordinate());
+	public boolean equals(Object o) {
+		if (o instanceof Node) {
+			Node n = (Node) o;
+			return (xCord == n.getAbsoluteXCoordinate() && yCord == n.getAbsoluteYCoordinate());
+		}
+		else return false;
 	}
 	
 //	public void addEdge(Edge edge) {
