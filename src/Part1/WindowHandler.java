@@ -365,10 +365,11 @@ public class WindowHandler {
 					double x1 = e.getFromNode().getXCord();
 					double y1 = e.getFromNode().getYCord();
 					double x2 = e.getToNode().getXCord();
-					double y2 = e.getToNode().getYCord();
-					boolean border = false;											// for now, no borders will be drawn
+					double y2 = e.getToNode().getYCord();						// for now, no borders will be drawn
 					Map.use().addRoadSegment(
-							new RoadSegment(x1, y1, x2, y2, e.getType(),border));
+							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+					Map.use().addBorderSegment(
+							new RoadSegment(x1, y1, x2, y2, e.getType(),true));
 				}
 			}
 		}

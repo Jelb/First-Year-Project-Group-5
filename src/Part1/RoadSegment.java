@@ -22,6 +22,8 @@ public class RoadSegment extends DrawableItem {
 	private static int roadType4242;
 	private static int zoomLevel;
 	
+	private boolean isBorder;
+	
 	private static Color lightYellow, lightOrange, darkOrange, white, lightGrey, darkGrey;
 	
 	/**
@@ -38,10 +40,11 @@ public class RoadSegment extends DrawableItem {
 		geoStartY = yStartCoord;
 		geoEndX = xEndCoord;
 		geoEndY = yEndCoord;
+		isBorder = border;
 		this.type = type;
 		color = getRoadSegmentColor(type);
 		setRoadWidth(type);
-		adjustRoadWidthForBorders(border);
+		adjustForBorders(isBorder);
 		if(type == 4242) roadWidth = 5;
 		updatePosition();
 	}
@@ -132,9 +135,10 @@ public class RoadSegment extends DrawableItem {
 		}
 	}
 	
-	public void adjustRoadWidthForBorders(boolean border) {
-		if(border) {
-			roadWidth += 0.8f;
+	public void adjustForBorders(boolean isBorder) {
+		if(isBorder) {
+			roadWidth += 1.0f;
+			color = darkGrey;
 		}
 	}
 	
@@ -156,6 +160,7 @@ public class RoadSegment extends DrawableItem {
 		xEnd = calcPixelX(geoEndX);
 		yEnd = calcPixelY(geoEndY);
 		setRoadWidth(type);
+		adjustForBorders(isBorder);
 	}
 	
 	/**
@@ -170,7 +175,7 @@ public class RoadSegment extends DrawableItem {
 		case 2    : return lightOrange;				// Motor traffic road
 		case 3    : return lightYellow; 			// Primary roads > 6 m 
 		case 4    : return lightYellow;				// Secondary roads > 6 m
-		case 5    : return darkGrey;				// Roads between 3-6 meters
+		case 5    : return lightGrey;				// Roads between 3-6 meters
 		case 8    : return Color.green.darker();	// paths
 		case 4242 : return Color.RED;				// route
 		default   : return darkGrey; 					// everything else
