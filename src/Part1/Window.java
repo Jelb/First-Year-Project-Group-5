@@ -79,9 +79,12 @@ public class Window extends JFrame {
 	private boolean fastest = true;
 	private boolean byShip = true;
 	
-	// The two flags
-	private Flag fromFlag = new Flag(true);
-	private Flag toFlag = new Flag(false);
+	// The tree flags
+	//private Flag fromFlag = new Flag(true);
+	//private Flag toFlag = new Flag(false);
+	private Flag fromFlag = new Flag(1);
+	private Flag toFlag = new Flag(2);
+	private Flag findFlag = new Flag(3);
 	
 	// Currently saved from and to text
 	private String fromText;
@@ -90,6 +93,9 @@ public class Window extends JFrame {
 	
 	//Currently saved node to search for
 	private Node findNode;
+	
+	// The label holding the current city and zip
+	private JLabel cityAndZipLabel;
 	
 	// The default text in the textfields
 	private final String fromDefault = "Enter startpoint";
@@ -196,7 +202,7 @@ public class Window extends JFrame {
 		}
 		Map.use().createBufferImage();
 		repaint();
-		System.out.println("Time to update map: " + (System.currentTimeMillis()-startTime)/1000.0);
+		//System.out.println("Time to update map: " + (System.currentTimeMillis()-startTime)/1000.0);
 	}
 
 	/**
@@ -206,7 +212,6 @@ public class Window extends JFrame {
 		//Icons from http://www.iconfinder.com/search/?q=iconset%3Abrightmix
 		resetZoom = createButton("ResetZoom.png", "Reset zoom", 75, 75);
 		zoomOut = createButton("minus_black.png", "Zoom out", 105, 175);
-		//zoomIn = createButton("ZoomIn.png", "Zoom in", 50, 175);
 		zoomIn = createButton("plus_black.png", "Zoom in", 55, 175);
 		west = createButton("West.png", "West", 25, 75);
 		east = createButton("East.png", "East", 125, 75);
@@ -228,9 +233,9 @@ public class Window extends JFrame {
 		carUnselected.setVisible(false);
 		carSelected = createButton("motor_marked.png", "By car", 78, 330);
 		carSelected.setVisible(false);
-		shipUnselected = createButton("ferry_unmarked.png", "If fastest or shortest, I would like to travel with ferry", 125, 330);
+		shipUnselected = createButton("ferry_unmarked.png", "I would like to travel with ferry", 125, 330);
 		shipUnselected.setVisible(false);
-		shipSelected = createButton("ferry_marked.png", "If fastest or shortest, I would like to travel with ferry", 125, 330);
+		shipSelected = createButton("ferry_marked.png", "I would like to travel with ferry", 125, 330);
 		shipSelected.setVisible(false);
 		
 		shortest = new JButton("Shortest");
@@ -280,6 +285,10 @@ public class Window extends JFrame {
 		reset.setFont(null);
 		reset.setVisible(true);
 		
+		cityAndZipLabel = new JLabel("");
+		cityAndZipLabel.setBounds(20, 640-40, 200, 20);
+		cityAndZipLabel.setVisible(true);
+		
 		//Internet magic from http://tips4java.wordpress.com/2009/05/31/backgrounds-with-transparency/
 		background = new JPanel(){
 		
@@ -295,9 +304,10 @@ public class Window extends JFrame {
 		        super.paintComponent(g);
 		    }
 		};
-		background.setOpaque(false);		
-		//background.setBackground(new Color(255,255,255,200)); White
-		background.setBackground(new Color(0,0,0,50));
+		background.setOpaque(false);
+		background.setBackground(new Color(65,105,225,50)); //royalblue
+		//background.setBackground(new Color(255,255,255,100)); //White
+		//background.setBackground(new Color(0,0,0,50)); //Black
 		background.setBounds(10,15,165,315);
 		routeInfo = new JPanel(){
 			
@@ -397,7 +407,7 @@ public class Window extends JFrame {
 		
 		to.addMouseListener(new mouseOnText(TextType.TO));
 		
-		find.addActionListener(new ActionListener() {
+		find.addActionListener(new ActionListener() { //Find single address text field listener
 			public void actionPerformed(ActionEvent evt) {
 				findText = find.getText();
 				addressParse(findText, 185, 260, TextType.FIND);
@@ -406,10 +416,9 @@ public class Window extends JFrame {
 		
 		find.addMouseListener(new mouseOnText(TextType.FIND));
 		
-		bikeUnselected.addActionListener(new ActionListener(){
+		bikeUnselected.addActionListener(new ActionListener(){ //If choosing bike
 
 			public void actionPerformed(ActionEvent evt) {
-				System.out.println("bike");
 				byCar = false;
 				carSelected.setVisible(false);
 				carUnselected.setVisible(true);
@@ -423,10 +432,9 @@ public class Window extends JFrame {
 			}
 		});
 		
-		carUnselected.addActionListener(new ActionListener(){
+		carUnselected.addActionListener(new ActionListener(){ //If choosing car
 
 			public void actionPerformed(ActionEvent evt) {
-				System.out.println("car");
 				byCar = true;
 				carSelected.setVisible(true);
 				carUnselected.setVisible(false);
@@ -434,7 +442,6 @@ public class Window extends JFrame {
 				bikeUnselected.setVisible(true);
 				shortest.setVisible(true);
 				shortest.setFont(null);
-				//reset.setVisible(true);
 				reset.setBounds(95, 405, 70, 20);
 				fastestButton.setVisible(true);
 				fastestButton.setFont(new Font("Shortest", Font.BOLD, 12));
@@ -446,7 +453,6 @@ public class Window extends JFrame {
 		shipUnselected.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				System.out.println("ship");
 				shipUnselected.setVisible(false);
 				shipSelected.setVisible(true);
 				byShip = true;
@@ -456,7 +462,6 @@ public class Window extends JFrame {
 		shipSelected.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				System.out.println("Blue ship");
 				shipSelected.setVisible(false);
 				shipUnselected.setVisible(true);
 				byShip = false;
@@ -466,7 +471,6 @@ public class Window extends JFrame {
 		fastestButton.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				System.out.println("Hurtigste rute valgt");
 				fastestButton.setFont(new Font("Fastest", Font.BOLD, 12));
 				shortest.setFont(null);
 				fastest = true;
@@ -476,7 +480,6 @@ public class Window extends JFrame {
 		shortest.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				System.out.println("Korteste rute valgt");
 				shortest.setFont(new Font("Shortest", Font.BOLD, 12));
 				fastestButton.setFont(null);
 				fastest = false;
@@ -486,7 +489,6 @@ public class Window extends JFrame {
 		reset.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				System.out.println("reset");
 				from.setText(fromDefault);
 				fromText = fromDefault;
 				to.setText(toDefault);
@@ -496,6 +498,7 @@ public class Window extends JFrame {
 				screen.remove(searchFromResultBox);
 				screen.remove(searchToResultBox);
 				screen.remove(routeInfo);
+				screen.remove(searchFindResultBox);
 				fromMarked = false;
 				toMarked = false;
 				Map.use().resetPath();
@@ -562,7 +565,6 @@ public class Window extends JFrame {
 				findPath.setVisible(true);
 				
 				find.setVisible(true);
-				//reset.setVisible(true);
 				reset.setBounds(95, 295, 70, 20);
 				findPath.setVisible(true);
 				findPathBlue.setVisible(false);
@@ -581,7 +583,6 @@ public class Window extends JFrame {
 				shipSelected.setVisible(false);
 				search.setVisible(false);
 				findButton.setVisible(true);
-				//reset.setVisible(false);
 				background.setBounds(10,15,165,315);
 				repositionInfo();
 			}
@@ -645,71 +646,69 @@ public class Window extends JFrame {
 		String[] result = AddressParser.use().parseAddress(text);
 		String[] setArray = new String[0];
 		String[] zipArray;
+		String[] cityNameArray; // used to sort the results
 		
-		if(result[0].equals("")){
-			// if no road name has been entered, we try to find any road name in the chosen city (if there is a city)
-			if (!result[5].equals("")) {
-				HashMap<String, String> zipToCityMap = WindowHandler.getZipToCityMap();
-				Set<String> zips = zipToCityMap.keySet();
-				ArrayList<String> zipList = new ArrayList<String>();
-				for (String zip : zips) {
-					if (result[5].toLowerCase().equals(zipToCityMap.get(zip).toLowerCase())) {
-						HashMap<String, HashSet<String>> roadToZipMap = WindowHandler.getRoadToZipMap();
-						Set<String> roads = roadToZipMap.keySet();
-						for (String road : roads) {
-							if (roadToZipMap.get(road).contains(zip)) { 
-								result[0] = road;
-								break;
-							}
-						}
+		// If there has been typed in a city name
+		if (!result[5].equals("")) {
+			HashMap<String, String> zipToCityMap = WindowHandler.getZipToCityMap();
+			Set<String> zips = zipToCityMap.keySet();
+			ArrayList<String> zipList = new ArrayList<String>();
+			for (String zip : zips) {
+				if (result[5].toLowerCase().equals(zipToCityMap.get(zip).toLowerCase())) {
+					if (result[0].equals("")) {
+						zipList.add(zip);
+					}
+					else if (WindowHandler.getRoadToZipMap().get(result[0]).contains(zip)) {
+						zipList.add(zip);
 					}
 				}
 			}
+			cityNameArray = new String[zipList.size()];
+			setArray = new String[zipList.size()];
+			for (int i = 0; i < setArray.length; i++) {
+				setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + zipList.get(i) + " " + result[5];
+				setArray[i] = setArray[i].replaceAll("\\s+", " ").trim();
+				cityNameArray[i] = result[5];
+			}
+			zipArray = Arrays.copyOf(zipList.toArray(), zipList.size(), String[].class);
 		}
-//		else 
-		{
-			// If there has been typed in a city name
-			if (!result[5].equals("")) {
-				HashMap<String, String> zipToCityMap = WindowHandler.getZipToCityMap();
-				Set<String> zips = zipToCityMap.keySet();
-				ArrayList<String> zipList = new ArrayList<String>();
-				for (String zip : zips) {
-					if (result[5].toLowerCase().equals(zipToCityMap.get(zip).toLowerCase())) {
-						if (WindowHandler.getRoadToZipMap().get(result[0]).contains(zip)) {
-							zipList.add(zip);
-						}
-					}
-				}
-				setArray = new String[zipList.size()];
-				for (int i = 0; i < setArray.length; i++) {
-					setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + zipList.get(i) + " " + result[5];
-					setArray[i] = setArray[i].replaceAll("\\s+", " ");
-				}
-				zipArray = Arrays.copyOf(zipList.toArray(), zipList.size(), String[].class);
+		// If there has been typed in a zip code
+		else if(!(result[4].equals(""))){
+			setArray = new String[1];
+			cityNameArray = new String[]{WindowHandler.getZipToCityMap().get(result[4])};
+			setArray[0] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + result[4]+ " " + WindowHandler.getZipToCityMap().get(result[4]);
+			setArray[0] = setArray[0].replaceAll("\\s+", " ").trim();
+			zipArray = new String[]{result[4]};
 			}
-			// If there has been typed in a zip code
-			else if(!(result[4].equals(""))){
-				setArray = new String[1]; 
-				setArray[0] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + result[4]+ " " + WindowHandler.getZipToCityMap().get(result[4]);
-				setArray[0] = setArray[0].replaceAll("\\s+", " ");
-				zipArray = new String[]{result[4]};
-				}
-			// If there has been typed in no city name or zip code
-			else{
-				HashSet<String> set = WindowHandler.getRoadToZipMap().get(result[0]);
-				setArray = set.toArray(new String[0]);
-				zipArray = new String[setArray.length];
-				for (int i = 0; i < setArray.length; i++) {
-					zipArray[i] = setArray[i];
-				}
-				for(int i = 0; i < setArray.length; i++){
-					String city = WindowHandler.getZipToCityMap().get(setArray[i]);
-					setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + setArray[i] + " " + city;
-					setArray[i] = setArray[i].replaceAll("\\s+", " ");				
-				}						
+		// If there has been typed in no city name or zip code
+		else{
+			HashSet<String> set = WindowHandler.getRoadToZipMap().get(result[0]);
+			if (set == null) setArray = new String[0];
+			else setArray = set.toArray(new String[0]);
+			cityNameArray = new String[setArray.length];
+			zipArray = new String[setArray.length];
+			for (int i = 0; i < setArray.length; i++) {
+				zipArray[i] = setArray[i];
 			}
+			for(int i = 0; i < setArray.length; i++){
+				String city = WindowHandler.getZipToCityMap().get(setArray[i]);
+				cityNameArray[i] = city;
+				setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + setArray[i] + " " + city;
+				setArray[i] = setArray[i].replaceAll("\\s+", " ").trim();				
+			}						
 		}
 		if (zipArray.length == 0) setArray = new String[]{"No results"};
+		// sort the result according to the city name
+		Arrays.sort(cityNameArray);
+		for (int i = 0; i < cityNameArray.length; i++) {
+			for (int j = 0; j < setArray.length; j++) {
+				if (setArray[j].contains(cityNameArray[i])) {
+					String temp = setArray[i]; setArray[i] = setArray[j]; setArray[j] = temp;
+					temp = zipArray[i]; zipArray[i] = zipArray[j]; zipArray[j] = temp;
+					continue;
+				}
+			}
+		}
 		createSearchBox(setArray,zipArray,result,x,y,t);
 	}
 	
@@ -749,7 +748,6 @@ public class Window extends JFrame {
 	/**
 	 * Buttons added to the Pallette_Layer, above the map layer
 	 */
-
 	private void addButtons(){
 		screen.add(resetZoom, JLayeredPane.PALETTE_LAYER);
 		screen.add(zoomOut, JLayeredPane.PALETTE_LAYER);
@@ -777,7 +775,7 @@ public class Window extends JFrame {
 		screen.add(findPlace, JLayeredPane.PALETTE_LAYER);
 		screen.add(findPlaceBlue, JLayeredPane.PALETTE_LAYER);
 		screen.add(background, JLayeredPane.PALETTE_LAYER);
-		//screen.add(routeInfo, JLayeredPane.PALETTE_LAYER);
+		screen.add(cityAndZipLabel, JLayeredPane.PALETTE_LAYER);
 	}
 
 	/**
@@ -866,8 +864,6 @@ public class Window extends JFrame {
 	 * Method for drawing the rectangle to show where the user is dragging for zoom
 	 * The method compares where the user is dragging from and to, and hereby calculates
 	 * the rectangle.
-	 * 
-	 * @author Nico
 	 */
 	@SuppressWarnings("serial")
 	static class DrawRect extends JComponent {
@@ -877,19 +873,15 @@ public class Window extends JFrame {
 			if(getMousePosition() != null && !Window.use().noMoreBoxes) {
 				if(pressedX < getMousePosition().x && pressedY < getMousePosition().y) {
 					g.drawRect(pressedX, pressedY, getMousePosition().x - pressedX, getMousePosition().y - pressedY);
-					System.out.println("Box width: " + (getMousePosition().x - pressedX) + " and height: " + (getMousePosition().y - pressedY));
 				}
 				else if(pressedX > getMousePosition().x && pressedY > getMousePosition().y) {
 					g.drawRect(getMousePosition().x, getMousePosition().y, pressedX - getMousePosition().x, pressedY - getMousePosition().y);
-					System.out.println("Box width: " + (pressedX - getMousePosition().x) + " and height: " + (pressedY - getMousePosition().y));
 				}
 				else if(pressedX < getMousePosition().x && pressedY > getMousePosition().y) {
 					g.drawRect(pressedX, getMousePosition().y, getMousePosition().x - pressedX, pressedY - getMousePosition().y);
-					System.out.println("Box width: " + (getMousePosition().x - pressedX) + " and height: " + (pressedY - getMousePosition().y));
 				}
 				else if(pressedX > getMousePosition().x && pressedY < getMousePosition().y) {
 					g.drawRect(getMousePosition().x, pressedY, pressedX - getMousePosition().x, getMousePosition().y - pressedY);
-					System.out.println("Box width: " + (pressedX - getMousePosition().x) + " and height: " + (getMousePosition().y - pressedY));
 				}
 			}
 		}
@@ -897,8 +889,6 @@ public class Window extends JFrame {
 
 	/**
 	 * Adds a key listener used to move around the map.
-	 * 
-	 * @author Tom (TMCH@ITU.DK)
 	 */
 	class MKeyListener extends KeyAdapter {
 		/**
@@ -930,7 +920,7 @@ public class Window extends JFrame {
 	
 	private class comboBoxListener implements ActionListener {
 		JComboBox searchResultBox;
-		TextType t;
+		TextType t; //From to or find comboBox
 		String[] zipArray, textArray;
 		
 		public comboBoxListener(JComboBox searchResultBox, String[] zipArray, String[] textArray, TextType t) {
@@ -950,11 +940,20 @@ public class Window extends JFrame {
 			else if (t == TextType.FIND) findMarked = true;
 			int i = searchResultBox.getSelectedIndex();
 			Edge randomCorrectEdge = null;
-			System.out.println(textArray[0]);
-			System.out.println(zipArray[i]);
 			Node flagNode = null;
 			String text = (String) searchResultBox.getSelectedItem();
-			for(Edge edge : WindowHandler.getEdges()){
+			// if there is no road name we look for a random road in the zip code area
+			if (textArray[0].equals("")) {
+				ArrayList<Edge> allEdgesForZip = new ArrayList<Edge>();
+				for(Edge edge : WindowHandler.getEdges()){
+					if (edge.getV_POSTNR().equals(zipArray[i]) && edge.getH_POSTNR().equals(zipArray[i])) {
+						allEdgesForZip.add(edge);
+					}
+				}
+				randomCorrectEdge = allEdgesForZip.get(allEdgesForZip.size()/2);
+			}
+			else {
+				for(Edge edge : WindowHandler.getEdges()){
 					if(edge.getVEJNAVN().equals(textArray[0]) && (edge.getV_POSTNR().equals(zipArray[i]) || edge.getH_POSTNR().equals(zipArray[i]) )){
 						randomCorrectEdge = edge;
 						String houseNumberString = textArray[1];
@@ -982,6 +981,7 @@ public class Window extends JFrame {
 							break;
 						}
 					}
+				}
 			}
 			if (randomCorrectEdge != null){
 				WindowHandler.setNode(randomCorrectEdge.getFromNode().getKdvID(), t);
@@ -1008,6 +1008,10 @@ public class Window extends JFrame {
 				else if (t == TextType.FIND) {
 					find.setText(text);
 					findText = text;
+					double x = flagNode.getXCord();
+					double y = flagNode.getYCord();
+					findFlag.setPosition(x, y);
+					Map.use().addFlag(findFlag);
 					findNode = flagNode;
 				}
 			}
@@ -1023,6 +1027,7 @@ public class Window extends JFrame {
 	private class resizeListener extends ComponentAdapter {
 		int height;
 		int width;
+		final int MIN_HEIGHT = 505;
 
 		public void componentResized(ComponentEvent evt) {
 			if(timer == null){
@@ -1038,13 +1043,20 @@ public class Window extends JFrame {
 				timer.stop();
 				if(Window.use().getHeight() < maxHeight && Window.use().getWidth()/WindowHandler.getRatio() < maxHeight) {
 					if(Math.abs(height - Window.use().getHeight())>0 && Window.use().getHeight() < maxHeight){
-						Window.use().setPreferredSize(new Dimension((int)(Window.use().getHeight()*WindowHandler.getRatio()), Window.use().getHeight()));
+						if (Window.use().getHeight() < MIN_HEIGHT)
+							Window.use().setPreferredSize(new Dimension((int)(MIN_HEIGHT*WindowHandler.getRatio()), MIN_HEIGHT));
+						else
+							Window.use().setPreferredSize(new Dimension((int)(Window.use().getHeight()*WindowHandler.getRatio()), Window.use().getHeight()));
 					} else if(Math.abs(width - Window.use().getWidth())>0 && Window.use().getHeight() < maxHeight){
-						Window.use().setPreferredSize(new Dimension(Window.use().getWidth(), (int)(Window.use().getWidth()/WindowHandler.getRatio())));
+						if (Window.use().getWidth()/WindowHandler.getRatio() < MIN_HEIGHT)
+							Window.use().setPreferredSize(new Dimension((int)(MIN_HEIGHT*WindowHandler.getRatio()), MIN_HEIGHT));
+						else
+							Window.use().setPreferredSize(new Dimension(Window.use().getWidth(), (int)(Window.use().getWidth()/WindowHandler.getRatio())));
 					}
 				} else {
 					Window.use().setPreferredSize(new Dimension((int)(maxHeight*WindowHandler.getRatio()), maxHeight));
 				}
+				cityAndZipLabel.setBounds(20, contentPane.getHeight()-40, 200, 20);
 				pack();
 				Map.use().setSize(Window.use().getSize());
 				if(Map.use().getRoadSegments() != null)
@@ -1063,13 +1075,9 @@ public class Window extends JFrame {
 
 		public void mousePressed(MouseEvent e) {
 			if (SwingUtilities.isRightMouseButton(e)) {
-				System.out.println("Mouse pressed");
 				pressedX = e.getX();
 				pressedY = e.getY();
 				noMoreBoxes = false;
-
-				System.out.println("Pressed X : "+ pressedX);
-				System.out.println("Pressed Y : "+ pressedY);
 			} else if (SwingUtilities.isLeftMouseButton(e)) {
 				pressedX = e.getX();
 				pressedY = e.getY();
@@ -1078,17 +1086,15 @@ public class Window extends JFrame {
 
 		public void mouseDragged(MouseEvent e) {
 			if (SwingUtilities.isRightMouseButton(e) && !noMoreBoxes) {
-				System.out.println("Mouse dragged");
 				rect = new DrawRect();
 				rect.setBounds(0, 0, contentPane.getWidth(), contentPane.getHeight());
 				screen.add(rect, JLayeredPane.POPUP_LAYER);
 			}
 			else if (SwingUtilities.isLeftMouseButton(e)) {
 				if (!dragging) {
-					prevX = e.getX();								// Before dragging starts, prevX and prevY is set to 
-					prevY = e.getY();								// the current cursor location.
-					dragging = true;								// Dragging is then set to begin.
-					System.out.println("Set dragging to true");			
+					prevX = e.getX();					// Before dragging starts, prevX and prevY is set to 
+					prevY = e.getY();					// the current cursor location.
+					dragging = true;					// Dragging is then set to begin.		
 				}										
 				else {
 					setMousePanX(e.getX() - prevX);		// While we are dragging, mousePanX and mousePanY is continually set to 
@@ -1098,17 +1104,32 @@ public class Window extends JFrame {
 			}
 		}
 		
+		/**
+		 *  Sets the tooltip with the road name and the label at the bottom of the screen with the city name and zip
+		 */
 		public void mouseMoved(MouseEvent e){
-			Map.use().setToolTipText(WindowHandler.closestEdge(e.getX(), e.getY()));
+			Edge closestEdge = WindowHandler.closestEdge(e.getX(), e.getY());
+			if (!(closestEdge == null)) {
+				String roadName;
+				if(closestEdge.getVEJNAVN().length() > 0) {
+					roadName = closestEdge.getVEJNAVN();
+				} else {
+					roadName =  "No name found";
+				}
+				Map.use().setToolTipText(roadName);
+				String zip = closestEdge.getH_POSTNR();
+				String cityName = WindowHandler.getZipToCityMap().get(zip);
+				if (cityName != null) {
+					cityAndZipLabel.setText(zip + " " + cityName);
+				}
+			}
+			
 		}
 		
 		public void mouseReleased(MouseEvent e) {
 			if (SwingUtilities.isRightMouseButton(e)) {
-				System.out.println("Mouse released");
 				releasedX = e.getX();
 				releasedY =  e.getY();
-				System.out.println("Released X : "+ releasedX);
-				System.out.println("Released Y : "+ releasedY);
 				WindowHandler.pixelSearch(pressedX, releasedX, pressedY, releasedY);
 				rect.setVisible(false); //Removes the rectangle when zoom box is chosen
 				noMoreBoxes = true;

@@ -17,7 +17,7 @@ public class Map extends JPanel {
 	/**
 	 * Map is a JPanel with the lines drawn
 	 */
-	private ArrayList<RoadSegment> segments;
+	private ArrayList<RoadSegment> segments, borderSegments;
 	private ArrayList<DrawableItem> path;
 	private static ArrayList<CoastPoint[]> coast, lake, island, border; 
 	private static Map instance = null;
@@ -36,15 +36,11 @@ public class Map extends JPanel {
 			instance = new Map();
 			instance.path = new ArrayList<DrawableItem>();
 			instance.flags = new ArrayList<Flag>();
-			ToolTipManager.sharedInstance().setInitialDelay(0);
-			ToolTipManager.sharedInstance().setDismissDelay(800);
+			ToolTipManager.sharedInstance().setInitialDelay(500);
+			ToolTipManager.sharedInstance().setDismissDelay(1200);
 			ToolTipManager.sharedInstance().setReshowDelay(0);
 		}
 		return instance;
-	}
-
-	public void scaleBufferedImage(int width, int height) {
-
 	}
 
 	/**
@@ -56,19 +52,28 @@ public class Map extends JPanel {
 	}
 
 	public void paintComponent(Graphics g) {
-		//Draw coast line, lakes, islands, and borders.
+		// Draw coast line, lakes, islands, and borders.
 		drawShore(coast, UIManager.getColor("Panel.background"), g);
 		drawShore(lake, Window.use().getBackground(), g);
 		drawShore(island, UIManager.getColor("Panel.background"), g);
 		drawBorder(border, Color.RED, g);
-		//Draw roads
-		for(RoadSegment r : segments) {
-			if(r == null) continue;
+		// Draw road borders
+		for (RoadSegment b : borderSegments) {
+			if (b == null)
+				continue;
+			b.paintComponent(g);
+		}
+		// Draw roads
+		for (RoadSegment r : segments) {
+			if (r == null)
+				continue;
 			r.paintComponent(g);
 		}
-		//Draw the path
-		for(DrawableItem r : path) r.paintComponent(g);
-		for(Flag f: flags) f.paintComponent(g);
+		// Draw the path
+		for (DrawableItem r : path)
+			r.paintComponent(g);
+		for (Flag f : flags)
+			f.paintComponent(g);
 	}
 
 	private void drawShore(ArrayList<CoastPoint[]> arg, Color c, Graphics g) {		
@@ -156,11 +161,16 @@ public class Map extends JPanel {
 		return segments;
 	}
 
+	public ArrayList<RoadSegment> getBorderSegments() {
+		return borderSegments;
+	}
+	
 	/**
 	 * Changes the <br>segments<br>-filed ArrayList to a new empty one. 
 	 */
 	public void newArrayList() {
 		segments = new ArrayList<RoadSegment>();
+		borderSegments = new ArrayList<RoadSegment>();
 	}
 
 	/**
@@ -177,6 +187,10 @@ public class Map extends JPanel {
 	 * within the map.
 	 */
 	public void updatePix(){
+		for(RoadSegment b: borderSegments){
+			if(b == null) continue;
+			b.updatePosition();
+		}
 		for(RoadSegment r: segments){
 			if(r == null) continue;
 			r.updatePosition();
@@ -234,5 +248,10 @@ public class Map extends JPanel {
 	 */
 	public double getDriveTime() {
 		return driveTime;
+	}
+
+	public void addBorderSegment(RoadSegment borderSegment) {
+		// TODO Auto-generated method stub
+		borderSegments.add(borderSegment);
 	}
 }

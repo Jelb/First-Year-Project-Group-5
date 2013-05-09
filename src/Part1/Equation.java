@@ -81,6 +81,19 @@ public class Equation {
 		return y;
 	}
 	
+	/**
+	 * Returns an on-screen geo-distance measured in pixels.
+	 * @param dist		The coordinate based geo distance
+	 * @return			The distance in number if pixels
+	 */
+	public static double onscreenPixelDistance(double dist) {
+		double diffX = (DrawableItem.getGeoMaxX() - DrawableItem.getGeoMinX());
+		int width = Window.use().getMapWidth();
+		double pixelSize = diffX / width;
+		double pixelDistance = dist / pixelSize;
+		return pixelDistance;
+	}
+	
 	//-----------------------VECTOR FUNCTIONS------------------------------------
 	
 	/**
@@ -142,6 +155,21 @@ public class Equation {
 		return dist;
 	}
 		
+	/**
+	 * Creates a 2D vector from two points
+	 * @param x1		X coord, first point
+	 * @param y1		Y coord, first point
+	 * @param x2		X coord, second point
+	 * @param y2		Y coord, second point
+	 * @return			The resulting vector between the two
+	 */
+	public static double[] pointsToVector(double x1, double y1, double x2, double y2) {
+		double[] vector = new double[2];
+		vector[0] = x2 - x1;
+		vector[1] = y2 - y1;
+		return vector;
+	}
+	
 	/**
 	 * Creates a 2D vector based on a set of nodes.
 	 * @param fnode		The 'from' node
@@ -219,21 +247,20 @@ public class Equation {
 							 );
 	}
 	
-	/**
-	 * Creates a 2D vector from two points
-	 * @param x1		X coord, first point
-	 * @param y1		Y coord, first point
-	 * @param x2		X coord, second point
-	 * @param y2		Y coord, second point
-	 * @return			The resulting vector between the two
-	 */
-	public static double[] pointsToVector(double x1, double y1, double x2, double y2) {
-		double[] vector = new double[2];
-		vector[0] = x2 - x1;
-		vector[1] = y2 - y1;
-		return vector;
-	}
+
 	
 	
-	//---------------------------------------------------------------------------
+	//------------------------------------------------------------------------------
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
