@@ -1,5 +1,7 @@
 package Part1;
 
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,19 +19,16 @@ public class WindowHandler {
 	private static List<Node> nodes;
 	private static List<Edge> edges;
 	private static List<Edge> longestRoads;
-	private static int startNode;
-	private static int endNode;
+	private static int startNode, endNode;
 	private static HashMap<String, HashSet<String>> roadToZipMap;
 	private static int longestRoadsFloor;
 	private static QuadTree QT;
 	private static Graph graph;
-	private static AddressParser ap;
 	private static double geoWidth;		// The  width of the view area in meters
 	private static double geoHeight;	// The height of the view area in meters
 	private static double offsetX;		// Offset of the current view area relative to the 'outer' map constraints
 	private static double offsetY;		// Offset of the current view area relative to the 'outer' map constraints
 	private static double ratio;
-	private static double minLength;
 	private static double maxMapHeight;	// = DataReader.getMaxY()-DataReader.getMinY();
 	private static double maxMapWidth;	// = DataReader.getMaxX()-DataReader.getMinX();
 	private static HashMap<String, String> zipToCityMap;
@@ -126,8 +125,6 @@ public class WindowHandler {
 				}
 			}
 		}
-		//testDrawClosestEdge(closestEdge);
-		//System.out.print("Closest edge: ");
 		if(Equation.onscreenPixelDistance(shortestDist) < 10.0) {
 			return closestEdge;
 		}
@@ -153,7 +150,8 @@ public class WindowHandler {
 		Stack<Edge> route = new Stack<Edge>();					// clears any previous route
 		
 		route = (Stack<Edge>) dsp.pathTo(endNode);	// find route from start to destination node
-		addRouteToMap(route);									// adding the route to the Map()
+		addRouteToMap(route);// adding the route to the Map()
+		if (route != null && !route.isEmpty()) Window.use().addPathInfo(transport);
 		Window.use().updateMap();
 	}
 	
@@ -178,7 +176,7 @@ public class WindowHandler {
 	 */
 	public static void addRouteToMap(Stack<Edge> route) {
 		ArrayList<DrawableItem> path = new ArrayList<DrawableItem>();
-		double minX = Double.MAX_VALUE, maxX = 0,  minY = Double.MAX_VALUE, maxY = 0;
+		double minX = Double.MAX_VALUE, maxX = 0,  minY = Double.MAX_VALUE, maxY = 0, length = 0, driveTime = 0;
 		while(!route.empty()) {
 			Edge edge = route.pop();
 			double x1 = edge.getFromNode().getXCord();
@@ -195,8 +193,11 @@ public class WindowHandler {
 			if (y2 > maxY) maxY = y2;
 			boolean border = false;											// for now, no borders will be drawn
 			path.add(new RoadSegment(x1, y1, x2, y2, 4242, border));
+			length += edge.length();
+			driveTime += edge.getDriveTime();
 		}
-		Map.use().setPath(path);
+
+		Map.use().setPath(path, length, driveTime);
 		if (!path.isEmpty()) {
 			double deltaX = (maxX-minX)*0.1;
 			double deltaY = (maxY-minY)*0.1; 
@@ -228,13 +229,13 @@ public class WindowHandler {
 			maxX = maxMapWidth - (offsetX + geoWidth) + geoWidth;
 		}
 		search(-minX, maxX, -minY, maxY);
-		Window.use().updateMap();
+//		Window.use().updateMap();
 		System.out.println("geoWidth = " + geoWidth);
 	}
 	
 	public static void zoomIn() {
 		search(geoWidth*0.1, geoWidth*0.9, geoHeight*0.1, geoHeight*0.9);
-		Window.use().updateMap();
+//		Window.use().updateMap();
 		System.out.println("geoWidth = " + geoWidth);
 	}
 	
@@ -346,11 +347,9 @@ public class WindowHandler {
 	// returns true if the given edge will be shown on the map with the current zoom level
 	private static boolean includeEdge(Edge e) {
 		int t = e.getType();
-		//if (t == 1 || t == 2 || t == 3 || t == 4 || t == 80) return true;
 		if (t == 1 || t == 2 || t == 3 || t == 80) return true;
 		else if (geoWidth < 250000 && (t == 4)) return true;
 		else if (geoWidth < 60000 && (t == 5)) return true;
-//		else if (geoWidth < 100000 && (t == 5)) return true;
 		else if (geoWidth < 13000) return true;
 		else return false;
 	}
@@ -365,10 +364,11 @@ public class WindowHandler {
 					double x1 = e.getFromNode().getXCord();
 					double y1 = e.getFromNode().getYCord();
 					double x2 = e.getToNode().getXCord();
-					double y2 = e.getToNode().getYCord();
-					boolean border = false;											// for now, no borders will be drawn
+					double y2 = e.getToNode().getYCord();						// for now, no borders will be drawn
 					Map.use().addRoadSegment(
-							new RoadSegment(x1, y1, x2, y2, e.getType(),border));
+							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+					Map.use().addBorderSegment(
+							new RoadSegment(x1, y1, x2, y2, e.getType(),true));
 				}
 			}
 		}
@@ -376,7 +376,7 @@ public class WindowHandler {
 	
 	public static void resetMap() {
 		search(-offsetX, maxMapWidth-offsetX, -offsetY, maxMapHeight-offsetY);
-		Window.use().updateMap();
+//		Window.use().updateMap();
 	}
 
 	
@@ -448,7 +448,34 @@ public class WindowHandler {
 	public static ArrayList<CoastPoint[]> getLakes() {
 		return lakes;
 	}
-
+	
+	/**
+	 * Used to get the effective size of the screen. 
+	 * The effective size of the screen is equals to the size of the screen 
+	 * excluding the size reserved for other objects such as docks and tool bars.
+	 * <br>
+	 * The effective size of the screen is used to set the ratio of the application 
+	 * and its max height;
+	 */
+	private static void getEffectiveScreenSize() {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		double h = ge.getMaximumWindowBounds().height;
+		double w = ge.getMaximumWindowBounds().width;
+		ratio = (w/h);
+		Window.setMaxHeight((int)h);	
+	}
+	
+	/**
+	 * Sets the ratio of the application.
+	 * This method should only be called if the calculated ratio 
+	 * forces map-data to be omitted.  
+	 * 
+	 * @param argRatio The new ratio of the application
+	 */
+	public static void setRatio(double argRatio) {
+		ratio = argRatio;
+	}
+	
 	public static void main(String[] args) throws IOException {
 //		String nodeFile = "kdv_node_unload.txt";
 //		String edgeFile = "kdv_unload.txt";
@@ -458,7 +485,7 @@ public class WindowHandler {
 		String lakeFile = "lake.dat";
 		String islandFile = "island.dat";
 		String borderFile = "border.dat";
-				
+		getEffectiveScreenSize();
 		SplashScreen.initialize(nodeFile, edgeFile, coastFile, lakeFile, islandFile);
 		SplashScreen.use();
 		
@@ -500,7 +527,7 @@ public class WindowHandler {
 		setGeoHeight(DataReader.getMaxY()-DataReader.getMinY());
 		setGeoWidth(DataReader.getMaxX()-DataReader.getMinX());
 		
-		ratio = geoWidth/geoHeight;
+		
 		SplashScreen.use().setTaskName(Task.MAP);
 				
 		// Finds all the nodes in the view area

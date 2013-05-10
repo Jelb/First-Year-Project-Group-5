@@ -1,5 +1,7 @@
 package QuadTree;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import Part1.Node;
@@ -82,6 +84,22 @@ public class Leaf extends BoundingBox implements Element {
 			if (p == null) break;
 			System.out.println("(" + p.getXCord() + ", " + p.getYCord() + ")");
 		}
+	}
+	
+	public ArrayList<Element> structure(ArrayList<Element> tree) {
+		tree.add(this);
+		return tree;
+	}
+	
+	public Node[] getNodes() {
+		return nodes;
+	}
+	
+	public boolean equals(Object o) {
+		System.out.println("Am i equal");
+		if (!(o instanceof Leaf)) return false;
+		Leaf l = (Leaf) o;
+		return Arrays.deepEquals(nodes, l.getNodes());
 	}
 
 }

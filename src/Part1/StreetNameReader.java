@@ -7,8 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 
 public class StreetNameReader   {
 
@@ -17,8 +15,10 @@ private DataInputStream inStreet, inZip;
 private BufferedReader brStreet, brZip;
 	
 	public StreetNameReader() throws FileNotFoundException{
-		street = new FileInputStream("src/names.txt");
-		zip = new FileInputStream("src/post.txt");
+		//street = new FileInputStream("src/names.txt");
+		street = new FileInputStream("names.dat");
+		//zip = new FileInputStream("src/post.txt");
+		zip = new FileInputStream("post.dat");
 		inStreet = new DataInputStream(street);
 		inZip = new DataInputStream(zip);
 		brStreet = new BufferedReader(new InputStreamReader(inStreet));

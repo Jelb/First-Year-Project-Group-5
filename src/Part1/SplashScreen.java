@@ -115,6 +115,7 @@ public class SplashScreen extends JFrame{
 	}
 	
 	public void close() {
+		Window.use().setVisible(true);
 		dispose();
 		instance = null;
 	}
