@@ -460,6 +460,8 @@ public class WindowHandler {
 	public static void main(String[] args) throws IOException {
 		String nodeFile = "kdv_node_unload.txt";
 		String edgeFile = "kdv_unload.txt";
+//		String nodeFile = "testNodes.txt";
+//		String edgeFile = "testEdges.txt";
 		String coastFile = "coastline.dat";
 		String lakeFile = "lake.dat";
 		String islandFile = "island.dat";
@@ -469,8 +471,8 @@ public class WindowHandler {
 		SplashScreen.use();
 		
 		//Initializing of data from KrakLoader
-		DataReader dataReader = DataReader.use("kdv_node_unload.txt","kdv_unload.txt");
-		
+		//DataReader dataReader = DataReader.use("kdv_node_unload.txt","kdv_unload.txt");
+		DataReader dataReader = DataReader.use(nodeFile,edgeFile);
 		
 		SplashScreen.use().setTaskName(Task.COAST);
 		coast = dataReader.readCoast(coastFile);
