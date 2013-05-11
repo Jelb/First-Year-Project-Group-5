@@ -79,8 +79,6 @@ public class Window extends JFrame {
 	private boolean byShip = true;
 	
 	// The tree flags
-	//private Flag fromFlag = new Flag(true);
-	//private Flag toFlag = new Flag(false);
 	private Flag fromFlag = new Flag(1);
 	private Flag toFlag = new Flag(2);
 	private Flag findFlag = new Flag(3);
@@ -178,12 +176,9 @@ public class Window extends JFrame {
 	 */
 	public void updateMap() {
 		Map.use().updatePath();
-				
 		if(!isVisible()){
-			SplashScreen.use().setAlwaysOnTop(true);
 			Map.use().setBounds(0, 0, contentPane.getPreferredSize().width, contentPane.getPreferredSize().height);		
 			addListeners();
-			SplashScreen.use().setAlwaysOnTop(false);
 		} else {
 			requestFocus();			
 		}
@@ -821,7 +816,6 @@ public class Window extends JFrame {
 	 * The method compares where the user is dragging from and to, and hereby calculates
 	 * the rectangle.
 	 */
-	@SuppressWarnings("serial")
 	static class DrawRect extends JComponent {
 		public void paint(Graphics g) {
 			super.paint(g);
@@ -983,7 +977,7 @@ public class Window extends JFrame {
 	private class resizeListener extends ComponentAdapter {
 		int height;
 		int width;
-		final int MIN_HEIGHT = 505;
+		final int MIN_HEIGHT = 550;
 
 		public void componentResized(ComponentEvent evt) {
 			if(timer == null){
@@ -1012,12 +1006,10 @@ public class Window extends JFrame {
 				} else {
 					Window.use().setPreferredSize(new Dimension((int)(maxHeight*WindowHandler.getRatio()), maxHeight));
 				}
-				cityAndZipLabel.setBounds(20, contentPane.getHeight()-40, 200, 20);
+				cityAndZipLabel.setBounds(20, contentPane.getHeight()-35, 200, 20);
 				pack();
 				Map.use().setSize(Window.use().getSize());
-				if(Map.use().getRoadSegments() != null)
 					Map.use().updatePix();
-				System.out.println(Window.use().getHeight());
 				height = Window.use().getHeight();
 				width = Window.use().getWidth();
 				timer = null;

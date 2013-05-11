@@ -247,14 +247,15 @@ public class Map extends JPanel {
 	}
 
 	/**
-	 * @return the driveTime
+	 * Getter method for the drive time of the current path.
+	 * 
+	 * @return the driveTime The drive time in minuttes. 
 	 */
 	public double getDriveTime() {
 		return driveTime;
 	}
 
 	public void addBorderSegment(RoadSegment borderSegment) {
-		// TODO Auto-generated method stub
 		borderSegments.add(borderSegment);
 	}
 }

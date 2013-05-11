@@ -21,10 +21,19 @@ public class RoadSegment extends DrawableItem {
 	private float roadWidth;
 	private static int roadType4242;
 	private static int zoomLevel;
+	private int realWidth;
 	
 	private boolean isBorder;
 	
-	private static Color lightYellow, lightOrange, darkOrange, white, lightGrey, darkGrey;
+	
+	//The colors used to draw RoadSegments.
+	private static Color 
+		lightYellow = new Color(254,252,138),
+		lightOrange = new Color(255,197,72),
+		darkOrange = new Color(250,144,57),
+		white = new Color(255,255,255),
+		lightGrey = new Color(239,235,226),
+		darkGrey = new Color(190,190,190);
 	
 	/**
 	 * 
@@ -137,21 +146,9 @@ public class RoadSegment extends DrawableItem {
 	
 	public void adjustForBorders(boolean isBorder) {
 		if(isBorder) {
-			roadWidth += 1.0f;
+			roadWidth += 2.0f;
 			color = darkGrey;
 		}
-	}
-	
-	/**
-	 * Creates color objects like the ones used by Google Maps.
-	 */
-	public static void setColors() {
-		lightYellow = new Color(254,252,138);
-		lightOrange = new Color(255,197,72);
-		darkOrange = new Color(250,144,57);
-		white = new Color(255,255,255);
-		lightGrey = new Color(239,235,226);
-		darkGrey = new Color(190,190,190);
 	}
 	
 	public void updatePosition(){

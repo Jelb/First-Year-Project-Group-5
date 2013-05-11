@@ -1,7 +1,7 @@
 package Part1;
 
 import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
+import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -147,28 +147,11 @@ public class WindowHandler {
 	public static void pathFinding(TransportWay transport, CompareType compareType, boolean useFerry) {
 		DijkstraSP dsp = new DijkstraSP(graph, startNode, transport, compareType, useFerry);
 		
-		Stack<Edge> route = new Stack<Edge>();					// clears any previous route
-		
-		route = (Stack<Edge>) dsp.pathTo(endNode);	// find route from start to destination node
+		Stack<Edge> route = (Stack<Edge>) dsp.pathTo(endNode);	// find route from start to destination node
 		addRouteToMap(route);// adding the route to the Map()
-		if (route != null && !route.isEmpty()) Window.use().addPathInfo(transport);
+		if (!route.isEmpty()) Window.use().addPathInfo(transport);
 		Window.use().updateMap();
 	}
-	
-//	/**
-//	 * Test method, draws the closest edge as a shortest path.
-//	 * @param edge	The 'closest' edge
-//	 */
-//	public static void testDrawClosestEdge(Edge edge) {
-//		ArrayList<DrawableItem> path = new ArrayList<DrawableItem>();
-//		double x1 = edge.getFromNode().getXCord();
-//		double y1 = edge.getFromNode().getYCord();
-//		double x2 = edge.getToNode().getXCord();
-//		double y2 = edge.getToNode().getYCord();
-//		boolean border = false;											// for now, no borders will be drawn
-//		path.add(new RoadSegment(x1, y1, x2, y2, 4242, border));
-//		Map.use().setPath(path);
-//	}
 	
 	/**
 	 * Adds the shortest path (static field 'route') to the roadSegments on the map.
@@ -229,13 +212,13 @@ public class WindowHandler {
 			maxX = maxMapWidth - (offsetX + geoWidth) + geoWidth;
 		}
 		search(-minX, maxX, -minY, maxY);
-//		Window.use().updateMap();
+		Window.use().updateMap();
 		System.out.println("geoWidth = " + geoWidth);
 	}
 	
 	public static void zoomIn() {
 		search(geoWidth*0.1, geoWidth*0.9, geoHeight*0.1, geoHeight*0.9);
-//		Window.use().updateMap();
+		Window.use().updateMap();
 		System.out.println("geoWidth = " + geoWidth);
 	}
 	
@@ -327,9 +310,7 @@ public class WindowHandler {
 				y1, y2)) Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, e.getType(),border));
 		}
 		
-		Map.use().createBufferImage();
-		Window.use().repaint();
-		
+		Map.use().createBufferImage();		
 	}
 	
 	//TODO: Write code to detect intersection between area of interest and road.
@@ -376,7 +357,7 @@ public class WindowHandler {
 	
 	public static void resetMap() {
 		search(-offsetX, maxMapWidth-offsetX, -offsetY, maxMapHeight-offsetY);
-//		Window.use().updateMap();
+		Window.use().updateMap();
 	}
 
 	
@@ -458,11 +439,11 @@ public class WindowHandler {
 	 * and its max height;
 	 */
 	private static void getEffectiveScreenSize() {
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		double h = ge.getMaximumWindowBounds().height;
-		double w = ge.getMaximumWindowBounds().width;
+		Rectangle mwb = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+		double h = mwb.height;
+		double w = mwb.width;
 		ratio = (w/h);
-		Window.setMaxHeight((int)h);	
+		Window.setMaxHeight(mwb.height);	
 	}
 	
 	/**
@@ -531,9 +512,6 @@ public class WindowHandler {
 		// Finds all the nodes in the view area
 		nodes = QT.query(0, 0, geoWidth, geoHeight);
 		DrawableItem.setMapSize(geoWidth, geoHeight, 0.0, 0.0);
-		
-		// Constructs the GoogleMaps style colors
-		RoadSegment.setColors();
 		
 		// Finds all the edges for these nodes
 		getEdgesFromNodes();
