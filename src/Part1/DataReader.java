@@ -1,8 +1,11 @@
 package Part1;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -86,8 +89,8 @@ public class DataReader {
 		SplashScreen.use().setTaskName(Task.NODES);
 		// open the file containing the list of nodes
 		try {
-		BufferedReader br = new BufferedReader(new FileReader(nodeFile));
-
+			Reader reader = new InputStreamReader(new FileInputStream(nodeFile), "UTF-8");
+		BufferedReader br = new BufferedReader(reader);
 		br.readLine(); // discard names of columns which is the first line
 
 		String line = br.readLine();
@@ -159,7 +162,8 @@ public class DataReader {
 			Graph graph = new Graph(nodes.size());
 			
 			// Reads the "kdv_unload.txt" file into the buffer.
-			BufferedReader br = new BufferedReader(new FileReader(edgeFile));
+			Reader reader = new InputStreamReader(new FileInputStream(edgeFile), "UTF-8");
+			BufferedReader br = new BufferedReader(reader);
 	
 			br.readLine(); // again discarding column names
 			String line = br.readLine();
@@ -274,13 +278,14 @@ public class DataReader {
 		ArrayList<CoastPoint[]> area = new ArrayList<CoastPoint[]>();
 
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(filepath));
-			String line = reader.readLine().trim();
+			Reader reader = new InputStreamReader(new FileInputStream(filepath), "UTF-8");
+			BufferedReader br = new BufferedReader(reader);
+			String line = br.readLine().trim();
 			ArrayList<CoastPoint> current = null;
 			while(!(line == null)) {
 				SplashScreen.use().updateProgress();
 				if(line.contains(">")) {
-					line = reader.readLine().trim();
+					line = br.readLine().trim();
 					if(current == null) {
 						current = new ArrayList<CoastPoint>();
 					} else {
@@ -293,7 +298,7 @@ public class DataReader {
 				double lat = Double.parseDouble(line.substring(line.indexOf("\t")+1).trim());
 				current.add(Equation.convertLonLatToUTM(lat, lon));
 
-				line = reader.readLine();
+				line = br.readLine();
 				}
 			area.add(current.toArray(new CoastPoint[1]));
 			reader.close();			
@@ -305,10 +310,10 @@ public class DataReader {
 	}
 	
 	public HashMap<String, String> getZipToCityMap(String zipFile) {
-		BufferedReader br;
 		HashMap<String, String> zipToCityMap = new HashMap<String, String>();
 		try {
-			br = new BufferedReader(new FileReader(zipFile));
+			Reader reader = new InputStreamReader(new FileInputStream(zipFile), "UTF-8");
+			BufferedReader br = new BufferedReader(reader);
 		String strLine = br.readLine();
 		while(strLine != null) {
 			String zipCode = strLine.split(" ", 2)[0];
