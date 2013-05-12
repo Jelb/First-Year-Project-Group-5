@@ -114,15 +114,13 @@ public class DataReader {
 			line = br.readLine();
 		}
 		// Increases the area of the map
-		
 		minY -= increase;
 		maxY += increase;
 		double add = ((maxY-minY)*WindowHandler.getRatio() - (maxX-minX))/2;
 		if(add < increase) {
 			minX -= increase;
 			maxX += increase;
-			double newRatio = (maxX-minX)/(maxY-minY);
-			WindowHandler.setRatio(newRatio);
+			WindowHandler.setRatio((maxX-minX)/(maxY-minY));
 		} else {
 			minX -= add;
 			maxX += add;

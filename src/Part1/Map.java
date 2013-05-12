@@ -27,10 +27,20 @@ public class Map extends JPanel {
 	
 	private double pathLength, driveTime;
 	
+	/**
+	 * Constructor of the map class.
+	 */
 	private Map() {
 	}
 
-	//Singleton check
+	/**
+	 * Method to ensure that only one instance of the map class
+	 * will exist at any time. 
+	 * An new instance will only be initialized if and only if 
+	 * the instance field has the null.
+	 * 
+	 * @return The current used instance of the map class.
+	 */
 	public static Map use() {
 		if(instance == null) {
 			instance = new Map();
@@ -51,6 +61,10 @@ public class Map extends JPanel {
 		g.drawImage(offScreen, Window.use().getMousePanX(), Window.use().getMousePanY(), this);
 	}
 
+	/**
+	 * PaintComponent method used to draw all needed components
+	 * on the map object.
+	 */
 	public void paintComponent(Graphics g) {
 		// Draw coast line, lakes, islands, and borders.
 		long time = System.currentTimeMillis();
@@ -79,6 +93,13 @@ public class Map extends JPanel {
 			f.paintComponent(g);
 	}
 
+	/**
+	 * Draws the coastline of the map based on specified inputs.
+	 * 
+	 * @param arg An array list of CoastPoint's defining the shape of the polygon.
+	 * @param c A java.awt.Color object specifying the color of the polygons.
+	 * @param g A java.awt.Graphics object used to draw the polygons.
+	 */
 	private void drawShore(ArrayList<CoastPoint[]> arg, Color c, Graphics g) {		
 		ArrayList<Polygon> poly = new ArrayList<Polygon>();
 		Polygon current = new Polygon();
@@ -111,6 +132,13 @@ public class Map extends JPanel {
 		}
 	}
 
+	/**
+	 * Creates and draws the polygons used to shape the coastline.
+	 * 
+	 * @param arrBorder ArratList of CostPoint arrays containing the points of the polygons.
+	 * @param c	The color used to fill the polygon.
+	 * @param g	The Graphics object used to draw the components. 
+	 */
 	private void drawBorder(ArrayList<CoastPoint[]> arrBorder, Color c, Graphics g) {
 
 		Graphics2D D2 = (Graphics2D) g;
@@ -132,6 +160,11 @@ public class Map extends JPanel {
 		}
 	}
 
+	/**
+	 * Method used retrieve the width of the border segments.
+	 * @param zoomLevel The current zoom-level of the map. 
+	 * @return The width corresponding to the given zoom-level.
+	 */
 	private float borderWidth(int zoomLevel) {
 		switch(zoomLevel) {
 		case 1 : return 2.5f;
@@ -169,7 +202,7 @@ public class Map extends JPanel {
 	}
 	
 	/**
-	 * Changes the <br>segments<br>-filed ArrayList to a new empty one. 
+	 * Changes the segments-filed ArrayList to a new empty one. 
 	 */
 	public void newArrayList() {
 		segments = new ArrayList<RoadSegment>();
@@ -210,16 +243,23 @@ public class Map extends JPanel {
 		for (Flag f : flags) f.updatePosition();
 	}
 
+	/**
+	 * Adds the result of the users path-finding including the length
+	 * of the path and the driving time, to the map instance.
+	 * 
+	 * @param path	An ArrayList of DrawableItem defining the path. 
+	 * @param pathLength	The length of the path in meters.
+	 * @param driveTime	The estimated drive time of the path in minutes.
+	 */
 	public void setPath(ArrayList<DrawableItem> path, double pathLength, double driveTime) {
 		this.path = path;
 		this.pathLength = pathLength;
 		this.driveTime = driveTime;
 	}
 
-	public void addDrawableItemToPath(DrawableItem i){
-		path.add(i);
-	}
-
+	/**
+	 * Removes the path from the map.
+	 */
 	public void resetPath() {
 		path = new ArrayList<DrawableItem>();
 		flags = new ArrayList<Flag>();
@@ -227,21 +267,48 @@ public class Map extends JPanel {
 		pathLength = -1;
 	}
 
+	/**
+	 * Adds a given flag to the flags array if it does
+	 * not already exists in the array.
+	 * 
+	 * @param f The flag to be added.
+	 */
 	public void addFlag(Flag f) {
-		for (Flag flag : flags) if (flag == f) return;
-		flags.add(f);
+		if (!flags.contains(f))
+			flags.add(f);
 	}
 
+	/**
+	 * Stores the coast, lake and island date to the map instance.
+	 * ##Should only be used once at the initializing 
+	 * since the data is stored in a static field##
+	 * 
+	 * @param argCoast An ArrayList of CoastPoint arrays describing the coast polygons.
+	 * @param argLake An ArrayList of CoastPoint arrays describing the lake polygons.
+	 * @param argIsland An ArrayList of CoastPoint arrays describing the island polygons.
+	 */
 	public static void setCoast(ArrayList<CoastPoint[]> argCoast, ArrayList<CoastPoint[]> argLake, ArrayList<CoastPoint[]> argIsland) {
 		coast = argCoast;
 		lake = argLake;
 		island = argIsland;
 	}
 
+	/**
+	 * Stores the border data to the map instance.
+	 * ##Should only be used once at the initializing 
+	 * since the data is stored in a static field##
+	 * 
+	 * @param argBorder An ArrayList of CoastPoint arrays describing the broderlines.
+	 */
 	public static void setBorder(ArrayList<CoastPoint[]> argBorder) {
 		border = argBorder;
 	}
 	
+	/**
+	 * Getter for the pathLength field.
+	 * 
+	 * @return The lenght of the current stored path.
+	 */
 	public double getPathLengt() {
 		return pathLength;
 	}
@@ -249,12 +316,16 @@ public class Map extends JPanel {
 	/**
 	 * Getter method for the drive time of the current path.
 	 * 
-	 * @return the driveTime The drive time in minuttes. 
+	 * @return the driveTime The drive time in minutes. 
 	 */
 	public double getDriveTime() {
 		return driveTime;
 	}
 
+	/**
+	 * Adds a RoadSegment to he borderSegments ArrayList.
+	 * @param borderSegment The RoadSegments which should be added.
+	 */
 	public void addBorderSegment(RoadSegment borderSegment) {
 		borderSegments.add(borderSegment);
 	}
