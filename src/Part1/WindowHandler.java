@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-
-import com.apple.eawt.Application;
+//
+//import com.apple.eawt.Application;
 
 import javax.swing.ToolTipManager;
 
@@ -471,15 +471,11 @@ public class WindowHandler {
 
 	public static void main(String[] args) throws IOException {
 		
-		if (System.getProperty("os.name").contains("Mac")) {
-			Application application = Application.getApplication();
-			Image image = Toolkit.getDefaultToolkit().getImage("deskicon.png");
-			application.setDockIconImage(image);
-		} else if (System.getProperty("os.name").contains("Windows")) {
-			ArrayList<Image> imageList = new ArrayList<Image>();
-			imageList.add(Toolkit.getDefaultToolkit().getImage("deskicon.png"));		 
-			Window.use().setIconImages(imageList);
-		}
+//		if (System.getProperty("os.name").contains("Mac")) {
+//			Application application = Application.getApplication();
+//			Image image = Toolkit.getDefaultToolkit().getImage("deskicon.png");
+//			application.setDockIconImage(image);
+//		}
 		String nodeFile = "kdv_node_unload.txt";
 		String edgeFile = "kdv_unload.txt";
 		String coastFile = "coastline.dat";
@@ -551,6 +547,12 @@ public class WindowHandler {
 		// thus calling the internal method paintComponents found in the roadSegments objects
 
 		Window.use().updateMap();
+		
+//		if (System.getProperty("os.name").contains("Windows")) {
+//			ArrayList<Image> imageList = new ArrayList<Image>();
+//			imageList.add(Toolkit.getDefaultToolkit().getImage("deskicon.png"));		 
+//			Window.use().setIconImages(imageList);
+//		}
 
 		SplashScreen.use().close();
 	}
