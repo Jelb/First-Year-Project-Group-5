@@ -46,9 +46,6 @@ public class Map extends JPanel {
 			instance = new Map();
 			instance.path = new ArrayList<DrawableItem>();
 			instance.flags = new ArrayList<Flag>();
-			ToolTipManager.sharedInstance().setInitialDelay(500);
-			ToolTipManager.sharedInstance().setDismissDelay(1200);
-			ToolTipManager.sharedInstance().setReshowDelay(0);
 		}
 		return instance;
 	}

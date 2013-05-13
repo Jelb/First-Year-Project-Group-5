@@ -1023,6 +1023,9 @@ public class Window extends JFrame {
 		int prevY;
 
 		public void mousePressed(MouseEvent e) {
+			if(rect == null){
+				rect = new DrawRect();
+			}
 			if (SwingUtilities.isRightMouseButton(e)) {
 				pressedX = e.getX();
 				pressedY = e.getY();
@@ -1033,7 +1036,7 @@ public class Window extends JFrame {
 			}
 		}
 
-		public void mouseDragged(MouseEvent e) {
+		public void mouseDragged(MouseEvent e) {			
 			if (SwingUtilities.isRightMouseButton(e) && !noMoreBoxes) {
 				rect = new DrawRect();
 				rect.setBounds(0, 0, contentPane.getWidth(), contentPane.getHeight());
