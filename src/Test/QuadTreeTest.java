@@ -3,7 +3,9 @@ package Test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.junit.After;
 import org.junit.Before;
@@ -12,6 +14,8 @@ import org.junit.Test;
 import Part1.Node;
 import QuadTree.Element;
 import QuadTree.Leaf;
+import QuadTree.Parent;
+import QuadTree.QuadNode;
 import QuadTree.QuadTree;
 
 public class QuadTreeTest {
@@ -52,7 +56,22 @@ public class QuadTreeTest {
 		QT.insert(1, 2, 2);
 		QT.insert(8, 4, 3);
 		QT.insert(7, 7, 4);
-		QT.showTree();
+		Element actualRoot = QT.getRoot();
+		QuadNode expRoot = new QuadNode(0, 0, 10, 10);
+		Element expNW = new Leaf(3, (Parent) expRoot, 0, 5, 5, 10);
+		expNW.insert(new Node(3,7,0));
+		expNW.insert(new Node(2,9,1));
+		Element expNE = new Leaf(3, (Parent) expRoot, 5, 5, 10, 10);
+		expNE.insert(new Node(7,7,4));
+		Element expSW = new Leaf(3, (Parent) expRoot, 0, 0, 5, 5);
+		expSW.insert(new Node(1,2,2));
+		Element expSE = new Leaf(3, (Parent) expRoot, 5, 0, 10, 5);
+		expSE.insert(new Node(8,4,3));
+		expRoot.setNE(expNE);
+		expRoot.setNW(expNW);
+		expRoot.setSE(expSE);
+		expRoot.setSW(expSW);
+		assertEquals(expRoot, actualRoot);
 	}
 	
 	@Test
@@ -61,45 +80,63 @@ public class QuadTreeTest {
 		QT.insert(2, 9, 1);
 		QT.insert(1, 2, 2);
 		QT.insert(8, 4, 3);
-		QT.showTree();
+		Element actualRoot = QT.getRoot();
+		QuadNode expRoot = new QuadNode(0, 0, 10, 10);
+		Element expNW = new Leaf(3, (Parent) expRoot, 0, 5, 5, 10);
+		expNW.insert(new Node(3,7,0));
+		expNW.insert(new Node(2,9,1));
+		Element expNE = new Leaf(3, (Parent) expRoot, 5, 5, 10, 10);
+		Element expSW = new Leaf(3, (Parent) expRoot, 0, 0, 5, 5);
+		expSW.insert(new Node(1,2,2));
+		Element expSE = new Leaf(3, (Parent) expRoot, 5, 0, 10, 5);
+		expSE.insert(new Node(8,4,3));
+		expRoot.setNE(expNE);
+		expRoot.setNW(expNW);
+		expRoot.setSE(expSE);
+		expRoot.setSW(expSW);
+		assertEquals(expRoot, actualRoot);
 	}
 	
 	@Test (expected = Exception.class)
 	public void outsideBorders() {
 		QT.insert(20, 11, 0);
-		QT.showTree();
 	}
 	
 	@Test
 	public void querySearchUnpartitioned() {
-		List<Node> coordList = new ArrayList<Node>();
+		List<Node> expList = new ArrayList<Node>();
 		QT.insert(1, 2, 0);
-		coordList.add(new Node(1, 2, 0));
 		QT.insert(7, 4, 1);
-		coordList.add(new Node(7, 4, 1));
+		expList.add(new Node(7, 4, 1));
 		QT.insert(9, 3, 2);
-		coordList.add(new Node(9, 3, 2));
-		List<Node> list = QT.query(4, 1, 10, 6);
-		for (Node c : list) System.out.println(c.getXCord() + ", " + c.getYCord());
+		expList.add(new Node(9, 3, 2));
+		List<Node> actualList = QT.query(4, 1, 10, 6);
+		HashSet<Node> expSet = new HashSet<Node>(expList);
+		HashSet<Node> actualSet = new HashSet<Node>(actualList);
+		assertEquals(expSet, actualSet);
 	}
 	
 	@Test
 	public void querySearchPartitionedOnce() {
+		HashSet<Node> expSet = new HashSet<Node>();
 		QT.insert(1, 2, 0);
 		QT.insert(7, 4, 1);
+		expSet.add(new Node(7, 4, 1));
 		QT.insert(9, 3, 2);
+		expSet.add(new Node(9,3,2));
 		QT.insert(7, 5, 3);
-		List<Node> list = QT.query(4, 1, 10, 6);
-		QT.showTree();
-		System.out.println();
-		for (Node c : list) System.out.println(c.getXCord() + ", " + c.getYCord());
+		expSet.add(new Node(7,5,3));
+		HashSet<Node> actualSet = new HashSet<Node>(QT.query(4, 1, 10, 6));
+		assertEquals(expSet, actualSet);
 	}
 	
 	@Test
 	public void querySearchEdge() {
+		HashSet<Node> expSet = new HashSet<Node>();
 		QT.insert(7, 6, 0);
-		List<Node> list = QT.query(4, 1, 10, 6);
-		for (Node c : list) System.out.println(c.getXCord() + ", " + c.getYCord());
+		expSet.add(new Node(7,6,0));
+		HashSet<Node> actualSet = new HashSet<Node>(QT.query(4, 1, 10, 6));
+		assertEquals(expSet, actualSet);
 	}
 	
 	@Test
@@ -107,8 +144,22 @@ public class QuadTreeTest {
 		QT.insert(1, 2, 0);
 		QT.insert(7, 4, 1);
 		QT.insert(9, 3, 2);
-		QT.insert(7, 5, 0);
-		QT.showTree();
+		QT.insert(7, 5, 3);
+		Element actualRoot = QT.getRoot();
+		QuadNode expRoot = new QuadNode(0, 0, 10, 10);
+		Element expNW = new Leaf(3, (Parent) expRoot, 0, 5, 5, 10);
+		Element expNE = new Leaf(3, (Parent) expRoot, 5, 5, 10, 10);
+		expNE.insert(new Node(7,5,3));
+		Element expSW = new Leaf(3, (Parent) expRoot, 0, 0, 5, 5);
+		expSW.insert(new Node(1,2,0));
+		Element expSE = new Leaf(3, (Parent) expRoot, 5, 0, 10, 5);
+		expSE.insert(new Node(7,4,1));
+		expSE.insert(new Node(9,3,2));
+		expRoot.setNE(expNE);
+		expRoot.setNW(expNW);
+		expRoot.setSE(expSE);
+		expRoot.setSW(expSW);
+		assertEquals(expRoot, actualRoot);
 	}
 	
 	@Test
@@ -117,35 +168,53 @@ public class QuadTreeTest {
 		QT.insert(7, 4, 1);
 		QT.insert(9, 3, 2);
 		QT.insert(5, 5, 3);
-		QT.showTree();
+		Element actualRoot = QT.getRoot();
+		QuadNode expRoot = new QuadNode(0, 0, 10, 10);
+		Element expNW = new Leaf(3, (Parent) expRoot, 0, 5, 5, 10);
+		expNW.insert(new Node(5,5,3));
+		Element expNE = new Leaf(3, (Parent) expRoot, 5, 5, 10, 10);
+		Element expSW = new Leaf(3, (Parent) expRoot, 0, 0, 5, 5);
+		expSW.insert(new Node(1,2,0));
+		Element expSE = new Leaf(3, (Parent) expRoot, 5, 0, 10, 5);
+		expSE.insert(new Node(7,4,1));
+		expSE.insert(new Node(9,3,2));
+		expRoot.setNE(expNE);
+		expRoot.setNW(expNW);
+		expRoot.setSE(expSE);
+		expRoot.setSW(expSW);
+		assertEquals(expRoot, actualRoot);
 	}
 	
-	@Test (expected = Exception.class)
+	@Test
 	public void queryPartlyOutsideBorders() {
 		QT.insert(1, 2, 0);
-		List<Node> list = QT.query(-2, -1, 3, 3);
-		for (Node c : list) System.out.println(c.getKdvID());
+		HashSet<Node> expSet = new HashSet<Node>();
+		expSet.add(new Node(1,2,0));
+		HashSet<Node> actualSet = new HashSet<Node>(QT.query(-2, -1, 3, 3));
+		assertEquals(expSet, actualSet);
+		
 	}
 	
-	@Test (expected = Exception.class)
+	@Test 
 	public void queryTotallyOutsideBorders() {
 		QT.insert(1, 2, 0);
 		List<Node> list = QT.query(-20, -10, -2, -1);
-		for (Node c : list) System.out.println(c.getKdvID());
+		assertEquals(0, list.size());
 	}
 	
 	@Test
 	public void queryOnLine() {
 		QT.insert(5,5,0);
-		List<Node> list = QT.query(3, 5, 7, 5);
-		for (Node c : list) System.out.println(c.getKdvID());
+		HashSet<Node> expSet = new HashSet<Node>();
+		expSet.add(new Node(5,5,0));
+		HashSet<Node> actualSet = new HashSet<Node>(QT.query(3, 5, 7, 5));
+		assertEquals(expSet, actualSet);
 	}
 	
 	@Test
 	public void emptyQuerySearch() {
 		QT.insert(5,5,0);
 		List<Node> list = QT.query(3, 6, 7, 9);
-		System.out.println("Length of list: " + list.size());
 		assertEquals(0, list.size());
 	}
 

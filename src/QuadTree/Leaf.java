@@ -96,7 +96,6 @@ public class Leaf extends BoundingBox implements Element {
 	}
 	
 	public boolean equals(Object o) {
-		System.out.println("Am i equal");
 		if (!(o instanceof Leaf)) return false;
 		Leaf l = (Leaf) o;
 		return Arrays.deepEquals(nodes, l.getNodes());

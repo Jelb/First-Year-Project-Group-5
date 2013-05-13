@@ -123,6 +123,39 @@ public class EquationTest {
 		assertFalse(Math.abs(Equation.distanceBetweenPoints(x1,y1,x2,y2) - 5.0) < 0.001);
 	}
 	
+	@Test
+	public void scalarProduct() {
+		double[] vectorA = new double[] {  4.0 ,  0.0 };
+		double[] vectorB = new double[] {  2.0 ,  5.0 };
+		double[] vectorC = new double[] { -1.0 ,  2.0 };
+		double[] vectorD = new double[] { -2.5 , -1.5 };
+		assertEquals(8.0, Equation.scalarProduct(vectorA, vectorB), 0.001);
+		assertEquals(8.0,  Equation.scalarProduct(vectorB, vectorC), 0.001);
+		assertEquals(-0.5, Equation.scalarProduct(vectorC, vectorD), 0.001);
+		assertFalse(Math.abs(Equation.scalarProduct(vectorA, vectorC) - (-3.0)) < 0.001);
+		assertFalse(Math.abs(Equation.scalarProduct(vectorB, vectorD) - 1.0) < 0.001);
+		assertFalse(Math.abs(Equation.scalarProduct(vectorA, vectorB) - 0.5) < 0.001);
+	}
+	
+	@Test
+	public void cosVectorAngle() {
+		double[] vectorA = new double[] {  4.0 ,  0.0 };
+		double[] vectorB = new double[] {  2.0 ,  2.0 };
+		double[] vectorC = new double[] { -3.0 ,  3.0 };
+		double[] vectorD = new double[] {  1.0 ,  1.73205 };
+		double[] vectorE = new double[] {  5.0 ,  5.0 };
+		assertEquals(0.5, Equation.cosVectorAngle(vectorA, vectorD), 0.001);
+		assertEquals(0.0, Equation.cosVectorAngle(vectorB, vectorC), 0.001);
+		assertEquals(1.0, Equation.cosVectorAngle(vectorB, vectorE), 0.001);
+		assertFalse(Math.abs(Equation.cosVectorAngle(vectorA, vectorB) - 0.5) < 0.001);
+		assertFalse(Math.abs(Equation.cosVectorAngle(vectorB, vectorC) - (-0.5)) < 0.001);
+		assertFalse(Math.abs(Equation.cosVectorAngle(vectorA, vectorB) - 0.5) < 0.001);
+	}
+	
+	@Test
+	public void edgeToVector() {
+		
+	}
 	
 //	@Test
 //	public void onscreenPixelDistance() {
