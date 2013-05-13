@@ -147,7 +147,8 @@ public class Window extends JFrame {
 		contentPane.add(screen);
 		createButtons();
 		addButtons();	
-		setBackground(new Color(71, 180, 201)); 	// The color of the ocean.
+//		setBackground(new Color(71, 180, 201)); 	// The color of the ocean.
+		setBackground(new Color(165,191,221));		// Tom's ocean color, courtesy of Google Maps
 		pack();
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -268,7 +269,7 @@ public class Window extends JFrame {
 		reset.setVisible(true);
 
 		cityAndZipLabel = new JLabel("");
-		cityAndZipLabel.setBounds(20, 640-40, 200, 20);
+		cityAndZipLabel.setBounds(20, 600-40, 200, 20);
 		cityAndZipLabel.setVisible(true);
 
 		background = new TransparetPane();
@@ -843,11 +844,18 @@ public class Window extends JFrame {
 		 */
 		public void keyPressed(KeyEvent e) {
 			switch(e.getKeyCode()){
-			case KeyEvent.VK_1:
+			case KeyEvent.VK_SUBTRACT:
 				WindowHandler.zoomOut(1);
-			case KeyEvent.VK_2:
+				break;
+			case KeyEvent.VK_MINUS:
+				WindowHandler.zoomOut(1);
+				break;
+			case KeyEvent.VK_PLUS:
 				WindowHandler.zoomIn(1);
 				break;
+			case KeyEvent.VK_ADD:
+				WindowHandler.zoomIn(1);
+				break;	
 			case KeyEvent.VK_UP:
 				PanHandler.directionPan(Direction.NORTH);
 				break;
