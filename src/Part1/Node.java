@@ -86,6 +86,14 @@ public class Node {
 		else return false;
 	}
 	
+	@Override
+	public int hashCode() {
+		int hash = 17;
+		hash = 31 * hash + ((Double)xCord).hashCode();
+		hash = 31 * hash + ((Double)yCord).hashCode();
+		return hash;
+	}
+	
 //	public void addEdge(Edge edge) {
 //		edges.add(edge);
 //	}
