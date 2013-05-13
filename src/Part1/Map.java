@@ -74,7 +74,7 @@ public class Map extends JPanel {
 		drawBorder(border, Color.RED, g);
 		
 		// Draw road borders
-		for (RoadSegment b : borderSegments) {
+		for (RoadSegment b : segments) {
 			if (b == null)
 				continue;
 			b.paintComponent(g);
@@ -85,7 +85,6 @@ public class Map extends JPanel {
 				continue;
 			r.paintComponent(g);
 		}
-		System.out.println("draw road :"+(System.currentTimeMillis() - time));
 		// Draw the path
 		for (DrawableItem r : path)
 			r.paintComponent(g);
