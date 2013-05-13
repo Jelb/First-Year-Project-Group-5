@@ -32,7 +32,8 @@ public class RoadSegment extends DrawableItem {
 		darkOrange = new Color(250,144,57),
 		white = new Color(255,255,255),
 		lightGrey = new Color(239,235,226),
-		darkGrey = new Color(190,190,190);
+		darkGrey = new Color(190,190,190),
+		green = new Color(202,223,170);
 	
 	/**
 	 * 
@@ -73,6 +74,14 @@ public class RoadSegment extends DrawableItem {
 					break;
 		case 6    : roadWidth = zoomLevelSix(type);
 					break;
+		case 7    : roadWidth = zoomLevelSeven(type);
+					break;
+		case 8    : roadWidth = zoomLevelEight(type);
+					break;
+		case 9    : roadWidth = zoomLevelNine(type);
+					break;
+		case 10   : roadWidth = zoomLevelTen(type);
+				    break;
 		default   : roadWidth = zoomLevelOne(type);
 					break;
 		}
@@ -85,6 +94,7 @@ public class RoadSegment extends DrawableItem {
 		case 3    : return 2.5f;
 		case 4    : return 2.0f;
 		case 5    : return 1.0f;
+		case 6    : return 1.0f;
 		case 8    : return 0.8f;
 		case 4242 : return 3.6f;
 		default   : return 0.8f;
@@ -98,9 +108,10 @@ public class RoadSegment extends DrawableItem {
 		case 3    : return 3.0f;
 		case 4    : return 2.8f;
 		case 5    : return 1.4f;
+		case 6    : return 1.4f;
 		case 8    : return 0.8f;
 		case 4242 : return 4.0f;
-		default   : return 0.8f;
+		default   : return 1.0f;
 		}
 	}
 	
@@ -111,47 +122,107 @@ public class RoadSegment extends DrawableItem {
 		case 3    : return 3.2f;
 		case 4    : return 2.8f;
 		case 5    : return 1.4f;
+		case 6    : return 1.4f;
 		case 8    : return 1.0f;
 		case 4242 : return 4.4f;
-		default   : return 0.8f;
+		default   : return 1.3f;
 		}
 	}
 	
 	public static float zoomLevelFour(int type) {
 		switch(type) {
-		case 1    : return 5.0f;
-		case 2    : return 4.2f;
-		case 3    : return 3.6f;
+		case 1    : return 6.0f;
+		case 2    : return 5.0f;
+		case 3    : return 3.8f;
 		case 4    : return 3.0f;
 		case 5    : return 1.4f;
+		case 6    : return 1.2f;
 		case 8    : return 1.0f;
 		case 4242 : return 5.0f;
-		default   : return 0.8f;
+		default   : return 1.5f;
 		}
 	}
 	
 	public static float zoomLevelFive(int type) {
 		switch(type) {
 		case 1    : return 7.0f;
-		case 2    : return 5.0f;
-		case 3    : return 4.4f;
+		case 2    : return 6.0f;
+		case 3    : return 4.5f;
 		case 4    : return 3.9f;
 		case 5    : return 1.8f;
+		case 6    : return 1.4f;
 		case 8    : return 1.0f;
 		case 4242 : return 7.0f;
-		default   : return 1.0f;
+		default   : return 2.0f;
 		}
 	}
 	
 	public static float zoomLevelSix(int type) {
 		switch(type) {
 		case 1    : return 8.0f;
-		case 2    : return 6.0f;
-		case 3    : return 5.0f;
+		case 2    : return 7.0f;
+		case 3    : return 6.0f;
+		case 4    : return 4.0f;
+		case 5    : return 3.0f;
+		case 6    : return 2.5f;
+		case 8    : return 2.0f;
+		case 4242 : return 10.0f;
+		default   : return 2.0f;
+		}
+	}
+	
+	public static float zoomLevelSeven(int type) {
+		switch(type) {
+		case 1    : return 9.0f;
+		case 2    : return 8.0f;
+		case 3    : return 7.0f;
 		case 4    : return 4.5f;
-		case 5    : return 3.5f;
+		case 5    : return 4.0f;
+		case 6    : return 3.4f;
 		case 8    : return 3.0f;
-		case 4242 : return 8.0f;
+		case 4242 : return 10.0f;
+		default   : return 2.5f;
+		}
+	}
+	
+	public static float zoomLevelEight(int type) {
+		switch(type) {
+		case 1    : return 12.0f;
+		case 2    : return 11.0f;
+		case 3    : return 9.0f;
+		case 4    : return 9.0f;
+		case 5    : return 8.0f;
+		case 6    : return 7.0f;
+		case 8    : return 3.0f;
+		case 4242 : return 12.0f;
+		default   : return 3.0f;
+		}
+	}
+	
+	public static float zoomLevelNine(int type) {
+		switch(type) {
+		case 1    : return 14.0f;
+		case 2    : return 12.0f;
+		case 3    : return 12.0f;
+		case 4    : return 11.0f;
+		case 5    : return 10.0f;
+		case 6    : return 8.5f;
+		case 8    : return 4.0f;
+		case 4242 : return 12.0f;
+		default   : return 3.0f;
+		}
+	}
+	
+	public static float zoomLevelTen(int type) {
+		switch(type) {
+		case 1    : return 18.0f;
+		case 2    : return 15.0f;
+		case 3    : return 14.0f;
+		case 4    : return 13.0f;
+		case 5    : return 12.0f;
+		case 6    : return 11.0f;
+		case 8    : return 5.0f;
+		case 4242 : return 20.0f;
 		default   : return 3.0f;
 		}
 	}
@@ -183,10 +254,11 @@ public class RoadSegment extends DrawableItem {
 		case 2    : return lightOrange;				// Motor traffic road
 		case 3    : return lightYellow; 			// Primary roads > 6 m 
 		case 4    : return lightYellow;				// Secondary roads > 6 m
-		case 5    : return lightGrey;				// Roads between 3-6 meters
-		case 8    : return Color.green.darker();	// paths
+		case 5    : return white;					// Roads between 3-6 meters
+		case 6    : return white;					// All regular roads and streets
+		case 8    : return green;					// paths
 		case 4242 : return Color.RED;				// route
-		default   : return darkGrey; 					// everything else
+		default   : return lightGrey; 				// everything else
 		}
 	}
 	
@@ -195,20 +267,32 @@ public class RoadSegment extends DrawableItem {
 		if(WindowHandler.getGeoWidth() > 50000.0) {
 			zoomLevel = 1; 
 			}
-		else if(WindowHandler.getGeoWidth() < 50000.0 && WindowHandler.getGeoWidth() > 40000.0) {
+		else if(WindowHandler.getGeoWidth() <= 50000.0 && WindowHandler.getGeoWidth() > 40000.0) {
 			zoomLevel = 2; 
 			}
-		else if (WindowHandler.getGeoWidth() < 40000.0 && WindowHandler.getGeoWidth() > 15000.0) {
+		else if(WindowHandler.getGeoWidth() <= 40000.0 && WindowHandler.getGeoWidth() > 40000.0) {
 			zoomLevel = 3; 
 			}
-		else if (WindowHandler.getGeoWidth() < 15000.0 && WindowHandler.getGeoWidth() > 6000.0) {
+		else if (WindowHandler.getGeoWidth() <= 30000.0 && WindowHandler.getGeoWidth() > 20000.0) {
 			zoomLevel = 4; 
 			}
-		else if (WindowHandler.getGeoWidth() < 6000.0 && WindowHandler.getGeoWidth() > 2000.0) {
+		else if (WindowHandler.getGeoWidth() <= 20000.0 && WindowHandler.getGeoWidth() > 10000.0) {
 			zoomLevel = 5; 
 			}
-		else if (WindowHandler.getGeoWidth() < 2000.0) {
-			zoomLevel = 6;
+		else if (WindowHandler.getGeoWidth() <= 10000.0 && WindowHandler.getGeoWidth() > 5000.0) {
+			zoomLevel = 6; 
+			}
+		else if (WindowHandler.getGeoWidth() <= 5000.0 && WindowHandler.getGeoWidth() > 2500.0) {
+			zoomLevel = 7; 
+			}
+		else if (WindowHandler.getGeoWidth() <= 2500.0 && WindowHandler.getGeoWidth() > 1250.0) {
+			zoomLevel = 8;
+			}
+		else if (WindowHandler.getGeoWidth() <= 1250.0 && WindowHandler.getGeoWidth() > 600.0) {
+			zoomLevel = 9;
+			}
+		else if (WindowHandler.getGeoWidth() <= 600.0) {
+			zoomLevel = 10;
 		}
 		
 		//System.out.println("Zoomlevel: " + zoomLevel);

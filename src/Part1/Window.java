@@ -159,7 +159,7 @@ public class Window extends JFrame {
 	public void addListeners() {
 		addKeyListener(new MKeyListener());
 		addComponentListener(new resizeListener());
-		Map.use().addMouseWheelListener(new mouseWheelZoom());
+		Map.use().addMouseWheelListener(new MouseWheelZoom());
 		//Listeners for when mouse is pressed, dragged or released
 		MouseListener mouseListener = new MouseListener();
 		Map.use().addMouseListener(mouseListener);
@@ -293,7 +293,7 @@ public class Window extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				WindowHandler.zoomOut();
+				WindowHandler.zoomOut(1);
 			}
 		});
 
@@ -301,7 +301,7 @@ public class Window extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				WindowHandler.zoomIn();
+				WindowHandler.zoomIn(1);
 			}
 		});
 
@@ -844,10 +844,9 @@ public class Window extends JFrame {
 		public void keyPressed(KeyEvent e) {
 			switch(e.getKeyCode()){
 			case KeyEvent.VK_1:
-				WindowHandler.zoomOut();
-				break;
+				WindowHandler.zoomOut(1);
 			case KeyEvent.VK_2:
-				WindowHandler.zoomIn();
+				WindowHandler.zoomIn(1);
 				break;
 			case KeyEvent.VK_UP:
 				PanHandler.directionPan(Direction.NORTH);
@@ -1094,44 +1093,40 @@ public class Window extends JFrame {
 		}
 	}
 	
-//	private class mouseWheel implements MouseWheelListener{
-//		int notches;
-//		int zoomCount = 0;
-//		
-//		public void mouseWheelMoved(MouseWheelEvent e) {
-//			notches += e.getWheelRotation();
-//			zoomCount += zoomCount;
-//			if(timer == null){
-//				timer = new Timer(500, new mouseWheelMovedZoom());
-//				timer.start();
-//			}
-//			timer.restart();
-//		
-//		}
-//		private class mouseWheelMovedZoom implements ActionListener {
-//			public void actionPerformed(ActionEvent e) {
-//				timer.stop();
-//				
-//				if (notches < 0) {
-//					WindowHandler.zoomIn(zoomCount);
-//				} else {	            
-//					WindowHandler.zoomOut(zoomCount);
-//				}
-//				zoomCount = 0;
-//				notches = 0;
-//				}
-//			}	
-//	}
-
-	private class mouseWheelZoom implements MouseWheelListener{
+	private class MouseWheelZoom implements MouseWheelListener{
+		int zoomCount;
+		MouseWheelMovedZoom zoomListener;
+		
+		MouseWheelZoom() {
+			zoomListener = new MouseWheelMovedZoom();
+		}
+		
 		public void mouseWheelMoved(MouseWheelEvent e) {
 			int notches = e.getWheelRotation();
-			if (notches < 0) {
-				WindowHandler.zoomIn();
-			} else {	            
-				WindowHandler.zoomOut();
+			if (notches < 0)
+				zoomCount -= 1;
+			else
+				zoomCount += 1;
+			if(timer == null){
+				timer = new Timer(50, zoomListener);
+				timer.start();
 			}
+			timer.restart();
+		
 		}
+		private class MouseWheelMovedZoom implements ActionListener {
+			public void actionPerformed(ActionEvent e) {
+				timer.stop();
+				if (zoomCount > 10) zoomCount = 5;
+				else if (zoomCount < -10) zoomCount = -5;
+				if (zoomCount < 0) {
+					WindowHandler.zoomIn(Math.abs(zoomCount));
+				} else {	            
+					WindowHandler.zoomOut(Math.abs(zoomCount));
+				}
+				zoomCount = 0;
+				}
+			}	
 	}
 
 	private class mouseOnText extends MouseAdapter {
