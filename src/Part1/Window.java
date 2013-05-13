@@ -1185,7 +1185,8 @@ class TransparetPane extends JPanel{
 	
 	public TransparetPane() {
 		super();
-		setBackground(new Color(65,105,225,50)); //royalblue
+		//setBackground(new Color(65,105,225,50)); //royalblue
+		setBackground(new Color(0,0,0,50)); //royalblue
 		setOpaque(false);
 	}
 	
