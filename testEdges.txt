@@ -1,6 +1,6 @@
 FNODE# TNODE# LENGTH DAV_DK# DAV_DK-ID TYP VEJNAVN FROMLEFT TOLEFT FROMRIGHT TORIGHT FROMLEFT_BOGSTAV TOLEFT_BOGSTAV FROMRIGHT_BOGSTA TORIGHT_BOGSTAV V_SOGNENR H_SOGNENR V_POSTNR H_POSTNR KOMMUNENR VEJKODE SUBNET RUTENR FRAKOERSEL ZONE SPEED DRIVETIME ONE_WAY F_TURN T_TURN VEJNR AENDR_DATO TJEK_ID
-1,2,44,1,1,1,'Random jysk motorvej',0,0,0,0,'','','','',0,0,0,0,0,0,0,'',0,0,110,30,'n','','',0,'18/03/13',1
-2,1,44,1,1,1,'Random jysk motorvej',0,0,0,0,'','','','',0,0,0,0,0,0,0,'',0,0,110,30,'n','','',0,'18/03/13',2
+1,2,44,1,1,1,'Random jysk motorvej',0,0,0,0,'','','','',0,0,0,0,0,0,0,'',0,0,110,30,'ft','','',0,'18/03/13',1
+2,1,44,1,1,1,'Random jysk motorvej',0,0,0,0,'','','','',0,0,0,0,0,0,0,'',0,0,110,30,'tf','','',0,'18/03/13',2
 3,2,45,1,1,1,'Hjem til mor i Hammel',0,0,0,0,'','','','',0,0,0,0,0,0,0,'',0,0,130,30,'n','','',0,'18/03/13',3
 2,3,45,1,1,1,'Hjem til mor i Hammel',0,0,0,0,'','','','',0,0,0,0,0,0,0,'',0,0,130,30,'n','','',0,'18/03/13',4
 2,4,46,1,1,80,'Random jysk motorvej',0,0,0,0,'','','','',0,0,0,0,0,0,0,'',0,0,110,30,'n','','',0,'18/03/13',5
