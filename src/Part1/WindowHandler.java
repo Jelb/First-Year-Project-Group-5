@@ -311,6 +311,8 @@ public class WindowHandler {
 						new RoadSegment(x1, y1, x2, y2, e.getType()));
 				else if(e.getType() == 5) Map.use().addRoadSegment5(
 						new RoadSegment(x1, y1, x2, y2, e.getType()));
+				else if(e.getType() == 6) Map.use().addRoadSegment6(
+						new RoadSegment(x1, y1, x2, y2, e.getType()));
 				else Map.use().addRoadSegment8(
 						new RoadSegment(x1, y1, x2, y2, e.getType()));
 			}
@@ -473,15 +475,15 @@ public class WindowHandler {
 
 	public static void main(String[] args) throws IOException {
 		
-		if (System.getProperty("os.name").contains("Mac")) {
+//		if (System.getProperty("os.name").contains("Mac")) {
 //			Application application = Application.getApplication();
-			Image image = Toolkit.getDefaultToolkit().getImage("deskicon.png");
+//			Image image = Toolkit.getDefaultToolkit().getImage("deskicon.png");
 //			application.setDockIconImage(image);
-		} else if (System.getProperty("os.name").contains("Windows")) {
-			ArrayList<Image> imageList = new ArrayList<Image>();
-			imageList.add(Toolkit.getDefaultToolkit().getImage("deskicon.png"));		 
-			Window.use().setIconImages(imageList);
-		}
+//		} else if (System.getProperty("os.name").contains("Windows")) {
+//			ArrayList<Image> imageList = new ArrayList<Image>();
+//			imageList.add(Toolkit.getDefaultToolkit().getImage("deskicon.png"));		 
+//			Window.use().setIconImages(imageList);
+//		}
 		String nodeFile = "kdv_node_unload.txt";
 		String edgeFile = "kdv_unload.txt";
 		String coastFile = "coastline.dat";
