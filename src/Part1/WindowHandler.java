@@ -1,11 +1,15 @@
 package Part1;
 
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Stack;
+
+import javax.swing.ToolTipManager;
 
 import Part1.DijkstraSP.CompareType;
 import Part1.DijkstraSP.TransportWay;
@@ -17,19 +21,16 @@ public class WindowHandler {
 	private static List<Node> nodes;
 	private static List<Edge> edges;
 	private static List<Edge> longestRoads;
-	private static int startNode;
-	private static int endNode;
+	private static int startNode, endNode;
 	private static HashMap<String, HashSet<String>> roadToZipMap;
 	private static int longestRoadsFloor;
 	private static QuadTree QT;
 	private static Graph graph;
-	private static AddressParser ap;
 	private static double geoWidth;		// The  width of the view area in meters
 	private static double geoHeight;	// The height of the view area in meters
 	private static double offsetX;		// Offset of the current view area relative to the 'outer' map constraints
 	private static double offsetY;		// Offset of the current view area relative to the 'outer' map constraints
 	private static double ratio;
-	private static double minLength;
 	private static double maxMapHeight;	// = DataReader.getMaxY()-DataReader.getMinY();
 	private static double maxMapWidth;	// = DataReader.getMaxX()-DataReader.getMinX();
 	private static HashMap<String, String> zipToCityMap;
@@ -126,8 +127,6 @@ public class WindowHandler {
 				}
 			}
 		}
-		//testDrawClosestEdge(closestEdge);
-		//System.out.print("Closest edge: ");
 		if(Equation.onscreenPixelDistance(shortestDist) < 10.0) {
 			return closestEdge;
 		}
@@ -150,27 +149,11 @@ public class WindowHandler {
 	public static void pathFinding(TransportWay transport, CompareType compareType, boolean useFerry) {
 		DijkstraSP dsp = new DijkstraSP(graph, startNode, transport, compareType, useFerry);
 		
-		Stack<Edge> route = new Stack<Edge>();					// clears any previous route
-		
-		route = (Stack<Edge>) dsp.pathTo(endNode);	// find route from start to destination node
-		addRouteToMap(route);									// adding the route to the Map()
+		Stack<Edge> route = (Stack<Edge>) dsp.pathTo(endNode);	// find route from start to destination node
+		addRouteToMap(route);// adding the route to the Map()
+		if (!route.isEmpty()) Window.use().addPathInfo(transport);
 		Window.use().updateMap();
 	}
-	
-//	/**
-//	 * Test method, draws the closest edge as a shortest path.
-//	 * @param edge	The 'closest' edge
-//	 */
-//	public static void testDrawClosestEdge(Edge edge) {
-//		ArrayList<DrawableItem> path = new ArrayList<DrawableItem>();
-//		double x1 = edge.getFromNode().getXCord();
-//		double y1 = edge.getFromNode().getYCord();
-//		double x2 = edge.getToNode().getXCord();
-//		double y2 = edge.getToNode().getYCord();
-//		boolean border = false;											// for now, no borders will be drawn
-//		path.add(new RoadSegment(x1, y1, x2, y2, 4242, border));
-//		Map.use().setPath(path);
-//	}
 	
 	/**
 	 * Adds the shortest path (static field 'route') to the roadSegments on the map.
@@ -178,7 +161,7 @@ public class WindowHandler {
 	 */
 	public static void addRouteToMap(Stack<Edge> route) {
 		ArrayList<DrawableItem> path = new ArrayList<DrawableItem>();
-		double minX = Double.MAX_VALUE, maxX = 0,  minY = Double.MAX_VALUE, maxY = 0;
+		double minX = Double.MAX_VALUE, maxX = 0,  minY = Double.MAX_VALUE, maxY = 0, length = 0, driveTime = 0;
 		while(!route.empty()) {
 			Edge edge = route.pop();
 			double x1 = edge.getFromNode().getXCord();
@@ -195,8 +178,11 @@ public class WindowHandler {
 			if (y2 > maxY) maxY = y2;
 			boolean border = false;											// for now, no borders will be drawn
 			path.add(new RoadSegment(x1, y1, x2, y2, 4242, border));
+			length += edge.length();
+			driveTime += edge.getDriveTime();
 		}
-		Map.use().setPath(path);
+
+		Map.use().setPath(path, length, driveTime);
 		if (!path.isEmpty()) {
 			double deltaX = (maxX-minX)*0.1;
 			double deltaY = (maxY-minY)*0.1; 
@@ -327,9 +313,7 @@ public class WindowHandler {
 			}
 		}
 		
-		Map.use().createBufferImage();
-		Window.use().repaint();
-		
+		Map.use().createBufferImage();		
 	}
 	
 	//TODO: Write code to detect intersection between area of interest and road.
@@ -347,11 +331,9 @@ public class WindowHandler {
 	// returns true if the given edge will be shown on the map with the current zoom level
 	private static boolean includeEdge(Edge e) {
 		int t = e.getType();
-		//if (t == 1 || t == 2 || t == 3 || t == 4 || t == 80) return true;
 		if (t == 1 || t == 2 || t == 3 || t == 80) return true;
 		else if (geoWidth < 250000 && (t == 4)) return true;
 		else if (geoWidth < 60000 && (t == 5)) return true;
-//		else if (geoWidth < 100000 && (t == 5)) return true;
 		else if (geoWidth < 13000) return true;
 		else return false;
 	}
@@ -450,7 +432,34 @@ public class WindowHandler {
 	public static ArrayList<CoastPoint[]> getLakes() {
 		return lakes;
 	}
-
+	
+	/**
+	 * Used to get the effective size of the screen. 
+	 * The effective size of the screen is equals to the size of the screen 
+	 * excluding the size reserved for other objects such as docks and tool bars.
+	 * <br>
+	 * The effective size of the screen is used to set the ratio of the application 
+	 * and its max height;
+	 */
+	private static void getEffectiveScreenSize() {
+		Rectangle mwb = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+		double h = mwb.height;
+		double w = mwb.width;
+		ratio = (w/h);
+		Window.setMaxHeight(mwb.height);	
+	}
+	
+	/**
+	 * Sets the ratio of the application.
+	 * This method should only be called if the calculated ratio 
+	 * forces map-data to be omitted.  
+	 * 
+	 * @param argRatio The new ratio of the application
+	 */
+	public static void setRatio(double argRatio) {
+		ratio = argRatio;
+	}
+	
 	public static void main(String[] args) throws IOException {
 		String nodeFile = "kdv_node_unload.txt";
 		String edgeFile = "kdv_unload.txt";
@@ -458,13 +467,13 @@ public class WindowHandler {
 		String lakeFile = "lake.dat";
 		String islandFile = "island.dat";
 		String borderFile = "border.dat";
-				
+		getEffectiveScreenSize();
 		SplashScreen.initialize(nodeFile, edgeFile, coastFile, lakeFile, islandFile);
 		SplashScreen.use();
 		
 		//Initializing of data from KrakLoader
-		DataReader dataReader = DataReader.use("kdv_node_unload.txt","kdv_unload.txt");
-		
+		//DataReader dataReader = DataReader.use("kdv_node_unload.txt","kdv_unload.txt");
+		DataReader dataReader = DataReader.use(nodeFile,edgeFile);
 		
 		SplashScreen.use().setTaskName(Task.COAST);
 		coast = dataReader.readCoast(coastFile);
@@ -500,19 +509,20 @@ public class WindowHandler {
 		setGeoHeight(DataReader.getMaxY()-DataReader.getMinY());
 		setGeoWidth(DataReader.getMaxX()-DataReader.getMinX());
 		
-		ratio = geoWidth/geoHeight;
+		
 		SplashScreen.use().setTaskName(Task.MAP);
 				
 		// Finds all the nodes in the view area
 		nodes = QT.query(0, 0, geoWidth, geoHeight);
 		DrawableItem.setMapSize(geoWidth, geoHeight, 0.0, 0.0);
 		
-		// Constructs the GoogleMaps style colors
-		RoadSegment.setColors();
-		
 		// Finds all the edges for these nodes
 		getEdgesFromNodes();
-
+		
+		// Getting the desired tool tip effect when mouse over on a road
+		ToolTipManager.sharedInstance().setInitialDelay(500);
+		ToolTipManager.sharedInstance().setDismissDelay(1200);
+		ToolTipManager.sharedInstance().setReshowDelay(0);
 
 		maxMapHeight = DataReader.getMaxY()-DataReader.getMinY();
 		maxMapWidth = DataReader.getMaxX()-DataReader.getMinX();

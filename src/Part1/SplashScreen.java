@@ -17,11 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 public class SplashScreen extends JFrame{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Enums used to describe the allowed tasks for the Loader class
@@ -115,6 +110,7 @@ public class SplashScreen extends JFrame{
 	}
 	
 	public void close() {
+		Window.use().setVisible(true);
 		dispose();
 		instance = null;
 	}
@@ -127,6 +123,13 @@ public class SplashScreen extends JFrame{
 		   noOfCoastPoints += countLines(island);
 	}
 	
+	/**
+	 * The method is used to count the number of RoadSegment within the 
+	 * data files. 
+	 * 
+	 * @param filepath The directory for the file which should be counted.
+	 * @return	The number of new line character within the file.
+	 */
 	private static int countLines(String filepath) {
 		InputStream is;
 		int count = 0;
@@ -145,11 +148,12 @@ public class SplashScreen extends JFrame{
 		            }
 		        }
 		        is.close();
-		    } catch (FileNotFoundException e) {
-
-			} catch (IOException e) {
-
-		}
+		    } catch (Exception e) {
+		        //Sets the value of the counter to 1 if an exception is caught.
+		        //Makes the Splash-screen' progress bar look funny but the program will start.  
+		        //If the file really is corrupt the DataReader will terminate the program.
+		    	return 1;
+			}
 		return count;
 	}
 }

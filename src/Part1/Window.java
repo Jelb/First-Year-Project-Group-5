@@ -5,8 +5,10 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.GraphicsEnvironment;
+import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.Rectangle;
+
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -17,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
@@ -32,6 +35,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -74,8 +79,6 @@ public class Window extends JFrame {
 	private boolean byShip = true;
 	
 	// The tree flags
-	//private Flag fromFlag = new Flag(true);
-	//private Flag toFlag = new Flag(false);
 	private Flag fromFlag = new Flag(1);
 	private Flag toFlag = new Flag(2);
 	private Flag findFlag = new Flag(3);
@@ -97,10 +100,13 @@ public class Window extends JFrame {
 	private final String findDefault = "Enter address";
 	
 	//GUI background
-	private JPanel background;
+	private JPanel background, routeInfo;
 
-	private int mousePanX;	// The temporary displacement of the buffered image
+	// The temporary displacement of the buffered image
+	private int mousePanX;	
 	private int mousePanY;
+	
+	private int infoSize;
 	
 	public enum TextType {
 		FIND, TO, FROM;
@@ -133,7 +139,6 @@ public class Window extends JFrame {
 	 * is displayed while the program is loading.
 	 */
 	private void makeContent(){
-		getEffectiveScreenSize();
 		contentPane = getContentPane();
 		setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
 		contentPane.setPreferredSize(new Dimension((int)(640*WindowHandler.getRatio()),640)); //Sets the dimension on the content pane.
@@ -163,38 +168,22 @@ public class Window extends JFrame {
 		addButtonListeners();
 	}
 
-	/**
-	 * Used to get the effective size of the screen. 
-	 * The effective size of the screen is equals to the size of the screen 
-	 * excluding the size reserved for other objects such as docks and tool bars.
-	 */
-	private static void getEffectiveScreenSize() {
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		maxHeight  = ge.getMaximumWindowBounds().height;
-	}
+	
 
 	/**
 	 * Redraws the map when its content has changed or 
 	 * the window has been resized. 
 	 */
 	public void updateMap() {
-		long startTime = System.currentTimeMillis();
 		Map.use().updatePath();
-		validate();
-		
-		
 		if(!isVisible()){
-			SplashScreen.use().setAlwaysOnTop(true);
 			Map.use().setBounds(0, 0, contentPane.getPreferredSize().width, contentPane.getPreferredSize().height);		
 			addListeners();
-			setVisible(true);
-			SplashScreen.use().setAlwaysOnTop(false);
 		} else {
 			requestFocus();			
 		}
 		Map.use().createBufferImage();
 		repaint();
-		//System.out.println("Time to update map: " + (System.currentTimeMillis()-startTime)/1000.0);
 	}
 
 	/**
@@ -281,26 +270,9 @@ public class Window extends JFrame {
 		cityAndZipLabel.setBounds(20, 640-40, 200, 20);
 		cityAndZipLabel.setVisible(true);
 		
-		//Internet magic from http://tips4java.wordpress.com/2009/05/31/backgrounds-with-transparency/
-		background = new JPanel(){
-		
-		    /**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			protected void paintComponent(Graphics g)
-		    {
-		        g.setColor( getBackground() );
-		        g.fillRect(0, 0, getWidth(), getHeight());
-		        super.paintComponent(g);
-		    }
-		};
-		background.setOpaque(false);
-		background.setBackground(new Color(65,105,225,50)); //royalblue
-		//background.setBackground(new Color(255,255,255,100)); //White
-		//background.setBackground(new Color(0,0,0,50)); //Black
+		background = new TransparetPane();
 		background.setBounds(10,15,165,315);
+		routeInfo = new TransparetPane();
 	}
 	
 	/**
@@ -372,6 +344,7 @@ public class Window extends JFrame {
 			}
 		});
 		
+		
 		from.addMouseListener(new mouseOnText(TextType.FROM));
 
 		to.addActionListener(new ActionListener(){
@@ -406,6 +379,8 @@ public class Window extends JFrame {
 				search.setBounds(20, 375,70, 20);
 				reset.setBounds(95, 375, 70, 20);
 				fastest = false; //We want the shortest route if by bike
+				background.setBounds(10,15,165,390);
+				repositionInfo();
 			}
 		});
 		
@@ -424,6 +399,8 @@ public class Window extends JFrame {
 				fastestButton.setFont(new Font("Shortest", Font.BOLD, 12));
 				search.setBounds(20, 405,70, 20);
 				fastest = true; //We want the fastest route by default if by car
+				background.setBounds(10,15,165,420);
+				repositionInfo();
 			}
 		});
 		
@@ -474,6 +451,7 @@ public class Window extends JFrame {
 				findText = findDefault;
 				screen.remove(searchFromResultBox);
 				screen.remove(searchToResultBox);
+				screen.remove(routeInfo);
 				screen.remove(searchFindResultBox);
 				fromMarked = false;
 				toMarked = false;
@@ -560,6 +538,7 @@ public class Window extends JFrame {
 				search.setVisible(false);
 				findButton.setVisible(true);
 				background.setBounds(10,15,165,315);
+				repositionInfo();
 			}
 		});
 		
@@ -574,6 +553,7 @@ public class Window extends JFrame {
 						bikeUnselected.setVisible(true);
 						carSelected.setVisible(true);
 						reset.setBounds(95, 405, 70, 20);
+						background.setBounds(10,15,165,420);
 						if (fastest) {
 							shortest.setVisible(true);
 							fastestButton.setVisible(true);
@@ -591,6 +571,7 @@ public class Window extends JFrame {
 						bikeSelected.setVisible(true);
 						carUnselected.setVisible(true);
 						reset.setBounds(95, 375, 70, 20);
+						background.setBounds(10,15,165,390);
 					}
 					navigateVisible = true;
 					if (byShip) shipSelected.setVisible(true);
@@ -602,7 +583,7 @@ public class Window extends JFrame {
 					findPlace.setVisible(true);
 					findPlaceBlue.setVisible(false);
 					searchFindResultBox.setVisible(false);
-					background.setBounds(10,15,165,420);
+					repositionInfo();
 				}
 			}
 		});
@@ -766,12 +747,67 @@ public class Window extends JFrame {
 		return button;
 	}
 
-	public int getMapWidth() {
-		return contentPane.getWidth();
-	}
+	public void addPathInfo(TransportWay transport) {
+		double dist = (Map.use().getPathLengt()/1000);
+		int hour = (int)Map.use().getDriveTime()/60, min = (int)Map.use().getDriveTime()%60;
+		DecimalFormat df = new DecimalFormat();
+		if(routeInfo != null) screen.remove(routeInfo);
+		routeInfo = new TransparetPane();
+		String distStr;
+		if(dist < 1) {
+			df.applyPattern(".###");
+			df.setRoundingMode(RoundingMode.HALF_UP);
+			distStr = ("Distance: " + df.format(dist).replaceAll("\\.|,", "") + " m");
+		} else if (dist < 100) {
+			df.applyPattern("###.#");
+			df.setRoundingMode(RoundingMode.HALF_UP);
+			distStr = "Distance: " + df.format(dist) + " km";
+		} else {
+			df.applyPattern("####");
+			df.setRoundingMode(RoundingMode.HALF_UP);
+			distStr = "Distance: " + df.format(dist) + " km";
+		}
+		String timeStr;
+		if(hour < 1) {
 
-	public int getMapHeight() {
-		return contentPane.getHeight();
+			timeStr = ("Time: " + min + " min");
+		} else {
+			if(min < 10) {
+				timeStr = ("Time: " + hour + ":0" + min + "h");
+			} else {
+				timeStr = ("Time: " + hour + ":" + min + "h");
+			}
+		}
+		if (transport == TransportWay.CAR) { 
+			infoSize = 50;
+			routeInfo.setLayout(new GridLayout(2, 1));
+			routeInfo.add(new JLabel(distStr, SwingConstants.HORIZONTAL));
+			routeInfo.add(new JLabel(timeStr, SwingConstants.HORIZONTAL));
+		}
+		else {
+			infoSize = 25;
+			routeInfo.add(new JLabel(distStr, SwingConstants.HORIZONTAL));
+		}
+			
+		repositionInfo();
+		if(dist != -1)  {
+			routeInfo.setVisible(true);
+		} else {
+			routeInfo.setVisible(false);
+		}
+		screen.add(routeInfo, JLayeredPane.PALETTE_LAYER);
+	}
+	
+	private void repositionInfo() {
+		Rectangle r = background.getBounds();
+		routeInfo.setBounds(10, (r.height + r.y +5), r.width, infoSize);
+		if(Map.use().getPathLengt() != -1)  {
+			System.out.println("Der tegnes");
+			routeInfo.setVisible(true);
+		} else {
+			System.out.println("der tegnes ikke");
+			routeInfo.setVisible(false);
+		}
 	}
 
 
@@ -780,7 +816,6 @@ public class Window extends JFrame {
 	 * The method compares where the user is dragging from and to, and hereby calculates
 	 * the rectangle.
 	 */
-	@SuppressWarnings("serial")
 	static class DrawRect extends JComponent {
 		public void paint(Graphics g) {
 			super.paint(g);
@@ -942,7 +977,7 @@ public class Window extends JFrame {
 	private class resizeListener extends ComponentAdapter {
 		int height;
 		int width;
-		final int MIN_HEIGHT = 505;
+		final int MIN_HEIGHT = 550;
 
 		public void componentResized(ComponentEvent evt) {
 			if(timer == null){
@@ -971,10 +1006,9 @@ public class Window extends JFrame {
 				} else {
 					Window.use().setPreferredSize(new Dimension((int)(maxHeight*WindowHandler.getRatio()), maxHeight));
 				}
-				cityAndZipLabel.setBounds(20, contentPane.getHeight()-40, 200, 20);
+				cityAndZipLabel.setBounds(20, contentPane.getHeight()-35, 200, 20);
 				pack();
 				Map.use().setSize(Window.use().getSize());
-				if(Map.use().getRoadSegments() != null)
 					Map.use().updatePix();
 				height = Window.use().getHeight();
 				width = Window.use().getWidth();
@@ -989,6 +1023,9 @@ public class Window extends JFrame {
 		int prevY;
 
 		public void mousePressed(MouseEvent e) {
+			if(rect == null){
+				rect = new DrawRect();
+			}
 			if (SwingUtilities.isRightMouseButton(e)) {
 				pressedX = e.getX();
 				pressedY = e.getY();
@@ -999,7 +1036,7 @@ public class Window extends JFrame {
 			}
 		}
 
-		public void mouseDragged(MouseEvent e) {
+		public void mouseDragged(MouseEvent e) {			
 			if (SwingUtilities.isRightMouseButton(e) && !noMoreBoxes) {
 				rect = new DrawRect();
 				rect.setBounds(0, 0, contentPane.getWidth(), contentPane.getHeight());
@@ -1060,7 +1097,37 @@ public class Window extends JFrame {
 			}
 			Map.use().createBufferImage();										// The new image is drawn to the buffer and flipped in when
 		}																		// it is completed (see Map.flipImageBuffer() for details).
-	}																			
+	}
+	
+//	private class mouseWheel implements MouseWheelListener{
+//		int notches;
+//		int zoomCount = 0;
+//		
+//		public void mouseWheelMoved(MouseWheelEvent e) {
+//			notches += e.getWheelRotation();
+//			zoomCount += zoomCount;
+//			if(timer == null){
+//				timer = new Timer(500, new mouseWheelMovedZoom());
+//				timer.start();
+//			}
+//			timer.restart();
+//		
+//		}
+//		private class mouseWheelMovedZoom implements ActionListener {
+//			public void actionPerformed(ActionEvent e) {
+//				timer.stop();
+//				
+//				if (notches < 0) {
+//					WindowHandler.zoomIn(zoomCount);
+//				} else {	            
+//					WindowHandler.zoomOut(zoomCount);
+//				}
+//				Map.use().createBufferImage();
+//				zoomCount = 0;
+//				notches = 0;
+//				}
+//			}	
+//	}
 
 	private class mouseWheelZoom implements MouseWheelListener{
 		public void mouseWheelMoved(MouseWheelEvent e) {
@@ -1085,11 +1152,18 @@ public class Window extends JFrame {
 		public void mousePressed(MouseEvent e) {
 			if (TextType.FROM == t && from.getText().equals(fromDefault)) from.setText("");
 			else if (t == TextType.TO && to.getText().equals(toDefault)) to.setText("");
-			else if (t == TextType.FIND && find.getText().equals(findDefault)) find.setText("");
-			
+			else if (t == TextType.FIND && find.getText().equals(findDefault)) find.setText("");			
 		}
 	}
 	
+	public int getMapWidth() {
+		return contentPane.getWidth();
+	}
+
+	public int getMapHeight() {
+		return contentPane.getHeight();
+	}
+
 	public int getMousePanX() {
 		return mousePanX;
 	}
@@ -1105,4 +1179,23 @@ public class Window extends JFrame {
 	public void setMousePanY(int inputMousePanY) {
 		mousePanY = inputMousePanY;
 	}
+	
+	public static void setMaxHeight(int maxH) {
+		maxHeight = maxH;
+	}
+}
+
+class TransparetPane extends JPanel{
+	
+	public TransparetPane() {
+		super();
+		setBackground(new Color(65,105,225,50)); //royalblue
+		setOpaque(false);
+	}
+	
+	protected void paintComponent(Graphics g) {
+        g.setColor( getBackground() );
+        g.fillRect(0, 0, getWidth(), getHeight());
+        super.paintComponent(g);
+    }
 }
