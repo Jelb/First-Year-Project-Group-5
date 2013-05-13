@@ -215,7 +215,7 @@ public class RoadSegment extends DrawableItem {
 			zoomLevel = 6;
 		}
 		
-		System.out.println("Zoomlevel: " + zoomLevel);
+		//System.out.println("Zoomlevel: " + zoomLevel);
 	}
 		
 	/**

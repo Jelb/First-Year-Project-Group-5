@@ -1119,7 +1119,6 @@ public class Window extends JFrame {
 //				} else {	            
 //					WindowHandler.zoomOut(zoomCount);
 //				}
-//				Map.use().createBufferImage();
 //				zoomCount = 0;
 //				notches = 0;
 //				}

@@ -113,7 +113,7 @@ public class Map extends JPanel {
 				continue;
 			r.paintComponent(g);
 		}
-		System.out.println("draw road :"+(System.currentTimeMillis() - time));
+		//System.out.println("draw road :"+(System.currentTimeMillis() - time));
 		// Draw the path
 		for (DrawableItem r : path)
 			r.paintComponent(g);
