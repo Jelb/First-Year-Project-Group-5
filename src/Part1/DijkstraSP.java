@@ -1,5 +1,6 @@
 package Part1;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -86,16 +87,14 @@ public class DijkstraSP {
 		return distTo[v] < Double.POSITIVE_INFINITY;
 	}
 	
-	public Iterable<Edge> pathTo(int v) {
-		Stack<Edge> path = new Stack<Edge>();
+	public ArrayList<Edge> pathTo(int v) {
+		ArrayList<Edge> path = new ArrayList<Edge>();
 		if(!hasPathTo(v)) {
-			System.out.println("No path to node " + v);
 			JOptionPane.showMessageDialog(Window.use(),"No route found. Try enabling ferry routes.");
 			return path;
 		}
 		for(Edge e = edgeTo[v]; e != null; e = edgeTo[e.getFromNodeID()]) {
-			path.push(e);
-			//System.out.println(e.getFromNodeID() + " -> " + e.getToNodeID());			
+			path.add(e);
 		}
 		return path;
 	}

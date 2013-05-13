@@ -16,11 +16,6 @@ public class Flag extends DrawableItem {
 	private int pixelYCord;
 	private BufferedImage icon;
 	
-//	public Flag(boolean fromBool){
-//		this.fromBool = fromBool;
-//		createFlag();
-//	}
-	
 	public Flag(int type){
 		this.type = type;
 		createFlag();
@@ -31,21 +26,6 @@ public class Flag extends DrawableItem {
 		geoYCord = y;
 		updatePosition();
 	}
-	
-//	private void createFlag(){
-//		try {
-//			if(fromBool){
-//				icon = ImageIO.read(new File("GreenFlag.PNG"));
-//			}
-//			else{
-//				icon = ImageIO.read(new File("RedFlag.PNG"));
-//			}
-//		} 
-//		
-//		catch (IOException e) {
-//			System.out.println("Failed to load flag image");
-//		}
-//	}
 	
 	private void createFlag(){
 		try {
@@ -61,7 +41,6 @@ public class Flag extends DrawableItem {
 		} 
 		
 		catch (IOException e) {
-			System.out.println("Failed to load flag image");
 		}
 	}
 	

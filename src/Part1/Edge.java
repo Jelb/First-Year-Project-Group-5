@@ -88,7 +88,6 @@ public class Edge {
 	 */
 	public String lookForStreetname(Edge e, Node n) {
 		ArrayList<Edge> connectedEdges = (ArrayList<Edge>) WindowHandler.getGraph().adjArr(n.getKdvID());	// gets a list of edges connected to the given node
-//		ArrayList<Edge> connectedEdges = (ArrayList<Edge>) WindowHandler.multiGraph.adjArr(n.getKdvID(),1);	// gets a list of edges connected to the given node
 		if(connectedEdges.size() <= 2) {																// makes sure the node has no more than 2 edges adjacent
 			for(Edge edge : connectedEdges) {															// iterates through these edges
 				if(edge != e) {																			// makes sure not to perform operation on the edge it just came from
@@ -96,7 +95,6 @@ public class Edge {
 					if(vejnavn.length() > 0) {															// determines whether edge has a streetname
 						return vejnavn;																	// if it does, return this name
 					} else {																			
-						System.out.println("Recursively looking for a streetname...");					// debuggin' yo!
 						lookForStreetname(edge, otherNode(n));											// if not, recursively call this method on the next adjacent edge	
 					}
 				}

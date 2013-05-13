@@ -70,16 +70,10 @@ public class AddressParser {
 		
 		INPUT = input.toLowerCase().trim(); 
 		
-//		System.out.println("plain input: " + INPUT);
-		
 		INPUT = INPUT.replaceAll("[.,]", "");
-		
-//		System.out.println("without period and comma: " + INPUT);
-		
+				
 		randomCheck();
 		findStreetName();
-		
-//		System.out.println("without street name: " + INPUT);
 		
 		// Searches for zip-code if search string contains one
 		// else searches for city-name
@@ -91,21 +85,13 @@ public class AddressParser {
 		else {
 			findCity();
 		}
-//        System.out.println("without zip and/or city name: " + INPUT);
 
 		buildingNo();
-		
-//		System.out.println("without building number: " + INPUT);
-		
+				
 		findBuildingLetter();
-		
-//		System.out.println("without building letter: " + INPUT);
-		
+				
 		findFloorNumber();
-		
-//		System.out.println("without floor number: " + INPUT);
-		
-		//print();
+
 		return result;
 	}
 	
@@ -114,7 +100,6 @@ public class AddressParser {
 		try {
 			streetName = fs.streetScan(INPUT);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		result[0] = streetName.trim();
@@ -199,27 +184,13 @@ public class AddressParser {
             throw new RuntimeException();
         }
     }
-    
-    public void print() {
-        System.out.println("----------------------------------------");
-        System.out.println("Search string: ");
-        System.out.println();
-        System.out.println("Street name:     " + result[0].trim());
-        System.out.println("Building no:     " + result[1].trim());
-        System.out.println("Building letter: " + result[2].trim());
-        System.out.println("Floor:           " + result[3].trim());
-//        System.out.println("Door:            " + result[-].trim());
-        System.out.println("Zip code:        " + result[4].trim());
-        System.out.println("City:            " + result[5].trim());
-        System.out.println("----------------------------------------");
-    }
+
     
     public String Test() {
     	String strBuilder = "";
     	for (String s : result) {
     		strBuilder += s + "#";
     	}
-    	System.out.println("Test: " + strBuilder.substring(0, strBuilder.length()-1));
     	return strBuilder.substring(0, strBuilder.length()-1);
     }
 }
