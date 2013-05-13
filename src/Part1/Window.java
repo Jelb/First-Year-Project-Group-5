@@ -191,7 +191,7 @@ public class Window extends JFrame {
 	 */
 	private void createButtons() {
 		//Icons from http://www.iconfinder.com/search/?q=iconset%3Abrightmix
-		resetZoom = createButton("ResetZoom.png", "Reset zoom", 75, 75);
+		resetZoom = createButton("ResetZoom.png", "Reset zoom", 73, 73);
 		zoomOut = createButton("minus_black.png", "Zoom out", 105, 175);
 		zoomIn = createButton("plus_black.png", "Zoom in", 55, 175);
 		west = createButton("West.png", "West", 25, 75);
