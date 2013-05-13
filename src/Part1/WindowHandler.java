@@ -219,6 +219,7 @@ public class WindowHandler {
 	}
 	
 	public static void zoomIn(int zoomCount) {
+		System.out.println(zoomCount);
 		double minX = geoWidth*0.1;
 		double minY = geoHeight*0.1;
 		double maxX = geoWidth-geoWidth*0.1;
