@@ -1,13 +1,17 @@
 package Part1;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.BufferedInputStream;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Random;
 
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -47,10 +51,63 @@ public class SplashScreen extends JFrame{
 	}
 	
 	private void setUp() {
+		String[] tipArray = { 
+			    "Click and hold right mouse to create zoom area", "Use mouse wheel to zoom in and out", "Click the globe to reset zoom", "<insert map joke>"
+			};
+		Random random = new Random();
+		int randomNumber = random.nextInt(tipArray.length);
+	
+		JLabel tipTitle = new JLabel("Todays tip:");
+		tipTitle.setForeground(Color.white);
+		JLabel tip = new JLabel(tipArray[randomNumber]);
+		tip.setForeground(Color.WHITE);
+		tip.setOpaque(false);
+		tipTitle.setOpaque(false);
+		
+		
 		JPanel contentPane = new JPanel(new GridBagLayout());
 		JLabel background = new JLabel(new ImageIcon("logo.jpg"));
 		background.setLayout(new GridBagLayout());
 		contentPane.add(background);
+		
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.weightx = 0.0;
+		gbc.weighty = 0.5;
+		background.add(Box.createGlue(), gbc);
+		
+		gbc.gridx = 0;
+		gbc.gridy = 5;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.weightx = 0.0;
+		gbc.weighty = 0.5;
+		background.add(Box.createGlue(), gbc);
+		
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.weightx = 0.0;
+		gbc.weighty = 0.0;
+		background.add(tipTitle, gbc);
+		
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.weightx = 0.0;
+		gbc.weighty = 0.0;
+		background.add(tipTitle, gbc);
+		
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 4;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.weightx = 0.0;
+		gbc.weighty = 0.0;
+		background.add(tip, gbc);
 		
 		mainBar = new JProgressBar(0, noOfNodes);
 		overview = new JProgressBar(0, noOfNodes+noOfEdges+noOfCoastPoints);
@@ -66,7 +123,12 @@ public class SplashScreen extends JFrame{
 		center.setOpaque(false);
 		center.add(mainBar, BorderLayout.NORTH);
 		center.add(overview, BorderLayout.SOUTH);
-		background.add(center);
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.0;
+		background.add(center, gbc);
 		setContentPane(contentPane);
 	}
 	
