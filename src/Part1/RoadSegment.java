@@ -74,6 +74,8 @@ public class RoadSegment extends DrawableItem {
 					break;
 		case 5    : roadWidth = zoomLevelFive(type);
 					break;
+		case 6    : roadWidth = zoomLevelSix(type);
+					break;
 		default   : roadWidth = zoomLevelOne(type);
 					break;
 		}
@@ -140,7 +142,20 @@ public class RoadSegment extends DrawableItem {
 		case 5    : return 1.8f;
 		case 8    : return 1.0f;
 		case 4242 : return 7.0f;
-		default   : return 0.8f;
+		default   : return 1.0f;
+		}
+	}
+	
+	public static float zoomLevelSix(int type) {
+		switch(type) {
+		case 1    : return 8.0f;
+		case 2    : return 6.0f;
+		case 3    : return 5.0f;
+		case 4    : return 4.5f;
+		case 5    : return 3.5f;
+		case 8    : return 3.0f;
+		case 4242 : return 8.0f;
+		default   : return 3.0f;
 		}
 	}
 	
@@ -193,9 +208,12 @@ public class RoadSegment extends DrawableItem {
 		else if (WindowHandler.getGeoWidth() < 15000.0 && WindowHandler.getGeoWidth() > 6000.0) {
 			zoomLevel = 4; 
 			}
-		else if (WindowHandler.getGeoWidth() < 6000.0) {
+		else if (WindowHandler.getGeoWidth() < 6000.0 && WindowHandler.getGeoWidth() > 2000.0) {
 			zoomLevel = 5; 
 			}
+		else if (WindowHandler.getGeoWidth() < 2000.0) {
+			zoomLevel = 6;
+		}
 		
 		System.out.println("Zoomlevel: " + zoomLevel);
 	}
