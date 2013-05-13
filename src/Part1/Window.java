@@ -505,7 +505,6 @@ public class Window extends JFrame {
 				
 				if(findMarked) {
 					WindowHandler.centerOnNode(findNode);
-					updateMap();
 				}
 			}
 		});
@@ -1013,7 +1012,7 @@ public class Window extends JFrame {
 				height = Window.use().getHeight();
 				width = Window.use().getWidth();
 				timer = null;
-				Map.use().createBufferImage();
+				updateMap();
 			}
 		}
 	}
@@ -1085,7 +1084,6 @@ public class Window extends JFrame {
 				WindowHandler.pixelSearch(pressedX, releasedX, pressedY, releasedY);
 				rect.setVisible(false); //Removes the rectangle when zoom box is chosen
 				noMoreBoxes = true;
-				updateMap();
 			}
 			else if (SwingUtilities.isLeftMouseButton(e)) {
 				if (dragging) {
@@ -1095,8 +1093,7 @@ public class Window extends JFrame {
 					dragging = false;											// Dragging ends.
 				}
 			}
-			Map.use().createBufferImage();										// The new image is drawn to the buffer and flipped in when
-		}																		// it is completed (see Map.flipImageBuffer() for details).
+		}
 	}
 	
 //	private class mouseWheel implements MouseWheelListener{
@@ -1137,7 +1134,6 @@ public class Window extends JFrame {
 			} else {	            
 				WindowHandler.zoomOut();
 			}
-			Map.use().createBufferImage();
 		}
 	}
 	

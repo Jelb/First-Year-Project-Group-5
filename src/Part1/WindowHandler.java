@@ -214,13 +214,11 @@ public class WindowHandler {
 			maxX = maxMapWidth - (offsetX + geoWidth) + geoWidth;
 		}
 		search(-minX, maxX, -minY, maxY);
-		Window.use().updateMap();
 		System.out.println("geoWidth = " + geoWidth);
 	}
 	
 	public static void zoomIn() {
 		search(geoWidth*0.1, geoWidth*0.9, geoHeight*0.1, geoHeight*0.9);
-		Window.use().updateMap();
 		System.out.println("geoWidth = " + geoWidth);
 	}
 	
@@ -313,7 +311,7 @@ public class WindowHandler {
 			}
 		}
 		
-		Map.use().createBufferImage();		
+		Window.use().updateMap();		
 	}
 	
 	//TODO: Write code to detect intersection between area of interest and road.
@@ -360,7 +358,6 @@ public class WindowHandler {
 	
 	public static void resetMap() {
 		search(-offsetX, maxMapWidth-offsetX, -offsetY, maxMapHeight-offsetY);
-		Window.use().updateMap();
 	}
 
 	

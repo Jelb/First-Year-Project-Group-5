@@ -93,7 +93,6 @@ public class PanHandler {
 		}
 		WindowHandler.search(deltaX, WindowHandler.getGeoWidth() + deltaX,
 				deltaY, WindowHandler.getGeoHeight() + deltaY);
-		Window.use().updateMap();
 	}
 
 	public static void pixelPan(int deltaX, int deltaY) {
