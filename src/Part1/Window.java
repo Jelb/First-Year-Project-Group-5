@@ -147,7 +147,8 @@ public class Window extends JFrame {
 		contentPane.add(screen);
 		createButtons();
 		addButtons();	
-		setBackground(new Color(71, 180, 201)); 	// The color of the ocean.
+//		setBackground(new Color(71, 180, 201)); 	// The color of the ocean.
+		setBackground(new Color(165,191,221));		// Tom's ocean color, courtesy of Google Maps
 		pack();
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
