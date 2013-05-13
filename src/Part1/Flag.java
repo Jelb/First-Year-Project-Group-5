@@ -42,12 +42,12 @@ public class Flag extends DrawableItem {
 	}
 	
 	public void updatePosition(){
-		pixelXCord = calcPixelX(geoXCord - WindowHandler.pixelToGeoX(16));
-		pixelYCord = calcPixelY(geoYCord+ WindowHandler.pixelToGeoY(32));
+		pixelXCord = calcPixelX(geoXCord - WindowHandler.pixelToGeoX(17));
+		pixelYCord = calcPixelY(geoYCord+ WindowHandler.pixelToGeoY(35));
 	}
 
 	public void paintComponent(Graphics g) {
-		g.drawImage(icon, pixelXCord-17, pixelYCord, null);
+		g.drawImage(icon, pixelXCord, pixelYCord, null);
 	}
 	
 	public double Y() {
