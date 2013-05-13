@@ -90,7 +90,7 @@ public class DijkstraSP {
 	public ArrayList<Edge> pathTo(int v) {
 		ArrayList<Edge> path = new ArrayList<Edge>();
 		if(!hasPathTo(v)) {
-			JOptionPane.showMessageDialog(Window.use(),"No route found. Try enabling ferry routes.");
+			JOptionPane.showMessageDialog(Window.use(),"No route found. Try enabling ferry or bike routes.");
 			return path;
 		}
 		for(Edge e = edgeTo[v]; e != null; e = edgeTo[e.getFromNodeID()]) {
