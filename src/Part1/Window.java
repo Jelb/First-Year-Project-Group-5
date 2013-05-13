@@ -192,7 +192,7 @@ public class Window extends JFrame {
 	 */
 	private void createButtons() {
 		//Icons from http://www.iconfinder.com/search/?q=iconset%3Abrightmix
-		resetZoom = createButton("ResetZoom.png", "Reset zoom", 75, 75);
+		resetZoom = createButton("ResetZoom.png", "Reset zoom", 73, 73);
 		zoomOut = createButton("minus_black.png", "Zoom out", 105, 175);
 		zoomIn = createButton("plus_black.png", "Zoom in", 55, 175);
 		west = createButton("West.png", "West", 25, 75);
@@ -505,7 +505,6 @@ public class Window extends JFrame {
 
 				if(findMarked) {
 					WindowHandler.centerOnNode(findNode);
-					updateMap();
 				}
 			}
 		});
@@ -1011,7 +1010,7 @@ public class Window extends JFrame {
 				height = Window.use().getHeight();
 				width = Window.use().getWidth();
 				timer = null;
-				Map.use().createBufferImage();
+				updateMap();
 			}
 		}
 	}
@@ -1021,6 +1020,9 @@ public class Window extends JFrame {
 		int prevY;
 
 		public void mousePressed(MouseEvent e) {
+			if(rect == null){
+				rect = new DrawRect();
+			}
 			if (SwingUtilities.isRightMouseButton(e)) {
 				pressedX = e.getX();
 				pressedY = e.getY();
@@ -1031,7 +1033,7 @@ public class Window extends JFrame {
 			}
 		}
 
-		public void mouseDragged(MouseEvent e) {
+		public void mouseDragged(MouseEvent e) {			
 			if (SwingUtilities.isRightMouseButton(e) && !noMoreBoxes) {
 				rect = new DrawRect();
 				rect.setBounds(0, 0, contentPane.getWidth(), contentPane.getHeight());
@@ -1080,7 +1082,6 @@ public class Window extends JFrame {
 				WindowHandler.pixelSearch(pressedX, releasedX, pressedY, releasedY);
 				rect.setVisible(false); //Removes the rectangle when zoom box is chosen
 				noMoreBoxes = true;
-				updateMap();
 			}
 			else if (SwingUtilities.isLeftMouseButton(e)) {
 				if (dragging) {
@@ -1090,39 +1091,37 @@ public class Window extends JFrame {
 					dragging = false;											// Dragging ends.
 				}
 			}
-			Map.use().createBufferImage();										// The new image is drawn to the buffer and flipped in when
-		}																		// it is completed (see Map.flipImageBuffer() for details).
+		}
 	}
-
-	//	private class mouseWheel implements MouseWheelListener{
-	//		int notches;
-	//		int zoomCount = 0;
-	//		
-	//		public void mouseWheelMoved(MouseWheelEvent e) {
-	//			notches += e.getWheelRotation();
-	//			zoomCount += zoomCount;
-	//			if(timer == null){
-	//				timer = new Timer(500, new mouseWheelMovedZoom());
-	//				timer.start();
-	//			}
-	//			timer.restart();
-	//		
-	//		}
-	//		private class mouseWheelMovedZoom implements ActionListener {
-	//			public void actionPerformed(ActionEvent e) {
-	//				timer.stop();
-	//				
-	//				if (notches < 0) {
-	//					WindowHandler.zoomIn(zoomCount);
-	//				} else {	            
-	//					WindowHandler.zoomOut(zoomCount);
-	//				}
-	//				Map.use().createBufferImage();
-	//				zoomCount = 0;
-	//				notches = 0;
-	//				}
-	//			}	
-	//	}
+	
+//	private class mouseWheel implements MouseWheelListener{
+//		int notches;
+//		int zoomCount = 0;
+//		
+//		public void mouseWheelMoved(MouseWheelEvent e) {
+//			notches += e.getWheelRotation();
+//			zoomCount += zoomCount;
+//			if(timer == null){
+//				timer = new Timer(500, new mouseWheelMovedZoom());
+//				timer.start();
+//			}
+//			timer.restart();
+//		
+//		}
+//		private class mouseWheelMovedZoom implements ActionListener {
+//			public void actionPerformed(ActionEvent e) {
+//				timer.stop();
+//				
+//				if (notches < 0) {
+//					WindowHandler.zoomIn(zoomCount);
+//				} else {	            
+//					WindowHandler.zoomOut(zoomCount);
+//				}
+//				zoomCount = 0;
+//				notches = 0;
+//				}
+//			}	
+//	}
 
 	private class mouseWheelZoom implements MouseWheelListener{
 		public void mouseWheelMoved(MouseWheelEvent e) {
@@ -1132,7 +1131,6 @@ public class Window extends JFrame {
 			} else {	            
 				WindowHandler.zoomOut();
 			}
-			Map.use().createBufferImage();
 		}
 	}
 

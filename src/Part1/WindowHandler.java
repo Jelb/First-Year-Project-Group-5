@@ -12,6 +12,8 @@ import java.util.List;
 
 import com.apple.eawt.Application;
 
+import javax.swing.ToolTipManager;
+
 import Part1.DijkstraSP.CompareType;
 import Part1.DijkstraSP.TransportWay;
 import Part1.SplashScreen.Task;
@@ -213,7 +215,7 @@ public class WindowHandler {
 			maxX = maxMapWidth - (offsetX + geoWidth) + geoWidth;
 		}
 		search(-minX, maxX, -minY, maxY);
-		Window.use().updateMap();
+		System.out.println("geoWidth = " + geoWidth);
 	}
 
 	public static void zoomIn() {
@@ -297,9 +299,22 @@ public class WindowHandler {
 			double x1 = e.getFromNode().getXCord();
 			double y1 = e.getFromNode().getYCord();
 			double x2 = e.getToNode().getXCord();
-			double y2 = e.getToNode().getYCord();
-			if(lineIntersects(geoXMin, geoXMax, geoYMin, geoYMax, x1, x2,
-					y1, y2)) Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, e.getType()));
+			double y2 = e.getToNode().getYCord();						// for now, no borders will be drawn
+			if(lineIntersects(geoXMin, geoXMax, geoYMin, geoYMax, x1, x2, y1, y2)) {
+				if(e.getType() == 1) Map.use().addRoadSegment1(
+						new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+				else if(e.getType() == 2) Map.use().addRoadSegment2(
+						new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+				else if(e.getType() == 3) Map.use().addRoadSegment3(
+						new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+				else if(e.getType() == 4) Map.use().addRoadSegment4(
+						new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+				else if(e.getType() == 5) Map.use().addRoadSegment5(
+						new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+				else Map.use().addRoadSegment8(
+						new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+				Map.use().addBorderSegment(new RoadSegment(x1, y1, x2, y2, e.getType(),true));
+			}
 		}
 		Window.use().updateMap();	
 	}
@@ -337,10 +352,20 @@ public class WindowHandler {
 					double y1 = e.getFromNode().getYCord();
 					double x2 = e.getToNode().getXCord();
 					double y2 = e.getToNode().getYCord();						// for now, no borders will be drawn
-					Map.use().addRoadSegment(
-							new RoadSegment(x1, y1, x2, y2, e.getType()));
-//					Map.use().addBorderSegment(
-//							new RoadSegment(x1, y1, x2, y2, e.getType(),true));
+					if(e.getType() == 1) Map.use().addRoadSegment1(
+							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+					else if(e.getType() == 2) Map.use().addRoadSegment2(
+							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+					else if(e.getType() == 3) Map.use().addRoadSegment3(
+							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+					else if(e.getType() == 4) Map.use().addRoadSegment4(
+							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+					else if(e.getType() == 5) Map.use().addRoadSegment5(
+							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+					else Map.use().addRoadSegment8(
+							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+					Map.use().addBorderSegment(
+							new RoadSegment(x1, y1, x2, y2, e.getType(),true));
 				}
 			}
 		}
@@ -348,7 +373,6 @@ public class WindowHandler {
 
 	public static void resetMap() {
 		search(-offsetX, maxMapWidth-offsetX, -offsetY, maxMapHeight-offsetY);
-		Window.use().updateMap();
 	}
 
 
@@ -516,7 +540,11 @@ public class WindowHandler {
 
 		// Finds all the edges for these nodes
 		getEdgesFromNodes();
-
+		
+		// Getting the desired tool tip effect when mouse over on a road
+		ToolTipManager.sharedInstance().setInitialDelay(500);
+		ToolTipManager.sharedInstance().setDismissDelay(1200);
+		ToolTipManager.sharedInstance().setReshowDelay(0);
 
 		maxMapHeight = DataReader.getMaxY()-DataReader.getMinY();
 		maxMapWidth = DataReader.getMaxX()-DataReader.getMinX();
