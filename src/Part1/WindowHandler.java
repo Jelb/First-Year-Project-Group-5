@@ -302,18 +302,17 @@ public class WindowHandler {
 			double y2 = e.getToNode().getYCord();						// for now, no borders will be drawn
 			if(lineIntersects(geoXMin, geoXMax, geoYMin, geoYMax, x1, x2, y1, y2)) {
 				if(e.getType() == 1) Map.use().addRoadSegment1(
-						new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+						new RoadSegment(x1, y1, x2, y2, e.getType()));
 				else if(e.getType() == 2) Map.use().addRoadSegment2(
-						new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+						new RoadSegment(x1, y1, x2, y2, e.getType()));
 				else if(e.getType() == 3) Map.use().addRoadSegment3(
-						new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+						new RoadSegment(x1, y1, x2, y2, e.getType()));
 				else if(e.getType() == 4) Map.use().addRoadSegment4(
-						new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+						new RoadSegment(x1, y1, x2, y2, e.getType()));
 				else if(e.getType() == 5) Map.use().addRoadSegment5(
-						new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+						new RoadSegment(x1, y1, x2, y2, e.getType()));
 				else Map.use().addRoadSegment8(
-						new RoadSegment(x1, y1, x2, y2, e.getType(),false));
-				Map.use().addBorderSegment(new RoadSegment(x1, y1, x2, y2, e.getType(),true));
+						new RoadSegment(x1, y1, x2, y2, e.getType()));
 			}
 		}
 		Window.use().updateMap();	
@@ -353,19 +352,17 @@ public class WindowHandler {
 					double x2 = e.getToNode().getXCord();
 					double y2 = e.getToNode().getYCord();						// for now, no borders will be drawn
 					if(e.getType() == 1) Map.use().addRoadSegment1(
-							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+							new RoadSegment(x1, y1, x2, y2, e.getType()));
 					else if(e.getType() == 2) Map.use().addRoadSegment2(
-							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+							new RoadSegment(x1, y1, x2, y2, e.getType()));
 					else if(e.getType() == 3) Map.use().addRoadSegment3(
-							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+							new RoadSegment(x1, y1, x2, y2, e.getType()));
 					else if(e.getType() == 4) Map.use().addRoadSegment4(
-							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+							new RoadSegment(x1, y1, x2, y2, e.getType()));
 					else if(e.getType() == 5) Map.use().addRoadSegment5(
-							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+							new RoadSegment(x1, y1, x2, y2, e.getType()));
 					else Map.use().addRoadSegment8(
-							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
-					Map.use().addBorderSegment(
-							new RoadSegment(x1, y1, x2, y2, e.getType(),true));
+							new RoadSegment(x1, y1, x2, y2, e.getType()));
 				}
 			}
 		}

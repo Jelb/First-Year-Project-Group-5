@@ -18,7 +18,7 @@ public class Map extends JPanel {
 	 * Map is a JPanel with the lines drawn
 	 */
 	private ArrayList<RoadSegment> segments1, segments2, segments3, segments4,
-								   segments5, segments8, borderSegments;
+								   segments5, segments8;
 	private ArrayList<DrawableItem> path;
 	private static ArrayList<CoastPoint[]> coast, lake, island, border; 
 	private static Map instance = null;
@@ -75,7 +75,7 @@ public class Map extends JPanel {
 		drawBorder(border, Color.RED, g);
 		
 		// Draw road borders
-		for (RoadSegment b : segments) {
+		for (RoadSegment b : segments8) {
 			if (b == null)
 				continue;
 			b.paintComponent(g);
@@ -86,11 +86,23 @@ public class Map extends JPanel {
 				continue;
 			r.paintComponent(g);
 		}
+		// Draw road borders
+		for (RoadSegment b : segments5) {
+			if (b == null)
+				continue;
+			b.paintComponent(g);
+		}
 		// Draw roads
 		for (RoadSegment r : segments5) {
 			if (r == null)
 				continue;
 			r.paintComponent(g);
+		}
+		// Draw road borders
+		for (RoadSegment b : segments4) {
+			if (b == null)
+				continue;
+			b.paintComponent(g);
 		}
 		// Draw roads
 		for (RoadSegment r : segments4) {
@@ -98,17 +110,35 @@ public class Map extends JPanel {
 				continue;
 			r.paintComponent(g);
 		}
+		// Draw road borders
+		for (RoadSegment b : segments3) {
+			if (b == null)
+				continue;
+			b.paintComponent(g);
+		}
 		// Draw roads
 		for (RoadSegment r : segments3) {
 			if (r == null)
 				continue;
 			r.paintComponent(g);
 		}
+		// Draw road borders
+		for (RoadSegment b : segments2) {
+			if (b == null)
+				continue;
+			b.paintComponent(g);
+		}
 		// Draw roads
 		for (RoadSegment r : segments2) {
 			if (r == null)
 				continue;
 			r.paintComponent(g);
+		}
+		// Draw road borders
+		for (RoadSegment b : segments1) {
+			if (b == null)
+				continue;
+			b.paintComponent(g);
 		}
 		// Draw roads
 		for (RoadSegment r : segments1) {
@@ -224,13 +254,10 @@ public class Map extends JPanel {
 	 * 
 	 * @return Returns the current value of the segment field. (ArrayList\<RoadSegment\>)
 	 */
-	public ArrayList<RoadSegment> getRoadSegments() {
-		return segments;
-	}
+//	public ArrayList<RoadSegment> getRoadSegments() {
+//		return segments;
+//	}
 
-	public ArrayList<RoadSegment> getBorderSegments() {
-		return borderSegments;
-	}
 	
 	/**
 	 * Changes the segments-filed ArrayList to a new empty one. 
@@ -242,7 +269,6 @@ public class Map extends JPanel {
 		segments4 = new ArrayList<RoadSegment>();
 		segments5 = new ArrayList<RoadSegment>();
 		segments8 = new ArrayList<RoadSegment>();
-		borderSegments = new ArrayList<RoadSegment>();
 	}
 
 	/**
@@ -279,10 +305,7 @@ public class Map extends JPanel {
 	 * within the map.
 	 */
 	public void updatePix(){
-		for(RoadSegment b: borderSegments){
-			if(b == null) continue;
-			b.updatePosition();
-		}
+
 		for(RoadSegment r: segments1){
 			if(r == null) continue;
 			r.updatePosition();
@@ -396,13 +419,5 @@ public class Map extends JPanel {
 	 */
 	public double getDriveTime() {
 		return driveTime;
-	}
-
-	/**
-	 * Adds a RoadSegment to he borderSegments ArrayList.
-	 * @param borderSegment The RoadSegments which should be added.
-	 */
-	public void addBorderSegment(RoadSegment borderSegment) {
-		borderSegments.add(borderSegment);
 	}
 }
