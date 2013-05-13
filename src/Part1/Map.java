@@ -18,7 +18,7 @@ public class Map extends JPanel {
 	 * Map is a JPanel with the lines drawn
 	 */
 	private ArrayList<RoadSegment> segments1, segments2, segments3, segments4,
-								   segments5, segments8, borderSegments;
+								   segments5, segments6, segments8, borderSegments;
 	private ArrayList<DrawableItem> path;
 	private static ArrayList<CoastPoint[]> coast, lake, island, border; 
 	private static Map instance = null;
@@ -79,6 +79,12 @@ public class Map extends JPanel {
 		}
 		// Draw roads
 		for (RoadSegment r : segments8) {
+			if (r == null)
+				continue;
+			r.paintComponent(g);
+		}
+		// Draw roads
+		for (RoadSegment r : segments6) {
 			if (r == null)
 				continue;
 			r.paintComponent(g);
@@ -200,6 +206,10 @@ public class Map extends JPanel {
 		case 3 : return 3.2f;
 		case 4 : return 3.6f;
 		case 5 : return 5.0f;
+		case 6 : return 6.0f;
+		case 7 : return 7.0f;
+		case 8 : return 8.0f;
+		case 9 : return 9.0f;
 		default: return 2.5f;
 		}
 	}
@@ -238,6 +248,7 @@ public class Map extends JPanel {
 		segments3 = new ArrayList<RoadSegment>();
 		segments4 = new ArrayList<RoadSegment>();
 		segments5 = new ArrayList<RoadSegment>();
+		segments6 = new ArrayList<RoadSegment>();
 		segments8 = new ArrayList<RoadSegment>();
 		borderSegments = new ArrayList<RoadSegment>();
 	}
@@ -265,6 +276,10 @@ public class Map extends JPanel {
 	
 	public void addRoadSegment5(RoadSegment roadSegment) {
 		segments5.add(roadSegment);
+	}
+	
+	public void addRoadSegment6(RoadSegment roadSegment) {
+		segments6.add(roadSegment);
 	}
 	
 	public void addRoadSegment8(RoadSegment roadSegment) {

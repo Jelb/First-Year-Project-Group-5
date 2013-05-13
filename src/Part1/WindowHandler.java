@@ -345,7 +345,7 @@ public class WindowHandler {
 		if (t == 1 || t == 2 || t == 3 || t == 80) return true;
 		else if (geoWidth < 250000 && (t == 4)) return true;
 		else if (geoWidth < 60000 && (t == 5)) return true;
-		else if (geoWidth < 13000) return true;
+		else if (geoWidth < 8000) return true;
 		else return false;
 	}
 	
@@ -369,6 +369,8 @@ public class WindowHandler {
 					else if(e.getType() == 4) Map.use().addRoadSegment4(
 							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
 					else if(e.getType() == 5) Map.use().addRoadSegment5(
+							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+					else if(e.getType() == 6) Map.use().addRoadSegment6(
 							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
 					else Map.use().addRoadSegment8(
 							new RoadSegment(x1, y1, x2, y2, e.getType(),false));
