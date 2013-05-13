@@ -29,7 +29,7 @@ public class SplashScreen extends JFrame{
 	
 	private SplashScreen() {
 		super();
-		setPreferredSize(new Dimension(850, 700));
+		setPreferredSize(new Dimension(800, 600));
 		setUndecorated(true);
 		setUp();
 		pack();

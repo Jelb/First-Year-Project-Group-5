@@ -10,9 +10,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-//import com.apple.eawt.Application;
 
 import javax.swing.ToolTipManager;
+
+import com.apple.eawt.Application;
 
 import Part1.DijkstraSP.CompareType;
 import Part1.DijkstraSP.TransportWay;
@@ -215,7 +216,6 @@ public class WindowHandler {
 			maxX = maxMapWidth - (offsetX + geoWidth) + geoWidth;
 		}
 		search(-minX, maxX, -minY, maxY);
-		System.out.println("geoWidth = " + geoWidth);
 	}
 
 	public static void zoomIn() {
@@ -472,19 +472,9 @@ public class WindowHandler {
 	}
 
 	public static void main(String[] args) throws IOException {
-		
-		if (System.getProperty("os.name").contains("Mac")) {
-//			Application application = Application.getApplication();
-			Image image = Toolkit.getDefaultToolkit().getImage("deskicon.png");
-//			application.setDockIconImage(image);
-		} else if (System.getProperty("os.name").contains("Windows")) {
-			ArrayList<Image> imageList = new ArrayList<Image>();
-			imageList.add(Toolkit.getDefaultToolkit().getImage("deskicon.png"));		 
-			Window.use().setIconImages(imageList);
-		}
 		String nodeFile = "kdv_node_unload.txt";
 		String edgeFile = "kdv_unload.txt";
-		String coastFile = "coastline.dat";
+		String coastFile = "new_coasts.dat";
 		String lakeFile = "lake.dat";
 		String islandFile = "island.dat";
 		String borderFile = "border.dat";
@@ -553,7 +543,6 @@ public class WindowHandler {
 		// thus calling the internal method paintComponents found in the roadSegments objects
 
 		Window.use().updateMap();
-
 		SplashScreen.use().close();
 	}
 

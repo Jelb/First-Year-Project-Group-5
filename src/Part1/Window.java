@@ -200,11 +200,11 @@ public class Window extends JFrame {
 		north = createButton("North.png", "North",75, 25);
 		south = createButton("South.png", "South", 75, 125);
 
-		findPath = createButton("flag3.png", "Find Path", 100, 215);
-		findPathBlue = createButton("flag_blue.png", "Find Path", 100, 215);
+		findPath = createButton("rsz_path_off.png", "Find Path", 100, 215);
+		findPathBlue = createButton("rsz_path.png", "Find Path", 100, 215);
 		findPathBlue.setVisible(false);
-		findPlace = createButton("pin_grey.png", "Find Place", 50, 215);
-		findPlaceBlue = createButton("pin_blue.png", "Find Place", 50, 215);
+		findPlace = createButton("find_red_off.png", "Find Place", 50, 215);
+		findPlaceBlue = createButton("find_red.png", "Find Place", 50, 215);
 		findPlace.setVisible(false);
 
 		bikeUnselected = createButton("cycle_unmarked.png", "By bike or walking", 25, 330);
@@ -787,7 +787,6 @@ public class Window extends JFrame {
 			infoSize = 25;
 			routeInfo.add(new JLabel(distStr, SwingConstants.HORIZONTAL));
 		}
-
 		repositionInfo();
 		if(dist != -1)  {
 			routeInfo.setVisible(true);
@@ -1093,35 +1092,6 @@ public class Window extends JFrame {
 			}
 		}
 	}
-	
-//	private class mouseWheel implements MouseWheelListener{
-//		int notches;
-//		int zoomCount = 0;
-//		
-//		public void mouseWheelMoved(MouseWheelEvent e) {
-//			notches += e.getWheelRotation();
-//			zoomCount += zoomCount;
-//			if(timer == null){
-//				timer = new Timer(500, new mouseWheelMovedZoom());
-//				timer.start();
-//			}
-//			timer.restart();
-//		
-//		}
-//		private class mouseWheelMovedZoom implements ActionListener {
-//			public void actionPerformed(ActionEvent e) {
-//				timer.stop();
-//				
-//				if (notches < 0) {
-//					WindowHandler.zoomIn(zoomCount);
-//				} else {	            
-//					WindowHandler.zoomOut(zoomCount);
-//				}
-//				zoomCount = 0;
-//				notches = 0;
-//				}
-//			}	
-//	}
 
 	private class mouseWheelZoom implements MouseWheelListener{
 		public void mouseWheelMoved(MouseWheelEvent e) {
@@ -1149,10 +1119,18 @@ public class Window extends JFrame {
 		}
 	}
 
+	/**
+	 * Getter method for the width of the map.
+	 * @return The width of map in pixel.
+	 */
 	public int getMapWidth() {
 		return contentPane.getWidth();
 	}
 
+	/**
+	 * Getter method for the height of the map.
+	 * @return The height of map in pixel.
+	 */
 	public int getMapHeight() {
 		return contentPane.getHeight();
 	}
@@ -1173,6 +1151,11 @@ public class Window extends JFrame {
 		mousePanY = inputMousePanY;
 	}
 
+	/**
+	 * Setter for the maxHeight field. 
+	 * maxHeight defines the maximal height of the application window.
+	 * @param maxH The maximum height in pixel.
+	 */
 	public static void setMaxHeight(int maxH) {
 		maxHeight = maxH;
 	}
@@ -1182,7 +1165,6 @@ class TransparetPane extends JPanel{
 
 	public TransparetPane() {
 		super();
-		//setBackground(new Color(65,105,225,50)); //royalblue
 		setBackground(new Color(0,0,0,50)); //royalblue
 		setOpaque(false);
 	}
