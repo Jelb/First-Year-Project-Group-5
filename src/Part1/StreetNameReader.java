@@ -3,16 +3,26 @@ package Part1;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+
+import javax.swing.JOptionPane;
 
 public class StreetNameReader   {
 
 	private InputStreamReader street, zip;
 	private BufferedReader brStreet, brZip;
 
+	/**
+	 * Constructor of the class. 
+	 * The constructor initializes the BufferedReaders used to perform 
+	 * the methods within the class.
+	 *  
+	 * @throws FileNotFoundException If the files aren't found.
+	 */
 	public StreetNameReader() throws FileNotFoundException{
 		try {
 			street = new InputStreamReader(new FileInputStream("names.dat"), "UTF-8");
@@ -20,10 +30,13 @@ public class StreetNameReader   {
 			brStreet = new BufferedReader(street);
 			brZip = new BufferedReader(zip);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			// Risks that the special characters aren't read properly 
+			brStreet = new BufferedReader(new FileReader("names.dat"));
+			brZip = new BufferedReader(new FileReader("post.dat"));
+			JOptionPane.showMessageDialog(null, "An encoding error ocured and it might affect the system." +
+											"\nIf yout experience any problem we sugest that you restart the Program.",
+											"WARNING", JOptionPane.WARNING_MESSAGE);
 		}
-
-
 	}
 
 	public String streetScan(String input) throws IOException {

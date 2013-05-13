@@ -51,4 +51,10 @@ public class DijkstraSPTest {
 		DijkstraSP dsp = new DijkstraSP(graph, 4, TransportWay.BIKE, CompareType.SHORTEST, true);
 		assertEquals(false,dsp.hasPathTo(5));
 	}
+	
+	@Test
+	public void oneDirection() {
+		DijkstraSP dsp = new DijkstraSP(graph, 2, TransportWay.BIKE, CompareType.SHORTEST, true);
+		assertEquals(false,dsp.hasPathTo(1)); //Edge 1-2 is one-way
+	}
 }

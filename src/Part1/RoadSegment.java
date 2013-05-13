@@ -21,9 +21,8 @@ public class RoadSegment extends DrawableItem {
 	private float roadWidth;
 	private static int roadType4242;
 	private static int zoomLevel;
-	private int realWidth;
 	
-	private boolean isBorder;
+	private boolean borderDrawn = false, isPath = false;
 	
 	
 	//The colors used to draw RoadSegments.
@@ -45,16 +44,14 @@ public class RoadSegment extends DrawableItem {
 	 * @param yEndCoord
 	 * @param Type
 	 */
-	public RoadSegment(double xStartCoord, double yStartCoord, double xEndCoord, double yEndCoord, int type, boolean border){
+	public RoadSegment(double xStartCoord, double yStartCoord, double xEndCoord, double yEndCoord, int type){
 		geoStartX = xStartCoord;
 		geoStartY = yStartCoord;
 		geoEndX = xEndCoord;
 		geoEndY = yEndCoord;
-		isBorder = border;
 		this.type = type;
 		color = getRoadSegmentColor(type);
 		setRoadWidth(type);
-		adjustForBorders(isBorder);
 		if(type == 4242) roadWidth = 5;
 		updatePosition();
 	}
@@ -243,7 +240,6 @@ public class RoadSegment extends DrawableItem {
 		xEnd = calcPixelX(geoEndX);
 		yEnd = calcPixelY(geoEndY);
 		setRoadWidth(type);
-		adjustForBorders(isBorder);
 	}
 	
 	/**
@@ -299,7 +295,7 @@ public class RoadSegment extends DrawableItem {
 			zoomLevel = 10;
 		}
 		
-		System.out.println("Zoomlevel: " + zoomLevel);
+		//System.out.println("Zoomlevel: " + zoomLevel);
 	}
 		
 	/**
@@ -308,20 +304,28 @@ public class RoadSegment extends DrawableItem {
 	 * @param g A Graphics object used for drawing
 	 */
 	public void paintComponent(Graphics g) {
+		
 
 		Graphics2D g2 = (Graphics2D) g;
 		
 		// enable anti-aliasing
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-		
-		// set road color
-		g2.setColor(color);
 	
 		// setting stroke type
-		g2.setStroke(new BasicStroke(roadWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		if(type == 4242) {
+			g2.setColor(color);
+			g2.setStroke(new BasicStroke(roadWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		} else if(!borderDrawn) {
+			g2.setColor(darkGrey);
+			g2.setStroke(new BasicStroke(roadWidth+2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		} else {
+			g2.setColor(color);
+			g2.setStroke(new BasicStroke(roadWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		}
 		
 		// draw the road segment
 		g2.drawLine(xStart, yStart, xEnd, yEnd);
+		borderDrawn = !borderDrawn;
 	}
 
 	/**
@@ -332,6 +336,4 @@ public class RoadSegment extends DrawableItem {
 	public static int getZoomLevel() {
 		return zoomLevel;
 	}
-	
-	
 }
