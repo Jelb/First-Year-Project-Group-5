@@ -199,10 +199,11 @@ public class WindowHandler {
 		search(node.getXCord()-distance-offsetX, node.getXCord()+distance-offsetX, 
 				node.getYCord()-distance-offsetY, node.getYCord()+distance-offsetY);
 	}
-
-	public static void zoomOut() {
-		double minX = geoWidth*0.1, maxX = geoWidth*1.1, minY = geoHeight*0.1, maxY = geoHeight*1.1;
-		if((maxMapHeight - (offsetY + geoHeight)) < geoHeight*0.1) {
+	
+	public static void zoomOut(int zoomCount) {
+		double minX = geoWidth*(0.111*zoomCount), maxX = geoWidth+geoWidth*(0.111*zoomCount),
+				minY = geoHeight*(0.111*zoomCount), maxY = geoHeight+geoHeight*(0.111*zoomCount);
+		if((maxMapHeight - (offsetY + geoHeight)) < geoHeight*(0.111*zoomCount)) {
 			maxY = maxMapHeight - (offsetY + geoHeight) + geoHeight;
 		}
 		if(offsetY < geoHeight*(0.111*zoomCount)) {
