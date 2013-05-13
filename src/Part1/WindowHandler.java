@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Stack;
 
+import javax.swing.ToolTipManager;
+
 import Part1.DijkstraSP.CompareType;
 import Part1.DijkstraSP.TransportWay;
 import Part1.SplashScreen.Task;
@@ -304,10 +306,11 @@ public class WindowHandler {
 			double x1 = e.getFromNode().getXCord();
 			double y1 = e.getFromNode().getYCord();
 			double x2 = e.getToNode().getXCord();
-			double y2 = e.getToNode().getYCord();
-			boolean border = false;											// for now, no borders will be drawn
-			if(lineIntersects(geoXMin, geoXMax, geoYMin, geoYMax, x1, x2,
-				y1, y2)) Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, e.getType(),border));
+			double y2 = e.getToNode().getYCord();						// for now, no borders will be drawn
+			if(lineIntersects(geoXMin, geoXMax, geoYMin, geoYMax, x1, x2, y1, y2)) {
+				Map.use().addRoadSegment(new RoadSegment(x1, y1, x2, y2, e.getType(),false));
+				Map.use().addBorderSegment(new RoadSegment(x1, y1, x2, y2, e.getType(),true));
+			}
 		}
 		
 		Map.use().createBufferImage();		
@@ -460,8 +463,6 @@ public class WindowHandler {
 	public static void main(String[] args) throws IOException {
 		String nodeFile = "kdv_node_unload.txt";
 		String edgeFile = "kdv_unload.txt";
-//		String nodeFile = "testNodes.txt";
-//		String edgeFile = "testEdges.txt";
 		String coastFile = "coastline.dat";
 		String lakeFile = "lake.dat";
 		String islandFile = "island.dat";
@@ -517,7 +518,11 @@ public class WindowHandler {
 		
 		// Finds all the edges for these nodes
 		getEdgesFromNodes();
-
+		
+		// Getting the desired tool tip effect when mouse over on a road
+		ToolTipManager.sharedInstance().setInitialDelay(500);
+		ToolTipManager.sharedInstance().setDismissDelay(1200);
+		ToolTipManager.sharedInstance().setReshowDelay(0);
 
 		maxMapHeight = DataReader.getMaxY()-DataReader.getMinY();
 		maxMapWidth = DataReader.getMaxX()-DataReader.getMinX();
