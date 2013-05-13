@@ -154,7 +154,26 @@ public class EquationTest {
 	
 	@Test
 	public void edgeToVector() {
-		
+		DR = DataReader.use("equationTestNodes.txt", "equationTestEdges.txt");
+		DR.createNodeList();
+		Edge edge1 =  new Edge(DR.nodes.get(1), DR.nodes.get(2), 0, "", 0, "0", "0", 0.1, 0, 0, 0, 0, true);
+		Edge edge2 =  new Edge(DR.nodes.get(2), DR.nodes.get(3), 0, "", 0, "0", "0", 0.1, 0, 0, 0, 0, true);
+		Edge edge3 =  new Edge(DR.nodes.get(3), DR.nodes.get(4), 0, "", 0, "0", "0", 0.1, 0, 0, 0, 0, true);
+		double[] expArr1 = new double[] {  4.0 ,  3.0 };
+		double[] expArr2 = new double[] { -7.0 ,  1.0 };
+		double[] expArr3 = new double[] { -2.0 , -4.0 };
+		assertArrayEquals(expArr1, Equation.edgeToVector(edge1), 0.001);
+		assertArrayEquals(expArr2, Equation.edgeToVector(edge2), 0.001);
+		assertArrayEquals(expArr3, Equation.edgeToVector(edge3), 0.001);
+		double[] expArr4 = new double[] {  1.0 ,  3.1 };
+		double[] expArr5 = new double[] { -7.5 ,  2.0 };
+		double[] expArr6 = new double[] {  2.0 , -4.7 };
+		assertFalse(Math.abs(expArr4[0] - Equation.edgeToVector(edge1)[0]) < 0.001);
+		assertFalse(Math.abs(expArr4[1] - Equation.edgeToVector(edge1)[1]) < 0.001);
+		assertFalse(Math.abs(expArr5[0] - Equation.edgeToVector(edge2)[0]) < 0.001);
+		assertFalse(Math.abs(expArr5[1] - Equation.edgeToVector(edge2)[1]) < 0.001);
+		assertFalse(Math.abs(expArr6[0] - Equation.edgeToVector(edge3)[0]) < 0.001);
+		assertFalse(Math.abs(expArr6[1] - Equation.edgeToVector(edge3)[1]) < 0.001);
 	}
 	
 //	@Test
