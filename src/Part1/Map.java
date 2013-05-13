@@ -80,73 +80,79 @@ public class Map extends JPanel {
 				continue;
 			b.paintComponent(g);
 		}
-		// Draw roads
-		for (RoadSegment r : segments8) {
-			if (r == null)
+		
+		for (RoadSegment b : segments6) {
+			if (b == null)
 				continue;
-			r.paintComponent(g);
+			b.paintComponent(g);
 		}
-		// Draw road borders
+		
 		for (RoadSegment b : segments5) {
 			if (b == null)
 				continue;
 			b.paintComponent(g);
 		}
-		// Draw roads
-		for (RoadSegment r : segments6) {
-			if (r == null)
-				continue;
-			r.paintComponent(g);
-		}
-		// Draw roads
-		for (RoadSegment r : segments5) {
-			if (r == null)
-				continue;
-			r.paintComponent(g);
-		}
-		// Draw road borders
+		
 		for (RoadSegment b : segments4) {
 			if (b == null)
 				continue;
 			b.paintComponent(g);
 		}
-		// Draw roads
-		for (RoadSegment r : segments4) {
-			if (r == null)
-				continue;
-			r.paintComponent(g);
-		}
-		// Draw road borders
+		
 		for (RoadSegment b : segments3) {
 			if (b == null)
 				continue;
 			b.paintComponent(g);
 		}
-		// Draw roads
-		for (RoadSegment r : segments3) {
-			if (r == null)
-				continue;
-			r.paintComponent(g);
-		}
-		// Draw road borders
+		
 		for (RoadSegment b : segments2) {
 			if (b == null)
 				continue;
 			b.paintComponent(g);
 		}
-		// Draw roads
-		for (RoadSegment r : segments2) {
-			if (r == null)
-				continue;
-			r.paintComponent(g);
-		}
-		// Draw road borders
+		
 		for (RoadSegment b : segments1) {
 			if (b == null)
 				continue;
 			b.paintComponent(g);
 		}
-		// Draw roads
+		
+		for (RoadSegment r : segments8) {
+			if (r == null)
+				continue;
+			r.paintComponent(g);
+		}
+
+		for (RoadSegment r : segments6) {
+			if (r == null)
+				continue;
+			r.paintComponent(g);
+		}
+
+		for (RoadSegment r : segments5) {
+			if (r == null)
+				continue;
+			r.paintComponent(g);
+		}
+
+		for (RoadSegment r : segments4) {
+			if (r == null)
+				continue;
+			r.paintComponent(g);
+		}
+
+		for (RoadSegment r : segments3) {
+			if (r == null)
+				continue;
+			r.paintComponent(g);
+		}
+
+		for (RoadSegment r : segments2) {
+			if (r == null)
+				continue;
+			r.paintComponent(g);
+		}
+
 		for (RoadSegment r : segments1) {
 			if (r == null)
 				continue;

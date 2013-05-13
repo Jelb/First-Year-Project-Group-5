@@ -13,8 +13,6 @@ import java.util.List;
 
 import javax.swing.ToolTipManager;
 
-import com.apple.eawt.Application;
-
 import Part1.DijkstraSP.CompareType;
 import Part1.DijkstraSP.TransportWay;
 import Part1.SplashScreen.Task;
@@ -200,27 +198,43 @@ public class WindowHandler {
 		search(node.getXCord()-distance-offsetX, node.getXCord()+distance-offsetX, 
 				node.getYCord()-distance-offsetY, node.getYCord()+distance-offsetY);
 	}
-
-	public static void zoomOut() {
-		double minX = geoWidth*0.1, maxX = geoWidth*1.1, minY = geoHeight*0.1, maxY = geoHeight*1.1;
-		if((maxMapHeight - (offsetY + geoHeight)) < geoHeight*0.1) {
+	
+	public static void zoomOut(int zoomCount) {
+		double minX = geoWidth*(0.111*zoomCount), maxX = geoWidth+geoWidth*(0.111*zoomCount),
+				minY = geoHeight*(0.111*zoomCount), maxY = geoHeight+geoHeight*(0.111*zoomCount);
+		if((maxMapHeight - (offsetY + geoHeight)) < geoHeight*(0.111*zoomCount)) {
 			maxY = maxMapHeight - (offsetY + geoHeight) + geoHeight;
 		}
-		if(offsetY < geoHeight*0.1) {
+		if(offsetY < geoHeight*(0.111*zoomCount)) {
 			minY = offsetY;
 		}
-		if(offsetX < geoWidth*0.1) {
+		if(offsetX < geoWidth*(0.111*zoomCount)) {
 			minX = offsetX;
 		}
-		if((maxMapWidth - (offsetX + geoWidth)) < geoWidth*0.1) {
+		if((maxMapWidth - (offsetX + geoWidth)) < geoWidth*(0.111*zoomCount)) {
 			maxX = maxMapWidth - (offsetX + geoWidth) + geoWidth;
 		}
 		search(-minX, maxX, -minY, maxY);
 	}
-
-	public static void zoomIn() {
-		search(geoWidth*0.1, geoWidth*0.9, geoHeight*0.1, geoHeight*0.9);
-		Window.use().updateMap();
+	
+	public static void zoomIn(int zoomCount) {
+		System.out.println(zoomCount);
+		double minX = geoWidth*0.1;
+		double minY = geoHeight*0.1;
+		double maxX = geoWidth-geoWidth*0.1;
+		double maxY = geoHeight-geoHeight*0.1;
+		for (int i = 0; i < zoomCount-2; i++) {
+			double prevMinX = minX;
+			double prevMaxX = maxX;
+			double prevMinY = minY;
+			double prevMaxY = maxY;
+			minX += (prevMaxX-prevMinX)*0.1;
+			minY += (prevMaxY-prevMinY)*0.1;
+			maxX -= (prevMaxX-prevMinX)*0.1;
+			maxY -= (prevMaxY-prevMinY)*0.1;
+		}
+		search(minX, maxX, minY, maxY);
+		System.out.println("geoWidth = " + geoWidth);
 	}
 
 	// Searches an area using pixel-values
@@ -310,6 +324,8 @@ public class WindowHandler {
 				else if(e.getType() == 4) Map.use().addRoadSegment4(
 						new RoadSegment(x1, y1, x2, y2, e.getType()));
 				else if(e.getType() == 5) Map.use().addRoadSegment5(
+						new RoadSegment(x1, y1, x2, y2, e.getType()));
+				else if(e.getType() == 6) Map.use().addRoadSegment6(
 						new RoadSegment(x1, y1, x2, y2, e.getType()));
 				else Map.use().addRoadSegment8(
 						new RoadSegment(x1, y1, x2, y2, e.getType()));

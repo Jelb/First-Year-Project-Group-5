@@ -89,10 +89,10 @@ public class RoadSegment extends DrawableItem {
 	
 	public static float zoomLevelOne(int type) {
 		switch(type) {
-		case 1    : return 3.6f;
-		case 2    : return 3.0f;
-		case 3    : return 2.5f;
-		case 4    : return 2.0f;
+		case 1    : return 2.6f;
+		case 2    : return 2.2f;
+		case 3    : return 2.0f;
+		case 4    : return 1.8f;
 		case 5    : return 1.0f;
 		case 6    : return 1.0f;
 		case 8    : return 0.8f;
@@ -103,8 +103,8 @@ public class RoadSegment extends DrawableItem {
 	
 	public static float zoomLevelTwo(int type) {
 		switch(type) {
-		case 1    : return 4.0f;
-		case 2    : return 3.6f;
+		case 1    : return 3.8f;
+		case 2    : return 3.4f;
 		case 3    : return 3.0f;
 		case 4    : return 2.8f;
 		case 5    : return 1.4f;
@@ -176,7 +176,7 @@ public class RoadSegment extends DrawableItem {
 		case 1    : return 9.0f;
 		case 2    : return 8.0f;
 		case 3    : return 7.0f;
-		case 4    : return 4.5f;
+		case 4    : return 6.5f;
 		case 5    : return 4.0f;
 		case 6    : return 3.4f;
 		case 8    : return 3.0f;
@@ -191,8 +191,8 @@ public class RoadSegment extends DrawableItem {
 		case 2    : return 11.0f;
 		case 3    : return 9.0f;
 		case 4    : return 9.0f;
-		case 5    : return 8.0f;
-		case 6    : return 7.0f;
+		case 5    : return 7.0f;
+		case 6    : return 6.0f;
 		case 8    : return 3.0f;
 		case 4242 : return 12.0f;
 		default   : return 3.0f;
@@ -205,7 +205,7 @@ public class RoadSegment extends DrawableItem {
 		case 2    : return 12.0f;
 		case 3    : return 12.0f;
 		case 4    : return 11.0f;
-		case 5    : return 10.0f;
+		case 5    : return 9.5f;
 		case 6    : return 8.5f;
 		case 8    : return 4.0f;
 		case 4242 : return 12.0f;
@@ -250,7 +250,7 @@ public class RoadSegment extends DrawableItem {
 	 */
 	private static Color getRoadSegmentColor(int TYP){
 		switch(TYP) {
-		case 1    : return darkOrange;				// Motor ways 	
+		case 1    : return lightOrange;				// Motor ways 	
 		case 2    : return lightOrange;				// Motor traffic road
 		case 3    : return lightYellow; 			// Primary roads > 6 m 
 		case 4    : return lightYellow;				// Secondary roads > 6 m

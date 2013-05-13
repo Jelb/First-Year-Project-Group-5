@@ -147,7 +147,8 @@ public class Window extends JFrame {
 		contentPane.add(screen);
 		createButtons();
 		addButtons();	
-		setBackground(new Color(71, 180, 201)); 	// The color of the ocean.
+//		setBackground(new Color(71, 180, 201)); 	// The color of the ocean.
+		setBackground(new Color(165,191,221));		// Tom's ocean color, courtesy of Google Maps
 		pack();
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -159,7 +160,7 @@ public class Window extends JFrame {
 	public void addListeners() {
 		addKeyListener(new MKeyListener());
 		addComponentListener(new resizeListener());
-		Map.use().addMouseWheelListener(new mouseWheelZoom());
+		Map.use().addMouseWheelListener(new MouseWheelZoom());
 		//Listeners for when mouse is pressed, dragged or released
 		MouseListener mouseListener = new MouseListener();
 		Map.use().addMouseListener(mouseListener);
@@ -194,7 +195,7 @@ public class Window extends JFrame {
 		//Icons from http://www.iconfinder.com/search/?q=iconset%3Abrightmix
 		resetZoom = createButton("ResetZoom.png", "Reset zoom", 73, 73);
 		zoomOut = createButton("minus_black.png", "Zoom out", 105, 175);
-		zoomIn = createButton("plus_black.png", "Zoom in", 55, 175);
+		zoomIn = createButton("plus.png", "Zoom in", 55, 175);
 		west = createButton("West.png", "West", 25, 75);
 		east = createButton("East.png", "East", 125, 75);
 		north = createButton("North.png", "North",75, 25);
@@ -268,7 +269,7 @@ public class Window extends JFrame {
 		reset.setVisible(true);
 
 		cityAndZipLabel = new JLabel("");
-		cityAndZipLabel.setBounds(20, 640-40, 200, 20);
+		cityAndZipLabel.setBounds(20, 600-40, 200, 20);
 		cityAndZipLabel.setVisible(true);
 
 		background = new TransparetPane();
@@ -293,7 +294,7 @@ public class Window extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				WindowHandler.zoomOut();
+				WindowHandler.zoomOut(1);
 			}
 		});
 
@@ -301,7 +302,7 @@ public class Window extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				WindowHandler.zoomIn();
+				WindowHandler.zoomIn(1);
 			}
 		});
 
@@ -842,12 +843,18 @@ public class Window extends JFrame {
 		 */
 		public void keyPressed(KeyEvent e) {
 			switch(e.getKeyCode()){
-			case KeyEvent.VK_1:
-				WindowHandler.zoomOut();
+			case KeyEvent.VK_SUBTRACT:
+				WindowHandler.zoomOut(1);
 				break;
-			case KeyEvent.VK_2:
-				WindowHandler.zoomIn();
+			case KeyEvent.VK_MINUS:
+				WindowHandler.zoomOut(1);
 				break;
+			case KeyEvent.VK_PLUS:
+				WindowHandler.zoomIn(1);
+				break;
+			case KeyEvent.VK_ADD:
+				WindowHandler.zoomIn(1);
+				break;	
 			case KeyEvent.VK_UP:
 				PanHandler.directionPan(Direction.NORTH);
 				break;
@@ -1092,16 +1099,41 @@ public class Window extends JFrame {
 			}
 		}
 	}
-
-	private class mouseWheelZoom implements MouseWheelListener{
+	
+	private class MouseWheelZoom implements MouseWheelListener{
+		int zoomCount;
+		MouseWheelMovedZoom zoomListener;
+		
+		MouseWheelZoom() {
+			zoomListener = new MouseWheelMovedZoom();
+		}
+		
 		public void mouseWheelMoved(MouseWheelEvent e) {
 			int notches = e.getWheelRotation();
-			if (notches < 0) {
-				WindowHandler.zoomIn();
-			} else {	            
-				WindowHandler.zoomOut();
+			if (notches < 0)
+				zoomCount -= 1;
+			else
+				zoomCount += 1;
+			if(timer == null){
+				timer = new Timer(50, zoomListener);
+				timer.start();
 			}
+			timer.restart();
+		
 		}
+		private class MouseWheelMovedZoom implements ActionListener {
+			public void actionPerformed(ActionEvent e) {
+				timer.stop();
+				if (zoomCount > 10) zoomCount = 5;
+				else if (zoomCount < -10) zoomCount = -5;
+				if (zoomCount < 0) {
+					WindowHandler.zoomIn(Math.abs(zoomCount));
+				} else {	            
+					WindowHandler.zoomOut(Math.abs(zoomCount));
+				}
+				zoomCount = 0;
+				}
+			}	
 	}
 
 	private class mouseOnText extends MouseAdapter {
