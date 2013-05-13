@@ -201,10 +201,10 @@ public class Window extends JFrame {
 		north = createButton("North.png", "North",75, 25);
 		south = createButton("South.png", "South", 75, 125);
 
-		findPath = createButton("rsz_path_off.png", "Find Path", 100, 215);
-		findPathBlue = createButton("rsz_path.png", "Find Path", 100, 215);
+		findPath = createButton("path_off.png", "Find Path", 100, 215);
+		findPathBlue = createButton("path.png", "Find Path", 100, 215);
 		findPathBlue.setVisible(false);
-		findPlace = createButton("find_red_off.png", "Find Place", 50, 215);
+		findPlace = createButton("find_off.png", "Find Place", 50, 215);
 		findPlaceBlue = createButton("find_red.png", "Find Place", 50, 215);
 		findPlace.setVisible(false);
 
