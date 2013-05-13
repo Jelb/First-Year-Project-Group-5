@@ -30,13 +30,10 @@ public class Flag extends DrawableItem {
 	private void createFlag(){
 		try {
 			if(type == 1){ //If we want a from flag (green)
-				icon = ImageIO.read(new File("flag_green.PNG"));
+				icon = ImageIO.read(new File("green_pin.PNG"));
 			}
 			else if(type == 2){ //To flag (checkered)
-				icon = ImageIO.read(new File("checkered_flag2.PNG"));
-			}
-			else if(type == 3) { //A find flag for single address find (blue)
-				icon = ImageIO.read(new File("blue_pin.PNG"));
+				icon = ImageIO.read(new File("red_pin.PNG"));
 			}
 		} 
 		
@@ -45,11 +42,15 @@ public class Flag extends DrawableItem {
 	}
 	
 	public void updatePosition(){
-		pixelXCord = calcPixelX(geoXCord);
+		pixelXCord = calcPixelX(geoXCord - WindowHandler.pixelToGeoX(16));
 		pixelYCord = calcPixelY(geoYCord+ WindowHandler.pixelToGeoY(32));
 	}
 
 	public void paintComponent(Graphics g) {
 		g.drawImage(icon, pixelXCord , pixelYCord, null);
+	}
+	
+	public double Y() {
+		return geoYCord;
 	}
 }

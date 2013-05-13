@@ -81,7 +81,7 @@ public class Window extends JFrame {
 	// The tree flags
 	private Flag fromFlag = new Flag(1);
 	private Flag toFlag = new Flag(2);
-	private Flag findFlag = new Flag(3);
+	private Flag findFlag = new Flag(1);
 
 	// Currently saved from and to text
 	private String fromText;
@@ -948,7 +948,7 @@ public class Window extends JFrame {
 					double x = flagNode.getXCord();
 					double y = flagNode.getYCord();
 					fromFlag.setPosition(x, y);
-					Map.use().addFlag(fromFlag);
+					Map.use().addFlag(fromFlag, t);
 				}
 				else if (t == TextType.TO) {
 					to.setText(text);
@@ -956,7 +956,7 @@ public class Window extends JFrame {
 					double x = flagNode.getXCord();
 					double y = flagNode.getYCord();
 					toFlag.setPosition(x, y);
-					Map.use().addFlag(toFlag);
+					Map.use().addFlag(toFlag, t);
 				}
 				else if (t == TextType.FIND) {
 					find.setText(text);
@@ -964,7 +964,7 @@ public class Window extends JFrame {
 					double x = flagNode.getXCord();
 					double y = flagNode.getYCord();
 					findFlag.setPosition(x, y);
-					Map.use().addFlag(findFlag);
+					Map.use().addFlag(findFlag, t);
 					findNode = flagNode;
 				}
 			}
@@ -1190,6 +1190,10 @@ public class Window extends JFrame {
 	 */
 	public static void setMaxHeight(int maxH) {
 		maxHeight = maxH;
+	}
+	
+	public Flag getFindFlag() {
+		return findFlag;
 	}
 }
 

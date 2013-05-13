@@ -12,6 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 
+import Part1.Window.TextType;
+
 
 public class Map extends JPanel {
 	/**
@@ -351,7 +353,7 @@ public class Map extends JPanel {
 			if(r == null) continue;
 			r.updatePosition();
 		}
-		for(DrawableItem r : path) r.updatePosition();
+		for (DrawableItem r : path) r.updatePosition();
 		for (Flag f : flags) f.updatePosition();
 	}
 
@@ -393,10 +395,18 @@ public class Map extends JPanel {
 	 * 
 	 * @param f The flag to be added.
 	 */
-	public void addFlag(Flag f) {
-		if (!flags.contains(f))
+	public void addFlag(Flag f, TextType t) {
+		if(t == TextType.FIND) {
+			flags = new ArrayList<Flag>();
 			flags.add(f);
+		} else {
+			if(flags.contains(Window.use().getFindFlag()))
+				flags.remove(Window.use().getFindFlag());
+			if(!flags.contains(f))
+				flags.add(f);
+		}
 	}
+
 
 	/**
 	 * Stores the coast, lake and island date to the map instance.
