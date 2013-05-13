@@ -268,7 +268,7 @@ public class Window extends JFrame {
 		reset.setVisible(true);
 
 		cityAndZipLabel = new JLabel("");
-		cityAndZipLabel.setBounds(20, 640-40, 200, 20);
+		cityAndZipLabel.setBounds(20, 600-40, 200, 20);
 		cityAndZipLabel.setVisible(true);
 
 		background = new TransparetPane();
