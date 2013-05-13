@@ -30,7 +30,7 @@ public class Flag extends DrawableItem {
 	private void createFlag(){
 		try {
 			if(type == 1){ //If we want a from flag (green)
-				icon = ImageIO.read(new File("green_flag2.PNG"));
+				icon = ImageIO.read(new File("flag_green.PNG"));
 			}
 			else if(type == 2){ //To flag (checkered)
 				icon = ImageIO.read(new File("checkered_flag2.PNG"));

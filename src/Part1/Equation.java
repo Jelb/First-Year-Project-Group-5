@@ -12,7 +12,9 @@ public class Equation {
 	private static final double E = Math.sqrt(1-(B*B)/(A*A));
 	private static final double EE = Math.pow(E, 2)/(1-Math.pow(E, 2));
 	private static final double N = ((A-B)/(A+B));
-	private static final double MERIDIAN = 9*(Math.PI/180);
+	private static final double MERIDIAN32 = 9*(Math.PI/180);
+	private static final double MERIDIAN33 = 15*(Math.PI/180); 
+	private static double p;
 	//---------------------------------------------------------------------
 	
 	/**
@@ -30,7 +32,11 @@ public class Equation {
 
 		double nu 	= A/Math.pow((1-Math.pow(E, 2)*Math.pow(Math.sin(lat), 2)), 1/2);
 
-		double p = (lon - MERIDIAN);
+		if(lon < 12) {
+			p = (lon - MERIDIAN32);
+		} else {
+			p = (lon - MERIDIAN33);
+		}
 		
 		double AP 	= A*(1-N+(5*N*N/4)*(1-N)+(81*Math.pow(N, 4)/64)*(1-N));
 		double BP 	= (3*A*N/2)*(1-N-(7*N*N/8)*(1-N)+(55*Math.pow(N, 4)/64));
