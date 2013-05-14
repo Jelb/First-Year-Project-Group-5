@@ -517,9 +517,11 @@ public class WindowHandler {
 		//All roads with length larger than the longest road floor are added to the longest roads list
 		//Makes graph object and list of roads longer than the longest roads floor
 		graph = dataReader.createGraphAndLongestRoadsList(longestRoadsFloor);
+//		System.out.println("Density of graph: " + graph.getE()/Math.pow(graph.getV(),2));
 
 		//Makes and returns a quadTree
 		QT = dataReader.createQuadTree();
+//		System.out.println("Height of quadtree: " + QT.getHeight());
 		longestRoads = dataReader.getLongestRoads();
 		roadToZipMap = dataReader.getRoadToZipMap();
 		zipToCityMap = dataReader.getZipToCityMap("post.dat");

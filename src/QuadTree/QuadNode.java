@@ -1,10 +1,10 @@
 package QuadTree;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import Part1.Node;
+
  /**
   * 
   * The QuadNode class holds references to the four quadrants: Northwest (NW), Northeast (NE), Southwest (SW) and Southeast (SE)
@@ -41,11 +41,16 @@ public class QuadNode extends BoundingBox implements Element, Parent {
 	/**
 	 * Sends the given point on to the next QuadNode or Leaf according to where the point belongs
 	 */
-	public void insert(Node c) {
-		if (NW.holds(c.getXCord(), c.getYCord())) NW.insert(c);
-		else if (NE.holds(c.getXCord(), c.getYCord())) NE.insert(c);
-		else if (SW.holds(c.getXCord(), c.getYCord())) SW.insert(c);
-		else if (SE.holds(c.getXCord(), c.getYCord())) SE.insert(c);
+	public int insert(Node c) {
+		int[] arr = new int[4];
+		if (NW.holds(c.getXCord(), c.getYCord())) arr[0] = NW.insert(c);
+		else if (NE.holds(c.getXCord(), c.getYCord())) arr[1] = NE.insert(c);
+		else if (SW.holds(c.getXCord(), c.getYCord())) arr[2] = SW.insert(c);
+		else if (SE.holds(c.getXCord(), c.getYCord())) arr[3] = SE.insert(c);
+		int height = 0;
+		for (int i = 0; i < arr.length; i++)
+			if (arr[i] != 0) height = arr[i];
+		return ++height;
 	}
 	
 	/**

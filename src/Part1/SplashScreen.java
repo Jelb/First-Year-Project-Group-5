@@ -52,7 +52,8 @@ public class SplashScreen extends JFrame{
 	
 	private void setUp() {
 		String[] tipArray = { 
-			    "Click, hold and drag with right mouse to create zoom area", "Use mouse wheel to zoom in and out", "Click the globe to reset zoom", "Better than apple maps", "Hold mouse over a road to get its name"
+			    "Click, hold and drag with right mouse button to create zoom area", "Use mouse wheel to zoom in and out",
+			    "Click the globe to reset zoom", "Better than apple maps", "Hold mouse over a road to get its name"
 			};
 		Random random = new Random();
 		int randomNumber = random.nextInt(tipArray.length);

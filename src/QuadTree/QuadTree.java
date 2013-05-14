@@ -18,9 +18,11 @@ public class QuadTree implements Parent {
 	Element root;
 	double xMax;
 	double yMax;
+	int height;
 	
 	public QuadTree(int leafCap, double xMax, double yMax) {
 		root = new Leaf(leafCap, this, 0, 0, xMax, yMax);
+		height = 1;
 		this.xMax = xMax;
 		this.yMax = yMax;
 	}
@@ -46,17 +48,20 @@ public class QuadTree implements Parent {
 	 * inserts a point in the QuadTree
 	 */
 	public void insert(double x, double y, int id) {
-		// if the point that is to be inserted is outside the QuadTree area, an IllegalArgumentException is thrown
-		if (x < 0 || x > xMax || y < 0 || y > yMax) throw new IllegalArgumentException();
-		root.insert(new Node(x, y, id));
+		insert(new Node(x, y, id));
 	}
 	
+	/**
+	 * inserts a node in the QuadTree
+	 */
 	public void insert(Node node) {
 		double x = node.getXCord();
 		double y = node.getYCord();
 		// if the point that is to be inserted is outside the QuadTree area, an IllegalArgumentException is thrown
 		if (x < 0 || x > xMax || y < 0 || y > yMax) throw new IllegalArgumentException();
-		root.insert(node);
+		int newHeight = 0;
+		newHeight = root.insert(node);
+		if (newHeight > height) height = newHeight;
 	}
 	
 	/**
@@ -91,6 +96,10 @@ public class QuadTree implements Parent {
 		return root;
 	}
 	
+	public int getHeight() {
+		return height;
+	}
+	
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
 		double maxX = 10;
@@ -116,7 +125,8 @@ public class QuadTree implements Parent {
 		for (Node c : list) {
 			System.out.println(c.getKdvID() + ": (" + c.getXCord() + ", " + c.getYCord() + ")");
 		}
-		//QT.showTree();
+		System.out.println("Height of quadtree:" + QT.getHeight());
+		QT.showTree();
 	}
 	
 

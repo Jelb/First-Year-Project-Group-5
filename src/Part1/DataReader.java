@@ -35,7 +35,7 @@ import QuadTree.QuadTree;
  */
 public class DataReader {
 	private static DataReader instance;
-	public ArrayList<Node> nodes;
+	private ArrayList<Node> nodes;
 	private ArrayList<Edge> edges;
 	private ArrayList<Edge> longestRoads;
 	private final String nodeFile, edgeFile;
@@ -251,7 +251,7 @@ public class DataReader {
 			return graph;
 		} 
 		catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "The \"edgeFile\" was not foud. \nThe will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "The \"edgeFile\" was not foud. \nThe program will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
 			throw new RuntimeException();
 		}
 	}
@@ -384,5 +384,9 @@ public class DataReader {
 
 	public List<Edge> getEdges() {
 		return edges;
+	}
+
+	public ArrayList<Node> getNodes() {
+		return nodes;
 	}
 }

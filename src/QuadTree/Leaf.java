@@ -29,15 +29,16 @@ public class Leaf extends BoundingBox implements Element {
 	/**
 	 * inserts Node in leaf. If there is overflow the leaf is converted into a Node
 	 */
-	public void insert(Node p) {
-		if (top == nodes.length) convertToNode().insert(p);
+	public int insert(Node p) {
+		if (top == nodes.length) return convertToNode().insert(p);
 		else {
 			// nodes must be unique
 			for (Node Node : nodes) {
 				if (Node != null)
-					if (p.equals(Node)) return;
+					if (p.equals(Node)) return 1;
 			}
 			nodes[top++] = p;
+			return 1;
 		}
 	}
 	

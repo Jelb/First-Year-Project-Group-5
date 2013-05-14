@@ -3,6 +3,7 @@ package QuadTree;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import Part1.Node;
 
 /**
@@ -13,7 +14,7 @@ import Part1.Node;
 public interface Element {
 	public List<Node> query(BoundingBox queryBox, List<Node> list);
 	
-	public void insert(Node n);
+	public int insert(Node n);
 	
 	public boolean intersects(BoundingBox b);
 	

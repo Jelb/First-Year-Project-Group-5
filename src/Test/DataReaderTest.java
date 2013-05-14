@@ -31,7 +31,7 @@ public class DataReaderTest {
 	public void numberOfNodes() {
 		//DR.createNodeList();
 		//System.out.println("Number of nodes:" + DR.numberOfNodes);
-		assertEquals(10, DR.nodes.size()-1);
+		assertEquals(10, DR.getNodes().size()-1);
 	}
 	
 	@Test
@@ -52,8 +52,8 @@ public class DataReaderTest {
 		//Graph graph = DR.createGraphAndLongestRoadsList(10000);
 		//System.out.println("Graph adj(1): " + graph.adj(1));
 		ArrayList<Edge> arrTest = new ArrayList<Edge>();
-		Edge edge1 = new Edge(DR.nodes.get(1), DR.nodes.get(2), 58.63325, "", 8, "0", "0", 0.135, 0, 0, 0, 0, true);
-		Edge edge2 = new Edge(DR.nodes.get(1), DR.nodes.get(3), 136.81998, "", 8, "0", "0", 0.315, 0, 0, 0, 0, true);
+		Edge edge1 = new Edge(DR.getNodes().get(1), DR.getNodes().get(2), 58.63325, "", 8, "0", "0", 0.135, 0, 0, 0, 0, true);
+		Edge edge2 = new Edge(DR.getNodes().get(1), DR.getNodes().get(3), 136.81998, "", 8, "0", "0", 0.315, 0, 0, 0, 0, true);
 		arrTest.add(edge1);
 		arrTest.add(edge2);
 		//Edge(fromNode, toNode, length, vejnavn, type, v_postnr, h_postnr, true);
@@ -65,7 +65,7 @@ public class DataReaderTest {
 		//Graph graph = DR.createGraphAndLongestRoadsList(10000);
 		//System.out.println("Graph adj(3): " + graph.adj(3));
 		ArrayList<Edge> arrTest = new ArrayList<Edge>();
-		Edge edge = new Edge(DR.nodes.get(3), DR.nodes.get(4), 20.01746, "", 8, "0", "0", 0.046, 0, 0, 0, 0, true);
+		Edge edge = new Edge(DR.getNodes().get(3), DR.getNodes().get(4), 20.01746, "", 8, "0", "0", 0.046, 0, 0, 0, 0, true);
 		arrTest.add(edge);
 		ArrayList<Edge> adjArr = graph.adjArr(3);
 		for (int i = 0; i < arrTest.size(); i++) {

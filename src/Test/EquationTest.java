@@ -30,7 +30,7 @@ public class EquationTest {
 	public void pointWithinChannel() {
 		DR = DataReader.use("equationTestNodes.txt", "equationTestEdges.txt");
 		DR.createNodeList();
-		Edge edge =  new Edge(DR.nodes.get(1), DR.nodes.get(2), 0, "", 0, "0", "0", 0.1, 0, 0, 0, 0, true);
+		Edge edge =  new Edge(DR.getNodes().get(1), DR.getNodes().get(2), 0, "", 0, "0", "0", 0.1, 0, 0, 0, 0, true);
 		assertFalse(Equation.pointWithinChannel(-3.0, 4.0, edge));
 		assertTrue(Equation.pointWithinChannel(4.0, 5.0, edge));
 	}
@@ -39,7 +39,7 @@ public class EquationTest {
 	public void getNormalVector() {
 		DR = DataReader.use("equationTestNodes.txt", "equationTestEdges.txt");
 		DR.createNodeList();
-		Edge edge =  new Edge(DR.nodes.get(1), DR.nodes.get(2), 0, "", 0, "0", "0", 0.1, 0, 0, 0, 0, true);
+		Edge edge =  new Edge(DR.getNodes().get(1), DR.getNodes().get(2), 0, "", 0, "0", "0", 0.1, 0, 0, 0, 0, true);
 		double[] expArr = new double[] { -3.0 , 4.0 };
 		double[] expArr2 = new double[] { -3.3 , 4.1 };
 		assertArrayEquals(expArr, Equation.getNormalVector(edge), 0.001);
@@ -51,7 +51,7 @@ public class EquationTest {
 	public void distanceBetweenPointAndLine() {
 		DR = DataReader.use("equationTestNodes.txt", "equationTestEdges.txt");
 		DR.createNodeList();
-		Edge edge =  new Edge(DR.nodes.get(1), DR.nodes.get(2), 0, "", 0, "0", "0", 0.1, 0, 0, 0, 0, true);
+		Edge edge =  new Edge(DR.getNodes().get(1), DR.getNodes().get(2), 0, "", 0, "0", "0", 0.1, 0, 0, 0, 0, true);
 		double x1 = 1.0;
 		double y1 = 7.5;
 		assertEquals(5.0, Equation.distanceBetweenPointAndLine(edge, x1, y1), 0.001);
@@ -81,12 +81,12 @@ public class EquationTest {
 	public void nodesToVector() {
 		DR = DataReader.use("equationTestNodes.txt", "equationTestEdges.txt");
 		DR.createNodeList();
-		Node node5 = DR.nodes.get(5);
-		Node node1 = DR.nodes.get(1);
+		Node node5 = DR.getNodes().get(5);
+		Node node1 = DR.getNodes().get(1);
 		double[] expArr = new double[] { -3.0 , 1.0 };
 		assertArrayEquals(expArr, Equation.nodesToVector(node5,node1), 0.01);
-		Node node2 = DR.nodes.get(2);
-		Node node3 = DR.nodes.get(3);
+		Node node2 = DR.getNodes().get(2);
+		Node node3 = DR.getNodes().get(3);
 		double[] expArr2 = new double[] { 4.3 , 3.2 };
 		assertFalse(Math.abs(expArr2[0] - Equation.nodesToVector(node2,node3)[0]) < 0.001);
 		assertFalse(Math.abs(expArr2[1] - Equation.nodesToVector(node2,node3)[1]) < 0.001);
@@ -104,9 +104,9 @@ public class EquationTest {
 	public void distanceBetweenNodes() {
 		DR = DataReader.use("equationTestNodes.txt", "equationTestEdges.txt");
 		DR.createNodeList();
-		Node node1 = DR.nodes.get(1);
-		Node node2 = DR.nodes.get(2);
-		Node node5 = DR.nodes.get(5);
+		Node node1 = DR.getNodes().get(1);
+		Node node2 = DR.getNodes().get(2);
+		Node node5 = DR.getNodes().get(5);
 		assertEquals(5.0, Equation.distanceBetweenNodes(node1, node2), 0.001);
 		assertFalse(Math.abs(Equation.distanceBetweenNodes(node2,node5) - 5.0) < 0.001);
 	}
@@ -156,9 +156,9 @@ public class EquationTest {
 	public void edgeToVector() {
 		DR = DataReader.use("equationTestNodes.txt", "equationTestEdges.txt");
 		DR.createNodeList();
-		Edge edge1 =  new Edge(DR.nodes.get(1), DR.nodes.get(2), 0, "", 0, "0", "0", 0.1, 0, 0, 0, 0, true);
-		Edge edge2 =  new Edge(DR.nodes.get(2), DR.nodes.get(3), 0, "", 0, "0", "0", 0.1, 0, 0, 0, 0, true);
-		Edge edge3 =  new Edge(DR.nodes.get(3), DR.nodes.get(4), 0, "", 0, "0", "0", 0.1, 0, 0, 0, 0, true);
+		Edge edge1 =  new Edge(DR.getNodes().get(1), DR.getNodes().get(2), 0, "", 0, "0", "0", 0.1, 0, 0, 0, 0, true);
+		Edge edge2 =  new Edge(DR.getNodes().get(2), DR.getNodes().get(3), 0, "", 0, "0", "0", 0.1, 0, 0, 0, 0, true);
+		Edge edge3 =  new Edge(DR.getNodes().get(3), DR.getNodes().get(4), 0, "", 0, "0", "0", 0.1, 0, 0, 0, 0, true);
 		double[] expArr1 = new double[] {  4.0 ,  3.0 };
 		double[] expArr2 = new double[] { -7.0 ,  1.0 };
 		double[] expArr3 = new double[] { -2.0 , -4.0 };
