@@ -187,7 +187,6 @@ public class Map extends JPanel {
 			// - The view area is inside the bounds of the polygon.
 			if (Map.use().getBounds().contains(current.getBounds()) || current.getBounds().contains(Map.use().getBounds()) || current.intersects(Map.use().getBounds())) {
 				poly.add(current);
-				if(k > max) max = k;
 			}
 		}
 		g.setColor(c);
