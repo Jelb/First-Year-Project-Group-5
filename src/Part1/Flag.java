@@ -45,7 +45,7 @@ public class Flag extends DrawableItem {
 	
 	public void updatePosition(){
 		pixelXCord = calcPixelX(geoXCord - WindowHandler.pixelToGeoX(17));
-		pixelYCord = calcPixelY(geoYCord+ WindowHandler.pixelToGeoY(32));
+		pixelYCord = calcPixelY(geoYCord+ WindowHandler.pixelToGeoY(35));
 	}
 
 	public void paintComponent(Graphics g) {
