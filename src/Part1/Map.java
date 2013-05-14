@@ -70,7 +70,6 @@ public class Map extends JPanel {
 	 */
 	public void paintComponent(Graphics g) {
 		// Draw coast line, lakes, islands, and borders.
-		long time = System.currentTimeMillis();
 		drawShore(coast, UIManager.getColor("Panel.background"), g);
 		drawShore(lake, Window.use().getBackground(), g);
 		drawShore(island, UIManager.getColor("Panel.background"), g);
@@ -160,7 +159,6 @@ public class Map extends JPanel {
 				continue;
 			r.paintComponent(g);
 		}
-		//System.out.println("draw road :"+(System.currentTimeMillis() - time));
 		// Draw the path
 		for (DrawableItem r : path)
 			r.paintComponent(g);
@@ -405,6 +403,7 @@ public class Map extends JPanel {
 			if(!flags.contains(f))
 				flags.add(f);
 		}
+		path = new ArrayList<DrawableItem>();
 	}
 
 

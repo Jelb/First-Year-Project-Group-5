@@ -79,9 +79,9 @@ public class Window extends JFrame {
 	private boolean byShip = true;
 
 	// The tree flags
-	private Flag fromFlag = new Flag(1);
-	private Flag toFlag = new Flag(2);
-	private Flag findFlag = new Flag(1);
+	private Flag fromFlag = new Flag(TextType.FROM);
+	private Flag toFlag = new Flag(TextType.TO);
+	private Flag findFlag = new Flag(TextType.FIND);
 
 	// Currently saved from and to text
 	private String fromText;
@@ -147,7 +147,6 @@ public class Window extends JFrame {
 		contentPane.add(screen);
 		createButtons();
 		addButtons();	
-//		setBackground(new Color(71, 180, 201)); 	// The color of the ocean.
 		setBackground(new Color(165,191,221));		// Tom's ocean color, courtesy of Google Maps
 		pack();
 		setLocationRelativeTo(null);

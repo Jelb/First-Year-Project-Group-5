@@ -7,18 +7,17 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import Part1.Window.TextType;
+
 public class Flag extends DrawableItem {
-	private boolean fromBool;
-	private int type; //can be fromFlag (1), toFlag (2) or findFlag (3)
 	private double geoXCord;
 	private double geoYCord;
 	private int pixelXCord;
 	private int pixelYCord;
 	private BufferedImage icon;
 	
-	public Flag(int type){
-		this.type = type;
-		createFlag();
+	public Flag(TextType Type){
+		createFlag(Type);
 	}
 	
 	public void setPosition(double x, double y) {
@@ -27,13 +26,16 @@ public class Flag extends DrawableItem {
 		updatePosition();
 	}
 	
-	private void createFlag(){
+	private void createFlag(TextType t){
 		try {
-			if(type == 1){ //If we want a from flag (green)
+			switch(t) {
+			case FROM : 
+			case FIND : 
 				icon = ImageIO.read(new File("green_pin.PNG"));
-			}
-			else if(type == 2){ //To flag (checkered)
+				break;
+			case TO : 
 				icon = ImageIO.read(new File("red_pin.PNG"));
+				break;
 			}
 		} 
 		

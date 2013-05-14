@@ -216,7 +216,6 @@ public class WindowHandler {
 	}
 	
 	public static void zoomIn(int zoomCount) {
-		System.out.println(zoomCount);
 		double minX = geoWidth*0.1;
 		double minY = geoHeight*0.1;
 		double maxX = geoWidth-geoWidth*0.1;
@@ -232,7 +231,6 @@ public class WindowHandler {
 			maxY -= (prevMaxY-prevMinY)*0.1;
 		}
 		search(minX, maxX, minY, maxY);
-		System.out.println("geoWidth = " + geoWidth);
 	}
 
 	// Searches an area using pixel-values
