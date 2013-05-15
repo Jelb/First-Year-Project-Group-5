@@ -307,19 +307,18 @@ public class WindowHandler {
 //		startTime = System.currentTimeMillis(); BRUGES I RAPPORTEN
 		getEdgesFromNodes();
 		// BRUGES I RAPPORTEN
-//		System.out.println("Time to find all drawable edges and create road segments: " + (System.currentTimeMillis()-startTime)/1000.0 + " s");
+//		System.out.println("Time to find all drawable edges and create road segments: " + 
+//									(System.currentTimeMillis()-startTime)/1000.0 + " s");
 		
 		offsetX += geoXMin;
 		offsetY += geoYMin;
-
 
 		// check whether any of the longest roads intersect with the searched area
 		for (Edge e : longestRoads) {
 			double x1 = e.getFromNode().getXCord();
 			double y1 = e.getFromNode().getYCord();
 			double x2 = e.getToNode().getXCord();
-			double y2 = e.getToNode().getYCord();						// for now, no borders will be drawn
-			if(lineIntersects(geoXMin, geoXMax, geoYMin, geoYMax, x1, x2, y1, y2)) {
+			double y2 = e.getToNode().getYCord();					// for now, no borders will be drawn
 				if(e.getType() == 1) Map.use().addRoadSegment1(
 						new RoadSegment(x1, y1, x2, y2, e.getType()));
 				else if(e.getType() == 2) Map.use().addRoadSegment2(
@@ -335,7 +334,6 @@ public class WindowHandler {
 				else Map.use().addRoadSegment8(
 						new RoadSegment(x1, y1, x2, y2, e.getType()));
 			}
-		}
 		
 //		startTime = System.currentTimeMillis(); BRUGES I RAPPORTEN
 		Window.use().updateMap();	
@@ -343,18 +341,6 @@ public class WindowHandler {
 //		System.out.println(); BRUGES I RAPPORTEN
 		
 	}
-
-	//TODO: Write code to detect intersection between area of interest and road.
-	private static boolean lineIntersects(double boxX1, double boxX2, double boxY1, double boxY2,
-			double lineX1, double lineX2, double lineY1, double lineY2) {
-		//		if (lineX1 > boxX2 && lineX2 > boxX2) return false;
-		//		else if (lineX1 < boxX1 && lineX2 < boxX1) return false;
-		//		else if (lineY1 > boxY2 && lineY2 > boxY2) return false;
-		//		else if (lineY1 < boxY1 && lineY1 < boxY1) return false;
-		//		else return true;
-		return true;
-	}
-
 
 	// returns true if the given edge will be shown on the map with the current zoom level
 	private static boolean includeEdge(Edge e) {
@@ -507,8 +493,7 @@ public class WindowHandler {
 		SplashScreen.initialize(nodeFile, edgeFile, coastFile, lakeFile);
 		SplashScreen.use();
 
-		//Initializing of data from KrakLoader
-		//DataReader dataReader = DataReader.use("kdv_node_unload.txt","kdv_unload.txt");
+		//Initializing of data from DataReader
 		DataReader dataReader = DataReader.use(nodeFile,edgeFile);
 
 		SplashScreen.use().setTaskName(Task.COAST);

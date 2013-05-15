@@ -95,7 +95,7 @@ public class Window extends JFrame {
 	private JLabel cityAndZipLabel;
 
 	// The default text in the textfields
-	private final String fromDefault = "Enter startpoint";
+	private final String fromDefault = "Enter start point";
 	private final String toDefault = "Enter destination";
 	private final String findDefault = "Enter address";
 
