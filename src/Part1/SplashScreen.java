@@ -38,6 +38,8 @@ public class SplashScreen extends JFrame{
 	private String[] tipArray;
 	private JLabel tip, tipTitle;
 	private Random random = new Random();
+	private boolean[] shown;
+	private int displayedTips = 0;
 	
 	private SplashScreen() {
 		super();
@@ -65,8 +67,9 @@ public class SplashScreen extends JFrame{
 			    "You can toggle ferry on/off by clicking the ship icon", "Change you transport type by clicking the car/bike icon",
 			    "Toggle between location search and path finding\nby clicking the single pin or multi pin icon"
 			};
+		shown = new boolean[tipArray.length];
 		int randomNumber = random.nextInt(tipArray.length);
-	
+		shown[randomNumber] = true;
 		tipTitle = new JLabel("Tips & Tricks #238");
 		tipTitle.setForeground(Color.white);
 		tip = new JLabel(tipArray[randomNumber]);
@@ -181,7 +184,7 @@ public class SplashScreen extends JFrame{
 	}
 	
 	private void createTimer() {
-		timer = new Timer(5000, new ChangeTip());
+		timer = new Timer(8000, new ChangeTip());
 		timer.start();
 	}
 	
@@ -192,12 +195,11 @@ public class SplashScreen extends JFrame{
 		instance = null;
 	}
 	
-	public static void initialize(String nodes, String edges, String coast, String lake, String island) {
+	public static void initialize(String nodes, String edges, String coast, String lake) {
 		   noOfNodes = countLines(nodes);
 		   noOfEdges = countLines(edges);
 		   noOfCoastPoints = countLines(coast);
 		   noOfCoastPoints += countLines(lake);
-		   noOfCoastPoints += countLines(island);
 	}
 	
 	/**
@@ -238,12 +240,17 @@ public class SplashScreen extends JFrame{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			for(boolean b : shown) {
+				if (b == true) displayedTips++;
+			}
+			if(displayedTips == tipArray.length) shown = new boolean[tipArray.length];
 			int next = random.nextInt(tipArray.length-1);
-			while (tip.getText().equals(tipArray[next])) {
+			while (shown[next]) {
 				next = random.nextInt(tipArray.length-1);
 			}
 			int no = random.nextInt(1000);
 			tipTitle.setText("Tips & Tricks #" + no);
+			shown[next] = true;
 			tip.setText(tipArray[next]);
 			repaint();
 		}

@@ -72,7 +72,6 @@ public class Map extends JPanel {
 		// Draw coast line, lakes, islands, and borders.
 		drawShore(coast, UIManager.getColor("Panel.background"), g);
 		drawShore(lake, Window.use().getBackground(), g);
-		drawShore(island, UIManager.getColor("Panel.background"), g);
 		drawBorder(border, Color.RED, g);
 		
 		// Draw road borders
@@ -416,10 +415,9 @@ public class Map extends JPanel {
 	 * @param argLake An ArrayList of CoastPoint arrays describing the lake polygons.
 	 * @param argIsland An ArrayList of CoastPoint arrays describing the island polygons.
 	 */
-	public static void setCoast(ArrayList<CoastPoint[]> argCoast, ArrayList<CoastPoint[]> argLake, ArrayList<CoastPoint[]> argIsland) {
+	public static void setCoast(ArrayList<CoastPoint[]> argCoast, ArrayList<CoastPoint[]> argLake) {
 		coast = argCoast;
 		lake = argLake;
-		island = argIsland;
 	}
 
 	/**
