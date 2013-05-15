@@ -5,8 +5,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
-
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Random;
@@ -17,6 +18,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.Timer;
+
+
 
 public class SplashScreen extends JFrame{
 
@@ -30,6 +34,10 @@ public class SplashScreen extends JFrame{
 	private static SplashScreen instance;
 	private static int noOfNodes, noOfEdges, noOfCoastPoints;
 	private JProgressBar mainBar, overview;
+	private Timer timer;
+	private String[] tipArray;
+	private JLabel tip, tipTitle;
+	private Random random = new Random();
 	
 	private SplashScreen() {
 		super();
@@ -51,16 +59,17 @@ public class SplashScreen extends JFrame{
 	}
 	
 	private void setUp() {
-		String[] tipArray = { 
+		tipArray = new String[] { 
 			    "Click, hold and drag with right mouse button to create zoom area", "Use mouse wheel to zoom in and out",
-			    "Click the globe to reset zoom", "Better than apple maps", "Hold mouse over a road to get its name"
+			    "Click the globe to reset zoom", "Hold mouse over a road to get its name", "Use the arrowkeys to pan the map",
+			    "You can toggle ferry on/off by clicking the ship icon", "Change you transport type by clicking the car/bike icon",
+			    "Toggle between location search and path finding\nby clicking the single pin or multi pin icon"
 			};
-		Random random = new Random();
 		int randomNumber = random.nextInt(tipArray.length);
 	
-		JLabel tipTitle = new JLabel("Todays tip:");
+		tipTitle = new JLabel("Tips & Tricks #238");
 		tipTitle.setForeground(Color.white);
-		JLabel tip = new JLabel(tipArray[randomNumber]);
+		tip = new JLabel(tipArray[randomNumber]);
 		tip.setForeground(Color.WHITE);
 		tip.setOpaque(false);
 		tipTitle.setOpaque(false);
@@ -131,6 +140,7 @@ public class SplashScreen extends JFrame{
 		gbc.weighty = 0.0;
 		background.add(center, gbc);
 		setContentPane(contentPane);
+		createTimer();
 	}
 	
 	public void updateProgress() {
@@ -170,7 +180,13 @@ public class SplashScreen extends JFrame{
 		}
 	}
 	
+	private void createTimer() {
+		timer = new Timer(5000, new ChangeTip());
+		timer.start();
+	}
+	
 	public void close() {
+		timer.stop();
 		Window.use().setVisible(true);
 		dispose();
 		instance = null;
@@ -217,6 +233,23 @@ public class SplashScreen extends JFrame{
 			}
 		return count;
 	}
+	
+	private class ChangeTip implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int next = random.nextInt(tipArray.length-1);
+			while (tip.getText().equals(tipArray[next])) {
+				next = random.nextInt(tipArray.length-1);
+			}
+			int no = random.nextInt(1000);
+			tipTitle.setText("Tips & Tricks #" + no);
+			tip.setText(tipArray[next]);
+			repaint();
+		}
+	}
 }
+
+
 	
 
