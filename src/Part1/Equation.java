@@ -32,7 +32,7 @@ public class Equation {
 
 		double nu 	= A/Math.pow((1-Math.pow(E, 2)*Math.pow(Math.sin(lat), 2)), 1/2);
 
-		if(lon < 12) {
+		if(lon < 12.0) {
 			p = (lon - MERIDIAN32);
 		} else {
 			p = (lon - MERIDIAN33);
@@ -54,6 +54,8 @@ public class Equation {
 		
 		double x 	= 500000+(K4*p+K5*Math.pow(p, 3));
 		double y	= K1+K2*p*p+K3*Math.pow(p, 4);
+		if (argLon < 12 && argLon > 9) x += 175;
+		if (argLon > 12 ) x += 520;
 		return new CoastPoint(x, y);
 	}
 	
