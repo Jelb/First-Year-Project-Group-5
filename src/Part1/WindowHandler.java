@@ -493,8 +493,7 @@ public class WindowHandler {
 		SplashScreen.initialize(nodeFile, edgeFile, coastFile, lakeFile);
 		SplashScreen.use();
 
-		//Initializing of data from KrakLoader
-		//DataReader dataReader = DataReader.use("kdv_node_unload.txt","kdv_unload.txt");
+		//Initializing of data from DataReader
 		DataReader dataReader = DataReader.use(nodeFile,edgeFile);
 
 		SplashScreen.use().setTaskName(Task.COAST);
