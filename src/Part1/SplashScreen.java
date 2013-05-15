@@ -63,9 +63,9 @@ public class SplashScreen extends JFrame{
 	private void setUp() {
 		tipArray = new String[] { 
 			    "Click, hold and drag with right mouse button to create zoom area", "Use mouse wheel to zoom in and out",
-			    "Click the globe to reset zoom", "Hold mouse over a road to get its name", "Use the arrowkeys to pan the map",
+			    "Click the globe to reset zoom", "Hold mouse over a road to get its name", "Use the arrowkeys to pan around the map",
 			    "You can toggle ferry on/off by clicking the ship icon", "Change you transport type by clicking the car/bike icon",
-			    "Toggle between location search and path finding by clicking the single pin or multi pin icon"
+			    "Toggle between location search and path finding by clicking the single pin or multi pin icon", "Pytheas was a Greek geographer and explorer"
 			};
 		shown = new boolean[tipArray.length];
 		int randomNumber = random.nextInt(tipArray.length);

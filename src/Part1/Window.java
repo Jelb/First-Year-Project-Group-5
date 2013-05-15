@@ -95,7 +95,7 @@ public class Window extends JFrame {
 	private JLabel cityAndZipLabel;
 
 	// The default text in the textfields
-	private final String fromDefault = "Enter startpoint";
+	private final String fromDefault = "Enter start point";
 	private final String toDefault = "Enter destination";
 	private final String findDefault = "Enter address";
 
@@ -464,48 +464,14 @@ public class Window extends JFrame {
 		search.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				// If the text has been changed the user must choose a new address
-				if (!fromText.equals(from.getText())) fromMarked = false;
-				if (!toText.equals(to.getText())) toMarked = false;
-
-				if(!fromMarked) {
-					String fromText = from.getText();
-					addressParse(fromText, 185, 260, TextType.FROM);
-				}
-				if (!toMarked) {	
-					String toText = to.getText();
-					addressParse(toText, 185, 295,TextType.TO);
-				}
-
-				if(fromMarked && toMarked) {
-					//Checks if the user is going by car or bike, and if they want the shortest or fastest route
-					if(byCar) { 
-						if(fastest) {
-							WindowHandler.pathFinding(TransportWay.CAR, CompareType.FASTEST, byShip);
-						} else {
-							WindowHandler.pathFinding(TransportWay.CAR, CompareType.SHORTEST, byShip);
-						}
-					} else {
-						WindowHandler.pathFinding(TransportWay.BIKE, CompareType.SHORTEST, byShip);
-					}
-				}
+				findPath();
 			}
 		});
 
 		findButton.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent evt) {
-				// If the text has been changed the user must choose a new address
-				if (!findText.equals(find.getText())) findMarked = false;
-
-				if(!findMarked) {
-					String findText = find.getText();
-					addressParse(findText, 185, 260, TextType.FIND);
-				}
-
-				if(findMarked) {
-					WindowHandler.centerOnNode(findNode);
-				}
+				findPlace();
 			}
 		});
 
@@ -587,6 +553,56 @@ public class Window extends JFrame {
 			}
 		});
 	}
+	
+	public void findPath() {
+		isTextChanged();
+		if(!fromMarked) {
+			String fromText = from.getText();
+			addressParse(fromText, 185, 260, TextType.FROM);
+		}
+		if (!toMarked) {	
+			String toText = to.getText();
+			addressParse(toText, 185, 295,TextType.TO);
+		}
+	
+		if(fromMarked && toMarked) {
+			Map.use().addFlag(fromFlag, TextType.FROM);
+			Map.use().addFlag(toFlag, TextType.TO);
+			//Checks if the user is going by car or bike, and if they want the shortest or fastest route
+			if(byCar) { 
+				if(fastest) {
+					WindowHandler.pathFinding(TransportWay.CAR, CompareType.FASTEST, byShip);
+				} else {
+					WindowHandler.pathFinding(TransportWay.CAR, CompareType.SHORTEST, byShip);
+				}
+			} else {
+				WindowHandler.pathFinding(TransportWay.BIKE, CompareType.SHORTEST, byShip);
+			}
+		}
+	}
+	
+	public void findPlace() {
+		// If the text has been changed the user must choose a new address
+		if (!findText.equals(find.getText())) findMarked = false;
+
+		if(!findMarked) {
+			String findText = find.getText();
+			addressParse(findText, 185, 260, TextType.FIND);
+		}
+		
+		if(findMarked) {
+			Map.use().addFlag(findFlag, TextType.FIND);
+			WindowHandler.centerOnNode(findNode);
+		}
+	}
+	
+	/**
+	 * If the text has been changed the user must choose a new address
+	 */
+	public void isTextChanged() {
+		if (!fromText.equals(from.getText())) fromMarked = false;
+		if (!toText.equals(to.getText())) toMarked = false;
+	}
 
 	/**
 	 * Parses the address from the search text field to the search box
@@ -663,7 +679,101 @@ public class Window extends JFrame {
 				}
 			}
 		}
-		createSearchBox(setArray,zipArray,result,x,y,t);
+		if (zipArray.length == 1) chooseAddress(zipArray, result, t, 0, setArray[0]); 
+		else createSearchBox(setArray,zipArray,result,x,y,t);
+	}
+	
+	public void chooseAddress(String[] zipArray, String[] textArray, TextType t, int i, String text) {
+		// if the zip array is empty, the search yielded no results
+		if (zipArray.length == 0) return;
+
+		if(t == TextType.FROM) fromMarked = true; //register if the from or to combo box is marked
+		else if (t == TextType.TO) toMarked = true;
+		else if (t == TextType.FIND) findMarked = true;
+		Edge randomCorrectEdge = null;
+		Node flagNode = null;
+		// if there is no road name we look for a random road in the zip code area
+		if (textArray[0].equals("")) {
+			ArrayList<Edge> allEdgesForZip = new ArrayList<Edge>();
+			HashSet<Integer> disallowedTypes = DijkstraSP.getDisallowedTypes();
+			for(Edge edge : WindowHandler.getEdges()){
+				if (edge.getV_POSTNR().equals(zipArray[i]) && edge.getH_POSTNR().equals(zipArray[i]) && !disallowedTypes.contains(edge.getType())) {
+					allEdgesForZip.add(edge);
+				}
+			}
+			randomCorrectEdge = allEdgesForZip.get(allEdgesForZip.size()/2);
+		}
+		else {
+			for(Edge edge : WindowHandler.getEdges()){
+				if(edge.getVEJNAVN().equals(textArray[0]) && (edge.getV_POSTNR().equals(zipArray[i]) || edge.getH_POSTNR().equals(zipArray[i]) )){
+					randomCorrectEdge = edge;
+					String houseNumberString = textArray[1];
+					if (!houseNumberString.equals("")) {
+						int houseNumber = Integer.parseInt(houseNumberString);
+						if (houseNumber % 2 == 0) {
+							if (houseNumber >= edge.getHouseNumberMinEven() && houseNumber <= edge.getHouseNumberMaxEven()) {
+								WindowHandler.setNode(edge.getFromNode().getKdvID(), t);
+								flagNode = edge.getFromNode();
+								randomCorrectEdge = null;
+								break;
+							}
+						}
+						else if (houseNumber >= edge.getHouseNumberMinOdd() && houseNumber <= edge.getHouseNumberMaxOdd()) {
+							WindowHandler.setNode(edge.getFromNode().getKdvID(), t);
+							flagNode = edge.getFromNode();
+							randomCorrectEdge = null;
+							break;
+						}
+					}
+					else {
+						WindowHandler.setNode(edge.getFromNode().getKdvID(), t);
+						flagNode = edge.getFromNode();
+						randomCorrectEdge = null;
+						break;
+					}
+				}
+			}
+		}
+		if (randomCorrectEdge != null){
+			WindowHandler.setNode(randomCorrectEdge.getFromNode().getKdvID(), t);
+			flagNode = randomCorrectEdge.getFromNode();
+		}
+		if (t == TextType.FIND) searchFindResultBox.setVisible(false);
+		else if (t == TextType.TO) searchToResultBox.setVisible(false);
+		else if (t == TextType.FROM) searchFromResultBox.setVisible(false);
+		
+		if (flagNode != null) {
+			if(t == TextType.FROM){
+				from.setText(text);
+				fromText = text;
+				double x = flagNode.getXCord();
+				double y = flagNode.getYCord();
+				fromFlag.setPosition(x, y);
+				Map.use().addFlag(fromFlag, t);
+			}
+			else if (t == TextType.TO) {
+				to.setText(text);
+				toText = text;
+				double x = flagNode.getXCord();
+				double y = flagNode.getYCord();
+				toFlag.setPosition(x, y);
+				Map.use().addFlag(toFlag, t);
+			}
+			else if (t == TextType.FIND) {
+				find.setText(text);
+				findText = text;
+				double x = flagNode.getXCord();
+				double y = flagNode.getYCord();
+				findFlag.setPosition(x, y);
+				Map.use().addFlag(findFlag, t);
+				findNode = flagNode;
+			}
+		}
+		isTextChanged();
+		if (fromMarked && toMarked && !(t == TextType.FIND)) findPath();
+		else if (t == TextType.FIND) findPlace();
+		else if (fromMarked || toMarked) WindowHandler.centerOnNode(flagNode);
+		else updateMap();
 	}
 
 	/**
@@ -681,20 +791,20 @@ public class Window extends JFrame {
 			screen.remove(searchFromResultBox);
 			searchFromResultBox = new JComboBox(addressArray);
 			searchFromResultBox.setBounds(x,y ,200,25);	
-			searchFromResultBox.addActionListener(new comboBoxListener(searchFromResultBox, zipArray, textArray, t));
+			searchFromResultBox.addActionListener(new comboBoxListener(zipArray, textArray, t));
 			screen.add(searchFromResultBox, JLayeredPane.PALETTE_LAYER);
 		} else if (t == TextType.TO) {
 			screen.remove(searchToResultBox);
 			searchToResultBox = new JComboBox(addressArray);
 			searchToResultBox.setBounds(x,y ,200,25);
-			searchToResultBox.addActionListener(new comboBoxListener(searchToResultBox, zipArray, textArray, t));
+			searchToResultBox.addActionListener(new comboBoxListener(zipArray, textArray, t));
 			screen.add(searchToResultBox, JLayeredPane.PALETTE_LAYER);
 		}	
 		else if (t == TextType.FIND) {
 			screen.remove(searchFindResultBox);
 			searchFindResultBox = new JComboBox(addressArray);
 			searchFindResultBox.setBounds(x, y, 200, 25);
-			searchFindResultBox.addActionListener(new comboBoxListener(searchFindResultBox, zipArray, textArray, t));
+			searchFindResultBox.addActionListener(new comboBoxListener(zipArray, textArray, t));
 			screen.add(searchFindResultBox, JLayeredPane.PALETTE_LAYER);
 		}
 	}
@@ -871,103 +981,32 @@ public class Window extends JFrame {
 	}
 
 	private class comboBoxListener implements ActionListener {
-		JComboBox searchResultBox;
 		TextType t; //From to or find comboBox
 		String[] zipArray, textArray;
 
-		public comboBoxListener(JComboBox searchResultBox, String[] zipArray, String[] textArray, TextType t) {
-			this.searchResultBox = searchResultBox;
+		public comboBoxListener(String[] zipArray, String[] textArray, TextType t) {
 			this.t = t;
 			this.zipArray = zipArray;
 			this.textArray = textArray;
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent e) {	
-			// if the zip array is empty, the search yielded no results
-			if (zipArray.length == 0) return;
-
-			if(t == TextType.FROM) fromMarked = true; //register if the from or to combo box is marked
-			else if (t == TextType.TO) toMarked = true;
-			else if (t == TextType.FIND) findMarked = true;
-			int i = searchResultBox.getSelectedIndex();
-			Edge randomCorrectEdge = null;
-			Node flagNode = null;
-			String text = (String) searchResultBox.getSelectedItem();
-			// if there is no road name we look for a random road in the zip code area
-			if (textArray[0].equals("")) {
-				ArrayList<Edge> allEdgesForZip = new ArrayList<Edge>();
-				for(Edge edge : WindowHandler.getEdges()){
-					if (edge.getV_POSTNR().equals(zipArray[i]) && edge.getH_POSTNR().equals(zipArray[i])) {
-						allEdgesForZip.add(edge);
-					}
-				}
-				randomCorrectEdge = allEdgesForZip.get(allEdgesForZip.size()/2);
+		public void actionPerformed(ActionEvent e) {
+			int i = 0;
+			String selected = "";
+			if (t == TextType.FIND) {
+				i = searchFindResultBox.getSelectedIndex();
+				selected = (String) searchFindResultBox.getSelectedItem();
 			}
-			else {
-				for(Edge edge : WindowHandler.getEdges()){
-					if(edge.getVEJNAVN().equals(textArray[0]) && (edge.getV_POSTNR().equals(zipArray[i]) || edge.getH_POSTNR().equals(zipArray[i]) )){
-						randomCorrectEdge = edge;
-						String houseNumberString = textArray[1];
-						if (!houseNumberString.equals("")) {
-							int houseNumber = Integer.parseInt(houseNumberString);
-							if (houseNumber % 2 == 0) {
-								if (houseNumber >= edge.getHouseNumberMinEven() && houseNumber <= edge.getHouseNumberMaxEven()) {
-									WindowHandler.setNode(edge.getFromNode().getKdvID(), t);
-									flagNode = edge.getFromNode();
-									randomCorrectEdge = null;
-									break;
-								}
-							}
-							else if (houseNumber >= edge.getHouseNumberMinOdd() && houseNumber <= edge.getHouseNumberMaxOdd()) {
-								WindowHandler.setNode(edge.getFromNode().getKdvID(), t);
-								flagNode = edge.getFromNode();
-								randomCorrectEdge = null;
-								break;
-							}
-						}
-						else {
-							WindowHandler.setNode(edge.getFromNode().getKdvID(), t);
-							flagNode = edge.getFromNode();
-							randomCorrectEdge = null;
-							break;
-						}
-					}
-				}
+			else if (t == TextType.FROM) {
+				i = searchFromResultBox.getSelectedIndex();
+				selected = (String) searchFromResultBox.getSelectedItem();
 			}
-			if (randomCorrectEdge != null){
-				WindowHandler.setNode(randomCorrectEdge.getFromNode().getKdvID(), t);
-				flagNode = randomCorrectEdge.getFromNode();
+			else if (t == TextType.TO) {
+				i = searchToResultBox.getSelectedIndex();
+				selected = (String) searchToResultBox.getSelectedItem();
 			}
-			searchResultBox.setVisible(false);
-			if (flagNode != null) {
-				if(t == TextType.FROM){
-					from.setText(text);
-					fromText = text;
-					double x = flagNode.getXCord();
-					double y = flagNode.getYCord();
-					fromFlag.setPosition(x, y);
-					Map.use().addFlag(fromFlag, t);
-				}
-				else if (t == TextType.TO) {
-					to.setText(text);
-					toText = text;
-					double x = flagNode.getXCord();
-					double y = flagNode.getYCord();
-					toFlag.setPosition(x, y);
-					Map.use().addFlag(toFlag, t);
-				}
-				else if (t == TextType.FIND) {
-					find.setText(text);
-					findText = text;
-					double x = flagNode.getXCord();
-					double y = flagNode.getYCord();
-					findFlag.setPosition(x, y);
-					Map.use().addFlag(findFlag, t);
-					findNode = flagNode;
-				}
-			}
-			updateMap();
+			chooseAddress(zipArray, textArray, t, i, selected);
 		}
 	}
 

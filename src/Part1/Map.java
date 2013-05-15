@@ -65,10 +65,10 @@ public class Map extends JPanel {
 	}
 
 	/**
-	 * PaintComponent method used to draw all needed components
-	 * on the map object.
+	 * PaintImage method used to draw all needed components
+	 * on the Image object.
 	 */
-	public void paintComponent(Graphics g) {
+	public void paintImage(Graphics g) {
 		// Draw coast line, lakes, islands, and borders.
 		drawShore(coast, UIManager.getColor("Panel.background"), g);
 		drawShore(lake, Window.use().getBackground(), g);
@@ -261,7 +261,7 @@ public class Map extends JPanel {
 	public void createBufferImage() {
 		offScreen = createImage(getWidth(), getHeight());		// Creates a new empty Image object and saves it to the buffer.
 		offgc = offScreen.getGraphics();						// The Graphics object of this Image is extracted,
-		paintComponent(offgc);									// and the paintComponent() method is called using this Graphics object,
+		paintImage(offgc);									// and the paintComponent() method is called using this Graphics object,
 	}															// thus 'flipping' the new map into view.
 
 	/**
