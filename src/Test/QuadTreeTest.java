@@ -34,9 +34,9 @@ public class QuadTreeTest {
 		QT.insert(9, 3, 2);
 		Element actualRoot = QT.getRoot();
 		Element expRoot = new Leaf(3, QT, 0, 0, 10, 10);
-		expRoot.insert(new Node(1, 2, 0), 0);
-		expRoot.insert(new Node(7, 4, 1), 0);
-		expRoot.insert(new Node(9, 3, 2), 0);
+		expRoot.insert(new Node(1, 2, 0));
+		expRoot.insert(new Node(7, 4, 1));
+		expRoot.insert(new Node(9, 3, 2));
 		assertEquals(expRoot, actualRoot);
 	}
 	
@@ -45,7 +45,7 @@ public class QuadTreeTest {
 		QT.insert(0, 10, 0);
 		Element actualRoot = QT.getRoot();
 		Element expRoot = new Leaf(3, QT, 0, 0, 10, 10);
-		expRoot.insert(new Node(0, 10, 0), 0);
+		expRoot.insert(new Node(0, 10, 0));
 		assertEquals(expRoot, actualRoot);
 	}
 	
@@ -59,14 +59,14 @@ public class QuadTreeTest {
 		Element actualRoot = QT.getRoot();
 		QuadNode expRoot = new QuadNode(0, 0, 10, 10);
 		Element expNW = new Leaf(3, (Parent) expRoot, 0, 5, 5, 10);
-		expNW.insert(new Node(3,7,0), 0);
-		expNW.insert(new Node(2,9,1), 0);
+		expNW.insert(new Node(3,7,0));
+		expNW.insert(new Node(2,9,1));
 		Element expNE = new Leaf(3, (Parent) expRoot, 5, 5, 10, 10);
-		expNE.insert(new Node(7,7,4), 0);
+		expNE.insert(new Node(7,7,4));
 		Element expSW = new Leaf(3, (Parent) expRoot, 0, 0, 5, 5);
-		expSW.insert(new Node(1,2,2), 0);
+		expSW.insert(new Node(1,2,2));
 		Element expSE = new Leaf(3, (Parent) expRoot, 5, 0, 10, 5);
-		expSE.insert(new Node(8,4,3), 0);
+		expSE.insert(new Node(8,4,3));
 		expRoot.setNE(expNE);
 		expRoot.setNW(expNW);
 		expRoot.setSE(expSE);
@@ -83,13 +83,13 @@ public class QuadTreeTest {
 		Element actualRoot = QT.getRoot();
 		QuadNode expRoot = new QuadNode(0, 0, 10, 10);
 		Element expNW = new Leaf(3, (Parent) expRoot, 0, 5, 5, 10);
-		expNW.insert(new Node(3,7,0), 0);
-		expNW.insert(new Node(2,9,1), 0);
+		expNW.insert(new Node(3,7,0));
+		expNW.insert(new Node(2,9,1));
 		Element expNE = new Leaf(3, (Parent) expRoot, 5, 5, 10, 10);
 		Element expSW = new Leaf(3, (Parent) expRoot, 0, 0, 5, 5);
-		expSW.insert(new Node(1,2,2), 0);
+		expSW.insert(new Node(1,2,2));
 		Element expSE = new Leaf(3, (Parent) expRoot, 5, 0, 10, 5);
-		expSE.insert(new Node(8,4,3), 0);
+		expSE.insert(new Node(8,4,3));
 		expRoot.setNE(expNE);
 		expRoot.setNW(expNW);
 		expRoot.setSE(expSE);
@@ -149,12 +149,12 @@ public class QuadTreeTest {
 		QuadNode expRoot = new QuadNode(0, 0, 10, 10);
 		Element expNW = new Leaf(3, (Parent) expRoot, 0, 5, 5, 10);
 		Element expNE = new Leaf(3, (Parent) expRoot, 5, 5, 10, 10);
-		expNE.insert(new Node(7,5,3), 0);
+		expNE.insert(new Node(7,5,3));
 		Element expSW = new Leaf(3, (Parent) expRoot, 0, 0, 5, 5);
-		expSW.insert(new Node(1,2,0), 0);
+		expSW.insert(new Node(1,2,0));
 		Element expSE = new Leaf(3, (Parent) expRoot, 5, 0, 10, 5);
-		expSE.insert(new Node(7,4,1), 0);
-		expSE.insert(new Node(9,3,2), 0);
+		expSE.insert(new Node(7,4,1));
+		expSE.insert(new Node(9,3,2));
 		expRoot.setNE(expNE);
 		expRoot.setNW(expNW);
 		expRoot.setSE(expSE);
@@ -171,13 +171,13 @@ public class QuadTreeTest {
 		Element actualRoot = QT.getRoot();
 		QuadNode expRoot = new QuadNode(0, 0, 10, 10);
 		Element expNW = new Leaf(3, (Parent) expRoot, 0, 5, 5, 10);
-		expNW.insert(new Node(5,5,3), 0);
+		expNW.insert(new Node(5,5,3));
 		Element expNE = new Leaf(3, (Parent) expRoot, 5, 5, 10, 10);
 		Element expSW = new Leaf(3, (Parent) expRoot, 0, 0, 5, 5);
-		expSW.insert(new Node(1,2,0), 0);
+		expSW.insert(new Node(1,2,0));
 		Element expSE = new Leaf(3, (Parent) expRoot, 5, 0, 10, 5);
-		expSE.insert(new Node(7,4,1), 0);
-		expSE.insert(new Node(9,3,2), 0);
+		expSE.insert(new Node(7,4,1));
+		expSE.insert(new Node(9,3,2));
 		expRoot.setNE(expNE);
 		expRoot.setNW(expNW);
 		expRoot.setSE(expSE);
