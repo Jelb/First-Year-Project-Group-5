@@ -293,13 +293,22 @@ public class WindowHandler {
 			geoXMin -= diff;
 			geoWidth = newGeoWidth;
 		}
+		
+//		System.out.println("Size of map [width x height]: [" + (int)geoWidth + " m x " + (int)geoHeight + " m]"); BRUGES I RAPPORTEN
 
-
+//		long startTime = System.currentTimeMillis(); BRUGES I RAPPORTEN
 		nodes = QT.query(geoXMin+offsetX-longestRoadsFloor, geoYMin+offsetY-longestRoadsFloor,
 				geoXMax+offsetX+longestRoadsFloor, geoYMax+offsetY+longestRoadsFloor);
+//		System.out.println("Time to query quadtree: " + (System.currentTimeMillis()-startTime)/1000.0 + " s"); BRUGES I RAPPORTEN
+		
 		DrawableItem.setMapSize(geoXMax+offsetX, geoYMax+offsetY, geoXMin+offsetX, geoYMin+offsetY);
 		RoadSegment.setZoomLevel();
+		
+//		startTime = System.currentTimeMillis(); BRUGES I RAPPORTEN
 		getEdgesFromNodes();
+		// BRUGES I RAPPORTEN
+//		System.out.println("Time to find all drawable edges and create road segments: " + (System.currentTimeMillis()-startTime)/1000.0 + " s");
+		
 		offsetX += geoXMin;
 		offsetY += geoYMin;
 
@@ -327,7 +336,12 @@ public class WindowHandler {
 						new RoadSegment(x1, y1, x2, y2, e.getType()));
 			}
 		}
+		
+//		startTime = System.currentTimeMillis(); BRUGES I RAPPORTEN
 		Window.use().updateMap();	
+//		System.out.println("Time to draw map: " + (System.currentTimeMillis()-startTime)/1000.0 + " s"); BRUGES I RAPPORTEN
+//		System.out.println(); BRUGES I RAPPORTEN
+		
 	}
 
 	//TODO: Write code to detect intersection between area of interest and road.
@@ -513,11 +527,11 @@ public class WindowHandler {
 		//All roads with length larger than the longest road floor are added to the longest roads list
 		//Makes graph object and list of roads longer than the longest roads floor
 		graph = dataReader.createGraphAndLongestRoadsList(longestRoadsFloor);
-//		System.out.println("Density of graph: " + graph.getE()/Math.pow(graph.getV(),2));
+//		System.out.println("Density of graph: " + graph.getE()/Math.pow(graph.getV(),2)); BRUGES I RAPPORTEN
 
 		//Makes and returns a quadTree
 		QT = dataReader.createQuadTree();
-//		System.out.println("Height of quadtree: " + QT.getHeight());
+//		System.out.println("Height of quadtree: " + QT.getHeight()); BRUGES I RAPPORTEN
 		longestRoads = dataReader.getLongestRoads();
 		roadToZipMap = dataReader.getRoadToZipMap();
 		zipToCityMap = dataReader.getZipToCityMap("post.dat");
@@ -528,19 +542,7 @@ public class WindowHandler {
 		//Avoid loitering
 		dataReader = null;
 
-		// Sets the delta width and height of the entire map
-		setGeoHeight(DataReader.getMaxY()-DataReader.getMinY());
-		setGeoWidth(DataReader.getMaxX()-DataReader.getMinX());
-
-
 		SplashScreen.use().setTaskName(Task.MAP);
-
-		// Finds all the nodes in the view area
-		nodes = QT.query(0, 0, geoWidth, geoHeight);
-		DrawableItem.setMapSize(geoWidth, geoHeight, 0.0, 0.0);
-
-		// Finds all the edges for these nodes
-		getEdgesFromNodes();
 		
 		// Getting the desired tool tip effect when mouse over on a road
 		ToolTipManager.sharedInstance().setInitialDelay(500);
@@ -549,12 +551,10 @@ public class WindowHandler {
 
 		maxMapHeight = DataReader.getMaxY()-DataReader.getMinY();
 		maxMapWidth = DataReader.getMaxX()-DataReader.getMinX();
-		// Creates and adds roadSegments to an the arraylist 'edges'
+		
+		// Searches the entire map, producing a view of the entire map
+		search(0, maxMapWidth, 0, maxMapHeight);
 
-		// Throws out the old contentPane, then adds a new and calls repaint/validate,
-		// thus calling the internal method paintComponents found in the roadSegments objects
-
-		Window.use().updateMap();
 		SplashScreen.use().close();
 	}
 
