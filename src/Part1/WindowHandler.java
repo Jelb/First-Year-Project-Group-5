@@ -488,10 +488,9 @@ public class WindowHandler {
 		String edgeFile = "kdv_unload.txt";
 		String coastFile = "new_coasts.dat";
 		String lakeFile = "lake.dat";
-		String islandFile = "island.dat";
 		String borderFile = "border.dat";
 		getEffectiveScreenSize();
-		SplashScreen.initialize(nodeFile, edgeFile, coastFile, lakeFile, islandFile);
+		SplashScreen.initialize(nodeFile, edgeFile, coastFile, lakeFile);
 		SplashScreen.use();
 
 		//Initializing of data from KrakLoader
@@ -501,10 +500,9 @@ public class WindowHandler {
 		SplashScreen.use().setTaskName(Task.COAST);
 		coast = dataReader.readCoast(coastFile);
 		lakes = dataReader.readCoast(lakeFile);
-		islands = dataReader.readCoast(islandFile);
 		border = dataReader.readCoast(borderFile);
 
-		Map.setCoast(coast, lakes, islands);
+		Map.setCoast(coast, lakes);
 		Map.setBorder(border);
 
 		//ArraylList with Nodes
