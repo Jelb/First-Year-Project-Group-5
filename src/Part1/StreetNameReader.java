@@ -43,8 +43,8 @@ public class StreetNameReader   {
 		String strLine;
 		String street = ""; 
 		while((strLine = brStreet.readLine()) != null) {
-			String regex = ".*?\\b" + strLine.toLowerCase() + "\\b.*?";
-			if(input.matches(regex) && strLine.length() > street.length())
+			String regex = ".*?\\b" + strLine.toLowerCase().replaceAll("é", "e") + "\\b.*?";
+			if(input.replaceAll("é", "e").matches(regex) && strLine.length() > street.length())
 				street = strLine;
 		}
 		return street;
