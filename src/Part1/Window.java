@@ -897,8 +897,9 @@ public class Window extends JFrame {
 			// if there is no road name we look for a random road in the zip code area
 			if (textArray[0].equals("")) {
 				ArrayList<Edge> allEdgesForZip = new ArrayList<Edge>();
+				HashSet<Integer> disallowedTypes = DijkstraSP.getDisallowedTypes();
 				for(Edge edge : WindowHandler.getEdges()){
-					if (edge.getV_POSTNR().equals(zipArray[i]) && edge.getH_POSTNR().equals(zipArray[i])) {
+					if (edge.getV_POSTNR().equals(zipArray[i]) && edge.getH_POSTNR().equals(zipArray[i]) && !disallowedTypes.contains(edge.getType())) {
 						allEdgesForZip.add(edge);
 					}
 				}

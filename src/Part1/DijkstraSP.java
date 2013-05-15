@@ -98,10 +98,21 @@ public class DijkstraSP {
 		return path;
 	}
 	
-	private void createDisallowedTypes() {
+	private static void createDisallowedTypes() {
 		disallowedTypes = new HashMap<TransportWay, HashSet<Integer>>();
 		disallowedTypes.put(TransportWay.CAR, new HashSet<Integer>(Arrays.asList(8, 48, 99))); //Roads cars can't drive at
 		disallowedTypes.put(TransportWay.BIKE, new HashSet<Integer>(Arrays.asList(1, 2, 31, 32, 41, 42))); //Roads bikes can't drive at
+	}
+	
+	public static HashSet<Integer> getDisallowedTypes() {
+		if (disallowedTypes == null) {
+			createDisallowedTypes();
+		}
+		HashSet<Integer> disallowed = new HashSet<Integer>();
+		for (TransportWay t : TransportWay.values()) {
+			disallowed.addAll(disallowedTypes.get(t));
+		}
+		return disallowed;
 	}
 	
 	public enum TransportWay {
