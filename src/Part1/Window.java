@@ -1022,7 +1022,7 @@ public class Window extends JFrame {
 
 		public void componentResized(ComponentEvent evt) {
 			if(timer == null){
-				timer = new Timer(50, new ResizeTask());
+				timer = new Timer(600, new ResizeTask());
 				timer.start();
 			}
 			timer.restart();
