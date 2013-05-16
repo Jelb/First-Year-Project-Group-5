@@ -54,8 +54,8 @@ public class Equation {
 		
 		double x 	= 500000+(K4*p+K5*Math.pow(p, 3));
 		double y	= K1+K2*p*p+K3*Math.pow(p, 4);
-		if (argLon < 12 && argLon > 9) x += 175;
-		if (argLon > 12 ) x += 520;
+		double dx = (4.051*Math.pow(10, -9)*Math.pow(x, 2))-(0.0028*x)+437;
+		if(dx > 0.0) x += dx;
 		return new CoastPoint(x, y);
 	}
 	
