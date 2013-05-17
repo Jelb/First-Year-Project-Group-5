@@ -282,14 +282,12 @@ public class Window extends JFrame {
 		fastestRadio = new JRadioButton("Fastest");
 		fastestRadio.setSelected(true);
 		fastestRadio.setOpaque(false);
-		fastestRadio.setBounds(95, 375, 70, 20);
-		fastestRadio.setFont(new Font("Fastest", Font.TRUETYPE_FONT, 11));
+		fastestRadio.setBounds(95, 375, 75, 20);
 		fastestRadio.setVisible(false);
 		
 		shortestRadio = new JRadioButton("Shortest");
 		shortestRadio.setOpaque(false);
-		shortestRadio.setBounds(20, 375, 70, 20);
-		shortestRadio.setFont(new Font("Shortest", Font.TRUETYPE_FONT, 11));
+		shortestRadio.setBounds(20, 375, 75, 20);
 		shortestRadio.setVisible(false);
 	    
 		group = new ButtonGroup();
