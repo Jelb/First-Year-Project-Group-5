@@ -40,9 +40,13 @@ public class SplashScreen extends JFrame{
 	private Random random = new Random();
 	private boolean[] shown;
 	private int displayedTips = 0;
+	//Field used to measure the time from system start to
+	//the program actually is ready for the user to use.
+	private long startUpTime;
 	
 	private SplashScreen() {
 		super();
+//		startUpTime = System.currentTimeMillis();
 		setPreferredSize(new Dimension(800, 600));
 		setUndecorated(true);
 		setUp();
@@ -70,7 +74,7 @@ public class SplashScreen extends JFrame{
 		shown = new boolean[tipArray.length];
 		int randomNumber = random.nextInt(tipArray.length);
 		shown[randomNumber] = true;
-		tipTitle = new JLabel("Tips & Tricks #238");
+		tipTitle = new JLabel("Tips & Tricks #" + random.nextInt(1000));
 		tipTitle.setForeground(Color.white);
 		tip = new JLabel(tipArray[randomNumber]);
 		tip.setForeground(Color.WHITE);
@@ -193,6 +197,8 @@ public class SplashScreen extends JFrame{
 		Window.use().setVisible(true);
 		dispose();
 		instance = null;
+		//Print statement used when measuring the startup time.
+//		System.out.format("Time in secounds need for the system to startup: %.2f sec.",(System.currentTimeMillis()-startUpTime)/1000.0);
 	}
 	
 	public static void initialize(String nodes, String edges, String coast, String lake) {
