@@ -211,17 +211,17 @@ public class Window extends JFrame {
 		findPlaceBlue = createButton("find_red.png", "Find Place", 50, 215);
 		findPlace.setVisible(false);
 
-		bikeUnselected = createButton("cycle_unmarked.png", "By bike or walking", 25, 330);
+		bikeUnselected = createButton("cycle_unmarked.png", "By bike or walking", 18, 330);
 		bikeUnselected.setVisible(false);
-		bikeSelected = createButton("cycle_marked.png", "By bike or walking", 25, 330);
+		bikeSelected = createButton("cycle_marked.png", "By bike or walking", 18, 330);
 		bikeSelected.setVisible(false);
-		carUnselected = createButton("motor_unmarked.png", "By car", 78, 330);
+		carUnselected = createButton("motor_unmarked.png", "By car", 68, 330);
 		carUnselected.setVisible(false);
-		carSelected = createButton("motor_marked.png", "By car", 78, 330);
+		carSelected = createButton("motor_marked.png", "By car", 68, 330);
 		carSelected.setVisible(false);
-		shipUnselected = createButton("ferry_unmarked.png", "I would like to travel with ferry", 125, 330);
+		shipUnselected = createButton("ferry_unmarked.png", "I would like to travel with ferry", 130, 330);
 		shipUnselected.setVisible(false);
-		shipSelected = createButton("ferry_marked.png", "I would like to travel with ferry", 125, 330);
+		shipSelected = createButton("ferry_marked.png", "I would like to travel with ferry", 130, 330);
 		shipSelected.setVisible(false);
 
 		shortest = new JButton("Shortest");
