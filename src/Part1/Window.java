@@ -617,7 +617,7 @@ public class Window extends JFrame {
 	 * @param t
 	 */
 	private void addressParse(String text, int x,int y, TextType t){
-		System.out.println("Input: " + text); // Used for white box test
+//		System.out.println("Input: " + text); // Used for white box test
 		String[] result = AddressParser.use().parseAddress(text);
 		String[] setArray = new String[0];
 		String[] zipArray;
@@ -687,15 +687,15 @@ public class Window extends JFrame {
 				}
 			}
 		}
-		System.out.print("Array of matching addresses: "); // Used for white box test
-		for (String s : setArray) System.out.println(s + ", "); // Used for white box test
+//		System.out.print("Array of matching addresses: "); // Used for white box test
+//		for (String s : setArray) System.out.println(s + ", "); // Used for white box test
 		if (zipArray.length == 1) {
 			chooseAddress(zipArray, result, t, 0, setArray[0]); // 15
-			System.out.println("Locating address"); // Used for white box test
+//			System.out.println("Locating address"); // Used for white box test
 		}
 		else {
 			createSearchBox(setArray,zipArray,result,x,y,t);
-			System.out.println("Creating combo box"); // Used for white box test
+//			System.out.println("Creating combo box"); // Used for white box test
 		}
 	}
 	
