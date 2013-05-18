@@ -5,10 +5,14 @@ import java.util.LinkedList;
 
 // Based on code on p. 611 in Algorithms 4. ed. Sedgewick, Wayne
 public class Graph {
-	private final int V;	// number of nodes
+	private final int V;	// length of graph. Number of nodes is V-1
 	private int E;			// number of edges
 	private LinkedList<Edge>[] adj; // array of adjacency lists
 	
+	/**
+	 * Graph constructor. Makes graph array and inserts empty linked lists in every index.
+	 * @param V		Length of graph
+	 */
 	public Graph(int V) {
 		this.V = V;
 		this.E = 0;
@@ -17,19 +21,6 @@ public class Graph {
 		for (int v = 0; v < V; v++) {
 			adj[v] = new LinkedList<Edge>();
 		}
-		
-	}
-	
-	/**
-	 * Tells if a node has no more than 2 adjacent edges.
-	 * @param v		Node
-	 * @return		True, if the node has a max of 2 adjacent edges.
-	 */
-	public boolean hasTwoEdges(int v) {
-		if(adj[v].size() == 2)
-			return true;
-		else
-			return false;
 	}
 	
 	public int getV() { return V; }
@@ -51,14 +42,5 @@ public class Graph {
 		ArrayList<Edge> arr = new ArrayList<Edge>();
 		arr.addAll(adj[v]);
 		return arr;
-	}
-
-	// returns linked list all edges in the graph
-	public Iterable<Edge> edges() {
-		LinkedList<Edge> list = new LinkedList<Edge>();
-		for (int v = 0; v < V; v++)
-			for (Edge e : adj[v])
-				list.add(e);
-		return list;
 	}
 }

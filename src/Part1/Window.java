@@ -981,7 +981,7 @@ public class Window extends JFrame {
 	}
 
 	private class comboBoxListener implements ActionListener {
-		TextType t; //From to or find comboBox
+		TextType t; //From, to or find comboBox
 		String[] zipArray, textArray;
 
 		public comboBoxListener(String[] zipArray, String[] textArray, TextType t) {

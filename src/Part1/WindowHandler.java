@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-
 import javax.swing.ToolTipManager;
 
 import Part1.DijkstraSP.CompareType;
@@ -17,10 +16,13 @@ import Part1.SplashScreen.Task;
 import Part1.Window.TextType;
 import QuadTree.QuadTree;
 
+/**
+ *
+ */
 public class WindowHandler {
 	private static List<Node> nodes;
 	private static List<Edge> edges;
-	private static List<Edge> longestRoads;
+	private static List<Edge> longestRoads;	// List of roads longer than 10 km
 	private static int startNode, endNode;
 	private static HashMap<String, HashSet<String>> roadToZipMap;
 	private static int longestRoadsFloor;
