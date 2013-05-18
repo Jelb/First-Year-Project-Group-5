@@ -68,7 +68,7 @@ public class Window extends JFrame {
 	private static int maxHeight;
 
 	//Buttons to pan and zoom
-	private JButton resetZoom, zoomOut, zoomIn,shortest, fastestButton, shipUnselected, shipSelected, search, findButton;
+	private JButton resetZoom, zoomOut, zoomIn, shipUnselected, shipSelected, search, findButton;
 	private JButton west, east, north, south, findPath, bikeUnselected, bikeSelected, carUnselected, carSelected, reset, findPathBlue;
 	private JButton findPlace, findPlaceBlue;
 	private JTextField from, to, find;
@@ -223,16 +223,6 @@ public class Window extends JFrame {
 		shipUnselected.setVisible(false);
 		shipSelected = createButton("ferry_marked.png", "I would like to travel with ferry", 130, 330);
 		shipSelected.setVisible(false);
-
-		shortest = new JButton("Shortest");
-		shortest.setMargin(new Insets(5,5,5,5));
-		shortest.setBounds(20, 375, 70, 20);
-		shortest.setVisible(false);
-
-		fastestButton = new JButton("Fastest");
-		fastestButton.setMargin(new Insets(5,5,5,5));
-		fastestButton.setBounds(95, 375, 70, 20);
-		fastestButton.setVisible(false);
 
 		searchFromResultBox = new JComboBox();
 		searchToResultBox = new JComboBox();
@@ -396,8 +386,6 @@ public class Window extends JFrame {
 				carUnselected.setVisible(true);
 				bikeSelected.setVisible(true);
 				bikeUnselected.setVisible(false);
-				shortest.setVisible(false);
-				fastestButton.setVisible(false);
 				shortestRadio.setVisible(false);
 				fastestRadio.setVisible(false);
 				search.setBounds(20, 375,70, 20);
@@ -416,11 +404,7 @@ public class Window extends JFrame {
 				carUnselected.setVisible(false);
 				bikeSelected.setVisible(false);
 				bikeUnselected.setVisible(true);
-				shortest.setVisible(true);
-				shortest.setFont(null);
 				reset.setBounds(95, 405, 70, 20);
-				fastestButton.setVisible(true);
-				fastestButton.setFont(new Font("Shortest", Font.BOLD, 12));
 				search.setBounds(20, 405,70, 20);
 				shortestRadio.setVisible(true);
 				fastestRadio.setVisible(true);
@@ -446,24 +430,6 @@ public class Window extends JFrame {
 				shipSelected.setVisible(false);
 				shipUnselected.setVisible(true);
 				byShip = false;
-			}
-		});
-
-		fastestButton.addActionListener(new ActionListener(){
-
-			public void actionPerformed(ActionEvent evt) {
-				fastestButton.setFont(new Font("Fastest", Font.BOLD, 12));
-				shortest.setFont(null);
-				fastest = true;
-			}
-		});
-
-		shortest.addActionListener(new ActionListener(){
-
-			public void actionPerformed(ActionEvent evt) {
-				shortest.setFont(new Font("Shortest", Font.BOLD, 12));
-				fastestButton.setFont(null);
-				fastest = false;
 			}
 		});
 
@@ -522,8 +488,6 @@ public class Window extends JFrame {
 				searchFromResultBox.setVisible(false);
 				searchToResultBox.setVisible(false);
 				navigateVisible = false;
-				shortest.setVisible(false);
-				fastestButton.setVisible(false);
 				shortestRadio.setVisible(false);
 				fastestRadio.setVisible(false);
 				shipUnselected.setVisible(false);				
@@ -548,19 +512,11 @@ public class Window extends JFrame {
 						reset.setBounds(95, 405, 70, 20);
 						background.setBounds(10,15,165,420);
 						if (fastest) {
-							shortest.setVisible(true);
-							fastestButton.setVisible(true);
-							fastestButton.setFont(new Font("Fastest", Font.BOLD, 12));							
-							shortest.setFont(null);
 							fastestRadio.setVisible(true);
 							shortestRadio.setVisible(true);
 							fastestRadio.setSelected(true);
 						}
 						else {
-							shortest.setVisible(true);
-							fastestButton.setVisible(true);
-							shortest.setFont(new Font("Shortest", Font.BOLD, 12));
-							fastestButton.setFont(null);
 							fastestRadio.setVisible(true);
 							shortestRadio.setVisible(true);
 							shortestRadio.setSelected(true);
@@ -1043,7 +999,7 @@ public class Window extends JFrame {
 	}
 
 	private class comboBoxListener implements ActionListener {
-		TextType t; //From to or find comboBox
+		TextType t; //From, to or find comboBox
 		String[] zipArray, textArray;
 
 		public comboBoxListener(String[] zipArray, String[] textArray, TextType t) {
