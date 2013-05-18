@@ -655,83 +655,95 @@ public class Window extends JFrame {
 	/**
 	 * Parses the address from the search text field to the search box
 	 * 
-	 * @param text The text to search for cities with
+	 * @param text The text to parse
 	 * @param x The x-position of the search box to be created
 	 * @param y The y-position of the search box to be created
-	 * @param fromBool Set to true if the search comes from the "from-field". Set to false if the search comes from the "to-field"
+	 * @param t
 	 */
-	private void addressParse(String text, int x,int y, TextType t){		
+	private void addressParse(String text, int x,int y, TextType t){
+		System.out.println("Input: " + text); // Used for white box test
 		String[] result = AddressParser.use().parseAddress(text);
 		String[] setArray = new String[0];
 		String[] zipArray;
 		String[] cityNameArray; // used to sort the results
 
-		// If there has been typed in a city name
-		if (!result[5].equals("")) {
-			HashMap<String, String> zipToCityMap = WindowHandler.getZipToCityMap();
-			Set<String> zips = zipToCityMap.keySet();
-			ArrayList<String> zipList = new ArrayList<String>();
-			for (String zip : zips) {
-				if (result[5].toLowerCase().equals(zipToCityMap.get(zip).toLowerCase())) {
-					if (result[0].equals("")) {
-						zipList.add(zip);
-					}
-					else if (WindowHandler.getRoadToZipMap().get(result[0]).contains(zip)) {
-						zipList.add(zip);
-					}
-				}
-			}
-			cityNameArray = new String[zipList.size()];
-			setArray = new String[zipList.size()];
-			for (int i = 0; i < setArray.length; i++) {
-				setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + zipList.get(i) + " " + result[5];
-				setArray[i] = setArray[i].replaceAll("\\s+", " ").trim();
-				cityNameArray[i] = result[5];
-			}
-			zipArray = Arrays.copyOf(zipList.toArray(), zipList.size(), String[].class);
-		}
+		// The numbers beside the code refers to the white box test
+		
 		// If there has been typed in a zip code
-		else if(!(result[4].equals(""))){
+		if(!(result[4].equals(""))){ // 1
 			setArray = new String[1];
 			cityNameArray = new String[]{WindowHandler.getZipToCityMap().get(result[4])};
 			setArray[0] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + result[4]+ " " + WindowHandler.getZipToCityMap().get(result[4]);
 			setArray[0] = setArray[0].replaceAll("\\s+", " ").trim();
 			zipArray = new String[]{result[4]};
 		}
+		
+		// If there has been typed in a city name and no zip code
+		else if (!result[5].equals("")) { // 2
+			HashMap<String, String> zipToCityMap = WindowHandler.getZipToCityMap();
+			Set<String> zips = zipToCityMap.keySet();
+			ArrayList<String> zipList = new ArrayList<String>();
+			for (String zip : zips) { // 3
+				if (result[5].toLowerCase().equals(zipToCityMap.get(zip).toLowerCase())) { // 4
+					if (result[0].equals("")) { // 5
+						zipList.add(zip);
+					}
+					else if (WindowHandler.getRoadToZipMap().get(result[0]).contains(zip)) { // 6
+						zipList.add(zip);
+					}
+				}
+			}
+			cityNameArray = new String[zipList.size()];
+			setArray = new String[zipList.size()];
+			for (int i = 0; i < setArray.length; i++) { // 7
+				setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + zipList.get(i) + " " + result[5];
+				setArray[i] = setArray[i].replaceAll("\\s+", " ").trim();
+				cityNameArray[i] = result[5];
+			}
+			zipArray = Arrays.copyOf(zipList.toArray(), zipList.size(), String[].class);
+		}
 		// If there has been typed in no city name or zip code
 		else{
 			HashSet<String> set = WindowHandler.getRoadToZipMap().get(result[0]);
-			if (set == null) setArray = new String[0];
+			if (set == null) setArray = new String[0]; // 8
 			else setArray = set.toArray(new String[0]);
 			cityNameArray = new String[setArray.length];
 			zipArray = new String[setArray.length];
-			for (int i = 0; i < setArray.length; i++) {
+			for (int i = 0; i < setArray.length; i++) { // 9
 				zipArray[i] = setArray[i];
 			}
-			for(int i = 0; i < setArray.length; i++){
+			for(int i = 0; i < setArray.length; i++){ // 10
 				String city = WindowHandler.getZipToCityMap().get(setArray[i]);
 				cityNameArray[i] = city;
 				setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + setArray[i] + " " + city;
 				setArray[i] = setArray[i].replaceAll("\\s+", " ").trim();				
 			}						
 		}
-		if (zipArray.length == 0) setArray = new String[]{"No results"};
+		if (zipArray.length == 0) setArray = new String[]{"No results"}; // 11
 		// sort the result according to the city name
 		Arrays.sort(cityNameArray);
-		for (int i = 0; i < cityNameArray.length; i++) {
-			for (int j = 0; j < setArray.length; j++) {
-				if (setArray[j].contains(cityNameArray[i])) {
+		for (int i = 0; i < cityNameArray.length; i++) { // 12
+			for (int j = 0; j < setArray.length; j++) { // 13
+				if (setArray[j].contains(cityNameArray[i])) { // 14
 					String temp = setArray[i]; setArray[i] = setArray[j]; setArray[j] = temp;
 					temp = zipArray[i]; zipArray[i] = zipArray[j]; zipArray[j] = temp;
-					continue;
+					break;
 				}
 			}
 		}
-		if (zipArray.length == 1) chooseAddress(zipArray, result, t, 0, setArray[0]); 
-		else createSearchBox(setArray,zipArray,result,x,y,t);
+		System.out.print("Array of matching addresses: "); // Used for white box test
+		for (String s : setArray) System.out.println(s + ", "); // Used for white box test
+		if (zipArray.length == 1) {
+			chooseAddress(zipArray, result, t, 0, setArray[0]); // 15
+			System.out.println("Locating address"); // Used for white box test
+		}
+		else {
+			createSearchBox(setArray,zipArray,result,x,y,t);
+			System.out.println("Creating combo box"); // Used for white box test
+		}
 	}
 	
-	public void chooseAddress(String[] zipArray, String[] textArray, TextType t, int i, String text) {
+	private void chooseAddress(String[] zipArray, String[] textArray, TextType t, int i, String text) {
 		// if the zip array is empty, the search yielded no results
 		if (zipArray.length == 0) return;
 
