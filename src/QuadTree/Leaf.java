@@ -1,6 +1,5 @@
 package QuadTree;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,15 +28,15 @@ public class Leaf extends BoundingBox implements Element {
 	/**
 	 * inserts Node in leaf. If there is overflow the leaf is converted into a Node
 	 */
-	public int insert(Node p) {
-		if (top == nodes.length) return convertToNode().insert(p);
+	public int insert(Node n) {
+		if (top == nodes.length) return convertToNode().insert(n);
 		else {
 			// nodes must be unique
 			for (Node Node : nodes) {
 				if (Node != null)
-					if (p.equals(Node)) return 1;
+					if (n.equals(Node)) return 1;
 			}
-			nodes[top++] = p;
+			nodes[top++] = n;
 			return 1;
 		}
 	}
@@ -46,9 +45,9 @@ public class Leaf extends BoundingBox implements Element {
 	 * adds the nodes of the Leaf that are inside the Bounding Box of the query
 	 */
 	public List<Node> query(BoundingBox queryBox, List<Node> list) {
-		for (Node p : nodes) {
-			if (p == null) break;
-			else if (queryBox.holds(p.getXCord(), p.getYCord())) list.add(p);
+		for (Node n : nodes) {
+			if (n == null) break;
+			else if (queryBox.holds(n.getXCord(), n.getYCord())) list.add(n);
 		}
 		return list;
 	}
@@ -69,8 +68,8 @@ public class Leaf extends BoundingBox implements Element {
 		quadNode.setNE(NE);
 		quadNode.setSW(SW);
 		quadNode.setSE(SE);
-		for (Node p : nodes) {
-			quadNode.insert(p);
+		for (Node n : nodes) {
+			quadNode.insert(n);
 		}
 		parent.changeChild(this, quadNode);
 		return quadNode;
@@ -81,15 +80,10 @@ public class Leaf extends BoundingBox implements Element {
 	 */
 	public void show() {
 		System.out.println("I'm a Leaf");
-		for (Node p : nodes) {
-			if (p == null) break;
-			System.out.println("(" + p.getXCord() + ", " + p.getYCord() + ")");
+		for (Node n : nodes) {
+			if (n == null) break;
+			System.out.println("(" + n.getXCord() + ", " + n.getYCord() + ")");
 		}
-	}
-	
-	public ArrayList<Element> structure(ArrayList<Element> tree) {
-		tree.add(this);
-		return tree;
 	}
 	
 	public Node[] getNodes() {

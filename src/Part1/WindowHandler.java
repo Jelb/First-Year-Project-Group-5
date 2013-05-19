@@ -296,19 +296,19 @@ public class WindowHandler {
 			geoWidth = newGeoWidth;
 		}
 		
-//		System.out.println("Size of map [width x height]: [" + (int)geoWidth + " m x " + (int)geoHeight + " m]"); BRUGES I RAPPORTEN
+//		System.out.println("Size of map [width x height]: [" + (int)geoWidth + " m x " + (int)geoHeight + " m]"); // Timing experiments
 
-//		long startTime = System.currentTimeMillis(); BRUGES I RAPPORTEN
+		long startTime = System.currentTimeMillis(); // Timing experiments
 		nodes = QT.query(geoXMin+offsetX-longestRoadsFloor, geoYMin+offsetY-longestRoadsFloor,
 				geoXMax+offsetX+longestRoadsFloor, geoYMax+offsetY+longestRoadsFloor);
-//		System.out.println("Time to query quadtree: " + (System.currentTimeMillis()-startTime)/1000.0 + " s"); BRUGES I RAPPORTEN
+//		System.out.println("Time to query quadtree: " + (System.currentTimeMillis()-startTime)/1000.0 + " s"); // Timing experiments
 		
 		DrawableItem.setMapSize(geoXMax+offsetX, geoYMax+offsetY, geoXMin+offsetX, geoYMin+offsetY);
 		RoadSegment.setZoomLevel();
 		
-//		startTime = System.currentTimeMillis(); BRUGES I RAPPORTEN
+//		startTime = System.currentTimeMillis(); // Timing experiments
 		getEdgesFromNodes();
-		// BRUGES I RAPPORTEN
+		// Timing experiments
 //		System.out.println("Time to find all drawable edges and create road segments: " + 
 //									(System.currentTimeMillis()-startTime)/1000.0 + " s");
 		
@@ -337,10 +337,10 @@ public class WindowHandler {
 						new RoadSegment(x1, y1, x2, y2, e.getType()));
 			}
 		
-//		startTime = System.currentTimeMillis(); BRUGES I RAPPORTEN
+//		startTime = System.currentTimeMillis(); // Timing experiments
 		Window.use().updateMap();	
-//		System.out.println("Time to draw map: " + (System.currentTimeMillis()-startTime)/1000.0 + " s"); BRUGES I RAPPORTEN
-//		System.out.println(); BRUGES I RAPPORTEN
+//		System.out.println("Time to draw map: " + (System.currentTimeMillis()-startTime)/1000.0 + " s"); // Timing experiments
+//		System.out.println(); // Timing experiments
 		
 	}
 
@@ -506,7 +506,7 @@ public class WindowHandler {
 		Map.setCoast(coast, lakes);
 		Map.setBorder(border);
 
-		//ArraylList with Nodes
+		//ArrayList with Nodes
 		dataReader.createNodeList();
 
 		longestRoadsFloor = 10000;
@@ -514,11 +514,11 @@ public class WindowHandler {
 		//All roads with length larger than the longest road floor are added to the longest roads list
 		//Makes graph object and list of roads longer than the longest roads floor
 		graph = dataReader.createGraphAndLongestRoadsList(longestRoadsFloor);
-//		System.out.println("Density of graph: " + graph.getE()/Math.pow(graph.getV(),2)); BRUGES I RAPPORTEN
+//		System.out.println("Density of graph: " + graph.getE()/Math.pow(graph.getV(),2)); // Used in the report
 
 		//Makes and returns a quadTree
 		QT = dataReader.createQuadTree();
-//		System.out.println("Height of quadtree: " + QT.getHeight()); BRUGES I RAPPORTEN
+//		System.out.println("Height of quadtree: " + QT.getHeight()); // Used in the report
 		longestRoads = dataReader.getLongestRoads();
 		roadToZipMap = dataReader.getRoadToZipMap();
 		zipToCityMap = dataReader.getZipToCityMap("post.dat");

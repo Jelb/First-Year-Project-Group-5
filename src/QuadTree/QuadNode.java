@@ -40,16 +40,14 @@ public class QuadNode extends BoundingBox implements Element, Parent {
 
 	/**
 	 * Sends the given point on to the next QuadNode or Leaf according to where the point belongs
+	 * returns the height of the quadtree rooted in this quadnode
 	 */
 	public int insert(Node c) {
-		int[] arr = new int[4];
-		if (NW.holds(c.getXCord(), c.getYCord())) arr[0] = NW.insert(c);
-		else if (NE.holds(c.getXCord(), c.getYCord())) arr[1] = NE.insert(c);
-		else if (SW.holds(c.getXCord(), c.getYCord())) arr[2] = SW.insert(c);
-		else if (SE.holds(c.getXCord(), c.getYCord())) arr[3] = SE.insert(c);
 		int height = 0;
-		for (int i = 0; i < arr.length; i++)
-			if (arr[i] != 0) height = arr[i];
+		if (NW.holds(c.getXCord(), c.getYCord())) height = NW.insert(c);
+		else if (NE.holds(c.getXCord(), c.getYCord())) height = NE.insert(c);
+		else if (SW.holds(c.getXCord(), c.getYCord())) height = SW.insert(c);
+		else if (SE.holds(c.getXCord(), c.getYCord())) height = SE.insert(c);
 		return ++height;
 	}
 	
@@ -89,15 +87,6 @@ public class QuadNode extends BoundingBox implements Element, Parent {
 		SW.show();
 		System.out.println("SE");
 		SE.show();
-	}
-	
-	public ArrayList<Element> structure(ArrayList<Element> tree) {
-		tree.add(this);
-		NW.structure(tree);
-		NE.structure(tree);
-		SW.structure(tree);
-		SE.structure(tree);
-		return tree;
 	}
 	
 	public Element getNW() {
