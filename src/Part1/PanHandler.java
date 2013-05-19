@@ -1,14 +1,19 @@
 package Part1;
 
+/**
+ * This class handles all pan inputs, checks if they comply with the 
+ * outside bounds of the viewable map are, changes them if they don't
+ * and eventually calls the search method in the WindowHandler class.
+ * 
+ */
 public class PanHandler {
 
 	/**
 	 * A general pan method that takes as parameter how much the viewport has
 	 * moved on the x-axis and y-axis
 	 */
-	// TODO: Optimize pan to take advantage of the points we already have loaded
 	public static void pan(double deltaX, double deltaY) {
-		// Hvis der er mindre end deltaY ud til kanten NORD
+		// If there is less than deltaY to the NORTH border
 		double offsetX = WindowHandler.getOffsetX();
 		double offsetY = WindowHandler.getOffsetY();
 		double geoHeight = WindowHandler.getGeoHeight();
@@ -19,15 +24,15 @@ public class PanHandler {
 		if (maxMapHeight - (offsetY + geoHeight) < deltaY) {
 			deltaY = maxMapHeight - (offsetY + geoHeight);
 		}
-		// Hvis der er mindre end deltaX ud til kanten ØST
+		// if there is less than deltaX to the EAST border
 		if (maxMapWidth - (offsetX + geoWidth) < deltaX) {
 			deltaX = maxMapWidth - (offsetX + geoWidth);
 		}
-		// Hvis der er mindre end deltaY ud til kanten SYD
+		// if there is less than deltaY to the SOUTH border
 		if (-deltaY > offsetY) {
 			deltaY = -offsetY;
 		}
-		// Hvis der er mindre end deltaX ud til kanten VEST
+		// if there is less than deltaX to the WEST border
 		if (-deltaX > offsetX) {
 			deltaX = -offsetX;
 		}
@@ -35,19 +40,24 @@ public class PanHandler {
 				deltaY, WindowHandler.getGeoHeight() + deltaY);
 	}
 
+	/**
+	 * Translates a pan in pixels to a pan in geo coordinates.
+	 * 
+	 * @param deltaX	Pixel X-axis offset
+	 * @param deltaY	Pixel Y-axis offset
+	 */
 	public static void pixelPan(int deltaX, int deltaY) {
 		double x = WindowHandler.pixelToGeoX(deltaX);
 		double y = WindowHandler.pixelToGeoY(deltaY);
 		pan(x, y);
 	}
 
-	/*
+	/**
 	 * Pans the map 10% in the direction specified.
 	 */
 	public static void directionPan(Direction d) {
 		switch (d) {
 		case NORTH: {
-
 			pan(0, WindowHandler.getGeoHeight() * 0.1);
 			break;
 		}
