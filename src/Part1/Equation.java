@@ -136,6 +136,11 @@ public class Equation {
 		
 	}
 	
+	/**
+	 * Calculates the normal vector of an edge. 
+	 * @param edge	The given edge
+	 * @return		The vector expressed as a double[2]
+	 */
 	public static double[] getNormalVector(Edge edge) {
 		double[] vector = edgeToVector(edge);
 		double x = vector[0];
@@ -144,6 +149,13 @@ public class Equation {
 		return normal;
 	}
 	
+	/**
+	 * calculates the distance between a point and a line.
+	 * @param edge	The edge from which the aforementioned line is defered
+	 * @param x		X value of the point
+	 * @param y		Y value of the point
+	 * @return		The distance between line and point
+	 */
 	public static double distanceBetweenPointAndLine(Edge edge, double x, double y) {
 		// a coordinate set on the line
 		double x1 = edge.getFromNode().getAbsoluteXCoordinate();
