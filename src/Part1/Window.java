@@ -277,7 +277,7 @@ public class Window extends JFrame {
 		
 		shortestRadio = new JRadioButton("Shortest");
 		shortestRadio.setOpaque(false);
-		shortestRadio.setBounds(12, 375, 85, 20);
+		shortestRadio.setBounds(15, 375, 85, 20);
 		shortestRadio.setVisible(false);
 	    
 		group = new ButtonGroup();

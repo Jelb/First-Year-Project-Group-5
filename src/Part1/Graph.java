@@ -26,18 +26,24 @@ public class Graph {
 	public int getV() { return V; }
 	public int getE() { return E; }
 	
-	// adds an edge to the nodes that the edge connects
+	/**
+	 * Adds an edge to the nodes that the edge connects
+	 */
 	public void addEdge(Edge e) {
 		adj[e.from()].add(e);
 		E++;
 	}
 	
-	// returns adjacency list for the given node, as a LinkedList of edges
+	/**
+	 * Returns adjacency list for the given node, as a LinkedList of edges
+	 */
 	public Iterable<Edge> adj(int v) { 
 		return adj[v]; 
 	}
 
-	// returns adjacency list for the given node, as an ArrayList of edges
+	/**
+	 * Returns adjacency list for the given node, as an ArrayList of edges
+	 */
 	public ArrayList<Edge> adjArr(int v) { 
 		ArrayList<Edge> arr = new ArrayList<Edge>();
 		arr.addAll(adj[v]);
