@@ -117,6 +117,7 @@ public class Map extends JPanel {
 			b.paintComponent(g);
 		}
 		
+		// Draw roads
 		for (RoadSegment r : segments8) {
 			if (r == null)
 				continue;
@@ -158,9 +159,12 @@ public class Map extends JPanel {
 				continue;
 			r.paintComponent(g);
 		}
+		
 		// Draw the path
 		for (DrawableItem r : path)
 			r.paintComponent(g);
+		
+		// Draw flags
 		for (Flag f : flags)
 			f.paintComponent(g);
 	}
@@ -252,8 +256,6 @@ public class Map extends JPanel {
 		}
 	}
 
-
-
 	/**
 	 * Creates an blank off-screen image, which Graphics object is then used to draw an
 	 * image to be flipped in later.
@@ -261,18 +263,8 @@ public class Map extends JPanel {
 	public void createBufferImage() {
 		offScreen = createImage(getWidth(), getHeight());		// Creates a new empty Image object and saves it to the buffer.
 		offgc = offScreen.getGraphics();						// The Graphics object of this Image is extracted,
-		paintImage(offgc);									// and the paintComponent() method is called using this Graphics object,
+		paintImage(offgc);										// and the paintComponent() method is called using this Graphics object,
 	}															// thus 'flipping' the new map into view.
-
-	/**
-	 * Getter method for the segments field.
-	 * 
-	 * @return Returns the current value of the segment field. (ArrayList\<RoadSegment\>)
-	 */
-//	public ArrayList<RoadSegment> getRoadSegments() {
-//		return segments;
-//	}
-
 	
 	/**
 	 * Changes the segments-filed ArrayList to a new empty one. 
