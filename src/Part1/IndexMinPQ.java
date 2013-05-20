@@ -186,6 +186,10 @@ public class IndexMinPQ<Key extends Comparable<Key>> {
         else return keys[i];
     }
 	
+    /**
+     * 'Swim' the index up through the PQ.
+     * @param k		Index number
+     */
 	private void swim(int k)  {
         while (k > 1 && greater(k/2, k)) {
             exch(k, k/2);
@@ -193,6 +197,10 @@ public class IndexMinPQ<Key extends Comparable<Key>> {
         }
     }
 
+	/**
+	 * 'Sink' the index down through the PQ.
+	 * @param k		Index number
+	 */
     private void sink(int k) {
         while (2*k <= N) {
             int j = 2*k;
@@ -203,10 +211,21 @@ public class IndexMinPQ<Key extends Comparable<Key>> {
         }
     }
 	
+    /**
+     * Compares two indexes to find their priority.
+     * @param i		Index of 'first' Key
+     * @param j		Index of 'second' Key
+     * @return		Return true if first key is greater than second
+     */
     private boolean greater(int i, int j) {
         return keys[pq[i]].compareTo(keys[pq[j]]) > 0;
     }
     
+    /**
+     * Swap two Keys in the PQ around.
+     * @param i		First Key
+     * @param j		Sesonc Key
+     */
 	public void exch(int i, int j) {
 		int swap = pq[i];						
 		pq[i] = pq[j];

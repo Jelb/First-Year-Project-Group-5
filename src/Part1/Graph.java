@@ -3,7 +3,9 @@ package Part1;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-// Based on code on p. 611 in Algorithms 4. ed. Sedgewick, Wayne
+/**
+ * Based on code on p. 611 in Algorithms 4. ed. Sedgewick, Wayne
+ */
 public class Graph {
 	private final int V;	// length of graph. Number of nodes is V-1
 	private int E;			// number of edges
