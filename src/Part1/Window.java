@@ -53,10 +53,8 @@ public class Window extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private static Window instance;
-	private static JLayeredPane screen;
+	private static JLayeredPane screen; //The layered pane in which all the buttons are placed
 	private static Container contentPane;
-	private boolean dragging;
-	private boolean noMoreBoxes;
 
 	//Fields used for drag zoom
 	private static int pressedX;
@@ -64,10 +62,14 @@ public class Window extends JFrame {
 	private static int releasedX;
 	private static int releasedY;
 	private static JComponent rect;
+	private boolean dragging;
+	private boolean noMoreBoxes; //Boolean to control the drawing of the zoom box
+	
+	//Resizing fields
 	private Timer timer;
 	private static int maxHeight;
 
-	//Buttons to pan and zoom
+	//Buttons and text fields
 	private JButton resetZoom, zoomOut, zoomIn, shipUnselected, shipSelected, search, findButton;
 	private JButton west, east, north, south, findPath, bikeUnselected, bikeSelected, carUnselected, carSelected, reset, findPathBlue;
 	private JButton findPlace, findPlaceBlue;
@@ -75,19 +77,19 @@ public class Window extends JFrame {
 	private ButtonGroup group;
 	private JRadioButton fastestRadio, shortestRadio;
 	private JComboBox searchFromResultBox, searchToResultBox, searchFindResultBox;
+	
 	private boolean navigateVisible = false;
 	private boolean fromMarked, toMarked, findMarked;
-
 	private boolean byCar = true;
 	private boolean fastest = true;
 	private boolean byShip = true;
 
-	// The tree flags
+	//The tree flags
 	private Flag fromFlag = new Flag(TextType.FROM);
 	private Flag toFlag = new Flag(TextType.TO);
 	private Flag findFlag = new Flag(TextType.FIND);
 
-	// Currently saved from and to text
+	//Currently saved from and to text
 	private String fromText;
 	private String toText;
 	private String findText;
@@ -95,29 +97,31 @@ public class Window extends JFrame {
 	//Currently saved node to search for
 	private Node findNode;
 
-	// The label holding the current city and zip
+	//The label holding the current city and zip
 	private JLabel cityAndZipLabel;
 
-	// The default text in the textfields
+	//The default text in the textfields
 	private final String fromDefault = "Enter start point";
 	private final String toDefault = "Enter destination";
 	private final String findDefault = "Enter address";
 
 	//GUI background
 	private JPanel background, routeInfo;
+	private int infoSize; //Size of route info panel
 
 	// The temporary displacement of the buffered image
 	private int mousePanX;	
 	private int mousePanY;
 
-	private int infoSize;
-
+	/**
+	 * Flag types
+	 */
 	public enum TextType {
 		FIND, TO, FROM;
 	}
 
 	/**
-	 * Constructor for the window class.
+	 * Constructor for the Window class.
 	 */
 	private Window(){
 		super("Pytheas");
@@ -172,8 +176,6 @@ public class Window extends JFrame {
 		addButtonListeners();
 	}
 
-
-
 	/**
 	 * Redraws the map when its content has changed or 
 	 * the window has been resized. 
@@ -204,6 +206,7 @@ public class Window extends JFrame {
 		north = createButton("North.png", "North",75, 25);
 		south = createButton("South.png", "South", 75, 125);
 
+		//Icons for single address search or find path
 		findPath = createButton("path_off.png", "Find Path", 100, 215);
 		findPathBlue = createButton("path.png", "Find Path", 100, 215);
 		findPathBlue.setVisible(false);
@@ -211,6 +214,7 @@ public class Window extends JFrame {
 		findPlaceBlue = createButton("find_red.png", "Find Place", 50, 215);
 		findPlace.setVisible(false);
 
+		//Route types (car, bike, ferry)
 		bikeUnselected = createButton("cycle_unmarked.png", "By bike or walking", 18, 330);
 		bikeUnselected.setVisible(false);
 		bikeSelected = createButton("cycle_marked.png", "By bike or walking", 18, 330);
@@ -261,13 +265,15 @@ public class Window extends JFrame {
 		reset.setFont(null);
 		reset.setVisible(true);
 
+		//Shown in the leftmost lower corner of the GUI
 		cityAndZipLabel = new JLabel("");
 		cityAndZipLabel.setBounds(20, 600-40, 200, 20);
 		cityAndZipLabel.setVisible(true);
 
-		background = new TransparetPane();
+		//Background of the menu
+		background = new TransparentPane();
 		background.setBounds(10,15,165,315);
-		routeInfo = new TransparetPane();
+		routeInfo = new TransparentPane();
 		
 		fastestRadio = new JRadioButton("Fastest");
 		fastestRadio.setSelected(true);
@@ -283,8 +289,6 @@ public class Window extends JFrame {
 		group = new ButtonGroup();
 	    group.add(fastestRadio);
 	    group.add(shortestRadio);
-	    
-		
 	}
 
 	/**
@@ -558,6 +562,11 @@ public class Window extends JFrame {
 		});
 	}
 	
+	/**
+	 * Checks the text fields when searching for path.
+	 * If filled, parse text andcall pathFinding() from WindowHandler with
+	 * the specified parameters.
+	 */
 	public void findPath() {
 		isTextChanged();
 		if(!fromMarked) {
@@ -585,6 +594,9 @@ public class Window extends JFrame {
 		}
 	}
 	
+	/**
+	 * When seraching for single address. Parse addres and center on the found node.
+	 */
 	public void findPlace() {
 		// If the text has been changed the user must choose a new address
 		if (!findText.equals(find.getText())) findMarked = false;
@@ -689,7 +701,7 @@ public class Window extends JFrame {
 		}
 //		System.out.print("Array of matching addresses: "); // Used for white box test
 //		for (String s : setArray) System.out.println(s + ", "); // Used for white box test
-		if (zipArray.length == 1) {
+		if (zipArray.length == 1) { //If only one possible address is found
 			chooseAddress(zipArray, result, t, 0, setArray[0]); // 15
 //			System.out.println("Locating address"); // Used for white box test
 		}
@@ -699,6 +711,10 @@ public class Window extends JFrame {
 		}
 	}
 	
+	/**
+	 * If only one possible address is found from text field or when choosing an address
+	 * from a search result combo box. Reads the text input.
+	 */
 	private void chooseAddress(String[] zipArray, String[] textArray, TextType t, int i, String text) {
 		// if the zip array is empty, the search yielded no results
 		if (zipArray.length == 0) return;
@@ -872,12 +888,15 @@ public class Window extends JFrame {
 		return button;
 	}
 
+	/**
+	 * Adds the path info below the menu when a route is found.
+	 */
 	public void addPathInfo(TransportWay transport) {
 		double dist = (Map.use().getPathLengt()/1000);
 		int hour = (int)Map.use().getDriveTime()/60, min = (int)Map.use().getDriveTime()%60;
 		DecimalFormat df = new DecimalFormat();
 		if(routeInfo != null) screen.remove(routeInfo);
-		routeInfo = new TransparetPane();
+		routeInfo = new TransparentPane();
 		String distStr;
 		if(dist < 1) {
 			df.applyPattern(".###");
@@ -922,6 +941,9 @@ public class Window extends JFrame {
 		screen.add(routeInfo, JLayeredPane.PALETTE_LAYER);
 	}
 
+	/**
+	 * Repositions the menu and path info backgrounds
+	 */
 	private void repositionInfo() {
 		Rectangle r = background.getBounds();
 		routeInfo.setBounds(10, (r.height + r.y +5), r.width, infoSize);
@@ -931,7 +953,6 @@ public class Window extends JFrame {
 			routeInfo.setVisible(false);
 		}
 	}
-
 
 	/**
 	 * Method for drawing the rectangle to show where the user is dragging for zoom
@@ -996,6 +1017,9 @@ public class Window extends JFrame {
 		}
 	}
 
+	/**
+	 * Combo box listener. Listens if the user chooses one of the possible results.
+	 */
 	private class comboBoxListener implements ActionListener {
 		TextType t; //From, to or find comboBox
 		String[] zipArray, textArray;
@@ -1075,6 +1099,9 @@ public class Window extends JFrame {
 		}
 	}
 
+	/**
+	 * Listens if the mouse is pressed, dragged, moved or released.
+	 */
 	private class MouseListener extends MouseInputAdapter {
 		int prevX;
 		int prevY;
@@ -1093,6 +1120,9 @@ public class Window extends JFrame {
 			}
 		}
 
+		/**
+		 * Right dragging draws zoom box, left dragging calls panning.
+		 */
 		public void mouseDragged(MouseEvent e) {			
 			if (SwingUtilities.isRightMouseButton(e) && !noMoreBoxes) {
 				rect = new DrawRect();
@@ -1114,7 +1144,8 @@ public class Window extends JFrame {
 		}
 
 		/**
-		 *  Sets the tooltip with the road name and the label at the bottom of the screen with the city name and zip
+		 *  Sets the tooltip with the road name and the label at the bottom 7
+		 *  of the screen with the city name and zip
 		 */
 		public void mouseMoved(MouseEvent e){
 			Edge closestEdge = WindowHandler.closestEdge(e.getX(), e.getY());
@@ -1132,9 +1163,12 @@ public class Window extends JFrame {
 					cityAndZipLabel.setText(zip + " " + cityName);
 				}
 			}
-
 		}
 
+		/**
+		 * When the mouse is released from dragging, either by left or right dragging,
+		 * a search is called to draw the new map.
+		 */
 		public void mouseReleased(MouseEvent e) {
 			if (SwingUtilities.isRightMouseButton(e)) {
 				releasedX = e.getX();
@@ -1154,6 +1188,9 @@ public class Window extends JFrame {
 		}
 	}
 	
+	/**
+	 * Listener to mouse wheel for zooming
+	 */
 	private class MouseWheelZoom implements MouseWheelListener{
 		int zoomCount;
 		MouseWheelMovedZoom zoomListener;
@@ -1162,6 +1199,10 @@ public class Window extends JFrame {
 			zoomListener = new MouseWheelMovedZoom();
 		}
 		
+		/**
+		 * When scrolling with mouse when, delay in case of scolling many layers up/down.
+		 * Then, call MouseWheelMovedZoom.
+		 */
 		public void mouseWheelMoved(MouseWheelEvent e) {
 			int notches = e.getWheelRotation();
 			if (notches < 0)
@@ -1173,8 +1214,11 @@ public class Window extends JFrame {
 				timer.start();
 			}
 			timer.restart();
-		
 		}
+		
+		/**
+		 * Zoom in/out according to number of notches
+		 */
 		private class MouseWheelMovedZoom implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				timer.stop();
@@ -1186,10 +1230,13 @@ public class Window extends JFrame {
 					WindowHandler.zoomOut(Math.abs(zoomCount));
 				}
 				zoomCount = 0;
-				}
-			}	
+			}
+		}
 	}
 
+	/**
+	 * Mouse listener for when clicking text fields
+	 */
 	private class mouseOnText extends MouseAdapter {
 		private TextType t;
 
@@ -1197,6 +1244,10 @@ public class Window extends JFrame {
 			this.t = t;
 		}
 
+		/**
+		 * When pressing the text fields the default text should disappear,
+		 *allowing the user to input
+		 */
 		@Override
 		public void mousePressed(MouseEvent e) {
 			if (TextType.FROM == t && from.getText().equals(fromDefault)) from.setText("");
@@ -1205,9 +1256,12 @@ public class Window extends JFrame {
 		}
 	}
 	
-	class TransparetPane extends JPanel{
+	/**
+	 * Class for drawing background for menu and route info.
+	 */
+	class TransparentPane extends JPanel{
 
-		public TransparetPane() {
+		public TransparentPane() {
 			super();
 			setBackground(new Color(0,0,0,50)); // black
 			setOpaque(false);

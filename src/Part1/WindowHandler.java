@@ -17,7 +17,9 @@ import Part1.Window.TextType;
 import QuadTree.QuadTree;
 
 /**
- *
+ * WindowHandler handles input from the GUI class Window and takes care of calculations
+ * needed to make all the classes cooperating. Collects input when calculated in other
+ * classes and passes it to Window.
  */
 public class WindowHandler {
 	private static List<Node> nodes;
