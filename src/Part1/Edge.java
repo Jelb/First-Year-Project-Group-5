@@ -105,6 +105,11 @@ public class Edge {
 		}
 	}
 	
+	/**
+	 * Initiates a search for a streetname on this or adjacent edges.
+	 * @param e		The initial edge
+	 * @return		Streetname
+	 */
 	public String lookForStreetname(Edge e) {
 		String streetname;
 		streetname = lookForStreetname(e, e.getFromNode());
@@ -178,55 +183,61 @@ public class Edge {
      	return TNODE.getKdvID();
     }
     
+    /**
+     * Checks if the edges are identical in terms of their nodes position.
+     * @param other		The other edge of the comparison
+     * @return			Returns true if both edges use the same nodes
+     */
     public boolean equals(Object other) {
 		if (other instanceof Edge) {
 			Edge otherEdge = (Edge) other;
-			if (FNODE.equals(otherEdge.getFromNode())
-					&& TNODE.equals(otherEdge.getToNode()))
+			if (FNODE.equals(otherEdge.getFromNode()) && TNODE.equals(otherEdge.getToNode()))
 				return true;
 			else
 				return false;
 		} else
 			return false;
-    	
-    	
-//		this.length = LENGTH;
-//		this.VEJNAVN = VEJNAVN;
-//		this.TYP = TYP;
-//		this.V_POSTNR = V_POSTNR;
-//		this.H_POSTNR = H_POSTNR;
-//		this.drawable = drawable;
-//		this.driveTime = driveTime;
-    }
+	}
     
+    /**
+     * Compares two edges to see which is the longest.
+     * @param that		The other edge of the comparison
+     * @return			Returns -1 if the other edge is longest,
+     * 					+1 if this one is the longest and 0 if they are equal length
+     */
     public int compareTo(Edge that){
     	if      (this.length() < that.length()) return -1;
         else if (this.length() > that.length()) return +1;
         else                                    return  0;
     }
 
+    /**
+     * Creates a String containing the from/to node ID numbers.
+     * @return		Returns a String with node ID numbers
+     */
     public String printEdge() {
     	String string = FNODE.getKdvID() + " -> " + TNODE.getKdvID();
     	return string;
     }
     
-     public String toString(){  
-    	 String data = FNODE.getKdvID() + " " + TNODE.getKdvID() + " " + length() + " " + FNODE.getXCord() + " " + FNODE.getYCord() +
-    			 " " + TNODE.getXCord() + " " + TNODE.getYCord() +" ";
-     	 return data.trim();  
-     }
-     
-     public Node getFromNode() {
-    	 return FNODE;
-     }
-     
-     public Node getToNode() {
-    	 return TNODE;
-     }
-     
-     public int getType() {
-    	 return TYPE;
-     }
+	public String toString() {
+		String data = FNODE.getKdvID() + " " + TNODE.getKdvID() + " "
+				+ length() + " " + FNODE.getXCord() + " " + FNODE.getYCord()
+				+ " " + TNODE.getXCord() + " " + TNODE.getYCord() + " ";
+		return data.trim();
+	}
+
+	public Node getFromNode() {
+		return FNODE;
+	}
+
+	public Node getToNode() {
+		return TNODE;
+	}
+
+	public int getType() {
+		return TYPE;
+	}
 
 	public String getVEJNAVN() {
 		return STREETNAME;
@@ -235,7 +246,7 @@ public class Edge {
 	public void setVEJNAVN(String vEJNAVN) {
 		STREETNAME = vEJNAVN;
 	}
-	
+
 	public boolean isDrawable() {
 		return drawable;
 	}
