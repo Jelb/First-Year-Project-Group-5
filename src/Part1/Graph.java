@@ -32,7 +32,7 @@ public class Graph {
 	 * Adds an edge to the nodes that the edge connects
 	 */
 	public void addEdge(Edge e) {
-		adj[e.from()].add(e);
+		adj[e.fromID()].add(e);
 		E++;
 	}
 	

@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
@@ -42,6 +41,14 @@ public class StreetNameReader {
 		}
 	}
 
+	/**
+	 * The method is used to find the best match of the input 
+	 * within the file containing the street names.
+	 * 
+	 * @param input The sting which should be checked for.
+	 * @return The best match on the input if any.
+	 * @throws IOException
+	 */
 	public String streetScan(String input) throws IOException {
 		String strLine;
 		String street = ""; 
@@ -54,10 +61,12 @@ public class StreetNameReader {
 	}
 
 	/**
+	 * This method is used to find the city name related to 
+	 * a given zip-code.
 	 * 
 	 * @param input The whole search string
-	 * @return
-	 * @throws IOException
+	 * @return A string containing the zip-code and the related city name.
+	 * @throws IOException 
 	 */
 	public String zipScan(String input) throws IOException {
 		String strLine;
@@ -71,18 +80,14 @@ public class StreetNameReader {
 		return zipAndName;
 	}	
 
-	public HashMap<String, String> zipToCityMap() throws IOException{
-		HashMap<String, String> zipToCityMap = new HashMap<String, String>();
-		String strLine;
-		while((strLine = brZip.readLine()) != null) {
-			String zipCode = strLine.split(" ", 2)[0];
-			String cityName = strLine.split(" ", 2)[1];
-
-			zipToCityMap.put(zipCode, cityName);
-		}
-		return zipToCityMap;
-	}
-
+	/**
+	 * Checks if a given city name configures in the 
+	 * data file. 
+	 * 
+	 * @param input The string which should be checked.
+	 * @return The city name found in the 
+	 * @throws IOException
+	 */
 	public String cityNameScan(String input) throws IOException {
 		String strLine;
 		String inputName = "";

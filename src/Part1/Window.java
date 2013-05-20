@@ -3,7 +3,6 @@ package Part1;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Insets;
@@ -729,7 +728,7 @@ public class Window extends JFrame {
 			ArrayList<Edge> allEdgesForZip = new ArrayList<Edge>();
 			HashSet<Integer> disallowedTypes = DijkstraSP.getDisallowedTypes();
 			for(Edge edge : WindowHandler.getEdges()){
-				if (edge.getV_POSTNR().equals(zipArray[i]) && edge.getH_POSTNR().equals(zipArray[i]) && !disallowedTypes.contains(edge.getType())) {
+				if (edge.getV_POSTNR().equals(zipArray[i]) && edge.getH_POSTNR().equals(zipArray[i]) && !disallowedTypes.contains(edge.type())) {
 					allEdgesForZip.add(edge);
 				}
 			}
@@ -737,29 +736,29 @@ public class Window extends JFrame {
 		}
 		else {
 			for(Edge edge : WindowHandler.getEdges()){
-				if(edge.getVEJNAVN().equals(textArray[0]) && (edge.getV_POSTNR().equals(zipArray[i]) || edge.getH_POSTNR().equals(zipArray[i]) )){
+				if(edge.getStreetname().equals(textArray[0]) && (edge.getV_POSTNR().equals(zipArray[i]) || edge.getH_POSTNR().equals(zipArray[i]) )){
 					randomCorrectEdge = edge;
 					String houseNumberString = textArray[1];
 					if (!houseNumberString.equals("")) {
 						int houseNumber = Integer.parseInt(houseNumberString);
 						if (houseNumber % 2 == 0) {
 							if (houseNumber >= edge.getHouseNumberMinEven() && houseNumber <= edge.getHouseNumberMaxEven()) {
-								WindowHandler.setNode(edge.getFromNode().getKdvID(), t);
-								flagNode = edge.getFromNode();
+								WindowHandler.setNode(edge.from().getKdvID(), t);
+								flagNode = edge.from();
 								randomCorrectEdge = null;
 								break;
 							}
 						}
 						else if (houseNumber >= edge.getHouseNumberMinOdd() && houseNumber <= edge.getHouseNumberMaxOdd()) {
-							WindowHandler.setNode(edge.getFromNode().getKdvID(), t);
-							flagNode = edge.getFromNode();
+							WindowHandler.setNode(edge.from().getKdvID(), t);
+							flagNode = edge.from();
 							randomCorrectEdge = null;
 							break;
 						}
 					}
 					else {
-						WindowHandler.setNode(edge.getFromNode().getKdvID(), t);
-						flagNode = edge.getFromNode();
+						WindowHandler.setNode(edge.from().getKdvID(), t);
+						flagNode = edge.from();
 						randomCorrectEdge = null;
 						break;
 					}
@@ -767,8 +766,8 @@ public class Window extends JFrame {
 			}
 		}
 		if (randomCorrectEdge != null){
-			WindowHandler.setNode(randomCorrectEdge.getFromNode().getKdvID(), t);
-			flagNode = randomCorrectEdge.getFromNode();
+			WindowHandler.setNode(randomCorrectEdge.from().getKdvID(), t);
+			flagNode = randomCorrectEdge.from();
 		}
 		if (t == TextType.FIND) searchFindResultBox.setVisible(false);
 		else if (t == TextType.TO) searchToResultBox.setVisible(false);
@@ -1058,7 +1057,7 @@ public class Window extends JFrame {
 	private class resizeListener extends ComponentAdapter {
 		int height;
 		int width;
-		final int MIN_HEIGHT = 550;
+		final int MIN_HEIGHT = 570;
 
 		public void componentResized(ComponentEvent evt) {
 			if(timer == null){
@@ -1151,8 +1150,8 @@ public class Window extends JFrame {
 			Edge closestEdge = WindowHandler.closestEdge(e.getX(), e.getY());
 			if (!(closestEdge == null)) {
 				String roadName;
-				if(closestEdge.getVEJNAVN().length() > 0) {
-					roadName = closestEdge.getVEJNAVN();
+				if(closestEdge.getStreetname().length() > 0) {
+					roadName = closestEdge.getStreetname();
 				} else {
 					roadName =  "No name found";
 				}

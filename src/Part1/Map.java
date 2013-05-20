@@ -22,7 +22,7 @@ public class Map extends JPanel {
 	private ArrayList<RoadSegment> segments1, segments2, segments3, segments4,
 								   segments5, segments6, segments8;
 	private ArrayList<DrawableItem> path;
-	private static ArrayList<CoastPoint[]> coast, lake, island, border; 
+	private static ArrayList<CoastPoint[]> coast, lake, border; 
 	private static Map instance = null;
 	private ArrayList<Flag> flags;
 	private Image offScreen = null;
@@ -280,34 +280,64 @@ public class Map extends JPanel {
 	}
 
 	/**
-	 * Adds a single roadSegment to the map.
+	 * Adds a single roadSegment to the ArrayList segment1.
 	 * 
-	 * @param roadSegment The roadSegment which are to be added to the map.
+	 * @param roadSegment The roadSegment which are to be added to the array.
 	 */
 	public void addRoadSegment1(RoadSegment roadSegment) {
 		segments1.add(roadSegment);
 	}
 	
+	/**
+	 * Adds a single roadSegment to the ArrayList segment2.
+	 * 
+	 * @param roadSegment The roadSegment which are to be added to the array.
+	 */
 	public void addRoadSegment2(RoadSegment roadSegment) {
 		segments2.add(roadSegment);
 	}
 	
+	/**
+	 * Adds a single roadSegment to the ArrayList segment3.
+	 * 
+	 * @param roadSegment The roadSegment which are to be added to the array.
+	 */
 	public void addRoadSegment3(RoadSegment roadSegment) {
 		segments3.add(roadSegment);
 	}
 	
+	/**
+	 * Adds a single roadSegment to the ArrayList segment4.
+	 * 
+	 * @param roadSegment The roadSegment which are to be added to the array.
+	 */
 	public void addRoadSegment4(RoadSegment roadSegment) {
 		segments4.add(roadSegment);
 	}
 	
+	/**
+	 * Adds a single roadSegment to the ArrayList segment5.
+	 * 
+	 * @param roadSegment The roadSegment which are to be added to the array.
+	 */
 	public void addRoadSegment5(RoadSegment roadSegment) {
 		segments5.add(roadSegment);
 	}
 	
+	/**
+	 * Adds a single roadSegment to the ArrayList segment6.
+	 * 
+	 * @param roadSegment The roadSegment which are to be added to the array.
+	 */
 	public void addRoadSegment6(RoadSegment roadSegment) {
 		segments6.add(roadSegment);
 	}
 	
+	/**
+	 * Adds a single roadSegment to the ArrayList segment8.
+	 * 
+	 * @param roadSegment The roadSegment which are to be added to the array.
+	 */
 	public void addRoadSegment8(RoadSegment roadSegment) {
 		segments8.add(roadSegment);
 	}
@@ -347,7 +377,7 @@ public class Map extends JPanel {
 	}
 
 	/**
-	 * Recalculate position of path
+	 * Recalculate the position of the path.
 	 */
 	public void updatePath() {
 		for (DrawableItem r : path) r.updatePosition();

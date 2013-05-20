@@ -273,8 +273,19 @@ public class DataReader {
 		return QT;
 	}
 	
+	/**
+	 * The method creates a <b>ArrayList</b> of CoastPoint arrays. Each CoastPoint array
+	 * represent all the points used to create a given piece of land/water depending on the 
+	 * data within the input file.
+	 * <p>
+	 * This class will <b>terminate</b> the program if the file path is invalid or the
+	 * file is unreadable.  
+	 * 
+	 * @param filepath The directory of the file containing the data. 
+	 * @return Returns An ArrayList of CoastPoint arrays.d
+	 */
 	public ArrayList<CoastPoint[]> readCoast(String filepath) {
-		ArrayList<CoastPoint[]> area = new ArrayList<CoastPoint[]>();
+		ArrayList<CoastPoint[]> coast = new ArrayList<CoastPoint[]>();
 
 		try {
 			Reader reader = new InputStreamReader(new FileInputStream(filepath), "UTF-8");
@@ -283,31 +294,40 @@ public class DataReader {
 			ArrayList<CoastPoint> current = null;
 			while(!(line == null)) {
 				SplashScreen.use().updateProgress();
+				//Creates a new array if the input matches ">".
 				if(line.contains(">")) {
 					line = br.readLine().trim();
 					if(current == null) {
 						current = new ArrayList<CoastPoint>();
 					} else {
-						area.add(current.toArray(new CoastPoint[1]));
+						//Adds the old array to the ArrayList.
+						coast.add(current.toArray(new CoastPoint[1]));
 						current = new ArrayList<CoastPoint>();
 					}
 					continue;
 				}
 				double lon = Double.parseDouble(line.substring(0, line.indexOf("\t")).trim());
 				double lat = Double.parseDouble(line.substring(line.indexOf("\t")+1).trim());
+				//Adds the CoastPoint returned by the Equation class to the array.
 				current.add(Equation.convertLonLatToUTM(lat, lon));
 
 				line = br.readLine();
 				}
-			area.add(current.toArray(new CoastPoint[1]));
+			coast.add(current.toArray(new CoastPoint[1]));
 			reader.close();			
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "The file <" + filepath+ "> was not foud. \nThe program will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
 			throw new RuntimeException();
 		}
-		return area;
+		return coast;
 	}
 	
+	/**
+	 * Creates a HashMap containing all zip-codes and their related city.
+	 * 
+	 * @param zipFile The directory of the input file.
+	 * @return An HashMap containing all zip-codes as keys and the related city as value.  
+	 */
 	public HashMap<String, String> getZipToCityMap(String zipFile) {
 		HashMap<String, String> zipToCityMap = new HashMap<String, String>();
 		try {
@@ -364,10 +384,6 @@ public class DataReader {
 	public static double getMinY() {
 		return minY;
 	}
-	
-	public int getIncrease() {
-		return increase;
-	}
 
 	/**
 	 * Getter method for the <i>longestRoads</i> field.
@@ -378,15 +394,41 @@ public class DataReader {
 		return longestRoads;
 	}
 	
+	/**
+	 * Getter for the roadToZipMap field.
+	 * roadToZipMap contains zip-codes as keys and all related street names as values.
+	 * 
+	 * @return An HashMap with strings as keys and a HashSet of strings as values.
+	 */
 	public HashMap<String, HashSet<String>> getRoadToZipMap() {
 		return roadToZipMap;
 	}
 
+	/**
+	 * Getter for the edge array.
+	 * @return An array containing all edges in the system.
+	 */
 	public List<Edge> getEdges() {
 		return edges;
 	}
-
+	
+	/**
+	 * Getter for the nodes array.
+	 * 
+	 * @return An ArrayList of all nods.
+	 */
 	public ArrayList<Node> getNodes() {
 		return nodes;
+	}
+	
+	/**
+	 * Getter for the increase field.
+	 * The increase filed contains the value which has been added to the 
+	 * map i order to see some of the area around Denmark.
+	 * 
+	 * @return The values of increase.
+	 */
+	public int getIncrease() {
+		return increase;
 	}
 }
