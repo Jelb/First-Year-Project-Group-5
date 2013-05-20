@@ -106,16 +106,16 @@ public class Edge {
 	}
 	
 	/**
-	 * Initiates a search for a streetname on this or adjacent edges.
+	 * Initiates a search for a street name on this or adjacent edges.
 	 * @param e		The initial edge
-	 * @return		Streetname
+	 * @return		The street name
 	 */
 	public String lookForStreetname(Edge e) {
 		String streetname;
-		streetname = lookForStreetname(e, e.getFromNode());
+		streetname = lookForStreetname(e, e.from());
 		if(streetname != null)
 			return streetname;
-		streetname = lookForStreetname(e, e.getToNode());
+		streetname = lookForStreetname(e, e.to());
 		if(streetname != null)
 			return streetname;
 		return "No streetname found";
@@ -132,7 +132,7 @@ public class Edge {
 		if(connectedEdges.size() <= 2) {																// makes sure the node has no more than 2 edges adjacent
 			for(Edge edge : connectedEdges) {															// iterates through these edges
 				if(edge != e) {																			// makes sure not to perform operation on the edge it just came from
-					String vejnavn = edge.getVEJNAVN();													// gets the streetname from this edge
+					String vejnavn = edge.getStreetname();													// gets the streetname from this edge
 					if(vejnavn.length() > 0) {															// determines whether edge has a streetname
 						return vejnavn;																	// if it does, return this name
 					} else {																			
@@ -156,30 +156,42 @@ public class Edge {
 			return FNODE;
 	}
 	
+	/**
+	 * Getter for the left hand zip-code.
+	 * @return The zip-code.
+	 */
 	public String getV_POSTNR(){
 		return V_POSTNR;
 	}
 	
+	/**
+	 * Getter for the right hand zip-code.
+	 * @return The zip-code.
+	 */
 	public String getH_POSTNR(){
 		return H_POSTNR;
 	}
 	
+	/**
+	 * @return The length of the edge.
+	 */
 	public double length(){  
 		return LENGTH;  
 	}
-	
-	public int getFromNodeID() {
-		return FNODE.getKdvID();
-	}
-	
-	public int getToNodeID() {
-		return TNODE.getKdvID();
-	}
      
-    public int from(){  
+	/**
+	 * Getter for the index of the from node.
+	 * @return The index of the from node.
+	 */
+    public int fromID(){  
     	return FNODE.getKdvID();  
     }
-    public int to(){
+    
+    /**
+	 * Getter for the index of the to node.
+	 * @return The index of the to node.
+	 */
+    public int toID(){
      	return TNODE.getKdvID();
     }
     
@@ -191,7 +203,7 @@ public class Edge {
     public boolean equals(Object other) {
 		if (other instanceof Edge) {
 			Edge otherEdge = (Edge) other;
-			if (FNODE.equals(otherEdge.getFromNode()) && TNODE.equals(otherEdge.getToNode()))
+			if (FNODE.equals(otherEdge.from()) && TNODE.equals(otherEdge.to()))
 				return true;
 			else
 				return false;
@@ -220,6 +232,7 @@ public class Edge {
     	return string;
     }
     
+    @Override
 	public String toString() {
 		String data = FNODE.getKdvID() + " " + TNODE.getKdvID() + " "
 				+ length() + " " + FNODE.getXCord() + " " + FNODE.getYCord()
@@ -227,46 +240,80 @@ public class Edge {
 		return data.trim();
 	}
 
-	public Node getFromNode() {
+    /**
+     * @return The from node.
+     */
+	public Node from() {
 		return FNODE;
 	}
 
-	public Node getToNode() {
+	/**
+	 * @return The to node.
+	 */
+	public Node to() {
 		return TNODE;
 	}
 
-	public int getType() {
+	/**
+	 * @return The type of the road.
+	 */
+	public int type() {
 		return TYPE;
 	}
 
-	public String getVEJNAVN() {
+	/**
+	 * @return The street name
+	 */
+	public String getStreetname() {
 		return STREETNAME;
 	}
-
-	public void setVEJNAVN(String vEJNAVN) {
-		STREETNAME = vEJNAVN;
+	
+	/**
+	 * Setter for the street name.
+	 * @param streetname The name of the street.
+	 */
+	public void setStreetname(String streetname) {
+		STREETNAME = streetname;
 	}
 
+	/**
+	 * @return true if the edge is draw able.
+	 */
 	public boolean isDrawable() {
 		return drawable;
 	}
 
+	/**
+	 * @return The estimated drive time.
+	 */
 	public double getDriveTime() {
 		return DRIVETIME;
 	}
 
+	/**
+	 * @return The floor of the even house numbers.
+	 */
 	public int getHouseNumberMinEven() {
 		return houseNumberMinEven;
 	}
 
+	/**
+	 * @return The sealing of the even house numbers.
+	 */
 	public int getHouseNumberMaxEven() {
 		return houseNumberMaxEven;
 	}
 
+	/**
+	 * @return The floor of the odd house numbers.
+	 */
 	public int getHouseNumberMinOdd() {
 		return houseNumberMinOdd;
 	}
 
+	/**
+	 * @return The sealing of the odd house numbers.
+	 */
 	public int getHouseNumberMaxOdd() {
 		return houseNumberMaxOdd;
 	}

@@ -1,7 +1,7 @@
 package Part1;
 
 public class Equation {
-	
+
 	//--------------------Fields for convertLonLatToUTM--------------------
 	//Scale along meridian
 	private static final double SCALE = 0.9996;
@@ -16,7 +16,7 @@ public class Equation {
 	private static final double MERIDIAN33 = 15*(Math.PI/180); 
 	private static double p;
 	//---------------------------------------------------------------------
-	
+
 	/**
 	 * Method used to convert longitude and latitude to UTM coordinates.
 	 * The calculation is based on UTM zone 32.
@@ -37,21 +37,21 @@ public class Equation {
 		} else {
 			p = (lon - MERIDIAN33);
 		}
-		
+
 		double AP 	= A*(1-N+(5*N*N/4)*(1-N)+(81*Math.pow(N, 4)/64)*(1-N));
 		double BP 	= (3*A*N/2)*(1-N-(7*N*N/8)*(1-N)+(55*Math.pow(N, 4)/64));
 		double CP 	= (A*15*N*N/16)*(1-N)+(3*N*N/4)*(1-N);
 		double DP 	= (35*A*Math.pow(N, 3)/48)*(1-N)+(11*N*N/16);
 		double EP 	= (315*A*Math.pow(N, 4)/51)*(1-N);
 		double S	= (AP*lat)-(BP*Math.sin(2*lat))+(CP*Math.sin(4*lat))-(DP*Math.sin(6*lat))+(EP*Math.sin(8*lat));
-		
+
 		double K1	= S*SCALE;
 		double K2	= SCALE*nu*Math.sin(2*lat)/4;
 		double K3	= (nu*Math.sin(lat)*Math.pow(Math.cos(lat), 3)/24)*((5*Math.pow(Math.tan(lat), 2))+9*EE*Math.pow(Math.cos(lat), 2)+4*EE*EE*Math.pow(Math.cos(lat),4))*SCALE;
-		
+
 		double K4 	= SCALE * nu * Math.cos(lat);
 		double K5 	= Math.pow(Math.cos(lat), 3)*(nu/6)*((1-Math.pow(Math.tan(lat), 2)+EE*Math.pow(Math.cos(lat), 2)))*SCALE;
-		
+
 		double x 	= 500000+(K4*p+K5*Math.pow(p, 3));
 		double y	= K1+K2*p*p+K3*Math.pow(p, 4);
 		//Adds a small value to the x-coordinate in order make the shore more precise.
@@ -59,7 +59,7 @@ public class Equation {
 		if(dx > 0.0) x += dx;
 		return new CoastPoint(x, y);
 	}
-	
+
 	/**
 	 * Method used to calculate the on-screen pixel-coordinate of a UTM 
 	 * x-coordinate.
@@ -73,9 +73,9 @@ public class Equation {
 		int x =(int)(((geoCord-DrawableItem.getGeoMinX())/diffX)*width);
 		return x;
 	}
-	
 
-	
+
+
 	/**
 	 * Method used to calculate the on-screen pixel-coordinate of a UTM 
 	 * y-coordinate.
@@ -89,7 +89,7 @@ public class Equation {
 		int y =(int)(height-(((geoCord-DrawableItem.getGeoMinY())/diffY)*height));
 		return y;
 	}
-	
+
 	/**
 	 * Returns an on-screen geo-distance measured in pixels.
 	 * @param dist		The coordinate based geo distance
@@ -102,9 +102,9 @@ public class Equation {
 		double pixelDistance = dist / pixelSize;
 		return pixelDistance;
 	}
-	
+
 	//-----------------------VECTOR FUNCTIONS------------------------------------
-	
+
 	/**
 	 * Determines if a point lies within the 'channel' of a given edge, meaning the points
 	 * normal vector actually touches the edge itself.
@@ -113,30 +113,30 @@ public class Equation {
 	 * @return			True, if the point is inside the channel
 	 */
 	public static boolean pointWithinChannel(double x, double y, Edge edge) {
-		double[] vectorA = pointsToVector(edge.getFromNode().getAbsoluteXCoordinate(),
-										  edge.getFromNode().getAbsoluteYCoordinate(),
-										  x, y);
-		double[] vectorB = pointsToVector(edge.getFromNode().getAbsoluteXCoordinate(),
-				  						  edge.getFromNode().getAbsoluteYCoordinate(),
-				  						  edge.getToNode().getAbsoluteXCoordinate(),
-				  						  edge.getToNode().getAbsoluteYCoordinate());
-		double[] vectorC = pointsToVector(edge.getToNode().getAbsoluteXCoordinate(),
-										  edge.getToNode().getAbsoluteYCoordinate(),
-										  x, y);
-		double[] vectorD = pointsToVector(edge.getToNode().getAbsoluteXCoordinate(),
-				  						  edge.getToNode().getAbsoluteYCoordinate(),
-				  						  edge.getFromNode().getAbsoluteXCoordinate(),
-				  						  edge.getFromNode().getAbsoluteYCoordinate());
-		
+		double[] vectorA = pointsToVector(edge.from().getAbsoluteXCoordinate(),
+				edge.from().getAbsoluteYCoordinate(),
+				x, y);
+		double[] vectorB = pointsToVector(edge.from().getAbsoluteXCoordinate(),
+				edge.from().getAbsoluteYCoordinate(),
+				edge.to().getAbsoluteXCoordinate(),
+				edge.to().getAbsoluteYCoordinate());
+		double[] vectorC = pointsToVector(edge.to().getAbsoluteXCoordinate(),
+				edge.to().getAbsoluteYCoordinate(),
+				x, y);
+		double[] vectorD = pointsToVector(edge.to().getAbsoluteXCoordinate(),
+				edge.to().getAbsoluteYCoordinate(),
+				edge.from().getAbsoluteXCoordinate(),
+				edge.from().getAbsoluteYCoordinate());
+
 		if (cosVectorAngle(vectorA, vectorB) > 0 && cosVectorAngle(vectorC, vectorD) > 0) {
 			return true;
 		}
 		else {
 			return false;
 		}
-		
+
 	}
-	
+
 	/**
 	 * Calculates the normal vector of an edge. 
 	 * @param edge	The given edge
@@ -149,7 +149,7 @@ public class Equation {
 		double[] normal = new double[] {-y , x} ;
 		return normal;
 	}
-	
+
 	/**
 	 * calculates the distance between a point and a line.
 	 * @param edge	The edge from which the aforementioned line is defered
@@ -159,23 +159,23 @@ public class Equation {
 	 */
 	public static double distanceBetweenPointAndLine(Edge edge, double x, double y) {
 		// a coordinate set on the line
-		double x1 = edge.getFromNode().getAbsoluteXCoordinate();
-		double y1 = edge.getFromNode().getAbsoluteYCoordinate();
-		
+		double x1 = edge.from().getAbsoluteXCoordinate();
+		double y1 = edge.from().getAbsoluteYCoordinate();
+
 		// the coordinate set of the point
 		double x2 = x;
 		double y2 = y;
-		
+
 		// the values of the lines normal vector
 		double a = getNormalVector(edge)[0];
 		double b = getNormalVector(edge)[1];
 		double c = (-a * x1) - (b * y1);
-		
+
 		// calculating the distance between the point and the line
 		double dist = (Math.abs(a * x2 + b * y2 + c)) / (Math.sqrt(a * a + b * b));
 		return dist;
 	}
-		
+
 	/**
 	 * Creates a 2D vector from two points
 	 * @param x1		X coord, first point
@@ -190,7 +190,7 @@ public class Equation {
 		vector[1] = y2 - y1;
 		return vector;
 	}
-	
+
 	/**
 	 * Creates a 2D vector based on a set of nodes.
 	 * @param fnode		The 'from' node
@@ -203,7 +203,7 @@ public class Equation {
 		vector[1] = tnode.getAbsoluteYCoordinate() - fnode.getAbsoluteYCoordinate();
 		return vector;
 	}
-	
+
 	/**
 	 * Calculates the length of a 2D vector.
 	 * @param vector	A double array of 2 values, describing the vector
@@ -212,7 +212,7 @@ public class Equation {
 	public static double vectorLength(double[] vector) {
 		return Math.sqrt(Math.pow(vector[0], 2) + Math.pow(vector[1], 2));
 	}
-	
+
 	/**
 	 * Calculates the distance between two nodes.
 	 * @param fnode		The 'from' node
@@ -222,7 +222,7 @@ public class Equation {
 	public static double distanceBetweenNodes(Node fnode, Node tnode) {
 		return vectorLength(nodesToVector(fnode, tnode));
 	}
-	
+
 	/**
 	 * Calculates the distance between two points.
 	 * @param x1		X coord, first point
@@ -234,7 +234,7 @@ public class Equation {
 	public static double distanceBetweenPoints(double x1, double y1, double x2, double y2) {
 		return vectorLength(pointsToVector(x1, y1, x2, y2));
 	}
-	
+
 	/** 
 	 * Calculates the scalar product of the 2D vectors.
 	 * @param vectorA	A double array of 2 values, describing the first vector
@@ -244,7 +244,7 @@ public class Equation {
 	public static double scalarProduct(double[] vectorA, double[] vectorB) {
 		return (vectorA[0] * vectorB[0]) + (vectorA[1] * vectorB[1]);
 	}
-	
+
 	/**
 	 * Calculates the cosine value of the angle between 2 vectors.
 	 * @param vectorA	A double array of 2 values, describing the first vector
@@ -254,20 +254,19 @@ public class Equation {
 	public static double cosVectorAngle(double[] vectorA, double[] vectorB) {
 		return (scalarProduct(vectorA, vectorB) / (vectorLength(vectorA) * vectorLength(vectorB)));
 	}
-	
+
 	/**
 	 * Creates a vector from a given edge.
 	 * @param edge		The given edge
 	 * @return			The resulting vector 
 	 */
 	public static double[] edgeToVector(Edge edge) {
-		return pointsToVector(edge.getFromNode().getAbsoluteXCoordinate(),
-							  edge.getFromNode().getAbsoluteYCoordinate(),
-							  edge.getToNode().getAbsoluteXCoordinate(),
-							  edge.getToNode().getAbsoluteYCoordinate()
-							 );
+		return pointsToVector(edge.from().getAbsoluteXCoordinate(),
+				edge.from().getAbsoluteYCoordinate(),
+				edge.to().getAbsoluteXCoordinate(),
+				edge.to().getAbsoluteYCoordinate()
+				);
 	}
-	
+
 	//------------------------------------------------------------------------------
 }
-	

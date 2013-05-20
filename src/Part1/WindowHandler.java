@@ -107,13 +107,13 @@ public class WindowHandler {
 						//calculate the vector lengths between the point and from- and to-node 
 					} else { 
 						double tempDist1 = Equation.vectorLength(Equation.pointsToVector(
-								e.getFromNode().getAbsoluteXCoordinate(),
-								e.getFromNode().getAbsoluteYCoordinate(),
+								e.from().getAbsoluteXCoordinate(),
+								e.from().getAbsoluteYCoordinate(),
 								x, y));
 
 						double tempDist2 = Equation.vectorLength(Equation.pointsToVector(
-								e.getToNode().getAbsoluteXCoordinate(),
-								e.getToNode().getAbsoluteYCoordinate(),
+								e.to().getAbsoluteXCoordinate(),
+								e.to().getAbsoluteYCoordinate(),
 								x, y));
 
 						// check distance to the FromNode
@@ -171,16 +171,16 @@ public class WindowHandler {
 		double minX = Double.MAX_VALUE, maxX = 0,  minY = Double.MAX_VALUE, maxY = 0, length = 0, driveTime = 0;
 		//Finds the max and min x and y values, used for query search
 		for(Edge edge : route) {
-			double x1 = edge.getFromNode().getXCord();
+			double x1 = edge.from().getXCord();
 			if (x1 < minX) minX = x1;
 			if (x1 > maxX) maxX = x1;
-			double y1 = edge.getFromNode().getYCord();
+			double y1 = edge.from().getYCord();
 			if (y1 < minY) minY = y1;
 			if (y1 > maxY) maxY = y1;
-			double x2 = edge.getToNode().getXCord();
+			double x2 = edge.to().getXCord();
 			if (x2 < minX) minX = x2;
 			if (x2 > maxX) maxX = x2;
-			double y2 = edge.getToNode().getYCord();
+			double y2 = edge.to().getYCord();
 			if (y2 < minY) minY = y2;
 			if (y2 > maxY) maxY = y2;
 			path.add(new RoadSegment(x1, y1, x2, y2, 4242));
@@ -336,24 +336,24 @@ public class WindowHandler {
 
 		//check whether any of the longest roads intersect with the searched area
 		for (Edge e : longestRoads) {
-			double x1 = e.getFromNode().getXCord();
-			double y1 = e.getFromNode().getYCord();
-			double x2 = e.getToNode().getXCord();
-			double y2 = e.getToNode().getYCord();					// for now, no borders will be drawn
-				if(e.getType() == 1) Map.use().addRoadSegment1(
-						new RoadSegment(x1, y1, x2, y2, e.getType()));
-				else if(e.getType() == 2) Map.use().addRoadSegment2(
-						new RoadSegment(x1, y1, x2, y2, e.getType()));
-				else if(e.getType() == 3) Map.use().addRoadSegment3(
-						new RoadSegment(x1, y1, x2, y2, e.getType()));
-				else if(e.getType() == 4) Map.use().addRoadSegment4(
-						new RoadSegment(x1, y1, x2, y2, e.getType()));
-				else if(e.getType() == 5) Map.use().addRoadSegment5(
-						new RoadSegment(x1, y1, x2, y2, e.getType()));
-				else if(e.getType() == 6) Map.use().addRoadSegment6(
-						new RoadSegment(x1, y1, x2, y2, e.getType()));
+			double x1 = e.from().getXCord();
+			double y1 = e.from().getYCord();
+			double x2 = e.to().getXCord();
+			double y2 = e.to().getYCord();					// for now, no borders will be drawn
+				if(e.type() == 1) Map.use().addRoadSegment1(
+						new RoadSegment(x1, y1, x2, y2, e.type()));
+				else if(e.type() == 2) Map.use().addRoadSegment2(
+						new RoadSegment(x1, y1, x2, y2, e.type()));
+				else if(e.type() == 3) Map.use().addRoadSegment3(
+						new RoadSegment(x1, y1, x2, y2, e.type()));
+				else if(e.type() == 4) Map.use().addRoadSegment4(
+						new RoadSegment(x1, y1, x2, y2, e.type()));
+				else if(e.type() == 5) Map.use().addRoadSegment5(
+						new RoadSegment(x1, y1, x2, y2, e.type()));
+				else if(e.type() == 6) Map.use().addRoadSegment6(
+						new RoadSegment(x1, y1, x2, y2, e.type()));
 				else Map.use().addRoadSegment8(
-						new RoadSegment(x1, y1, x2, y2, e.getType()));
+						new RoadSegment(x1, y1, x2, y2, e.type()));
 			}
 		
 //		startTime = System.currentTimeMillis(); // Timing experiments
@@ -367,7 +367,7 @@ public class WindowHandler {
 	 * Returns true if the given edge will be shown on the map with the current zoom level
 	 */
 	private static boolean includeEdge(Edge e) {
-		int t = e.getType();
+		int t = e.type();
 		if (t == 1 || t == 2 || t == 3 || t == 80) return true;
 		else if (geoWidth < 250000 && (t == 4)) return true;
 		else if (geoWidth < 60000 && (t == 5)) return true;
@@ -385,24 +385,24 @@ public class WindowHandler {
 			Iterable<Edge> edgesFromNode = graph.adj(n.getKdvID());
 			for (Edge e : edgesFromNode) {
 				if (e.isDrawable() && includeEdge(e)) {
-					double x1 = e.getFromNode().getXCord();
-					double y1 = e.getFromNode().getYCord();
-					double x2 = e.getToNode().getXCord();
-					double y2 = e.getToNode().getYCord();
-					if(e.getType() == 1) Map.use().addRoadSegment1(
-							new RoadSegment(x1, y1, x2, y2, e.getType()));
-					else if(e.getType() == 2) Map.use().addRoadSegment2(
-							new RoadSegment(x1, y1, x2, y2, e.getType()));
-					else if(e.getType() == 3) Map.use().addRoadSegment3(
-							new RoadSegment(x1, y1, x2, y2, e.getType()));
-					else if(e.getType() == 4) Map.use().addRoadSegment4(
-							new RoadSegment(x1, y1, x2, y2, e.getType()));
-					else if(e.getType() == 5) Map.use().addRoadSegment5(
-							new RoadSegment(x1, y1, x2, y2, e.getType()));
-					else if(e.getType() == 6) Map.use().addRoadSegment6(
-							new RoadSegment(x1, y1, x2, y2, e.getType()));
+					double x1 = e.from().getXCord();
+					double y1 = e.from().getYCord();
+					double x2 = e.to().getXCord();
+					double y2 = e.to().getYCord();
+					if(e.type() == 1) Map.use().addRoadSegment1(
+							new RoadSegment(x1, y1, x2, y2, e.type()));
+					else if(e.type() == 2) Map.use().addRoadSegment2(
+							new RoadSegment(x1, y1, x2, y2, e.type()));
+					else if(e.type() == 3) Map.use().addRoadSegment3(
+							new RoadSegment(x1, y1, x2, y2, e.type()));
+					else if(e.type() == 4) Map.use().addRoadSegment4(
+							new RoadSegment(x1, y1, x2, y2, e.type()));
+					else if(e.type() == 5) Map.use().addRoadSegment5(
+							new RoadSegment(x1, y1, x2, y2, e.type()));
+					else if(e.type() == 6) Map.use().addRoadSegment6(
+							new RoadSegment(x1, y1, x2, y2, e.type()));
 					else Map.use().addRoadSegment8(
-							new RoadSegment(x1, y1, x2, y2, e.getType()));
+							new RoadSegment(x1, y1, x2, y2, e.type()));
 				}
 			}
 		}

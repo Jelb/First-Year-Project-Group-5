@@ -57,23 +57,22 @@ public class PanHandler {
 	 */
 	public static void directionPan(Direction d) {
 		switch (d) {
-		case NORTH: {
-			pan(0, WindowHandler.getGeoHeight() * 0.1);
-			break;
-		}
-		case SOUTH: {
-			pan(0, -WindowHandler.getGeoHeight() * 0.1);
-			break;
-		}
-		case WEST: {
-			pan(-WindowHandler.getGeoWidth() * 0.1, 0);
-			break;
-		}
-		case EAST: {
-			pan(WindowHandler.getGeoWidth() * 0.1, 0);
-			break;
-		}
-
+			case NORTH: {
+				pan(0, WindowHandler.getGeoHeight() * 0.1);
+				break;
+			}
+			case SOUTH: {
+				pan(0, -WindowHandler.getGeoHeight() * 0.1);
+				break;
+			}
+			case WEST: {
+				pan(-WindowHandler.getGeoWidth() * 0.1, 0);
+				break;
+			}
+			case EAST: {
+				pan(WindowHandler.getGeoWidth() * 0.1, 0);
+				break;
+			}
 		}
 	}
 }

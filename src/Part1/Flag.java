@@ -19,11 +19,11 @@ public class Flag extends DrawableItem {
 	private int pixelXCord;
 	private int pixelYCord;
 	private BufferedImage icon;
-	
+
 	public Flag(TextType Type){
 		createFlag(Type);
 	}
-	
+
 	/**
 	 * Constructor setting the geo (UTM) position of the flag pin,
 	 * as well as updating the position in terms of on-screen pixel coordinate.
@@ -35,10 +35,10 @@ public class Flag extends DrawableItem {
 		geoYCord = y;
 		updatePosition();
 	}
-	
+
 	/**
 	 * Loads the flag pin image file.
-	 * @param t		The type (colour) of the flag pin
+	 * @param t		The type (color) of the flag pin
 	 */
 	private void createFlag(TextType t){
 		try {
@@ -52,11 +52,11 @@ public class Flag extends DrawableItem {
 				break;
 			}
 		} 
-		
+
 		catch (IOException e) {
 		}
 	}
-	
+
 	/**
 	 * Calculates the pixel position of the flag pin.
 	 */

@@ -42,8 +42,8 @@ public class DijkstraSP {
 			int v = pq.delMin();
 			for (Edge e : G.adj(v)) {
 				// if an edge is not allowed for the chosen transportation then it is skipped
-				if (disallowedTypes.get(t).contains(e.getType())) continue;
-				if (e.getType() == 80 && !useFerry) continue;
+				if (disallowedTypes.get(t).contains(e.type())) continue;
+				if (e.type() == 80 && !useFerry) continue;
 				if (c.equals(CompareType.SHORTEST)) relaxLength(e);
 				else if (c.equals(CompareType.FASTEST)) relaxDriveTime(e);
 			}
@@ -54,7 +54,7 @@ public class DijkstraSP {
 	 * Compares and relaxes edges according to their length.
 	 */
 	private void relaxLength(Edge e) {
-        int v = e.getFromNodeID(), w = e.getToNodeID();
+        int v = e.fromID(), w = e.toID();
 
         if (distTo[w] > distTo[v] + e.length()) {
         	distTo[w] = distTo[v] + e.length();
@@ -72,7 +72,7 @@ public class DijkstraSP {
 	 * Compares and relaxes edges according to their drive time.
 	 */
 	private void relaxDriveTime(Edge e) {
-		int v = e.getFromNodeID(), w = e.getToNodeID();
+		int v = e.fromID(), w = e.toID();
 
 		if (distTo[w] > distTo[v] + e.getDriveTime()) {
 			distTo[w] = distTo[v] + e.getDriveTime();
@@ -115,7 +115,7 @@ public class DijkstraSP {
 			JOptionPane.showMessageDialog(Window.use(),"No route found. Try enabling ferry or bike routes.");
 			return path;
 		}
-		for(Edge e = edgeTo[v]; e != null; e = edgeTo[e.getFromNodeID()]) {
+		for(Edge e = edgeTo[v]; e != null; e = edgeTo[e.fromID()]) {
 			path.add(e);
 		}
 		return path;
