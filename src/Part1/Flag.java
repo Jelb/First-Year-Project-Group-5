@@ -9,6 +9,10 @@ import javax.imageio.ImageIO;
 
 import Part1.Window.TextType;
 
+/**
+ * Class containing the green and red 'flag pins' denoting the start and finish
+ * positions of the search path in the GUI.
+ */
 public class Flag extends DrawableItem {
 	private double geoXCord;
 	private double geoYCord;
@@ -20,12 +24,22 @@ public class Flag extends DrawableItem {
 		createFlag(Type);
 	}
 	
+	/**
+	 * Constructor setting the geo (UTM) position of the flag pin,
+	 * as well as updating the position in terms of on-screen pixel coordinate.
+	 * @param x		X-axis UTM value
+	 * @param y		Y-axis UTM value
+	 */
 	public void setPosition(double x, double y) {
 		geoXCord = x;
 		geoYCord = y;
 		updatePosition();
 	}
 	
+	/**
+	 * Loads the flag pin image file.
+	 * @param t		The type (colour) of the flag pin
+	 */
 	private void createFlag(TextType t){
 		try {
 			switch(t) {
@@ -43,16 +57,18 @@ public class Flag extends DrawableItem {
 		}
 	}
 	
+	/**
+	 * Calculates the pixel position of the flag pin.
+	 */
 	public void updatePosition(){
 		pixelXCord = calcPixelX(geoXCord) - 17;
 		pixelYCord = calcPixelY(geoYCord) - 35;
 	}
 
+	/**
+	 * Paints the flag.
+	 */
 	public void paintComponent(Graphics g) {
 		g.drawImage(icon, pixelXCord, pixelYCord, null);
-	}
-	
-	public double Y() {
-		return geoYCord;
-	}
+	}	
 }
