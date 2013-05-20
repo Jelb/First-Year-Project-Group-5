@@ -508,7 +508,7 @@ public class WindowHandler {
 	public static void main(String[] args) throws IOException {
 		String nodeFile = "kdv_node_unload.txt";
 		String edgeFile = "kdv_unload.txt";
-		String coastFile = "new_coasts.dat";
+		String coastFile = "coasts.dat";
 		String lakeFile = "lake.dat";
 		String borderFile = "border.dat";
 		getEffectiveScreenSize();
