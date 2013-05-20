@@ -6,16 +6,14 @@ import java.util.List;
 import Part1.Node;
 
 /**
- * 
  * A Leaf of the QuadTree. Holds a number of nodes specified when the QuadTree is created.
  * Is converted to a QuadNode when a number of nodes exceeding the capacity is added to the Leaf.
- *
  */
 public class Leaf extends BoundingBox implements Element {
 	Node[] nodes;
-	int top;
-	int cap;
-	Parent parent;
+	int top; //Number of nodes in node array Node[]
+	int cap; //Capacity of nodes in Node[]
+	Parent parent; //The parent for the given leaf
 	
 	public Leaf(int cap, Parent parent, double x1, double y1, double x2, double y2) {
 		super(x1, y1, x2, y2);
@@ -26,7 +24,7 @@ public class Leaf extends BoundingBox implements Element {
 	}
 	
 	/**
-	 * inserts Node in leaf. If there is overflow the leaf is converted into a Node
+	 * Inserts node element in leaf. If there is overflow the leaf is converted into a Node
 	 */
 	public int insert(Node n) {
 		if (top == nodes.length) return convertToNode().insert(n);
@@ -42,7 +40,7 @@ public class Leaf extends BoundingBox implements Element {
 	}
 	
 	/**
-	 * adds the nodes of the Leaf that are inside the Bounding Box of the query
+	 * Adds the nodes of the Leaf that are inside the Bounding Box of the query
 	 */
 	public List<Node> query(BoundingBox queryBox, List<Node> list) {
 		for (Node n : nodes) {
@@ -53,8 +51,8 @@ public class Leaf extends BoundingBox implements Element {
 	}
 	
 	/**
-	 * 
-	 * converts this leaf to a Node and puts the nodes that it holds into the corresponding quadrant of the new Node
+	 * Converts this leaf to a Node and puts the nodes that it holds
+	 * into the corresponding quadrant of the new Node.
 	 */
 	public QuadNode convertToNode() {
 		double xMid = (xMin + xMax) / 2.0;
@@ -76,7 +74,7 @@ public class Leaf extends BoundingBox implements Element {
 	}
 	
 	/**
-	 * used to show the structure of the QuadTree
+	 * Used to show the structure of the QuadTree
 	 */
 	public void show() {
 		System.out.println("I'm a Leaf");
@@ -86,14 +84,19 @@ public class Leaf extends BoundingBox implements Element {
 		}
 	}
 	
+	/**
+	 * @return returns the node array.
+	 */
 	public Node[] getNodes() {
 		return nodes;
 	}
 	
+	/**
+	 * Checks whether the object is an instance of the Leaf
+	 */
 	public boolean equals(Object o) {
 		if (!(o instanceof Leaf)) return false;
 		Leaf l = (Leaf) o;
 		return Arrays.deepEquals(nodes, l.getNodes());
 	}
-
 }
