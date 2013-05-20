@@ -7,18 +7,16 @@ import java.util.Random;
 import Part1.Node;
 
 /**
- * 
  * An implementation of the QuadTree data structure
  * Inserts nodes that are defined by a x-coordinate and a y-coordinate and has an ID-number.
  * Takes queries in the form of two nodes (x1, y1) and (x2, y2) which together defines a query box.
  * Returns the result of the query in the form of a list of nodes which are inside the query box.
- *
  */
 public class QuadTree implements Parent {
 	Element root;
 	double xMax;
 	double yMax;
-	int height;
+	int height; //Height of quad tree
 	
 	public QuadTree(int leafCap, double xMax, double yMax) {
 		root = new Leaf(leafCap, this, 0, 0, xMax, yMax);
@@ -28,10 +26,12 @@ public class QuadTree implements Parent {
 	}
 	
 	/**
-	 * finds all the nodes that are held in the box defined by the two nodes (x1, y1), (x2, y2)
+	 * Finds all the nodes that are held in the box defined 
+	 * by the two nodes (x1, y1), (x2, y2)
 	 */
 	public List<Node> query(double x1, double y1, double x2, double y2) {
-		// If the query box is outside of the QuadTree area, it is set to the ends of the quadtree area
+		// If the query box is outside of the QuadTree area, 
+		// it is set to the ends of the quadtree area
 		if (x1 > xMax) x1 = xMax;
 		if (x1 < 0) x1 = 0;
 		if (x2 < 0) x2 = 0;
@@ -45,14 +45,14 @@ public class QuadTree implements Parent {
 	}
 	
 	/**
-	 * inserts a point in the QuadTree
+	 * Inserts a point in the QuadTree
 	 */
 	public void insert(double x, double y, int id) {
 		insert(new Node(x, y, id));
 	}
 	
 	/**
-	 * inserts a node in the QuadTree
+	 * Inserts a node in the QuadTree
 	 */
 	public void insert(Node node) {
 		double x = node.getXCord();
@@ -65,14 +65,14 @@ public class QuadTree implements Parent {
 	}
 	
 	/**
-	 * changes the root reference. Used when the root is converted to a QuadNode
+	 * Changes the root reference. Used when the root is converted to a QuadNode
 	 */
 	public void changeChild(Element oldChild, Element newChild) {
 		root = newChild;
 	}
 	
 	/**
-	 * shows the structure of the QuadTree
+	 * Shows the structure of the QuadTree
 	 */
 	public void showTree() {
 		root.show();
@@ -94,6 +94,9 @@ public class QuadTree implements Parent {
 		return height;
 	}
 	
+	/**
+	 * Test of QuadTree
+	 */
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
 		double maxX = 10;
@@ -122,6 +125,4 @@ public class QuadTree implements Parent {
 		System.out.println("Height of quadtree:" + QT.getHeight());
 		QT.showTree();
 	}
-	
-
 }

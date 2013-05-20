@@ -1,16 +1,14 @@
 package QuadTree;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import Part1.Node;
 
  /**
-  * 
-  * The QuadNode class holds references to the four quadrants: Northwest (NW), Northeast (NE), Southwest (SW) and Southeast (SE)
-  * The four quadrants of the QuadNode can be either Nodes or Leafs, it is not necessary for the QuadNode to know this.
-  * When a query or an insertion is called on the QuadNode, it sends it on to its children.
-  *
+  * The QuadNode class holds references to the four quadrants: Northwest (NW), Northeast (NE), 
+  * Southwest (SW) and Southeast (SE). The four quadrants of the QuadNode can be either Nodes 
+  * or Leafs, it is not necessary for the QuadNode to know this. When a query or an insertion 
+  * is called on the QuadNode, it sends it on to its children.
   */
 public class QuadNode extends BoundingBox implements Element, Parent {
 	Element NW;
@@ -52,7 +50,8 @@ public class QuadNode extends BoundingBox implements Element, Parent {
 	}
 	
 	/**
-	 * Sends the query on to the next QuadNode or Leaf according to which of the children of the QuadNode intersects with the query box
+	 * Sends the query on to the next QuadNode or Leaf according to which of the children
+	 * of the QuadNode intersects with the query box.
 	 */
 	public List<Node> query(BoundingBox queryBox, List<Node> list) {
 		if (NW.intersects(queryBox)) list = NW.query(queryBox, list);
@@ -63,8 +62,10 @@ public class QuadNode extends BoundingBox implements Element, Parent {
 	}
 	
 	/**
-	 * Changes the child of either one the quadrants to a new given Element. Used when Leafs converts to Nodes
-	 * Throws IllegalStateException if the given former (current) child does not match any of the children of this QuadNode
+	 * Changes the child of either one the quadrants to a new given Element. 
+	 * Used when Leafs converts to Nodes.
+	 * Throws IllegalStateException if the given former (current) child does 
+	 * not match any of the children of this QuadNode.
 	 */
 	public void changeChild(Element oldChild, Element newChild) {
 		if (NW == oldChild) NW = newChild;
@@ -105,6 +106,10 @@ public class QuadNode extends BoundingBox implements Element, Parent {
 		return SE;
 	}
 	
+	/**
+	 * Checks if the quad node object is an insstance of QuadNode 
+	 * or any quad nodes in NW, NE, SW or SE.
+	 */
 	public boolean equals(Object o) {
 		if (!(o instanceof QuadNode)) return false;
 		QuadNode q = (QuadNode) o;
@@ -114,6 +119,4 @@ public class QuadNode extends BoundingBox implements Element, Parent {
 		if (!SE.equals(q.getSE())) return false;
 		return true;
 	}
-	
-	
 }
