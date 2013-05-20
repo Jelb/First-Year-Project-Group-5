@@ -408,6 +408,9 @@ public class WindowHandler {
 		}
 	}
 
+	/**
+	 * Resets the map view so that the whole map is shown.
+	 */
 	public static void resetMap() {
 		search(-offsetX, maxMapWidth-offsetX, -offsetY, maxMapHeight-offsetY);
 	}
