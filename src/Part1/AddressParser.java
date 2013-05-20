@@ -21,7 +21,7 @@ import java.util.regex.Matcher;
  */
 public class AddressParser {
 	
-	private StreetNameReader fs;
+	private StreetNameReader streetNameReader;
 	private String[] result = new String[6];
 	private String INPUT;
     private Pattern p1;
@@ -58,7 +58,7 @@ public class AddressParser {
 			result[i] = "";
 		}
 		try {
-			fs = new StreetNameReader();
+			streetNameReader = new StreetNameReader();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -81,7 +81,7 @@ public class AddressParser {
 	public String[] parseAddress(String input) {
 		clearResults();
 		try {
-			fs = new StreetNameReader();
+			streetNameReader = new StreetNameReader();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -119,7 +119,7 @@ public class AddressParser {
 	private void findStreetName() {
 		String streetName = "";
 		try {
-			streetName = fs.streetScan(INPUT);
+			streetName = streetNameReader.streetScan(INPUT);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -135,7 +135,7 @@ public class AddressParser {
 		String[] zipNameArr = new String[] {"",""};
 		String zipCodeAndCityName = "";
 		try {
-			zipCodeAndCityName = fs.zipScan(INPUT).trim();
+			zipCodeAndCityName = streetNameReader.zipScan(INPUT).trim();
 			zipNameArr = zipCodeAndCityName.split(" ", 2);
 			if(zipNameArr.length == 1) return;
 		} catch (IOException e) {
@@ -155,7 +155,7 @@ public class AddressParser {
 	private void findCity() {
 		String cityName = "";
 		try {
-			cityName = fs.cityNameScan(INPUT).trim();
+			cityName = streetNameReader.cityNameScan(INPUT).trim();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -94,23 +94,6 @@ public class DataReaderTest {
 		assertEquals(6402050.98297+DR.getIncrease(), DataReader.getMaxY(), 0.1);
 	}
 	
-
-	@Test (expected = Exception.class)
-	public void wrongNodeFile() {
-		DataReader.resetInstance();
-		DR2 = DataReader.use("wrongFile.txt", "10edgestest.txt");
-		DR2.createNodeList();
-	}
-	
-	@Test (expected = Exception.class)
-	public void wrongEdgeFile() {
-		DataReader.resetInstance();
-		DataReader DR3 = DataReader.use("10nodestest.txt", "wrongFile.txt");
-		DR3.createNodeList();
-		DR3.createGraphAndLongestRoadsList(10000);
-		//The program will close down and do nothing
-	}
-	
 	@After
 	public void breakDown() {
 		DR = null;

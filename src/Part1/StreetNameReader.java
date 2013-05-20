@@ -11,7 +11,10 @@ import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
-public class StreetNameReader   {
+/**
+ *
+ */
+public class StreetNameReader {
 
 	private InputStreamReader street, zip;
 	private BufferedReader brStreet, brZip;
