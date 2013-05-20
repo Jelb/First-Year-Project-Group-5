@@ -2,30 +2,66 @@ package Part1;
 
 import java.util.ArrayList;
 
+
+/**
+ * An instance of the edge class contains all the information about a
+ * given road in the data-file.
+ * 
+ *
+ */
 public class Edge {
-	private Node FNODE, TNODE;
-	private double length, driveTime;
-	private String VEJNAVN, V_POSTNR, H_POSTNR;
-	private int TYP;
-	private boolean drawable;
+	//The nodes which the edge goes between.
+	private final Node FNODE, TNODE;
+	//The length in meter and the estimated drive time in minutes. 
+	private final double LENGTH, DRIVETIME;
+	//The name of the road, the ZIP code at the left end of the edge and the ZIP code at the right end of the edge.
+	private String STREETNAME, V_POSTNR, H_POSTNR;
+	private final int TYPE;
+	private final boolean drawable;
 	private int houseNumberMinEven, houseNumberMaxEven, houseNumberMinOdd, houseNumberMaxOdd;
 
-	public Edge(Node FNODE, Node TNODE, double LENGTH, String VEJNAVN, int TYP, String V_POSTNR, String H_POSTNR,
+	/**
+	 * Constructor for the edge class. 
+	 * Initializes all the fields of the instance based on the parameters. 
+	 * @param FNODE The departure node.
+	 * @param TNODE The destination node.
+	 * @param LENGTH The length of the edge in meters.
+	 * @param streetname The street name.
+	 * @param type An integer describing the edge-type e.g. Freeway, highway, main Road... 
+	 * @param V_POSTNR The ZIP code at the left end of the edge.
+	 * @param H_POSTNR The ZIP code at the right end of the edge.
+	 * @param driveTime The estimated drive time for the edge. [(length / speed limit) + 15%]
+	 * @param houseNumberFromLeft The floor of house numbering on the left side of the edge.
+	 * @param houseNumberToLeft The sealing of house numbering on the left side of the edge.
+	 * @param houseNumberFromRight The floor of house numbering on the right side of the edge.
+	 * @param houseNumberToRight The sealing of house numbering on the right side of the edge.
+	 * @param drawable Boolean telling whether or not the edge should be drawn.
+	 */
+	public Edge(Node FNODE, Node TNODE, double LENGTH, String streetname, int type, String V_POSTNR, String H_POSTNR,
 			double driveTime, int houseNumberFromLeft, int houseNumberToLeft, int houseNumberFromRight,
 			int houseNumberToRight, boolean drawable)
 	{
 		this.FNODE = FNODE;
 		this.TNODE = TNODE;
-		this.length = LENGTH;
-		this.VEJNAVN = VEJNAVN;
-		this.TYP = TYP;
+		this.LENGTH = LENGTH;
+		this.STREETNAME = streetname;
+		this.TYPE = type;
 		this.V_POSTNR = V_POSTNR;
 		this.H_POSTNR = H_POSTNR;
 		this.drawable = drawable;
-		this.driveTime = driveTime;
+		this.DRIVETIME = driveTime;
 		setHouseNumbers(houseNumberFromLeft, houseNumberToLeft, houseNumberFromRight, houseNumberToRight);
 	}
 	
+	/**
+	 * Determines which road numbers should be bound too each
+	 * side of the edge.
+	 * 
+	 * @param houseNumberFrom1 The floor of the first list of house numbers.
+	 * @param houseNumberTo1 The sealing of the first list of house numbers.
+	 * @param houseNumberFrom2 The floor of the second list of house numbers.
+	 * @param houseNumberTo2 The sealing of the second list of house numbers.
+	 */
 	private void setHouseNumbers(int houseNumberFrom1, int houseNumberTo1, int houseNumberFrom2, int houseNumberTo2) {
 		if (houseNumberFrom1 % 2 == 0 && houseNumberTo1 % 2 == 0) {
 			if (houseNumberFrom1 < houseNumberTo1) {
@@ -124,7 +160,7 @@ public class Edge {
 	}
 	
 	public double length(){  
-		return length;  
+		return LENGTH;  
 	}
 	
 	public int getFromNodeID() {
@@ -189,15 +225,15 @@ public class Edge {
      }
      
      public int getType() {
-    	 return TYP;
+    	 return TYPE;
      }
 
 	public String getVEJNAVN() {
-		return VEJNAVN;
+		return STREETNAME;
 	}
 
 	public void setVEJNAVN(String vEJNAVN) {
-		VEJNAVN = vEJNAVN;
+		STREETNAME = vEJNAVN;
 	}
 	
 	public boolean isDrawable() {
@@ -205,7 +241,7 @@ public class Edge {
 	}
 
 	public double getDriveTime() {
-		return driveTime;
+		return DRIVETIME;
 	}
 
 	public int getHouseNumberMinEven() {
