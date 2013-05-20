@@ -847,8 +847,6 @@ public class Window extends JFrame {
 		screen.add(carUnselected, JLayeredPane.PALETTE_LAYER);
 		screen.add(bikeSelected, JLayeredPane.PALETTE_LAYER);
 		screen.add(carSelected, JLayeredPane.PALETTE_LAYER);
-		//screen.add(fastestButton, JLayeredPane.PALETTE_LAYER);
-		//screen.add(shortest, JLayeredPane.PALETTE_LAYER);
 		screen.add(fastestRadio, JLayeredPane.PALETTE_LAYER);
 		screen.add(shortestRadio, JLayeredPane.PALETTE_LAYER);
 		screen.add(shipUnselected, JLayeredPane.PALETTE_LAYER);
@@ -1206,6 +1204,21 @@ public class Window extends JFrame {
 			else if (t == TextType.FIND && find.getText().equals(findDefault)) find.setText("");			
 		}
 	}
+	
+	class TransparetPane extends JPanel{
+
+		public TransparetPane() {
+			super();
+			setBackground(new Color(0,0,0,50)); // black
+			setOpaque(false);
+		}
+
+		protected void paintComponent(Graphics g) {
+			g.setColor( getBackground() );
+			g.fillRect(0, 0, getWidth(), getHeight());
+			super.paintComponent(g);
+		}
+	}
 
 	/**
 	 * Getter method for the width of the map.
@@ -1250,20 +1263,5 @@ public class Window extends JFrame {
 	
 	public Flag getFindFlag() {
 		return findFlag;
-	}
-}
-
-class TransparetPane extends JPanel{
-
-	public TransparetPane() {
-		super();
-		setBackground(new Color(0,0,0,50)); //royalblue
-		setOpaque(false);
-	}
-
-	protected void paintComponent(Graphics g) {
-		g.setColor( getBackground() );
-		g.fillRect(0, 0, getWidth(), getHeight());
-		super.paintComponent(g);
 	}
 }
