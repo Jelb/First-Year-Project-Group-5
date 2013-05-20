@@ -42,7 +42,7 @@ public class SplashScreen extends JFrame{
 	private int displayedTips = 0;
 	//Field used to measure the time from system start to
 	//the program actually is ready for the user to use.
-	private long startUpTime;
+//	private long startUpTime;
 	
 	private SplashScreen() {
 		super();
@@ -69,12 +69,12 @@ public class SplashScreen extends JFrame{
 			    "Click, hold and drag with right mouse button to create zoom area", "Use mouse wheel to zoom in and out",
 			    "Click the globe to reset zoom", "Hold mouse over a road to get its name", "Use the arrowkeys to pan around the map",
 			    "You can toggle ferry on/off by clicking the ship icon", "Change you transport type by clicking the car/bike icon",
-			    "Toggle between location search and path finding by clicking the single pin or multi pin icon", "Pytheas was a Greek geographer and explorer"
+			    "Toggle between location search and path finding by clicking the single pin or multi pin icon", "Pytheas of Massalia was a Greek geographer and explorer"
 			};
 		shown = new boolean[tipArray.length];
 		int randomNumber = random.nextInt(tipArray.length);
 		shown[randomNumber] = true;
-		tipTitle = new JLabel("Tips & Tricks #" + random.nextInt(1000));
+		tipTitle = new JLabel("Tips & Tricks:");
 		tipTitle.setForeground(Color.white);
 		tip = new JLabel(tipArray[randomNumber]);
 		tip.setForeground(Color.WHITE);
@@ -83,7 +83,7 @@ public class SplashScreen extends JFrame{
 		
 		
 		JPanel contentPane = new JPanel(new GridBagLayout());
-		JLabel background = new JLabel(new ImageIcon("logo.jpg"));
+		JLabel background = new JLabel(new ImageIcon("logo1.jpg"));
 		background.setLayout(new GridBagLayout());
 		contentPane.add(background);
 		
@@ -198,7 +198,7 @@ public class SplashScreen extends JFrame{
 		dispose();
 		instance = null;
 		//Print statement used when measuring the startup time.
-//		System.out.format("Time in secounds need for the system to startup: %.2f sec.",(System.currentTimeMillis()-startUpTime)/1000.0);
+//		System.out.format("Time in seconds need for the system to startup: %.2f sec.",(System.currentTimeMillis()-startUpTime)/1000.0);
 	}
 	
 	public static void initialize(String nodes, String edges, String coast, String lake) {
@@ -254,8 +254,7 @@ public class SplashScreen extends JFrame{
 			while (shown[next]) {
 				next = random.nextInt(tipArray.length-1);
 			}
-			int no = random.nextInt(1000);
-			tipTitle.setText("Tips & Tricks #" + no);
+			tipTitle.setText("Tips & Tricks:");
 			shown[next] = true;
 			tip.setText(tipArray[next]);
 			repaint();
