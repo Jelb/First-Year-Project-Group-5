@@ -68,7 +68,7 @@ public class Window extends JFrame {
 	private static int maxHeight;
 
 	//Buttons to pan and zoom
-	private JButton resetZoom, zoomOut, zoomIn,shortest, fastestButton, shipUnselected, shipSelected, search, findButton;
+	private JButton resetZoom, zoomOut, zoomIn, shipUnselected, shipSelected, search, findButton;
 	private JButton west, east, north, south, findPath, bikeUnselected, bikeSelected, carUnselected, carSelected, reset, findPathBlue;
 	private JButton findPlace, findPlaceBlue;
 	private JTextField from, to, find;
@@ -211,28 +211,18 @@ public class Window extends JFrame {
 		findPlaceBlue = createButton("find_red.png", "Find Place", 50, 215);
 		findPlace.setVisible(false);
 
-		bikeUnselected = createButton("cycle_unmarked.png", "By bike or walking", 25, 330);
+		bikeUnselected = createButton("cycle_unmarked.png", "By bike or walking", 18, 330);
 		bikeUnselected.setVisible(false);
-		bikeSelected = createButton("cycle_marked.png", "By bike or walking", 25, 330);
+		bikeSelected = createButton("cycle_marked.png", "By bike or walking", 18, 330);
 		bikeSelected.setVisible(false);
-		carUnselected = createButton("motor_unmarked.png", "By car", 78, 330);
+		carUnselected = createButton("motor_unmarked.png", "By car", 68, 330);
 		carUnselected.setVisible(false);
-		carSelected = createButton("motor_marked.png", "By car", 78, 330);
+		carSelected = createButton("motor_marked.png", "By car", 68, 330);
 		carSelected.setVisible(false);
-		shipUnselected = createButton("ferry_unmarked.png", "I would like to travel with ferry", 125, 330);
+		shipUnselected = createButton("ferry_unmarked.png", "I would like to travel with ferry", 130, 330);
 		shipUnselected.setVisible(false);
-		shipSelected = createButton("ferry_marked.png", "I would like to travel with ferry", 125, 330);
+		shipSelected = createButton("ferry_marked.png", "I would like to travel with ferry", 130, 330);
 		shipSelected.setVisible(false);
-
-		shortest = new JButton("Shortest");
-		shortest.setMargin(new Insets(5,5,5,5));
-		shortest.setBounds(20, 375, 70, 20);
-		shortest.setVisible(false);
-
-		fastestButton = new JButton("Fastest");
-		fastestButton.setMargin(new Insets(5,5,5,5));
-		fastestButton.setBounds(95, 375, 70, 20);
-		fastestButton.setVisible(false);
 
 		searchFromResultBox = new JComboBox();
 		searchToResultBox = new JComboBox();
@@ -287,7 +277,7 @@ public class Window extends JFrame {
 		
 		shortestRadio = new JRadioButton("Shortest");
 		shortestRadio.setOpaque(false);
-		shortestRadio.setBounds(12, 375, 85, 20);
+		shortestRadio.setBounds(15, 375, 85, 20);
 		shortestRadio.setVisible(false);
 	    
 		group = new ButtonGroup();
@@ -396,8 +386,6 @@ public class Window extends JFrame {
 				carUnselected.setVisible(true);
 				bikeSelected.setVisible(true);
 				bikeUnselected.setVisible(false);
-				shortest.setVisible(false);
-				fastestButton.setVisible(false);
 				shortestRadio.setVisible(false);
 				fastestRadio.setVisible(false);
 				search.setBounds(20, 375,70, 20);
@@ -416,11 +404,7 @@ public class Window extends JFrame {
 				carUnselected.setVisible(false);
 				bikeSelected.setVisible(false);
 				bikeUnselected.setVisible(true);
-				shortest.setVisible(true);
-				shortest.setFont(null);
 				reset.setBounds(95, 405, 70, 20);
-				fastestButton.setVisible(true);
-				fastestButton.setFont(new Font("Shortest", Font.BOLD, 12));
 				search.setBounds(20, 405,70, 20);
 				shortestRadio.setVisible(true);
 				fastestRadio.setVisible(true);
@@ -446,24 +430,6 @@ public class Window extends JFrame {
 				shipSelected.setVisible(false);
 				shipUnselected.setVisible(true);
 				byShip = false;
-			}
-		});
-
-		fastestButton.addActionListener(new ActionListener(){
-
-			public void actionPerformed(ActionEvent evt) {
-				fastestButton.setFont(new Font("Fastest", Font.BOLD, 12));
-				shortest.setFont(null);
-				fastest = true;
-			}
-		});
-
-		shortest.addActionListener(new ActionListener(){
-
-			public void actionPerformed(ActionEvent evt) {
-				shortest.setFont(new Font("Shortest", Font.BOLD, 12));
-				fastestButton.setFont(null);
-				fastest = false;
 			}
 		});
 
@@ -522,8 +488,6 @@ public class Window extends JFrame {
 				searchFromResultBox.setVisible(false);
 				searchToResultBox.setVisible(false);
 				navigateVisible = false;
-				shortest.setVisible(false);
-				fastestButton.setVisible(false);
 				shortestRadio.setVisible(false);
 				fastestRadio.setVisible(false);
 				shipUnselected.setVisible(false);				
@@ -548,19 +512,11 @@ public class Window extends JFrame {
 						reset.setBounds(95, 405, 70, 20);
 						background.setBounds(10,15,165,420);
 						if (fastest) {
-							shortest.setVisible(true);
-							fastestButton.setVisible(true);
-							fastestButton.setFont(new Font("Fastest", Font.BOLD, 12));							
-							shortest.setFont(null);
 							fastestRadio.setVisible(true);
 							shortestRadio.setVisible(true);
 							fastestRadio.setSelected(true);
 						}
 						else {
-							shortest.setVisible(true);
-							fastestButton.setVisible(true);
-							shortest.setFont(new Font("Shortest", Font.BOLD, 12));
-							fastestButton.setFont(null);
 							fastestRadio.setVisible(true);
 							shortestRadio.setVisible(true);
 							shortestRadio.setSelected(true);
@@ -655,83 +611,95 @@ public class Window extends JFrame {
 	/**
 	 * Parses the address from the search text field to the search box
 	 * 
-	 * @param text The text to search for cities with
+	 * @param text The text to parse
 	 * @param x The x-position of the search box to be created
 	 * @param y The y-position of the search box to be created
-	 * @param fromBool Set to true if the search comes from the "from-field". Set to false if the search comes from the "to-field"
+	 * @param t
 	 */
-	private void addressParse(String text, int x,int y, TextType t){		
+	private void addressParse(String text, int x,int y, TextType t){
+//		System.out.println("Input: " + text); // Used for white box test
 		String[] result = AddressParser.use().parseAddress(text);
 		String[] setArray = new String[0];
 		String[] zipArray;
 		String[] cityNameArray; // used to sort the results
 
-		// If there has been typed in a city name
-		if (!result[5].equals("")) {
-			HashMap<String, String> zipToCityMap = WindowHandler.getZipToCityMap();
-			Set<String> zips = zipToCityMap.keySet();
-			ArrayList<String> zipList = new ArrayList<String>();
-			for (String zip : zips) {
-				if (result[5].toLowerCase().equals(zipToCityMap.get(zip).toLowerCase())) {
-					if (result[0].equals("")) {
-						zipList.add(zip);
-					}
-					else if (WindowHandler.getRoadToZipMap().get(result[0]).contains(zip)) {
-						zipList.add(zip);
-					}
-				}
-			}
-			cityNameArray = new String[zipList.size()];
-			setArray = new String[zipList.size()];
-			for (int i = 0; i < setArray.length; i++) {
-				setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + zipList.get(i) + " " + result[5];
-				setArray[i] = setArray[i].replaceAll("\\s+", " ").trim();
-				cityNameArray[i] = result[5];
-			}
-			zipArray = Arrays.copyOf(zipList.toArray(), zipList.size(), String[].class);
-		}
+		// The numbers beside the code refers to the white box test
+		
 		// If there has been typed in a zip code
-		else if(!(result[4].equals(""))){
+		if(!(result[4].equals(""))){ // 1
 			setArray = new String[1];
 			cityNameArray = new String[]{WindowHandler.getZipToCityMap().get(result[4])};
 			setArray[0] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + result[4]+ " " + WindowHandler.getZipToCityMap().get(result[4]);
 			setArray[0] = setArray[0].replaceAll("\\s+", " ").trim();
 			zipArray = new String[]{result[4]};
 		}
+		
+		// If there has been typed in a city name and no zip code
+		else if (!result[5].equals("")) { // 2
+			HashMap<String, String> zipToCityMap = WindowHandler.getZipToCityMap();
+			Set<String> zips = zipToCityMap.keySet();
+			ArrayList<String> zipList = new ArrayList<String>();
+			for (String zip : zips) { // 3
+				if (result[5].toLowerCase().equals(zipToCityMap.get(zip).toLowerCase())) { // 4
+					if (result[0].equals("")) { // 5
+						zipList.add(zip);
+					}
+					else if (WindowHandler.getRoadToZipMap().get(result[0]).contains(zip)) { // 6
+						zipList.add(zip);
+					}
+				}
+			}
+			cityNameArray = new String[zipList.size()];
+			setArray = new String[zipList.size()];
+			for (int i = 0; i < setArray.length; i++) { // 7
+				setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + zipList.get(i) + " " + result[5];
+				setArray[i] = setArray[i].replaceAll("\\s+", " ").trim();
+				cityNameArray[i] = result[5];
+			}
+			zipArray = Arrays.copyOf(zipList.toArray(), zipList.size(), String[].class);
+		}
 		// If there has been typed in no city name or zip code
 		else{
 			HashSet<String> set = WindowHandler.getRoadToZipMap().get(result[0]);
-			if (set == null) setArray = new String[0];
+			if (set == null) setArray = new String[0]; // 8
 			else setArray = set.toArray(new String[0]);
 			cityNameArray = new String[setArray.length];
 			zipArray = new String[setArray.length];
-			for (int i = 0; i < setArray.length; i++) {
+			for (int i = 0; i < setArray.length; i++) { // 9
 				zipArray[i] = setArray[i];
 			}
-			for(int i = 0; i < setArray.length; i++){
+			for(int i = 0; i < setArray.length; i++){ // 10
 				String city = WindowHandler.getZipToCityMap().get(setArray[i]);
 				cityNameArray[i] = city;
 				setArray[i] = result[0]+" " + result[1] + result[2]+" " + result[3] + " " + setArray[i] + " " + city;
 				setArray[i] = setArray[i].replaceAll("\\s+", " ").trim();				
 			}						
 		}
-		if (zipArray.length == 0) setArray = new String[]{"No results"};
+		if (zipArray.length == 0) setArray = new String[]{"No results"}; // 11
 		// sort the result according to the city name
 		Arrays.sort(cityNameArray);
-		for (int i = 0; i < cityNameArray.length; i++) {
-			for (int j = 0; j < setArray.length; j++) {
-				if (setArray[j].contains(cityNameArray[i])) {
+		for (int i = 0; i < cityNameArray.length; i++) { // 12
+			for (int j = 0; j < setArray.length; j++) { // 13
+				if (setArray[j].contains(cityNameArray[i])) { // 14
 					String temp = setArray[i]; setArray[i] = setArray[j]; setArray[j] = temp;
 					temp = zipArray[i]; zipArray[i] = zipArray[j]; zipArray[j] = temp;
-					continue;
+					break;
 				}
 			}
 		}
-		if (zipArray.length == 1) chooseAddress(zipArray, result, t, 0, setArray[0]); 
-		else createSearchBox(setArray,zipArray,result,x,y,t);
+//		System.out.print("Array of matching addresses: "); // Used for white box test
+//		for (String s : setArray) System.out.println(s + ", "); // Used for white box test
+		if (zipArray.length == 1) {
+			chooseAddress(zipArray, result, t, 0, setArray[0]); // 15
+//			System.out.println("Locating address"); // Used for white box test
+		}
+		else {
+			createSearchBox(setArray,zipArray,result,x,y,t);
+//			System.out.println("Creating combo box"); // Used for white box test
+		}
 	}
 	
-	public void chooseAddress(String[] zipArray, String[] textArray, TextType t, int i, String text) {
+	private void chooseAddress(String[] zipArray, String[] textArray, TextType t, int i, String text) {
 		// if the zip array is empty, the search yielded no results
 		if (zipArray.length == 0) return;
 
@@ -1031,7 +999,7 @@ public class Window extends JFrame {
 	}
 
 	private class comboBoxListener implements ActionListener {
-		TextType t; //From to or find comboBox
+		TextType t; //From, to or find comboBox
 		String[] zipArray, textArray;
 
 		public comboBoxListener(String[] zipArray, String[] textArray, TextType t) {

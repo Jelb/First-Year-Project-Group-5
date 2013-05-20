@@ -4,8 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+
 /**
- *
+ * This class parses the users address input, preparing it for address lookup.
  * 
  * regexadress is used to split a given address input into each of its components.<br>
  * 1. [0] Street name <br>
@@ -18,7 +19,6 @@ import java.util.regex.Matcher;
  * If any of the components are omitted the class will try to determind which of the components 
  * is omitted and split the rest of the input.
  */
-
 public class AddressParser {
 	
 	private StreetNameReader fs;
@@ -37,6 +37,12 @@ public class AddressParser {
     private static final String ETAGE = "etage";
     private static AddressParser instance=null;
     
+    /**
+     * Singleton design patter.
+     * If no instance exists, create an return on. Otherwise,
+     * return the existing instance.
+     * @return	The one, existing instance of the class.
+     */
 	public static AddressParser use() {
 		if(instance == null) {
 			instance = new AddressParser();
@@ -44,6 +50,9 @@ public class AddressParser {
 		return instance;
 	}
 	
+	/**
+	 * Constructor.
+	 */
 	private AddressParser() {
 		for(int i = 0; i < result.length; i++){
 			result[i] = "";
@@ -55,11 +64,20 @@ public class AddressParser {
 		}
 	}
 	
+	/**
+	 * Clears the result variable of input.
+	 */
 	public void clearResults(){
 		result = new String[6];
 		for (int i = 0; i < result.length; i++) result[i] = "";
 	}
 	
+	/**
+	 * Parse a single line of input, returning a String array
+	 * containing the matching address variables.
+	 * @param input		User text input
+	 * @return			String array containing the parsed address
+	 */
 	public String[] parseAddress(String input) {
 		clearResults();
 		try {
@@ -95,6 +113,9 @@ public class AddressParser {
 		return result;
 	}
 	
+	/**
+	 * Searches the input String for a street name.
+	 */
 	private void findStreetName() {
 		String streetName = "";
 		try {
@@ -106,7 +127,10 @@ public class AddressParser {
 		INPUT = INPUT.replaceFirst(streetName.toLowerCase(), "").trim();
 	}
 	
-	// Only finds zip-codes with 4-digits
+	/**
+	 * Searches the input String for a 4-digit postal code.
+	 * Will ONLY find postal codes of 4 digits.
+	 */
 	private void findZip() {
 		String[] zipNameArr = new String[] {"",""};
 		String zipCodeAndCityName = "";
@@ -125,6 +149,9 @@ public class AddressParser {
 		INPUT = INPUT.replaceFirst(zipNameArr[1].trim().toLowerCase(), "").trim();
 	}
 	
+	/**
+	 * Searches the input String for a city name.
+	 */
 	private void findCity() {
 		String cityName = "";
 		try {
@@ -140,7 +167,9 @@ public class AddressParser {
 		
 	}
 	
-	// At this point INPUT only includes the building number, building letter and floor
+	/**
+	 * Searches the input String for building number.
+	 */
 	private void buildingNo() {
 		p1 = Pattern.compile(NR);
 		m1 = p1.matcher(INPUT);
@@ -153,6 +182,9 @@ public class AddressParser {
 		
     }
 	
+	/**
+	 * Searches the input String for a building letter.
+	 */
 	private void findBuildingLetter() {
 		p1 = Pattern.compile("\\b[a-z]\\b");
 		m1 = p1.matcher(INPUT);
@@ -164,6 +196,9 @@ public class AddressParser {
 		}
 	}
 	
+	/**
+	 * Searches the input String for a floor number.
+	 */
 	private void findFloorNumber() {
 		p1 = Pattern.compile("\\d+");
 		m1 = p1.matcher(INPUT);
@@ -185,7 +220,10 @@ public class AddressParser {
         }
     }
 
-    
+    /**
+     * Test method, used for debugging purposes.
+     * @return	A String containing the parsed results, separated by a hash tag
+     */
     public String Test() {
     	String strBuilder = "";
     	for (String s : result) {

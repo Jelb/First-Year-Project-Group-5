@@ -78,12 +78,6 @@ public class QuadTree implements Parent {
 		root.show();
 	}
 	
-	public ArrayList<Element> structure() {
-		ArrayList<Element> tree = new ArrayList<Element>();
-		root.structure(tree);
-		return tree;
-	}
-	
 	public double getXMax() {
 		return xMax;
 	}

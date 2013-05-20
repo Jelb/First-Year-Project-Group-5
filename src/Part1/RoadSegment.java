@@ -36,13 +36,13 @@ public class RoadSegment extends DrawableItem {
 		green = new Color(202,223,170);
 	
 	/**
+	 * Constructs a RoadSegment.
 	 * 
-	 * 
-	 * @param xStartCoord
-	 * @param yStartCoord
-	 * @param xEndCoord
-	 * @param yEndCoord
-	 * @param Type
+	 * @param xStartCoord	The geo (UTM) X-axis coordinate of the start of the segment
+	 * @param yStartCoord	The geo (UTM) Y-axis coordinate of the start of the segment
+	 * @param xEndCoord		The geo (UTM) Y-axis coordinate of the end of the segment
+	 * @param yEndCoord		The geo (UTM) Y-axis coordinate of the end of the segment
+	 * @param Type			The road type
 	 */
 	public RoadSegment(double xStartCoord, double yStartCoord, double xEndCoord, double yEndCoord, int type){
 		geoStartX = xStartCoord;
@@ -86,7 +86,12 @@ public class RoadSegment extends DrawableItem {
 					break;
 		}
 	}
-	
+
+	/**
+	 * Setting the width of a RoadSegment when drawn at zoom level 1
+	 * @param type	The type of road
+	 * @return		The width this RoadSegment will be drawn with
+	 */
 	public static float zoomLevelOne(int type) {
 		switch(type) {
 		case 1    : return 2.6f;
@@ -100,7 +105,12 @@ public class RoadSegment extends DrawableItem {
 		default   : return 0.8f;
 		}
 	}
-	
+
+	/**
+	 * Setting the width of a RoadSegment when drawn at zoom level 2
+	 * @param type	The type of road
+	 * @return		The width this RoadSegment will be drawn with
+	 */
 	public static float zoomLevelTwo(int type) {
 		switch(type) {
 		case 1    : return 3.8f;
@@ -114,7 +124,12 @@ public class RoadSegment extends DrawableItem {
 		default   : return 1.0f;
 		}
 	}
-	
+
+	/**
+	 * Setting the width of a RoadSegment when drawn at zoom level 3
+	 * @param type	The type of road
+	 * @return		The width this RoadSegment will be drawn with
+	 */
 	public static float zoomLevelThree(int type) {
 		switch(type) {
 		case 1    : return 4.4f;
@@ -128,7 +143,12 @@ public class RoadSegment extends DrawableItem {
 		default   : return 1.3f;
 		}
 	}
-	
+
+	/**
+	 * Setting the width of a RoadSegment when drawn at zoom level 4
+	 * @param type	The type of road
+	 * @return		The width this RoadSegment will be drawn with
+	 */
 	public static float zoomLevelFour(int type) {
 		switch(type) {
 		case 1    : return 6.0f;
@@ -142,7 +162,12 @@ public class RoadSegment extends DrawableItem {
 		default   : return 1.5f;
 		}
 	}
-	
+
+	/**
+	 * Setting the width of a RoadSegment when drawn at zoom level 5
+	 * @param type	The type of road
+	 * @return		The width this RoadSegment will be drawn with
+	 */
 	public static float zoomLevelFive(int type) {
 		switch(type) {
 		case 1    : return 7.0f;
@@ -156,7 +181,12 @@ public class RoadSegment extends DrawableItem {
 		default   : return 2.0f;
 		}
 	}
-	
+
+	/**
+	 * Setting the width of a RoadSegment when drawn at zoom level 6
+	 * @param type	The type of road
+	 * @return		The width this RoadSegment will be drawn with
+	 */
 	public static float zoomLevelSix(int type) {
 		switch(type) {
 		case 1    : return 8.0f;
@@ -170,7 +200,12 @@ public class RoadSegment extends DrawableItem {
 		default   : return 2.0f;
 		}
 	}
-	
+
+	/**
+	 * Setting the width of a RoadSegment when drawn at zoom level 7
+	 * @param type	The type of road
+	 * @return		The width this RoadSegment will be drawn with
+	 */
 	public static float zoomLevelSeven(int type) {
 		switch(type) {
 		case 1    : return 9.0f;
@@ -185,6 +220,11 @@ public class RoadSegment extends DrawableItem {
 		}
 	}
 	
+	/**
+	 * Setting the width of a RoadSegment when drawn at zoom level 8
+	 * @param type	The type of road
+	 * @return		The width this RoadSegment will be drawn with
+	 */
 	public static float zoomLevelEight(int type) {
 		switch(type) {
 		case 1    : return 12.0f;
@@ -199,6 +239,11 @@ public class RoadSegment extends DrawableItem {
 		}
 	}
 	
+	/**
+	 * Setting the width of a RoadSegment when drawn at zoom level 9
+	 * @param type	The type of road
+	 * @return		The width this RoadSegment will be drawn with
+	 */
 	public static float zoomLevelNine(int type) {
 		switch(type) {
 		case 1    : return 14.0f;
@@ -213,6 +258,11 @@ public class RoadSegment extends DrawableItem {
 		}
 	}
 	
+	/**
+	 * Setting the width of a RoadSegment when drawn at zoom level 10
+	 * @param type	The type of road
+	 * @return		The width this RoadSegment will be drawn with
+	 */
 	public static float zoomLevelTen(int type) {
 		switch(type) {
 		case 1    : return 18.0f;
@@ -227,6 +277,11 @@ public class RoadSegment extends DrawableItem {
 		}
 	}
 	
+	/**
+	 * Checks if this RoadSegment is supposed to be drawn as a border,
+	 * and if it is, increases the width and changes the colour to grey.
+	 * @param isBorder
+	 */
 	public void adjustForBorders(boolean isBorder) {
 		if(isBorder) {
 			roadWidth += 2.0f;
@@ -234,6 +289,10 @@ public class RoadSegment extends DrawableItem {
 		}
 	}
 	
+	/**
+	 * Changes the stored pixel coordinates of the start and end location
+	 * of the road segment, based on the current geo (or UTM) coordinate.
+	 */
 	public void updatePosition(){
 		xStart = calcPixelX(geoStartX);
 		yStart = calcPixelY(geoStartY);
@@ -262,8 +321,10 @@ public class RoadSegment extends DrawableItem {
 		}
 	}
 	
+	/**
+	 * Sets the zoom level field based on the currently displayed GeoWidth.
+	 */
 	public static void setZoomLevel() {
-//		zoomLevel = 1;
 		if(WindowHandler.getGeoWidth() > 50000.0) {
 			zoomLevel = 1; 
 			}
@@ -294,8 +355,6 @@ public class RoadSegment extends DrawableItem {
 		else if (WindowHandler.getGeoWidth() <= 600.0) {
 			zoomLevel = 10;
 		}
-		
-		//System.out.println("Zoomlevel: " + zoomLevel);
 	}
 		
 	/**

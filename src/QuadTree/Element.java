@@ -1,6 +1,5 @@
 package QuadTree;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,8 +20,6 @@ public interface Element {
 	public boolean holds(double x, double y);
 	
 	public void show();
-	
-	public ArrayList<Element> structure(ArrayList<Element> tree);
 	
 	public boolean equals(Object o);
 }

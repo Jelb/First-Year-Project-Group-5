@@ -302,7 +302,7 @@ public class DataReader {
 			area.add(current.toArray(new CoastPoint[1]));
 			reader.close();			
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "The file <" + filepath+ "> was not foud. \nThe will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "The file <" + filepath+ "> was not foud. \nThe program will terminate.", "ERROR", JOptionPane.ERROR_MESSAGE);
 			throw new RuntimeException();
 		}
 		return area;
