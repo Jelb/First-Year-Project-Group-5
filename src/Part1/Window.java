@@ -1058,7 +1058,7 @@ public class Window extends JFrame {
 	private class resizeListener extends ComponentAdapter {
 		int height;
 		int width;
-		final int MIN_HEIGHT = 550;
+		final int MIN_HEIGHT = 570;
 
 		public void componentResized(ComponentEvent evt) {
 			if(timer == null){
