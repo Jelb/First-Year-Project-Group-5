@@ -2,6 +2,9 @@ package Part1;
 
 import java.awt.Graphics;
 
+/**
+ * Abstract superclass for everything that needs to be drawn on the screen.
+ */
 public abstract class DrawableItem {
 	
 	// The current minimum and maximum values of the area of the map we're looking at.
@@ -15,7 +18,6 @@ public abstract class DrawableItem {
 	 * @param geoMinX The min X-coordinate of the current displayed map.
 	 * @param geoMinY The min Y-coordinate of the current displayed map.
 	 */
-	
 	public static void setMapSize(double geoMaxX, double geoMaxY, double geoMinX, double geoMinY){
 		DrawableItem.geoMaxX = geoMaxX;
 		DrawableItem.geoMaxY = geoMaxY;
@@ -31,13 +33,19 @@ public abstract class DrawableItem {
 	}
 	
 	/**
-	 * Used to convert the UTM coordinate to pixel.
+	 * Converts geo (UTM) coordinate to on-screen pixel coordinate.
+	 * @param geoCord	UTM X-axis value
+	 * @return			Pixel X-axis value
 	 */
-	
 	public int calcPixelX(double geoCord){
 		return Equation.calcPixelX(geoCord);
 	}
 	
+	/**
+	 * Converts geo (UTM) coordinate to on-screen pixel coordinate.
+	 * @param geoCord	UTM Y-axis value
+	 * @return			Pixel Y-axis value
+	 */
 	public int calcPixelY(double geoCord){
 		return Equation.calcPixelY(geoCord);
 	}
