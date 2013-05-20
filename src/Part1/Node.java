@@ -1,13 +1,23 @@
 package Part1;
 
+/**
+ * Class containing information on a map coordinate. Used to identify
+ * the location of instances of the Edge class in the world.
+ */
 public class Node {
 	
-	private double xCord;
-	private double yCord;
-	private int kdvID;
-	private static double xOffset;
-	private static double yOffset;
+	private double xCord;			// UTM x-axis value
+	private double yCord;			// UTM y-axis value
+	private int kdvID;				// ID number
+	private static double xOffset;	// the UTM distance from the absolute UTM X=0 to the lowest value xCord in the dataset 
+	private static double yOffset;	// the UTM distance from the absolute UTM Y=0 to the lowest value yCord in the dataset 
 	
+	/**
+	 * Constructor, taking the coordinates and ID number of the node.
+	 * @param xCord		X-axis UTM value
+	 * @param yCord		Y-axis UTM value
+	 * @param kdvID		Node ID number
+	 */
 	public Node(double xCord, double yCord, int kdvID) {
 		this.xCord = xCord;
 		this.yCord = yCord;
@@ -70,14 +80,25 @@ public class Node {
 		return kdvID;
 	}
 	
+	/**
+	 * Sets the absolute UTM X offset of the 'outer' map constraints
+	 * @param xOffset	X-axis UTM value of offset
+	 */
 	public static void setXOffset(double xOffset) {
 		Node.xOffset = xOffset;
 	}
 	
+	/**
+	 * Sets the absolute UTM Y offset of the 'outer' map constraints
+	 * @param yOffset	Y-axis UTM value of offset
+	 */
 	public static void setYOffset(double yOffset) {
 		Node.yOffset = yOffset;
 	}
 	
+	/**
+	 * Compares two nodes to see if their position is identical.
+	 */
 	public boolean equals(Object o) {
 		if (o instanceof Node) {
 			Node n = (Node) o;
@@ -93,13 +114,4 @@ public class Node {
 		hash = 31 * hash + ((Double)yCord).hashCode();
 		return hash;
 	}
-	
-//	public void addEdge(Edge edge) {
-//		edges.add(edge);
-//	}
-//	
-//	public LinkedList<Edge> getEdges() {
-//		return edges;
-//	}
-
 }

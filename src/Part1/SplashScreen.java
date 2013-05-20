@@ -21,7 +21,9 @@ import javax.swing.JProgressBar;
 import javax.swing.Timer;
 
 
-
+/**
+ * The splash screen and progress load bar that appears when the program is run.
+ */
 public class SplashScreen extends JFrame{
 
 	/**
@@ -57,6 +59,10 @@ public class SplashScreen extends JFrame{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
+	/**
+	 * Singleton design pattern.
+	 * @return		Returns an instance of the object.
+	 */
 	public static SplashScreen use() {
 		if(instance == null) {
 			instance = new SplashScreen();
@@ -64,6 +70,9 @@ public class SplashScreen extends JFrame{
 		return instance;
 	}
 	
+	/**
+	 * Sets up the different progress bars, the splash and tooltips used.
+	 */
 	private void setUp() {
 		tipArray = new String[] { 
 			    "Click, hold and drag with right mouse button to create zoom area", "Use mouse wheel to zoom in and out",
@@ -150,12 +159,19 @@ public class SplashScreen extends JFrame{
 		createTimer();
 	}
 	
+	/**
+	 * Sets the labels and values of the progress bar.
+	 */
 	public void updateProgress() {
 		mainBar.setValue(mainBar.getValue()+1);
 		mainBar.setString(mainBar.getValue()+" of "+mainBar.getMaximum()+" "+mainBar.getName());
 		overview.setValue(overview.getValue()+1);
 	}
 	
+	/**
+	 * Changes the displayed name of the task currently being performed during start-up.
+	 * @param task	Name of task
+	 */
 	public void setTaskName(Task task) {
 		switch(task) {
 		case COAST: 
@@ -187,20 +203,34 @@ public class SplashScreen extends JFrame{
 		}
 	}
 	
+	/**
+	 * Sets up a timer.
+	 * (For testing and debugging)
+	 */
 	private void createTimer() {
 		timer = new Timer(8000, new ChangeTip());
 		timer.start();
 	}
 	
+	/**
+	 * When the program has loaded, stops the timer and closes the splash.
+	 */
 	public void close() {
 		timer.stop();
 		Window.use().setVisible(true);
 		dispose();
 		instance = null;
-		//Print statement used when measuring the startup time.
+		// Print statement used when measuring the startup time.
 //		System.out.format("Time in seconds need for the system to startup: %.2f sec.",(System.currentTimeMillis()-startUpTime)/1000.0);
 	}
 	
+	/**
+	 * Sets the number of initializations to be displayed on the progress bars.
+	 * @param nodes	Number of nodes
+	 * @param edges	Number of edges
+	 * @param coast	Number of points on coastline
+	 * @param lake	Number of points in lakes
+	 */
 	public static void initialize(String nodes, String edges, String coast, String lake) {
 		   noOfNodes = countLines(nodes);
 		   noOfEdges = countLines(edges);
@@ -212,8 +242,8 @@ public class SplashScreen extends JFrame{
 	 * The method is used to count the number of RoadSegment within the 
 	 * data files. 
 	 * 
-	 * @param filepath The directory for the file which should be counted.
-	 * @return	The number of new line character within the file.
+	 * @param filepath	The directory for the file which should be counted.
+	 * @return			The number of new line character within the file.
 	 */
 	private static int countLines(String filepath) {
 		InputStream is;
@@ -242,6 +272,9 @@ public class SplashScreen extends JFrame{
 		return count;
 	}
 	
+	/**
+	 * Randomly picks a tool tip an changes the current one.
+	 */
 	private class ChangeTip implements ActionListener {
 
 		@Override
