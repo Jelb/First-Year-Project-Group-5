@@ -12,7 +12,9 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Random;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,6 +41,7 @@ public class SplashScreen extends JFrame{
 	private Timer timer;
 	private String[] tipArray;
 	private JLabel tip, tipTitle;
+	private JPanel tippanel;
 	private Random random = new Random();
 	private boolean[] shown;
 	private int displayedTips = 0;
@@ -49,7 +52,7 @@ public class SplashScreen extends JFrame{
 	private SplashScreen() {
 		super();
 //		startUpTime = System.currentTimeMillis();
-		setPreferredSize(new Dimension(800, 600));
+		setPreferredSize(new Dimension(800, 500));
 		setUndecorated(true);
 		setUp();
 		pack();
@@ -75,24 +78,31 @@ public class SplashScreen extends JFrame{
 	 */
 	private void setUp() {
 		tipArray = new String[] { 
-			    "Click, hold and drag with right mouse button to create zoom area", "Use mouse wheel to zoom in and out",
-			    "Click the globe to reset zoom", "Hold mouse over a road to get its name", "Use the arrowkeys to pan around the map",
-			    "You can toggle ferry on/off by clicking the ship icon", "Change you transport type by clicking the car/bike icon",
-			    "Toggle between location search and path finding by clicking the single pin or multi pin icon", "Pytheas of Massalia was a Greek geographer and explorer"
+			    "        Click, hold and drag with right mouse button to create zoom area        ", "        Use mouse wheel to zoom in and out        ",
+			    "        Click the globe to reset zoom        ", "        Hold mouse over a road to get its name        ", "        Use the arrowkeys to pan around the map        ",
+			    "        You can toggle ferry on/off by clicking the ship icon        ", "        Change you transport type by clicking the car/bike icon        ",
+			    "        Toggle between location search and path finding by clicking the single pin or multi pin icon        ", "        Pytheas of Massalia was a Greek geographer and explorer        "
 			};
 		shown = new boolean[tipArray.length];
 		int randomNumber = random.nextInt(tipArray.length);
 		shown[randomNumber] = true;
 		tipTitle = new JLabel("Tips & Tricks:");
-		tipTitle.setForeground(Color.white);
+		tipTitle.setAlignmentX(CENTER_ALIGNMENT);
 		tip = new JLabel(tipArray[randomNumber]);
-		tip.setForeground(Color.WHITE);
 		tip.setOpaque(false);
 		tipTitle.setOpaque(false);
+		tip.setAlignmentX(CENTER_ALIGNMENT);
+		tippanel = new JPanel();
+		tippanel.setLayout(new BoxLayout(tippanel, BoxLayout.Y_AXIS));
+		tippanel.add(tipTitle);
+		tippanel.add(tip);
+		tippanel.setOpaque(true);
+		tippanel.setBackground(new Color(255, 255, 255));
+		tippanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 		
 		
 		JPanel contentPane = new JPanel(new GridBagLayout());
-		JLabel background = new JLabel(new ImageIcon("logo1.jpg"));
+		JLabel background = new JLabel(new ImageIcon("logo.png"));
 		background.setLayout(new GridBagLayout());
 		contentPane.add(background);
 		
@@ -113,27 +123,27 @@ public class SplashScreen extends JFrame{
 		
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
-		gbc.gridy = 2;
-		gbc.fill = GridBagConstraints.NONE;
-		gbc.weightx = 0.0;
-		gbc.weighty = 0.0;
-		background.add(tipTitle, gbc);
-		
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
 		gbc.gridy = 3;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.weightx = 0.0;
 		gbc.weighty = 0.0;
-		background.add(tipTitle, gbc);
+		background.add(tippanel, gbc);
 		
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
-		gbc.gridy = 4;
+		gbc.gridy = 2;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.weightx = 0.0;
-		gbc.weighty = 0.0;
-		background.add(tip, gbc);
+		gbc.weighty = 0.05;
+		background.add(Box.createGlue(), gbc);
+		
+//		gbc = new GridBagConstraints();
+//		gbc.gridx = 0;
+//		gbc.gridy = 4;
+//		gbc.fill = GridBagConstraints.NONE;
+//		gbc.weightx = 0.0;
+//		gbc.weighty = 0.0;
+//		background.add(tip, gbc);
 		
 		mainBar = new JProgressBar(0, noOfNodes);
 		overview = new JProgressBar(0, noOfNodes+noOfEdges+noOfCoastPoints);
