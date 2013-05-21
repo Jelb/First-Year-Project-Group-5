@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import Part1.Node;
+import pytheas.Node;
+
 
 /**
  * An implementation of the QuadTree data structure

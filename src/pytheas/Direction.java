@@ -1,4 +1,4 @@
-package Part1;
+package pytheas;
 
 public enum Direction {
 	NORTH, 

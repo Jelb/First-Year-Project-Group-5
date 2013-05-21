@@ -1,4 +1,4 @@
-package Part1;
+package pytheas;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -7,7 +7,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import Part1.Window.TextType;
+import pytheas.Window.TextType;
+
 
 /**
  * Class containing the green and red 'flag pins' denoting the start and finish

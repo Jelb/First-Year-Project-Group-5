@@ -1,4 +1,4 @@
-package Part1;
+package pytheas;
 
 /**
  * Class containing information on a map coordinate. Used to identify

@@ -11,7 +11,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import Part1.Node;
+import pytheas.Node;
+
 import QuadTree.Element;
 import QuadTree.Leaf;
 import QuadTree.Parent;

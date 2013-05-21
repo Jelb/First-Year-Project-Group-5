@@ -2,7 +2,8 @@ package QuadTree;
 
 import java.util.List;
 
-import Part1.Node;
+import pytheas.Node;
+
 
  /**
   * The QuadNode class holds references to the four quadrants: Northwest (NW), Northeast (NE), 

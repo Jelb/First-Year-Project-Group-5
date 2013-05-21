@@ -1,4 +1,4 @@
-package Part1;
+package pytheas;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

@@ -1,4 +1,4 @@
-package Part1;
+package pytheas;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -13,7 +13,8 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import Part1.SplashScreen.Task;
+import pytheas.SplashScreen.Task;
+
 import QuadTree.QuadTree;
 
 

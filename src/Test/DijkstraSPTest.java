@@ -5,12 +5,13 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import Part1.DataReader;
-import Part1.DijkstraSP;
-import Part1.DijkstraSP.CompareType;
-import Part1.Graph;
-import Part1.WindowHandler;
-import Part1.DijkstraSP.TransportWay;
+import pytheas.DataReader;
+import pytheas.DijkstraSP;
+import pytheas.Graph;
+import pytheas.WindowHandler;
+import pytheas.DijkstraSP.CompareType;
+import pytheas.DijkstraSP.TransportWay;
+
 
 public class DijkstraSPTest {
 	Graph graph;

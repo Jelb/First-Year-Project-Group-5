@@ -1,4 +1,4 @@
-package Part1;
+package pytheas;
 
 /**
  * This class handles all pan inputs, checks if they comply with the 

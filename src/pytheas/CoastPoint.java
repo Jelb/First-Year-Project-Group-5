@@ -1,4 +1,4 @@
-package Part1;
+package pytheas;
 
 /**
  * Class describing a single point on the coast line. Points are used to describe

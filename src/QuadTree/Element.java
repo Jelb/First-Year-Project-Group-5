@@ -1,7 +1,8 @@
 package QuadTree;
 
 import java.util.List;
-import Part1.Node;
+
+import pytheas.Node;
 
 /**
  * An interface defining an element (QuadNode or Leaf) of the QuadTree

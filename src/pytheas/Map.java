@@ -1,4 +1,4 @@
-package Part1;
+package pytheas;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -12,7 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 
-import Part1.Window.TextType;
+import pytheas.Window.TextType;
+
 
 
 public class Map extends JPanel {

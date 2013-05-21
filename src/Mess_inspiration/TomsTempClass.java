@@ -5,8 +5,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JComponent;
 
-import Part1.RoadSegment;
-import Part1.Window;
+import pytheas.RoadSegment;
+import pytheas.Window;
+
 
 public class TomsTempClass {
 	

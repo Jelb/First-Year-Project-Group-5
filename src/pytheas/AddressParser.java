@@ -1,4 +1,4 @@
-package Part1;
+package pytheas;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

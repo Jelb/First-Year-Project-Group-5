@@ -1,4 +1,4 @@
-package Part1;
+package pytheas;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -24,8 +24,10 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
-import Part1.DijkstraSP.CompareType;
-import Part1.DijkstraSP.TransportWay;
+
+import pytheas.DijkstraSP.CompareType;
+import pytheas.DijkstraSP.TransportWay;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;

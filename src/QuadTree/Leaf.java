@@ -3,7 +3,8 @@ package QuadTree;
 import java.util.Arrays;
 import java.util.List;
 
-import Part1.Node;
+import pytheas.Node;
+
 
 /**
  * A Leaf of the QuadTree. Holds a number of nodes specified when the QuadTree is created.

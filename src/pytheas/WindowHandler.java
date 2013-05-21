@@ -1,4 +1,4 @@
-package Part1;
+package pytheas;
 
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
@@ -10,10 +10,11 @@ import java.util.List;
 
 import javax.swing.ToolTipManager;
 
-import Part1.DijkstraSP.CompareType;
-import Part1.DijkstraSP.TransportWay;
-import Part1.SplashScreen.Task;
-import Part1.Window.TextType;
+import pytheas.DijkstraSP.CompareType;
+import pytheas.DijkstraSP.TransportWay;
+import pytheas.SplashScreen.Task;
+import pytheas.Window.TextType;
+
 import QuadTree.QuadTree;
 
 /**

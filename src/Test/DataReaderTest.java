@@ -6,12 +6,13 @@ import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Test;
-import Part1.DataReader;
-import Part1.Edge;
-import Part1.Graph;
-import Part1.Node;
 
 import org.junit.Before;
+
+import pytheas.DataReader;
+import pytheas.Edge;
+import pytheas.Graph;
+import pytheas.Node;
 
 public class DataReaderTest {
 	

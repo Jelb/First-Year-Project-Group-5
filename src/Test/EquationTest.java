@@ -9,14 +9,15 @@ import java.lang.reflect.Array;
 import org.junit.After;
 import org.junit.Test;
 
-import Part1.DataReader;
-import Part1.DrawableItem;
-import Part1.Edge;
-import Part1.Equation;
-import Part1.Map;
-import Part1.Node;
-import Part1.Window;
-import Part1.WindowHandler;
+import pytheas.DataReader;
+import pytheas.DrawableItem;
+import pytheas.Edge;
+import pytheas.Equation;
+import pytheas.Map;
+import pytheas.Node;
+import pytheas.Window;
+import pytheas.WindowHandler;
+
 
 public class EquationTest {
 

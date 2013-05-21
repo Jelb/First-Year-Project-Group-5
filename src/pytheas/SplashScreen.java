@@ -1,4 +1,4 @@
-package Part1;
+package pytheas;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
